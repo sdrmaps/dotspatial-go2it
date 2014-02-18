@@ -1,0 +1,14 @@
+;
+; This file is used by the build script to grab all the needed
+; sdr libraries required for this particular product
+; ideally we could build a exe to parse this info instead.
+; the order of compilation is important be sure to move lower 
+; level to higher level for compilation order
+;
+SDR.Data
+SDR.Authentication
+SDR.Configuration
+SDR.Common
+DotSpatial.SDR.Controls
+DotSpatial.SDR.Plugins.Measure
+DotSpatial.SDR.Plugins.Navigate

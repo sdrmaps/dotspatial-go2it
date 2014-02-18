@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include Id="ProductDefinitionInclude">
+
+  <?define ProductUpgradeCode='52355DFA-5369-4676-B690-D5A876506B43' ?>
+  <?define ProductId='A8B4584F-533F-4EAB-B40A-2CFF00594512' ?>
+  <?define ProductCodepage='1252' ?>
+  <?define ProductInstalledDir='Go2It' ?>
+  
+</Include>

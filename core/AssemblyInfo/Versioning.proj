@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="All"  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Required Import to use MSBuild Community Tasks -->
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+      <Version>version</Version>
+      <BuildInfo>buildinfo</BuildInfo>
+  </PropertyGroup>
+
+  <Target Name="AssemblyInfo">    
+    <AssemblyInfo CodeLanguage="CS"  
+			OutputFile="AssemblyInfoVersion.cs" 
+			AssemblyVersion="1.0.0.0" 
+            AssemblyFileVersion="$(Version).$(BuildInfo)"
+            AssemblyInformationalVersion="$(Version)" />
+  </Target>
+
+  <Target Name="All">
+    <CallTarget Targets="AssemblyInfo" />
+  </Target>
+  
+</Project>

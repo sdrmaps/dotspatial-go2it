@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <!-- include file that defines the product specific ID, UPGRADECODE and CODEPAGE values-->
+    <?include $(sys.CURRENTDIR)\ProductDefinitionInclude.wxi ?>
+    
+    <Product Id ='$(var.ProductId)'
+             UpgradeCode='$(var.ProductUpgradeCode)'
+             Codepage='$(var.ProductCodepage)'
+             Name='!(loc.ProductName)'
+             Language='!(loc.LANGUAGE)'
+             Version='$(env.VERSION).$(env.BUILD_INFO)'   
+             Manufacturer='!(loc.Manufacturer)' >
+
+    <Package InstallerVersion='200'
+               Compressed='yes'
+               Keywords='!(loc.PackageKeywords)'
+               Description='!(loc.PackageDescription)'
+               Comments='!(loc.PackageComments)'
+               Manufacturer='!(loc.Manufacturer)'
+               Languages='!(loc.LANGUAGE)'
+               SummaryCodepage='$(var.ProductCodepage)'
+               InstallPrivileges='elevated' />
+
+    <Media Id="1"
+             Cabinet="$(env.PRODUCT).cab"
+             EmbedCab="yes"
+             DiskPrompt="CD-ROM #1" />
+
+    <Property Id='DiskPrompt'
+            Value="!(loc.DiskPrompt)" />
+
+     <!--  <InstallExecuteSequence>
+        <Custom Action='ExecEsriRegister' After='InstallFinalize'>NOT REMOVE</Custom>
+        <Custom Action='ExecEsriUnregister' Before='RemoveFiles'>REMOVE</Custom>
+      </InstallExecuteSequence>
+
+    <CustomAction Id='ExecEsriRegister'
+                  Directory='SDR_PRODUCT'
+                  Execute='immediate'
+                  ExeCommand='&quot;[CommonFilesFolder]ArcGIS\bin\ESRIRegasm.exe&quot; /p:Desktop /s &quot;[SDR_PRODUCT]$(var.ProductInstalledDir).dll&quot;'
+                  Return='check'/> 
+
+    <CustomAction Id='ExecEsriUnregister'
+              Directory='SDR_PRODUCT'
+              Execute='immediate'
+              ExeCommand='&quot;[CommonFilesFolder]ArcGIS\bin\ESRIRegasm.exe&quot; /p:Desktop /s /u &quot;[SDR_PRODUCT]$(var.ProductInstalledDir).dll&quot;'
+              Return='check'/>  -->
+      
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="SDR_DIRECTORY" Name='SDR'>
+          <Directory Id="SDR_PRODUCT" Name='$(var.ProductInstalledDir)' />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Complete" Level="1">
+      <ComponentGroupRef Id='PRODUCT_BINARIES'/>
+    </Feature>
+
+    <!-- user interface stuff here -->
+    <Property Id="WIXUI_INSTALLDIR" Value="SDR_PRODUCT" />
+    <UIRef Id="WixUI_InstallDir" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+      
+    <Icon Id="ARPIcon.ico" SourceFile="$(sys.CURRENTDIR)\bitmaps\ARPIcon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="ARPIcon.ico" />
+    <Property Id="ARPCOMMENTS" Value='!(loc.PackageComments)' />
+    <Property Id="ARPCONTACT" Value='!(loc.Manufacturer)' />
+ 
+    <!-- <Property Id="ARPHELPLINK" Value="Your help link" /> 
+    <Property Id="ARPREADME" Value="Your README link" /> -->
+    <Property Id="ARPURLINFOABOUT" Value='!(loc.Website)' />
+    <Property Id="ARPURLUPDATEINFO" Value='!(loc.Website)' />
+    <Property Id="ARPHELPTELEPHONE" Value='!(loc.PhoneNumber)' />
+    <!-- <Property Id="ARPAUTHORIZEDCDFPREFIX" Value="URL of the update channel for the application" /> -->
+    <Property Id="ARPSIZE" Value="44" />
+      
+    <!-- <Property Id="ARPNOMODIFY" Value="1" /> modify the program button has been disabled  
+    <Property Id="ARPNOREPAIR" Value="0" /> repair program button is enabled 
+    <Property Id="ARPNOREMOVE" Value="0" />  remove program button is enabled
+    <Property Id="ARPSYSTEMCOMPONENT" Value="0" /> set to 1 = using the command line or a transform prevents the application from being displayed in the Add or Remove Programs list of Control Panel -->
+    
+    <!-- other installer imagery/license -->
+    <WixVariable Id="WixUIDialogBmp" Value="$(sys.CURRENTDIR)\bitmaps\WixUIDialogBmp.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(sys.CURRENTDIR)\bitmaps\WixUIBannerBmp.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(sys.CURRENTDIR)\License.rtf" />
+  
+    </Product>
+
+  </Wix>

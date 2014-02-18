@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  
+  <!-- Language defined for this product-->
+  <String Id="LANGUAGE">1033</String>
+
+  <!-- Product description key values -->
+  <String Id="ProductName">Go2It</String>
+  <String Id="Manufacturer">Spatial Data Research Inc.</String>
+  <String Id="Website">http://www.sdrmaps.com</String>
+  <String Id="PhoneNumber">1.800.238.1911</String>
+
+  <!-- Package key values -->
+  <String Id="PackageKeywords">Go2It SDR Spatial Data Research</String>
+  <String Id="PackageDescription">Go2It - SDR Inc. Location Navigation Solution</String>
+  <String Id="PackageComments">Copyright © 2013 Spatial Data Research Inc.</String>
+
+  <!-- Disk prompt (never used!) -->
+  <String Id="DiskPrompt">Go2It Installation [1]</String>
+  
+  <!-- AddRemovePrograms values -->
+  <String Id="ArpComments">Go2It</String>
+  
+</WixLocalization>
