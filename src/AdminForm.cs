@@ -45,7 +45,6 @@ namespace Go2It
 
         // change tracking flags for project changes as well as mapview changes
         private bool _dirtyProject;
-        private bool _dirtyTabs;
 
         // admin form level controls
         private Legend _adminLegend;
@@ -680,7 +679,7 @@ namespace Go2It
             {
                 if (ProjectIsClean(_dirtyProject))
                 {
-                    e.Cancel = !ProjectIsClean(_dirtyTabs);
+                    // e.Cancel = !ProjectIsClean(_dirtyTabs);
                 }
                 else
                 {
@@ -847,7 +846,7 @@ namespace Go2It
                 // reset the orginal map back to the active map
                 _appManager.Map = tMap;
                 _dirtyProject = false;
-                _dirtyTabs = false;
+                // _dirtyTabs = false;
                 return true;
             }
             catch (XmlException)
@@ -1110,57 +1109,6 @@ namespace Go2It
         private void lstUsers_DoubleClick(object sender, EventArgs e)
         {
             txtUsername.Text = lstUsers.Items[lstUsers.SelectedIndex].ToString();
-        }
-
-        //private void adminTab_Control_Selected(object sender, TabControlEventArgs e)
-        //{
-        //    // only run the check on the view manager and index manager tabs
-        //    if (adminTab_Control.SelectedTab.Name == "adminTab_SearchProperties" ||
-        //        adminTab_Control.SelectedTab.Name == "adminTab_ViewManagement")
-        //    {
-        //        // verify the user has created the project file
-        //        if (ProjectExists())
-        //        {
-        //            // to use views or indexing the project must be clean
-        //            if (!ProjectIsClean(_dirtyProject))
-        //            {
-        //                adminTab_Control.SelectedIndex = 0;
-        //            }
-        //        }
-        //        else // no project currently exists
-        //        {
-        //            adminTab_Control.SelectedIndex = 0;
-        //        }
-        //    }
-        //    // populate form specific attribution now
-        //    if (adminTab_Control.SelectedTab.Name == "adminTab_SearchProperties")
-        //    {
-        //        cmbLayerIndex.Items.Clear();
-        //        AddLayersToIndex(chkAddressLayers);
-        //        AddLayersToIndex(chkRoadLayers);
-        //        AddLayersToIndex(chkKeyLocationsLayers);
-        //        AddLayersToIndex(cmbCellSectorLayer);
-        //        AddLayersToIndex(cmbCityLimitLayer);
-        //        AddLayersToIndex(cmbESNLayer);
-        //        AddLayersToIndex(cmbParcelsLayer);
-        //    }
-        //}
-
-        private void AddLayersToIndex(CheckedListBox chkBox)
-        {
-            if (chkBox == null) return;
-            foreach (object t in chkBox.CheckedItems)
-            {
-                cmbLayerIndex.Items.Add(t);
-            }
-        }
-
-        private void AddLayersToIndex(ComboBox cmbBox)
-        {
-            if (cmbBox.Text.Length > 0)
-            {
-                cmbLayerIndex.Items.Add(cmbBox.Text);
-            }
         }
 
         private IEnumerable<string> ReadIndexLines(string filePath)
@@ -1489,7 +1437,7 @@ namespace Go2It
                 _appManager.Map.Layers.Remove(lyr);
             }
             _appManager.Map.Invalidate();
-            _dirtyTabs = true;
+            // _dirtyTabs = true;
         }
 
         private void btnAddView_Click(object sender, EventArgs e)
@@ -1544,8 +1492,55 @@ namespace Go2It
             }
         }
 
+        private List<string> AddLayersToIndex(CheckedListBox clb)
+        {
+            var l  = new List<string>();
+            foreach (var item in clb.CheckedItems)
+            {
+                l.Add(item.ToString());
+            }
+            return l;
+        }
+
+        private List<string> AddLayersToIndex(ComboBox cmbBox)
+        {
+            var l = new List<string>();
+            if (cmbBox.Text.Length > 0)
+            {
+                l.Add(cmbBox.Text);
+            }
+            return l;
+        }
+
+        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl)
+        {
+            cmbLayerIndex.Items.Clear();
+            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count);
+            sels.AddRange(ad);
+            sels.AddRange(rd);
+            sels.AddRange(kl);
+            sels.AddRange(cs);
+            sels.AddRange(cl);
+            sels.AddRange(es);
+            sels.AddRange(pl);
+            cmbLayerIndex.Items.AddRange(sels.ToArray());
+        }
+
         private void cmbCityLimitLayer_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            var cmb = (ComboBox)sender;
+            var cl = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                cl.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
@@ -1556,26 +1551,105 @@ namespace Go2It
 
         private void chkRoadLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            var clb = (CheckedListBox)sender;
+            var rd = new List<string>();
+            foreach (var item in clb.CheckedItems)
+            {
+                if (item != clb.Items[e.Index].ToString())
+                {
+                    rd.Add(item.ToString());
+                }
+            }
+            if (e.NewValue == CheckState.Checked)
+            {
+                rd.Add(clb.Items[e.Index].ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
         private void chkAddressLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            var clb = (CheckedListBox)sender;
+            var ad = new List<string>();
+            foreach (var item in clb.CheckedItems)
+            {
+                if (item != clb.Items[e.Index].ToString())
+                {
+                    ad.Add(item.ToString());
+                }
+            }
+            if (e.NewValue == CheckState.Checked)
+            {
+                ad.Add(clb.Items[e.Index].ToString());
+            }
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
         private void cmbCellSectorLayer_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            var cmb = (ComboBox)sender;
+            var cs = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                cs.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
         private void cmbESNLayer_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            var cmb = (ComboBox)sender;
+            var es = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                es.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
         private void cmbParcelsLayer_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            var cmb = (ComboBox)sender;
+            var pl = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                pl.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
@@ -1586,6 +1660,26 @@ namespace Go2It
 
         private void chkKeyLocationsLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            var clb = (CheckedListBox)sender;
+            var kl = new List<string>();
+            foreach (var item in clb.CheckedItems)
+            {
+                if (item != clb.Items[e.Index].ToString())
+                {
+                    kl.Add(item.ToString());   
+                }
+            }
+            if (e.NewValue == CheckState.Checked)
+            {
+                kl.Add(clb.Items[e.Index].ToString());
+            }
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
         }
 
