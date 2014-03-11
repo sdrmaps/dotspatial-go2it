@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,11 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
-using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
-using DotSpatial.Topology.Index.Bintree;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -35,6 +34,12 @@ namespace Go2It
 {
     public partial class AdminForm : Form
     {
+        [Import("Shell")]
+        internal ContainerControl Shell { get; set; }
+
+        // name of the initial map tab
+        private const string MapTabDefaultName = "My Map";
+
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
         private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
 
@@ -58,76 +63,9 @@ namespace Go2It
         private readonly LayerSelectionSwitcher _lineLayerSwitcher = new LayerSelectionSwitcher();
         private readonly LayerSelectionSwitcher _polygonLayerSwitcher = new LayerSelectionSwitcher();
 
-        // temp dict to hold all base map layers for use selection/removal on individual tab maps
+        // temp dict holds all base map layers for selection/removal on map tabs
         // on save this is passed to the dockingcontrol baselayerlookup dict
         private readonly Dictionary<string, IMapLayer> _localBaseMapLayerLookup = new Dictionary<string, IMapLayer>();
-
-        // string collections for all search indexes
-        private readonly StringCollection _addressIndexes = new StringCollection
-        {
-            "First Name",
-            "Last Name",
-            "Structure Number",
-            "Pre Directional",
-            "Pre Type",
-            "Street Name",
-            "Street Type",
-            "Post Directional",
-            "Sub Unit Type",
-            "Sub Unit Designation",
-            "Community",
-            "Phone",
-            "Aux. Phone",
-            "Other 1",
-            "Other 2"
-        };
-
-        private readonly StringCollection _roadIndexes = new StringCollection
-        {
-            "Pre Directional",
-            "Pre Type",
-            "Street Name",
-            "Street Type",
-            "Post Directional",
-            "Right Zip Community",
-            "Left Zip Community",
-            "Right MSAG Community",
-            "Left MSAG Community",
-            "Other 1",
-            "Other 2"
-        };
-
-        private readonly StringCollection _keyLocationsIndexes = new StringCollection
-        {
-            "Name",
-            "Type",
-            "Description"
-        };
-
-        private readonly StringCollection _cellSectorsIndexes = new StringCollection
-        {
-            "Sector ID",
-            "Tower ID",
-            "Company ID"
-        };
-
-        private readonly StringCollection _cityLimitsIndexes = new StringCollection
-        {
-            "Name"
-        };
-
-        private readonly StringCollection _esnsIndexes = new StringCollection
-        {
-            "Name"
-        };
-
-        private readonly StringCollection _parcelsIndexes = new StringCollection
-        {
-            "Parcel ID",
-            "Owner Name",
-            "Other 1",
-            "Other 2"
-        };
 
         public AdminForm(AppManager app)
         {
@@ -140,109 +78,64 @@ namespace Go2It
                 BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                 Dock = DockStyle.Fill,
                 Visible = false,
-                ViewExtents = app.Map.ViewExtents,
-                Projection = app.Map.Projection
+                Projection = app.Map.Projection,
+                ViewExtents = app.Map.ViewExtents
             };
+
             // set options on our indexing bgworker
             _idxWorker.WorkerReportsProgress = true;
             _idxWorker.WorkerSupportsCancellation = true;
             // splitter stuff
             adminLayerSplitter.SplitterWidth = 10;
             adminLayerSplitter.Paint += Splitter_Paint;
-            // lets setup the full administrative form
+            // overall events tied to main application
+            _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
+
+            // populate all the settings, layers, and maps to the form and attach a legend
             AttachLegend();
+            PopulateMapViews();
             PopulateSettingsToForm();
             PopulateUsersToForm();
-            // setup all events now
+
+            // check if we have any available map tab views
+            if (_dockingControl.DockPanelLookup.Count == 0)
+            {
+                var txt = MapTabDefaultName;
+                // clean the filename for a key value
+                var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
+                fname = fname.Replace(" ", "");
+                var key = "kMap_" + fname;
+                // create a new map to stick to the tab using the settings from _baseMap
+                var nMap = new Map
+                {
+                    BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                    Dock = DockStyle.Fill,
+                    Visible = true,
+                    Projection = _baseMap.Projection,
+                    ViewExtents = _baseMap.ViewExtents
+                };
+                // create new dockable panel and stow that shit yo!
+                var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
+                cmbActiveMapTab.Items.Add(dp.Caption);
+                // add the new tab view to the main form and select it to activate
+                _appManager.DockManager.Add(dp);
+                _appManager.DockManager.SelectPanel(key);
+            }
+
+            // setup all interface events now
             FormClosing += AdminForm_Closed; // check for isdirty changes to project file
-            adminTab_Control.Selected += adminTab_Control_Selected;
-            // validate that project is saved before allowing indexing and views
             chkViewLayers.ItemCheck += chkViewLayers_ItemCheck; // add or remove item to specific map tab view
+
             // setup a background worker for update progress bar on indexing tab
             _idxWorker.DoWork += idx_DoWork;
             _idxWorker.ProgressChanged += idx_ProgressChanged;
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             // map tracking events on removal and addition of a layer
-            // _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
+            _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
             _baseMap.Layers.LayerAdded += LayersOnLayerAdded;
-            
-            // overall events tied to main application
-            _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
-            // active map or tool panel has been changed
-            _dirtyProject = false; // reset dirty flag after populating form
-        }
 
-        private void idx_DoWork(object sender, DoWorkEventArgs e)
-        {
-            IndexObject io = e.Argument as IndexObject;
-            // our worker for running the indexing operation
-            var worker = sender as BackgroundWorker;
-            // setup everything else we need to generate ouselves a lucene index
-            if (io != null)
-            {
-                IFeatureSet fl = io.FeatureSet;
-                Directory dir = FSDirectory.Open(new DirectoryInfo(_appManager.SerializationManager.CurrentProjectDirectory + "\\indexes\\" + io.LayerType));
-                for (int x = 0; x < fl.DataTable.Rows.Count; x++)
-                {
-                    if (worker != null && (worker.CancellationPending))
-                    {
-                        e.Cancel = true;
-                        break;
-                    }
-                    // grab a row from the datatable and index that shit
-                    DataRow dr = fl.DataTable.Rows[x];
-                    var doc = new Document();  // generate a document for indexing by lucene
-                    var list = io.FieldLookup;
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        doc.Add(new Field("FID", dr["FID"].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        // no need to run an analyzer on numbered values
-                        var kv = new KeyValuePair<string, string>();
-                        kv = list[i];
-                        if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
-                        {
-                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        }
-                        else  // run analyzer on all remaining field types
-                        {
-                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
-                        }
-                    }
-                    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-                    // either create a new index or update an existing index
-                    var writer = x == 0 ? new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) : new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
-                    writer.AddDocument(doc);
-                    writer.Optimize();
-                    writer.Dispose();
-                    // get the current ratio of the list we are indexing
-                    double ratio = (double)fl.DataTable.Rows.Count/100;
-                    // update the progress bar on the main thread interface
-                    int result = Convert.ToInt32((x + 1)/ratio);
-                    if (worker != null) worker.ReportProgress((result));
-                }
-            }
-        }
-
-        private void idx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if ((e.Cancelled == true))
-            {
-                idxProgressBar.Hide();
-                DeleteIndex();
-            }
-            else if (e.Error != null)
-            {
-                // TODO:this.tbProgress.Text = ("Error: " + e.Error.Message);
-                MessageBox.Show("Error");
-            }
-            idxProgressBar.Hide();
-        }
-
-        private void idx_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            // idxProgressBar.Text = (e.ProgressPercentage.ToString() + "%");
-            idxProgressBar.Value = e.ProgressPercentage;
+            _dirtyProject = false; // reset dirty flag after populating form on startup
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
@@ -276,7 +169,7 @@ namespace Go2It
 
         private void LayersOnLayerRemoved(object sender, LayerEventArgs layerEventArgs)
         {
-            /*var layer = (IMapLayer) layerEventArgs.Layer;
+            var layer = (IMapLayer) layerEventArgs.Layer;
             if (layer == null) return;
             string fileName;
             if (layer.GetType().Name == "MapImageLayer")
@@ -305,12 +198,14 @@ namespace Go2It
             foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
             {
                 var map = (Map) dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
+                foreach (var lyr in map.Layers)
+                {
+                    var k = lyr.DataSet.Name;
+                }
                 map.Layers.Remove(layer);
+                // now set the map back to itself
                 dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
-                // remove the old map from the maptab controls now and reset it (not sure if this is even needed)
-                dockPanelInfo.Value.DockPanelTab.Controls.Clear();
-                dockPanelInfo.Value.DockPanelTab.Controls.Add(dockPanelInfo.Value.DotSpatialDockPanel.InnerControl);
-            }*/
+            }
         }
 
         private static void Splitter_Paint(object sender, PaintEventArgs e)
@@ -360,8 +255,8 @@ namespace Go2It
             if (dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
                 var caption = dockInfo.DotSpatialDockPanel.Caption;
-                var idx = lstViews.Items.IndexOf(caption);
-                lstViews.SetSelected(idx, true);
+                var idx = cmbActiveMapTab.Items.IndexOf(caption);
+                cmbActiveMapTab.SelectedIndex = idx;
                 chkViewLayers.Items.Clear();
                 // populate all the layers available to the checkbox
                 foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
@@ -456,15 +351,15 @@ namespace Go2It
                     var mLayer = (IMapFeatureLayer) layer;
                     if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                     IFeatureSet fs = FeatureSet.Open(mLayer.DataSet.Filename);
-                    if (mLayer.DataSet.FeatureType.Equals(DotSpatial.Topology.FeatureType.Line))
+                    if (mLayer.DataSet.FeatureType.Equals(FeatureType.Line))
                     {
                         _lineLayers.Add(fs);
                     }
-                    if (mLayer.DataSet.FeatureType.Equals(DotSpatial.Topology.FeatureType.Point))
+                    if (mLayer.DataSet.FeatureType.Equals(FeatureType.Point))
                     {
                         _pointLayers.Add(fs);
                     }
-                    if (mLayer.DataSet.FeatureType.Equals(DotSpatial.Topology.FeatureType.Polygon))
+                    if (mLayer.DataSet.FeatureType.Equals(FeatureType.Polygon))
                     {
                         _polygonLayers.Add(fs);
                     }
@@ -473,14 +368,16 @@ namespace Go2It
             }
             SetupLayerSelectionSwitchers();
             SetActiveLayerSelections();
-            PopulateMapViews();
         }
 
         private void PopulateMapViews()
         {
             foreach (KeyValuePair<string, DockPanelInfo> dpi in _dockingControl.DockPanelLookup)
             {
-                lstViews.Items.Add(dpi.Value.DotSpatialDockPanel.Caption);
+                if (!cmbActiveMapTab.Items.Contains(dpi.Value.DotSpatialDockPanel.Caption))
+                {
+                    cmbActiveMapTab.Items.Add(dpi.Value.DotSpatialDockPanel.Caption);
+                }
             }
         }
 
@@ -604,12 +501,12 @@ namespace Go2It
         {
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
             var f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
-            if (mapLayer.FeatureType.Equals(DotSpatial.Topology.FeatureType.Line))
+            if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Add(mapLayer); // add to line layer list
                 chkRoadLayers.Items.Add(f);
             }
-            if (mapLayer.FeatureType.Equals(DotSpatial.Topology.FeatureType.Point))
+            if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
                 _pointLayers.Add(mapLayer); // add to point layer list
                 cmbNotesLayer.Items.Add(f);
@@ -623,7 +520,7 @@ namespace Go2It
                     chkKeyLocationsLayers.Items.Add(f);
                 }
             }
-            if (mapLayer.FeatureType.Equals(DotSpatial.Topology.FeatureType.Polygon))
+            if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
                 _polygonLayers.Add(mapLayer); // add to polygon layer list
                 cmbCityLimitLayer.Items.Add(f);
@@ -639,18 +536,22 @@ namespace Go2It
                     chkKeyLocationsLayers.Items.Add(f);
                 }
             }
+            chkViewLayers.Items.Add(f);
+            int idx = chkViewLayers.Items.IndexOf(f);
+            chkViewLayers.SelectedIndex = idx;
+            chkViewLayers.SetItemCheckState(idx, CheckState.Checked);
         }
 
         private void RemoveLayer(IFeatureSet mapLayer)
         {
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
             string f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
-            if (mapLayer.FeatureType.Equals(DotSpatial.Topology.FeatureType.Line))
+            if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Remove(mapLayer); // remove from layer list
                 chkRoadLayers.Items.Remove(f);
             }
-            if (mapLayer.FeatureType.Equals(DotSpatial.Topology.FeatureType.Point))
+            if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
                 _pointLayers.Remove(mapLayer); // remove from point layer list
                 if (cmbNotesLayer.Text == f)
@@ -672,7 +573,7 @@ namespace Go2It
                     chkKeyLocationsLayers.Items.Remove(f);
                 }
             }
-            if (mapLayer.FeatureType.Equals(DotSpatial.Topology.FeatureType.Polygon))
+            if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
                 _polygonLayers.Remove(mapLayer); // remove from polygon list
                 if (cmbCityLimitLayer.Text == f)
@@ -704,6 +605,7 @@ namespace Go2It
                     chkKeyLocationsLayers.Items.Remove(f);
                 }
             }
+            chkViewLayers.Items.Remove(f);
         }
 
         private bool ShowSaveProjectDialog()
@@ -840,46 +742,10 @@ namespace Go2It
 
         private void btnRemoveLayer_Click(object sender, EventArgs e)
         {
-            // remove layer from base map (fires event watcher of the basemap remove event)
             var layer = _baseMap.Layers.SelectedLayer;
             if (layer != null)
             {
-                string fileName;
-                if (layer.GetType().Name == "MapImageLayer")
-                {
-                    var mImage = (IMapImageLayer) layer;
-                    if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-                    fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                    if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
-                    _dirtyProject = true;
-                }
-                else
-                {
-                    var mLayer = (IMapFeatureLayer) layer;
-                    if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-                    fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                    if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
-                    _dirtyProject = true;
-                    // remove any layers that could be part of active config now
-                    if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
-                         mLayer.DataSet.FeatureType.ToString() != "Line" &&
-                         mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
-                    IFeatureSet fs = FeatureSet.Open(mLayer.DataSet.Filename);
-                    RemoveLayer(fs); // perform all form specific remove operations
-                }
-                // we need to cycle through all the available dockpanels check if the layer has been set on that map
-                foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
-                {
-                    var map = (Map) dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
-                    map.Layers.Remove(layer);
-                    dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
-                    // remove the old map from the maptab controls now and reset it (not sure if this is even needed)
-                    dockPanelInfo.Value.DockPanelTab.Controls.Clear();
-                    dockPanelInfo.Value.DockPanelTab.Controls.Add(dockPanelInfo.Value.DotSpatialDockPanel.InnerControl);
-                }
-
-                // originally we were using the event but moving layers in the legend add/removes.. fucking stupid shit fucktards
-                // _baseMap.Layers.Remove(layer);
+                _baseMap.Layers.Remove(layer);
             }
         }
 
@@ -1246,39 +1112,39 @@ namespace Go2It
             txtUsername.Text = lstUsers.Items[lstUsers.SelectedIndex].ToString();
         }
 
-        private void adminTab_Control_Selected(object sender, TabControlEventArgs e)
-        {
-            // only run the check on the view manager and index manager tabs
-            if (adminTab_Control.SelectedTab.Name == "adminTab_SearchProperties" ||
-                adminTab_Control.SelectedTab.Name == "adminTab_ViewManagement")
-            {
-                // verify the user has created the project file
-                if (ProjectExists())
-                {
-                    // to use views or indexing the project must be clean
-                    if (!ProjectIsClean(_dirtyProject))
-                    {
-                        adminTab_Control.SelectedIndex = 0;
-                    }
-                }
-                else // no project currently exists
-                {
-                    adminTab_Control.SelectedIndex = 0;
-                }
-            }
-            // populate form specific attribution now
-            if (adminTab_Control.SelectedTab.Name == "adminTab_SearchProperties")
-            {
-                cmbLayerIndex.Items.Clear();
-                AddLayersToIndex(chkAddressLayers);
-                AddLayersToIndex(chkRoadLayers);
-                AddLayersToIndex(chkKeyLocationsLayers);
-                AddLayersToIndex(cmbCellSectorLayer);
-                AddLayersToIndex(cmbCityLimitLayer);
-                AddLayersToIndex(cmbESNLayer);
-                AddLayersToIndex(cmbParcelsLayer);
-            }
-        }
+        //private void adminTab_Control_Selected(object sender, TabControlEventArgs e)
+        //{
+        //    // only run the check on the view manager and index manager tabs
+        //    if (adminTab_Control.SelectedTab.Name == "adminTab_SearchProperties" ||
+        //        adminTab_Control.SelectedTab.Name == "adminTab_ViewManagement")
+        //    {
+        //        // verify the user has created the project file
+        //        if (ProjectExists())
+        //        {
+        //            // to use views or indexing the project must be clean
+        //            if (!ProjectIsClean(_dirtyProject))
+        //            {
+        //                adminTab_Control.SelectedIndex = 0;
+        //            }
+        //        }
+        //        else // no project currently exists
+        //        {
+        //            adminTab_Control.SelectedIndex = 0;
+        //        }
+        //    }
+        //    // populate form specific attribution now
+        //    if (adminTab_Control.SelectedTab.Name == "adminTab_SearchProperties")
+        //    {
+        //        cmbLayerIndex.Items.Clear();
+        //        AddLayersToIndex(chkAddressLayers);
+        //        AddLayersToIndex(chkRoadLayers);
+        //        AddLayersToIndex(chkKeyLocationsLayers);
+        //        AddLayersToIndex(cmbCellSectorLayer);
+        //        AddLayersToIndex(cmbCityLimitLayer);
+        //        AddLayersToIndex(cmbESNLayer);
+        //        AddLayersToIndex(cmbParcelsLayer);
+        //    }
+        //}
 
         private void AddLayersToIndex(CheckedListBox chkBox)
         {
@@ -1297,6 +1163,18 @@ namespace Go2It
             }
         }
 
+        private IEnumerable<string> ReadIndexLines(string filePath)
+        {
+            using (StreamReader reader = File.OpenText(filePath))
+            {
+                string line = string.Empty;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
+            }
+        } 
+
         private DataTable GetLayerTypeIndexes(string layName)
         {
             var table = new DataTable();
@@ -1305,7 +1183,8 @@ namespace Go2It
             StringCollection sc = ApplyCheckBoxSetting(chkAddressLayers);
             if (sc.Contains(layName))
             {
-                foreach (string key in _addressIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\address_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1314,7 +1193,8 @@ namespace Go2It
             sc = ApplyCheckBoxSetting(chkRoadLayers);
             if (sc.Contains(layName))
             {
-                foreach (string key in _roadIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\road_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1323,7 +1203,8 @@ namespace Go2It
             sc = ApplyCheckBoxSetting(chkKeyLocationsLayers);
             if (sc.Contains(layName))
             {
-                foreach (string key in _keyLocationsIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\keyLocation_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1331,7 +1212,8 @@ namespace Go2It
             }
             if (layName == ApplyComboBoxSetting(cmbCityLimitLayer))
             {
-                foreach (string key in _cityLimitsIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\cityLimit_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1339,7 +1221,8 @@ namespace Go2It
             }
             if (layName == ApplyComboBoxSetting(cmbCellSectorLayer))
             {
-                foreach (string key in _cellSectorsIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\cellSector_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1347,7 +1230,8 @@ namespace Go2It
             }
             if (layName == ApplyComboBoxSetting(cmbESNLayer))
             {
-                foreach (string key in _esnsIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\esn_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1355,7 +1239,8 @@ namespace Go2It
             }
             if (layName == ApplyComboBoxSetting(cmbParcelsLayer))
             {
-                foreach (string key in _parcelsIndexes)
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\parcel_indexes.txt");
+                foreach (string key in file)
                 {
                     table.Rows.Add(key, "");
                 }
@@ -1589,7 +1474,7 @@ namespace Go2It
 
         private void chkViewLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            var clb = (CheckedListBox) sender;
+            var clb = (CheckedListBox)sender;
             if (clb.SelectedItem == null) return;
 
             var lyr = _localBaseMapLayerLookup[clb.SelectedItem.ToString()];
@@ -1607,22 +1492,6 @@ namespace Go2It
             _dirtyTabs = true;
         }
 
-        //public static ProjectionInfo DefaultProjection { get { return KnownCoordinateSystems.Projected.World.WebMercator; } }
-
-        //public Envelope DefaultMapExtents()
-        //{
-        //    var defaultMapExtent = new Envelope(-130, -60, 10, 55);
-        //    var xy = new double[4];
-        //    xy[0] = defaultMapExtent.Minimum.X;
-        //    xy[1] = defaultMapExtent.Minimum.Y;
-        //    xy[2] = defaultMapExtent.Maximum.X;
-        //    xy[3] = defaultMapExtent.Maximum.Y;
-        //    var z = new double[] { 0, 0 };
-        //    ProjectionInfo wgs84 = KnownCoordinateSystems.Geographic.World.WGS1984;
-        //    Reproject.ReprojectPoints(xy, z, wgs84, DefaultProjection, 0, 2);
-        //    return new Envelope(xy[0], xy[2], xy[1], xy[3]);
-        //}
-
         private void btnAddView_Click(object sender, EventArgs e)
         {
             if (txtViewName.Text.Length <= 0) return;
@@ -1632,47 +1501,47 @@ namespace Go2It
             var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
             fname = fname.Replace(" ", "");
             var key = "kMap_" + fname;
-            if (lstViews.Items.Contains(txt))
+            if (cmbActiveMapTab.Items.Contains(txt))
             {
                 // this map tab already exists
                 _appManager.DockManager.SelectPanel(key);
                 return;
             }
-            lstViews.Items.Add(txt);
+            cmbActiveMapTab.Items.Add(txt);
             // create a new map to stick to the tab using the settings from _baseMap
             var nMap = new Map
             {
                 BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                 Dock = DockStyle.Fill,
                 Visible = true,
-                // Projection = _baseMap.Projection,
-                // ViewExtents = _baseMap.ViewExtents
+                Projection = _baseMap.Projection,
+                ViewExtents = _baseMap.ViewExtents
             };
             // create new dockable panel and stow that shit yo!
             var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
             _appManager.DockManager.Add(dp);
             _appManager.DockManager.SelectPanel(key);
-            _dirtyTabs = true;
         }
 
         private void btnRemoveView_Click(object sender, EventArgs e)
         {
-            if (lstViews.SelectedItem == null) return;
-            if (lstViews.SelectedItem.ToString().Length <= 0) return;
-            var txt = lstViews.SelectedItem.ToString();
+            if (cmbActiveMapTab.SelectedItem == null) return;
+            if (cmbActiveMapTab.SelectedItem.ToString().Length <= 0) return;
+            var txt = cmbActiveMapTab.SelectedItem.ToString();
             // clean the filename for a key value
             var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
             fname = fname.Replace(" ", "");
             var key = "kMap_" + fname;
             // remove the dockpanel now (which will also kill the map and tab)
             _appManager.DockManager.Remove(key);
-            lstViews.Items.Remove(txt);
-            // auto updates with next selected panel, if no panels then wipe the list
-            if (lstViews.Items.Count == 0)
+            cmbActiveMapTab.Items.Remove(txt);
+            if (_dockingControl.DockPanelLookup.Count == 0)
             {
-                chkViewLayers.Items.Clear();
+                for (int i = 0; i < chkViewLayers.Items.Count; i++)
+                {
+                    chkViewLayers.SetItemCheckState(i, (CheckState.Unchecked));
+                }
             }
-            _dirtyTabs = true;
         }
 
         private void cmbCityLimitLayer_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1722,12 +1591,36 @@ namespace Go2It
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine(_appManager.Map.ViewExtents.ToString());
-            Debug.WriteLine(_baseMap.ViewExtents.ToString());
-            Debug.WriteLine(_appManager.Map.Extent.ToString());
-            Debug.WriteLine(_baseMap.Extent.ToString());
-            Debug.WriteLine(_appManager.Map.Projection.ToEsriString());
-            Debug.WriteLine(_baseMap.Projection.ToEsriString());
+            // AppManager Map
+            Debug.WriteLine("_appManager.Map.Bounds: " + _appManager.Map.Bounds.ToString());
+            Debug.WriteLine("_appManager.Map.Extent: " + _appManager.Map.Extent.ToString());
+            Debug.WriteLine("_appManager.Map.GetMaxExtent: " + _appManager.Map.GetMaxExtent().ToString());
+            Debug.WriteLine("_appManager.Map.Projection.ToProj4String: " +  _appManager.Map.Projection.ToProj4String());
+            Debug.WriteLine("_appManager.Map.Projection: " + _appManager.Map.Projection.ToString());
+            Debug.WriteLine("_appManager.Map.ViewExtents: " + _appManager.Map.ViewExtents.ToString());
+            // AppManager MapFrame
+            Debug.WriteLine("_appManager.Map.MapFrame.Extent: " + _appManager.Map.MapFrame.Extent.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.GeographicExtents: " + _appManager.Map.MapFrame.GeographicExtents.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.Projection.ToProj4String: " + _appManager.Map.MapFrame.Projection.ToProj4String());
+            Debug.WriteLine("_appManager.Map.MapFrame.Projection: " + _appManager.Map.MapFrame.Projection.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.ProjectionString: " + _appManager.Map.MapFrame.ProjectionString);
+            Debug.WriteLine("_appManager.Map.MapFrame.View: " + _appManager.Map.MapFrame.View.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.ViewExtents: " + _appManager.Map.MapFrame.ViewExtents.ToString());
+            // BaseMap Map
+            Debug.WriteLine("_baseMap.Bounds: " + _baseMap.Bounds.ToString());
+            Debug.WriteLine("_baseMap.Extent: " + _baseMap.Extent.ToString());
+            Debug.WriteLine("_baseMap.GetMaxExtent: " + _baseMap.GetMaxExtent().ToString());
+            Debug.WriteLine("_baseMap.Projection.ToProj4String: " + _baseMap.Projection.ToProj4String());
+            Debug.WriteLine("_baseMap.Projection: " + _baseMap.Projection.ToString());
+            Debug.WriteLine("_baseMap.ViewExtents: " + _baseMap.ViewExtents.ToString());
+            // AppManager MapFrame
+            Debug.WriteLine("_baseMap.MapFrame.Extent: " + _baseMap.MapFrame.Extent.ToString());
+            Debug.WriteLine("_baseMap.MapFrame.GeographicExtents: " + _baseMap.MapFrame.GeographicExtents.ToString());
+            Debug.WriteLine("_baseMap.MapFrame.Projection: " + _baseMap.MapFrame.Projection.ToProj4String());
+            Debug.WriteLine("_baseMap.MapFrame.Projection: " + _baseMap.MapFrame.Projection.ToString());
+            Debug.WriteLine("_baseMap.MapFrame.ProjectionString: " + _baseMap.MapFrame.ProjectionString);
+            Debug.WriteLine("_baseMap.MapFrame.View: " + _baseMap.MapFrame.View.ToString());
+            Debug.WriteLine("_baseMap.MapFrame.ViewExtents: " + _baseMap.MapFrame.ViewExtents.ToString());
         }
 
         private void btnIndexCancel_Click(object sender, EventArgs e)
@@ -1750,5 +1643,92 @@ namespace Go2It
                 LayerType = layerType;
             }
         }
+
+        private void cmbActiveMapTab_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var txt = cmbActiveMapTab.SelectedItem.ToString();
+            // clean the filename for a key value
+            var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
+            fname = fname.Replace(" ", "");
+            var key = "kMap_" + fname;
+            if (cmbActiveMapTab.Items.Contains(txt))
+            {
+                _appManager.DockManager.SelectPanel(key);
+            }
+        }
+
+
+        private void idx_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var io = e.Argument as IndexObject;
+            // our worker for running the indexing operation
+            var worker = sender as BackgroundWorker;
+            // setup everything else we need to generate ouselves a lucene index
+            if (io != null)
+            {
+                IFeatureSet fl = io.FeatureSet;
+                Directory dir = FSDirectory.Open(new DirectoryInfo(_appManager.SerializationManager.CurrentProjectDirectory + "\\indexes\\" + io.LayerType));
+                for (int x = 0; x < fl.DataTable.Rows.Count; x++)
+                {
+                    if (worker != null && (worker.CancellationPending))
+                    {
+                        e.Cancel = true;
+                        break;
+                    }
+                    // grab a row from the datatable and index that shit
+                    DataRow dr = fl.DataTable.Rows[x];
+                    var doc = new Document();  // generate a document for indexing by lucene
+                    var list = io.FieldLookup;
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        doc.Add(new Field("FID", dr["FID"].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        // no need to run an analyzer on numbered values
+                        var kv = new KeyValuePair<string, string>();
+                        kv = list[i];
+                        if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
+                        {
+                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        }
+                        else  // run analyzer on all remaining field types
+                        {
+                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
+                        }
+                    }
+                    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+                    // either create a new index or update an existing index
+                    var writer = x == 0 ? new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) : new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
+                    writer.AddDocument(doc);
+                    writer.Optimize();
+                    writer.Dispose();
+                    // get the current ratio of the list we are indexing
+                    double ratio = (double)fl.DataTable.Rows.Count / 100;
+                    // update the progress bar on the main thread interface
+                    int result = Convert.ToInt32((x + 1) / ratio);
+                    if (worker != null) worker.ReportProgress((result));
+                }
+            }
+        }
+
+        private void idx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                idxProgressBar.Hide();
+                DeleteIndex();
+            }
+            else if (e.Error != null)
+            {
+                // TODO:this.tbProgress.Text = ("Error: " + e.Error.Message);
+                MessageBox.Show("Error");
+            }
+            idxProgressBar.Hide();
+        }
+
+        private void idx_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // idxProgressBar.Text = (e.ProgressPercentage.ToString() + "%");
+            idxProgressBar.Value = e.ProgressPercentage;
+        }
+
     }
 }

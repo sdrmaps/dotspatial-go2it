@@ -135,7 +135,7 @@ namespace Go2It
             // go ahead and set the database to proper location
             string dbFileName = Path.ChangeExtension(App.SerializationManager.CurrentProjectFile, "sqlite");
             // check if it exists, create a default db if not (this really shouldnt be happening -> user lost the db)
-            if (!ValidateDatabase(dbFileName))
+            if (!DatabaseExists(dbFileName))
             {
                 MessageBox.Show(@"Database is missing, a new default DB has been created");
                 CreateNewDatabase(dbFileName);
@@ -286,12 +286,6 @@ namespace Go2It
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
         }
 
-        //checks if the db exists. Also checks the db schema
-        private static bool ValidateDatabase(string dbFileName)
-        {
-            // check if db exists
-            return SQLiteHelper.DatabaseExists(dbFileName);
-        }
 
         /// <summary>
         /// Creates a new 'empty' project

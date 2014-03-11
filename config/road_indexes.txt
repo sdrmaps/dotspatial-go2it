@@ -1,0 +1,11 @@
+Pre Directional
+Pre Type
+Street Name
+Street Type
+Post Directional
+Right Zip Community
+Left Zip Community
+Right MSAG Community
+Left MSAG Community
+Other 1
+Other 2

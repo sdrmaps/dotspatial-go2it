@@ -1,0 +1,15 @@
+First Name
+Last Name
+Structure Number
+Pre Directional
+Pre Type
+Street Name
+Street Type
+Post Directional
+Sub Unit Type
+Sub Unit Designation
+Community
+Phone
+Aux. Phone
+Other 1
+Other 2

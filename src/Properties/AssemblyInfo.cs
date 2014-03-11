@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Go2It")]
-[assembly: AssemblyDescription("SDR Emergency Locationing System")]
+[assembly: AssemblyDescription("SDR Emergency Location System")]
 [assembly: AssemblyProduct("Go2It")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

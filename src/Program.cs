@@ -45,7 +45,6 @@ namespace Go2It
                     };
 
             log.Info("Application Started");
-            // var mainForm = new MainForm();
             var mainForm = new MainForm();
             if (args.Length > 0 && File.Exists(args[0]))
             {

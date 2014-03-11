@@ -2,14 +2,12 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.SDR.Controls;
 using Go2It.Properties;
 using SdrConfig = SDR.Configuration;
-using SDR.Data.Database;
 
 namespace Go2It
 {
@@ -20,7 +18,7 @@ namespace Go2It
 
         private StartUpForm _startUpForm;
         private ProjectManager _projManager;
-        private CoordinateDisplay _latLongDisplay;
+        // private CoordinateDisplay _latLongDisplay;
         // private SelectionStatusDisplay selectionDisplay;
 
         public override void Activate()
@@ -40,7 +38,7 @@ namespace Go2It
             // selectionDisplay = new SelectionStatusDisplay(App);
 
             //show latitude, longitude coordinate display
-            _latLongDisplay = new CoordinateDisplay(App);
+            // _latLongDisplay = new CoordinateDisplay(App);
             base.Activate();
         }
 
@@ -52,7 +50,7 @@ namespace Go2It
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
             if (App.Map.Projection != null)
             {
-                _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
+                // _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
         }
 
@@ -135,7 +133,7 @@ namespace Go2It
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
             if (App.Map.Projection != null)
             {
-                _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
+                // _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
         }
 
@@ -163,7 +161,7 @@ namespace Go2It
         {
             // check the map for a coordinate/projection system
             //setup the lat, long coordinate display
-            _latLongDisplay.ShowCoordinates = true;
+            // _latLongDisplay.ShowCoordinates = true;
             // set focus to the main application window
             Shell.Focus();
         }

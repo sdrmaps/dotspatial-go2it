@@ -16,8 +16,6 @@ namespace Go2It
         [Import("Shell", typeof(ContainerControl))]
         private ContainerControl Shell { get; set; }
 
-        // private TableLayoutPanel _buttonPanel;
-
         #region IPartImportsSatisfiedNotification
 
         public void OnImportsSatisfied()

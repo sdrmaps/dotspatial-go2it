@@ -57,8 +57,8 @@ IF /I "%1"=="--Help" (
     goto SETBUILDPATH
 
 :SETBUILDPATH
-    IF "%TYPE%"=="Release" ( SET "BUILDPATH=..\Build\%CONFIG%\%PRODUCT%" )
-    IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\Build\%CONFIG%" )
+    IF "%TYPE%"=="Release" ( SET "BUILDPATH=..\build\%CONFIG%\%PRODUCT%" )
+    IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
     goto SETVERSION
 	
 :RELEASE
@@ -102,7 +102,7 @@ IF /I "%1"=="--Help" (
 
 :COMPILE
     ECHO.
-    ECHO Begin Compilation of Application Components
+    ECHO Compile Application Components
     ECHO.
     REM If cleaning then do the application first to properly unregister from COM (if so it will happen in the proj file)
     IF /I "%TYPE%"=="Clean" (
@@ -140,7 +140,9 @@ IF /I "%1"=="--Help" (
 	    )
 	)
     )
-    ECHO Compile Actual Application
+    ECHO.
+    ECHO Compile Application
+    ECHO.
     IF "%TYPE%"=="Release" (
         REM In release mode we need to make sure to assign a version number using jenkins
         msbuild.exe /p:BuildInfo=%BUILD_INFO%;Version=%VERSION% AssemblyInfo\Versioning.proj
@@ -155,17 +157,23 @@ IF /I "%1"=="--Help" (
             goto END ))
 
 :UPDATEHARVEST
+    ECHO.
+    ECHO Update Component and Plugin Harvest
+    ECHO.
     REM Update all the paraffin files before running wix
     IF EXIST "..\install\ProductBinariesFragment.PARAFFIN" ( Tools\paraffin\Paraffin.exe -update "..\install\ProductBinariesFragment.PARAFFIN" ) ELSE (
-		Tools\paraffin\Paraffin.exe -d %BUILDPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDR_DIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
-	REM Check if an actual ProductBinariesFragment for WIX exists
-	IF NOT EXIST "..\install\ProductBinariesFragment.wxs" ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
-	REM Check if the to fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
-	Tools\xmldiff\xmldiff.exe "..\install\ProductBinariesFragment.wxs" "..\install\ProductBinariesFragment.PARAFFIN"
-	IF NOT %ERRORLEVEL%==0  ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
+        Tools\paraffin\Paraffin.exe -d %BUILDPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDR_DIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
+    REM Check if an actual ProductBinariesFragment for WIX exists
+    IF NOT EXIST "..\install\ProductBinariesFragment.wxs" ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
+    REM Check if the to fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
+    Tools\xmldiff\xmldiff.exe "..\install\ProductBinariesFragment.wxs" "..\install\ProductBinariesFragment.PARAFFIN"
+    IF NOT %ERRORLEVEL%==0  ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
     goto CREATEINSTALL
 
 :CREATEINSTALL
+    ECHO.
+    ECHO Create Installer
+    ECHO.
     REM Run wix for updating the file fragments and creating a new installer
     msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\install\%PRODUCT%.Install.sln
     IF NOT %ERRORLEVEL%==0 ( goto HALT )
@@ -175,14 +183,16 @@ IF /I "%1"=="--Help" (
     goto ZIPARTIFACTS
 	
 :ZIPARTIFACTS
-    ECHO zip all build artifacts for archiving
-	REM make sure that the archive directory is available
-	RD /S/Q "..\Archive\%PRODUCT%\"
-	IF NOT EXIST "..\Archive\%PRODUCT%\" ( MD "..\Archive\%PRODUCT%" )
-	COPY /Y "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\Archive\%PRODUCT%"
-	RD /S/Q "%BUILDPATH%\en-us"
-	Tools\7zip\7za.exe -r a ..\Archive\%PRODUCT%\%VERSION%.%BUILD_INFO%.zip %BUILDPATH%\*
-	goto DELETEFILES
+    ECHO.
+    ECHO Zip all build artifacts for archiving
+    ECHO.
+    REM make sure that the archive directory is available
+    RD /S/Q "..\archive\%PRODUCT%\"
+    IF NOT EXIST "..\archive\%PRODUCT%\" ( MD "..\archive\%PRODUCT%" )
+    COPY /Y "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\archive\%PRODUCT%"
+    RD /S/Q "%BUILDPATH%\en-us"
+    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%.zip %BUILDPATH%\*
+    goto DELETEFILES
 
 :COPYFILES
     ECHO.
@@ -190,14 +200,16 @@ IF /I "%1"=="--Help" (
     ECHO.
     REM check that the build directory exists, create it if missing
     IF NOT EXIST %BUILDPATH% ( MD %BUILDPATH% )
-    REM copy all the configuration files to product location
-    XCOPY /Y /S /E "..\config\*" %BUILDPATH%
+    REM check that the config directory exists, create if missing
+    IF NOT EXIST "%BUILDPATH%\Config" ( MD "%BUILDPATH%\Config" )
+    REM copy all the configuration files to product config location
+    XCOPY /Y /S /E "..\config\*" "%BUILDPATH%\Config"
     REM Copy in the License file
     XCOPY /Y "..\install\License.rtf" %BUILDPATH%
     REM Copy in the Manual file
     REM TODO XCOPY /Y /S "docs" %BUILDPATH%
     REM Delete any files or directories with underscore at start of name (do not included in build)
-    SET "DEL_MATCH=%BUILDPATH%\_*"
+    SET "DEL_MATCH=%BUILDPATH%\Config\_*"
     DEL /S %DEL_MATCH%
     IF "%TYPE%"=="Release" ( goto UPDATEHARVEST )
     IF "%CONFIG%"=="Debug" ( goto COMPILE )

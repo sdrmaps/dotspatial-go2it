@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using SDR.Common;
+using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -24,6 +26,7 @@ namespace Go2It
         public MainForm()
         {
             InitializeComponent();
+            var log = AppContext.Instance.Get<ILog>();
             AppManager = new AppManager
             {
                 // map placeholder on app manager, used to swap out active map views using tab interface
@@ -33,6 +36,10 @@ namespace Go2It
                     Visible = true
                 }
             };
+            log.Info("Startup -> AppManager.Map.Projection: " + AppManager.Map.Projection.ToProj4String());
+            log.Info("Startup -> AppManager.Map.MapFrame.ProjectionString: " + AppManager.Map.MapFrame.ProjectionString);
+            log.Info("Startup -> AppManager.Map.Extent: " + AppManager.Map.Extent);
+            log.Info("Startup -> AppManager.Map.ViewExtents: " + AppManager.Map.ViewExtents);
             _shell = this;
             AppManager.LoadExtensions();
         }
