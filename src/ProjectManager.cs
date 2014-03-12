@@ -469,6 +469,41 @@ namespace Go2It
             return null;
         }
 
+        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+            // If the destination directory doesn't exist, create it. 
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+            // If copying subdirectories, copy them and their contents to new location. 
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
         public void SavingProject()
         {
             string projectFileName = App.SerializationManager.CurrentProjectFile;
@@ -479,13 +514,23 @@ namespace Go2It
 
             // check for a project level database
             string newDbPath = Path.ChangeExtension(projectFileName, ".sqlite");
+            string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + "indexes";
+
             string currentDbPath = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(currentDbPath);
+            var currentDirPath = Path.Combine(d, "indexes");
+
             if (newDbPath != currentDbPath)
             {
                 // copy db to new path. If no db exists, create new db in the new location
                 if (SQLiteHelper.DatabaseExists(currentDbPath))
                 {
                     File.Copy(currentDbPath, newDbPath, true);
+                    // check if there are any index files available copy them if so
+                    if (Directory.Exists(currentDirPath))
+                    {
+                        DirectoryCopy(currentDirPath, newDirPath, true);
+                    }
                 }
                 else
                 {

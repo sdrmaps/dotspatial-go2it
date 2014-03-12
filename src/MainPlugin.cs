@@ -46,6 +46,8 @@ namespace Go2It
         {
             // save the project 
             _projManager.SavingProject();
+
+
             // TODO: look into if these are both functioning correctly
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
             if (App.Map.Projection != null)

@@ -723,20 +723,25 @@ namespace Go2It
 
         private void btnSplitSave_Click(object sender, EventArgs e)
         {
-            if (btnSplitSave.Text == @"Save")
-            {
-                if (String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
+            if (_idxWorker.IsBusy != true)
+                if (btnSplitSave.Text == @"Save")
                 {
-                    SaveProjectAs();
+                    if (String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
+                    {
+                        SaveProjectAs();
+                    }
+                    else
+                    {
+                        SaveProject(_appManager.SerializationManager.CurrentProjectFile);
+                    }
                 }
                 else
                 {
-                    SaveProject(_appManager.SerializationManager.CurrentProjectFile);
+                    SaveProjectAs();
                 }
-            }
             else
             {
-                SaveProjectAs();
+                MessageBox.Show(@"Layer Indexing Operation is running, please wait or cancel to process");
             }
         }
 
@@ -756,7 +761,7 @@ namespace Go2It
 
         private void ApplyProjectSettings()
         {
-            // set the baselayer lookup to the temp one we will be using on the admin form
+            // set the baselayer lookup to the localized one used by the admin form
             _dockingControl.BaseLayerLookup.Clear();
             foreach (KeyValuePair<string, IMapLayer> keyValuePair in _localBaseMapLayerLookup)
             {
@@ -780,7 +785,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer = ApplyComboBoxSetting(cmbHydrantsLayer);
             // set the map background color
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = mapBGColorPanel.BackColor;
-            // active map panel and caption will already be set / no need to fuss with that shit
+            // active map panel key and caption are set on active panel changes already
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -810,16 +815,16 @@ namespace Go2It
                     ShowSaveSettingsError(msg);
                     return false;
                 }
-                // apply go2it setting to the app settings  later saved to dbase by project manager on serialization event
+                // apply go2it setting to the app settings
+                // later this is saved to dbase by project manager on serialization event fired just below
                 ApplyProjectSettings();
-                // swap the active map out with our base map now (so we serialize all layers to project xml file)
+                // swap the active map out with our base map now -> all layers will be serialized (not just active ones)
                 var tMap = _appManager.Map;
                 _appManager.Map = _baseMap;
                 _appManager.SerializationManager.SaveProject(fileName);
-                // reset the orginal map back to the active map
+                // reset our orginal map view back to the active map
                 _appManager.Map = tMap;
                 _dirtyProject = false;
-                // _dirtyTabs = false;
                 return true;
             }
             catch (XmlException)
@@ -1393,12 +1398,8 @@ namespace Go2It
 
             var lyrName = cmbLayerIndex.SelectedItem.ToString();
             var lyrType = GetLayerIndexTable(lyrName);
-            var d = Path.GetDirectoryName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            // remove the datasource string portion of the repo connection string
-            if (d.StartsWith("data source="))
-            {
-                d = d.Substring(12);
-            }
+            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(db);
             var path = Path.Combine(d, "indexes", lyrType);
             if (System.IO.Directory.Exists(path))
             {
@@ -1758,12 +1759,8 @@ namespace Go2It
             if (io != null)
             {
                 IFeatureSet fl = io.FeatureSet;
-                var d = Path.GetDirectoryName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-                // remove the datasource string portion of the repo connection string
-                if (d.StartsWith("data source="))
-                {
-                    d = d.Substring(12);
-                }
+                var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+                var d = Path.GetDirectoryName(db);
                 var path = Path.Combine(d, "indexes", io.LayerType);
                 DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
                 Directory dir = FSDirectory.Open(di);
