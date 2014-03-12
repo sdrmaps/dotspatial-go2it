@@ -197,6 +197,34 @@
       <DependentUpon>UserLegendForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\defaultDatabase.sqlite" />
+    <Content Include="..\config\address_indexes.txt">
+      <Link>Config\address_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\config\cellSector_indexes.txt">
+      <Link>Config\cellSector_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\config\cityLimit_indexes.txt">
+      <Link>Config\cityLimit_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\config\esn_indexes.txt">
+      <Link>Config\esn_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\config\keyLocation_indexes.txt">
+      <Link>Config\keyLocation_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\config\parcel_indexes.txt">
+      <Link>Config\parcel_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\config\road_indexes.txt">
+      <Link>Config\road_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\filenew_16.png" />
     <Content Include="Resources\filenew_32.png" />
     <Content Include="Resources\go2it2.ico" />

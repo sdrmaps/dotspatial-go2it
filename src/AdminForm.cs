@@ -197,10 +197,6 @@ namespace Go2It
             foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
             {
                 var map = (Map) dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
-                foreach (var lyr in map.Layers)
-                {
-                    var k = lyr.DataSet.Name;
-                }
                 map.Layers.Remove(layer);
                 // now set the map back to itself
                 dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
@@ -1259,10 +1255,17 @@ namespace Go2It
             dgvLayerIndex.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
 
             // add all the data field columns to the checkbox list
-            IFeatureSet fl = GetLayerByName(lyrName);
-            foreach (DataColumn dc in fl.DataTable.Columns)
+            IMapLayer mapLyr;
+            _localBaseMapLayerLookup.TryGetValue(lyrName, out mapLyr);
+
+            IMapFeatureLayer mfl = mapLyr as IMapFeatureLayer;
+            if (mfl != null && mfl.DataSet != null)
             {
-                chkLayerIndex.Items.Add(dc.ColumnName);
+                IFeatureSet fl = mfl.DataSet;
+                foreach (DataColumn dc in fl.DataTable.Columns)
+                {
+                    chkLayerIndex.Items.Add(dc.ColumnName);
+                }
             }
             // determine what type of layer we have and set lookup indexes
             string lyrIndexTable = GetLayerIndexTable(lyrName);
