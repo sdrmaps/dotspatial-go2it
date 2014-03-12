@@ -311,10 +311,13 @@ namespace Go2It
         public void SetupDatabase()
         {
             // the 'default' database path is a temporary db file, it is not for use on actual projects
-            string dataRepositoryTempFile = string.Format("NewProject_{0}_{1}{2}.sqlite",
-                DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour, DateTime.Now.Minute);
-            // find or create a temp directory to hold the basic info
-            string tempDir = SdrConfig.ConfigurationHelper.FindOrCreateTempDirectory(Resources.AppName);
+            var unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour, DateTime.Now.Minute);
+            string dataRepositoryTempFile = unqTmpId + ".sqlite";
+
+            // find or create a temp directory to hold the db and any possible indexes
+            string tempDir = SdrConfig.ConfigurationHelper.FindOrCreateTempDirectory(
+                SdrConfig.Settings.Instance.ApplicationName + "\\" + unqTmpId);
+
             // setup the basic datarepo path
             string dataRepositoryPath = Path.Combine(tempDir, dataRepositoryTempFile);
             // validate we can write to temp access directory

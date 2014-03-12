@@ -465,29 +465,6 @@ namespace Go2It
             }
         }
 
-        private IFeatureSet GetLayerByName(string layName)
-        {
-            if (_lineLayers.Count > 0)
-            {
-                foreach (IFeatureSet fl in _lineLayers)
-                {
-                    if (Path.GetFileNameWithoutExtension(fl.Filename) == layName) return fl;
-                }
-            }
-            if (_pointLayers.Count > 0)
-            {
-                foreach (IFeatureSet fl in _pointLayers)
-                {
-                    if (Path.GetFileNameWithoutExtension(fl.Filename) == layName) return fl;
-                }
-            }
-            if (_polygonLayers.Count > 0)
-            {
-                return _polygonLayers.FirstOrDefault(fl => Path.GetFileNameWithoutExtension(fl.Filename) == layName);
-            }
-            return null;
-        }
-
         /// <summary>
         /// Handle all form elements when a new layer is added to the project
         /// </summary>
@@ -1111,7 +1088,7 @@ namespace Go2It
         {
             using (StreamReader reader = File.OpenText(filePath))
             {
-                string line = string.Empty;
+                string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     yield return line;
@@ -1125,7 +1102,7 @@ namespace Go2It
             table.Columns.Add("lookup");
             table.Columns.Add("fieldname");
             StringCollection sc = ApplyCheckBoxSetting(chkAddressLayers);
-            if (sc.Contains(layName))
+            if (sc != null && sc.Contains(layName))
             {
                 var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\address_indexes.txt");
                 foreach (string key in file)
@@ -1135,7 +1112,7 @@ namespace Go2It
                 return table;
             }
             sc = ApplyCheckBoxSetting(chkRoadLayers);
-            if (sc.Contains(layName))
+            if (sc != null && sc.Contains(layName))
             {
                 var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\road_indexes.txt");
                 foreach (string key in file)
@@ -1196,33 +1173,34 @@ namespace Go2It
         private String GetLayerIndexTable(string layName)
         {
             StringCollection sc = ApplyCheckBoxSetting(chkAddressLayers);
-            if (sc.Contains(layName))
+
+            if (sc != null && sc.Contains(layName))
             {
                 return "AddressIndex";
             }
             sc = ApplyCheckBoxSetting(chkRoadLayers);
-            if (sc.Contains(layName))
+            if (sc != null && sc.Contains(layName))
             {
                 return "RoadIndex";
             }
             sc = ApplyCheckBoxSetting(chkKeyLocationsLayers);
-            if (sc.Contains(layName))
+            if (sc != null && sc.Contains(layName))
             {
                 return "KeyLocationIndex";
             }
-            if (layName == ApplyComboBoxSetting(cmbCityLimitLayer))
+            if (sc != null && layName == ApplyComboBoxSetting(cmbCityLimitLayer))
             {
                 return "CityLimitIndex";
             }
-            if (layName == ApplyComboBoxSetting(cmbCellSectorLayer))
+            if (sc != null && layName == ApplyComboBoxSetting(cmbCellSectorLayer))
             {
                 return "CellSectorIndex";
             }
-            if (layName == ApplyComboBoxSetting(cmbESNLayer))
+            if (sc != null && layName == ApplyComboBoxSetting(cmbESNLayer))
             {
                 return "EsnIndex";
             }
-            if (layName == ApplyComboBoxSetting(cmbParcelsLayer))
+            if (sc != null && layName == ApplyComboBoxSetting(cmbParcelsLayer))
             {
                 return "ParcelIndex";
             }
@@ -1258,7 +1236,7 @@ namespace Go2It
             IMapLayer mapLyr;
             _localBaseMapLayerLookup.TryGetValue(lyrName, out mapLyr);
 
-            IMapFeatureLayer mfl = mapLyr as IMapFeatureLayer;
+            var mfl = mapLyr as IMapFeatureLayer;
             if (mfl != null && mfl.DataSet != null)
             {
                 IFeatureSet fl = mfl.DataSet;
@@ -1360,8 +1338,20 @@ namespace Go2It
                             list.Add(kv);
                         }
                     }
-                    // setup everything else we need to generate ouselves a lucene index                  
-                    IFeatureSet fs = GetLayerByName(lyrName);
+                    // setup everything else we need to generate ouselves a lucene index      
+                    IMapLayer mapLyr;
+                    _localBaseMapLayerLookup.TryGetValue(lyrName, out mapLyr);
+                    var mfl = mapLyr as IMapFeatureLayer;
+                    IFeatureSet fs;
+                    if (mfl != null && mfl.DataSet != null)
+                    {
+                        fs = mfl.DataSet;
+                    }
+                    else
+                    {
+                        // TODO: account for some sort of logging and inform the user of the issues here
+                        return;
+                    }
                     // make sure we have a fid value for lookup
                     fs.AddFid();  // make sure this featureset has FID values for lookup
                     fs.Save();
@@ -1377,8 +1367,7 @@ namespace Go2It
                     SQLiteHelper.ClearTable(conn, lyrType);
                     for (int i = 0; i < io.FieldLookup.Count; i++)
                     {
-                        var kv = new KeyValuePair<string, string>();
-                        kv = io.FieldLookup[i];
+                        var kv = io.FieldLookup[i];
                         var d = new Dictionary<string, string>
                         {
                             {"lookup", kv.Key},
@@ -1400,27 +1389,33 @@ namespace Go2It
 
         private void DeleteIndex()
         {
-            if (cmbLayerIndex.SelectedItem.ToString().Length > 0)
+            if (cmbLayerIndex.SelectedItem.ToString().Length <= 0) return;
+
+            var lyrName = cmbLayerIndex.SelectedItem.ToString();
+            var lyrType = GetLayerIndexTable(lyrName);
+            var d = Path.GetDirectoryName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            // remove the datasource string portion of the repo connection string
+            if (d.StartsWith("data source="))
             {
-                string lyrName = cmbLayerIndex.SelectedItem.ToString();
-                string lyrType = GetLayerIndexTable(lyrName);
-                if (System.IO.Directory.Exists(_appManager.SerializationManager.CurrentProjectDirectory + "\\" + "indexes\\" + lyrType))
-                {
-                    System.IO.Directory.Delete(_appManager.SerializationManager.CurrentProjectDirectory + "\\" + "indexes\\" + lyrType, true);
-                }
-                string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-                SQLiteHelper.ClearTable(conn, lyrType);
-                // reset the existing table
-                DataGridViewRowCollection rows = dgvLayerIndex.Rows;
-                foreach (DataGridViewRow row in rows)
-                {
-                    row.Cells[1].Value = string.Empty;
-                }
-                foreach (int i in chkLayerIndex.CheckedIndices)
-                {
-                    chkLayerIndex.SetItemCheckState(i, CheckState.Unchecked);
-                }
-            } 
+                d = d.Substring(12);
+            }
+            var path = Path.Combine(d, "indexes", lyrType);
+            if (System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.Delete(path, true);
+            }
+            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            SQLiteHelper.ClearTable(conn, lyrType);
+            // reset the existing table
+            DataGridViewRowCollection rows = dgvLayerIndex.Rows;
+            foreach (DataGridViewRow row in rows)
+            {
+                row.Cells[1].Value = string.Empty;
+            }
+            foreach (int i in chkLayerIndex.CheckedIndices)
+            {
+                chkLayerIndex.SetItemCheckState(i, CheckState.Unchecked);
+            }
         }
 
         private void chkViewLayers_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -1440,7 +1435,6 @@ namespace Go2It
                 _appManager.Map.Layers.Remove(lyr);
             }
             _appManager.Map.Invalidate();
-            // _dirtyTabs = true;
         }
 
         private void btnAddView_Click(object sender, EventArgs e)
@@ -1760,11 +1754,20 @@ namespace Go2It
             var io = e.Argument as IndexObject;
             // our worker for running the indexing operation
             var worker = sender as BackgroundWorker;
-            // setup everything else we need to generate ouselves a lucene index
+            // setup everything else we need to generate ourselves a lucene index
             if (io != null)
             {
                 IFeatureSet fl = io.FeatureSet;
-                Directory dir = FSDirectory.Open(new DirectoryInfo(_appManager.SerializationManager.CurrentProjectDirectory + "\\indexes\\" + io.LayerType));
+                var d = Path.GetDirectoryName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+                // remove the datasource string portion of the repo connection string
+                if (d.StartsWith("data source="))
+                {
+                    d = d.Substring(12);
+                }
+                var path = Path.Combine(d, "indexes", io.LayerType);
+                DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
+                Directory dir = FSDirectory.Open(di);
+                
                 for (int x = 0; x < fl.DataTable.Rows.Count; x++)
                 {
                     if (worker != null && (worker.CancellationPending))
@@ -1816,7 +1819,7 @@ namespace Go2It
             else if (e.Error != null)
             {
                 // TODO:this.tbProgress.Text = ("Error: " + e.Error.Message);
-                MessageBox.Show("Error");
+                MessageBox.Show(@"Error on Indexing Layer");
             }
             idxProgressBar.Hide();
         }
