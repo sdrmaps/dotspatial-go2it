@@ -129,7 +129,7 @@ namespace Go2It
             }
 
             // setup all interface events now
-            FormClosing += AdminForm_Closed; // check for isdirty changes to project file
+            FormClosing += AdminForm_Closing; // check for isdirty changes to project file
             chkViewLayers.ItemCheck += chkViewLayers_ItemCheck; // add or remove item to specific map tab view
 
             // setup a background worker for update progress bar on indexing tab
@@ -587,35 +587,42 @@ namespace Go2It
             }
         }
 
-        private bool ProjectExists()
+        private void AdminForm_Closing(object sender, FormClosingEventArgs e)
         {
-            var projectExists = (!String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile));
-            if (projectExists) return true;
-
-            var res = MessageBox.Show(string.Format("Please save your project to continue."),
-                Resources.AppName,
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button3);
-            switch (res)
+            // check if this project file has ever been saved
+            if (String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
             {
-                case DialogResult.Cancel:
-                    return false;
-                case DialogResult.No:
-                    return false;
-                case DialogResult.Yes:
-                    return ShowSaveProjectDialog();
-            }
-            return false;
-        }
-
-        private bool ProjectIsClean(bool flag)
-        {
-            var projectExists = (!String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile));
-            if (projectExists)
+                // this project file has never been saved before lets ask the user what they want to do?
+                var res = MessageBox.Show(string.Format("Save current project before exiting?"),
+                    Resources.AppName,
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button3);
+                switch (res)
+                {
+                    case DialogResult.Cancel:
+                        e.Cancel = true; // cancel the closing of the admin form
+                        break;
+                    case DialogResult.No:
+                        e.Cancel = false;  // allow this dialog to continue closing
+                        // the project was not saved, reset the active app.map
+                        _appManager.SerializationManager.New();
+                        break;
+                    case DialogResult.Yes:
+                        e.Cancel = false;  // continue to allow the form to close
+                        if (!ShowSaveProjectDialog())
+                        {
+                            // user decided not to save, reset main app map back to defaults
+                            _appManager.SerializationManager.New();
+                        } // else the user did a proper save and all things should be synced now
+                        break;
+                }
+            } 
+            else // project file exists, check for any changes the user made and account for them
             {
                 var hasProjectChanges = _appManager.SerializationManager.IsDirty;
-                if (hasProjectChanges || flag)
+                if (hasProjectChanges || _dirtyProject)
                 {
+                    // user has made changes lets see if they want to save them
                     var res =
                         MessageBox.Show(string.Format("Save changes to current project [{0}]?", GetProjectShortName()),
                             Resources.AppName,
@@ -624,34 +631,27 @@ namespace Go2It
                     switch (res)
                     {
                         case DialogResult.Cancel:
-                            return false;
+                            e.Cancel = true; // cancel the closing of the admin form
+                            break;
                         case DialogResult.No:
-                            return false;
+                            e.Cancel = false;  // allow form to finish closing
+                            // user did not save the new changes, so reload the original project file now
+                            _appManager.SerializationManager.OpenProject(_appManager.SerializationManager.CurrentProjectFile);
+                            break;
                         case DialogResult.Yes:
-                            return SaveProject(_appManager.SerializationManager.CurrentProjectFile);
+                            e.Cancel = false; // finish form closing
+                            if (!SaveProject(_appManager.SerializationManager.CurrentProjectFile))
+                            {
+                                // user canceled the save, so reload the original project file now
+                                _appManager.SerializationManager.OpenProject(_appManager.SerializationManager.CurrentProjectFile);
+                            } // else the save was successful and thus everything is in sync now
+                            break;
                     }
                 }
-                return true;
-            }
-            return false;
-        }
-
-        private void AdminForm_Closed(object sender, FormClosingEventArgs e)
-        {
-            if (ProjectExists())
-            {
-                if (ProjectIsClean(_dirtyProject))
+                else // no changes have been made, allow the form to finish closing
                 {
-                    // e.Cancel = !ProjectIsClean(_dirtyTabs);
+                    e.Cancel = false;
                 }
-                else
-                {
-                    e.Cancel = true; // discard changes
-                }
-            }
-            else
-            {
-                e.Cancel = false; // no project file exists. leave as it is
             }
         }
 

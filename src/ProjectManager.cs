@@ -203,7 +203,6 @@ namespace Go2It
                 // var txtBounds = row["bounds"].ToString();
                 var txtViewExtent = row["viewextent"].ToString();
                 var zorder = row["zorder"].ToString();
-
                 var nMap = new Map
                 {
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
@@ -211,7 +210,6 @@ namespace Go2It
                     // give this new map all the same functionality as the original base map
                     MapFunctions = App.Map.MapFunctions
                 };
-
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
                 foreach (IMapLayer ml in App.Map.Layers)

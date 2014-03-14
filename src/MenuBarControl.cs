@@ -149,13 +149,11 @@ namespace Go2It
 
         void adminForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // if the cancel is false then the project file doesnt exist or all changes are synced
-            if (e.Cancel)
+            if (!e.Cancel)
             {
-                // changes have been discarded reload the active project file
-                App.SerializationManager.OpenProject(App.SerializationManager.CurrentProjectFile);
+                // form is closing so set the focus on the main application, otherwise ignore
+                Shell.Focus();
             }
-            Shell.Focus();
         }
 
         private void loginForm_Logout(object sender, EventArgs e)
