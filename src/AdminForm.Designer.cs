@@ -121,7 +121,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(843, 731);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(539, 764);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // adminTab_Control
@@ -136,7 +136,7 @@
             this.adminTab_Control.Name = "adminTab_Control";
             this.adminTab_Control.Padding = new System.Drawing.Point(0, 0);
             this.adminTab_Control.SelectedIndex = 0;
-            this.adminTab_Control.Size = new System.Drawing.Size(843, 696);
+            this.adminTab_Control.Size = new System.Drawing.Size(539, 729);
             this.adminTab_Control.TabIndex = 8;
             // 
             // adminTab_LayerManagement
@@ -146,7 +146,7 @@
             this.adminTab_LayerManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_LayerManagement.Margin = new System.Windows.Forms.Padding(0);
             this.adminTab_LayerManagement.Name = "adminTab_LayerManagement";
-            this.adminTab_LayerManagement.Size = new System.Drawing.Size(835, 670);
+            this.adminTab_LayerManagement.Size = new System.Drawing.Size(531, 703);
             this.adminTab_LayerManagement.TabIndex = 0;
             this.adminTab_LayerManagement.Text = "Layer Management";
             // 
@@ -197,8 +197,8 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbNotesLayer);
             this.adminLayerSplitter.Panel2.Margin = new System.Windows.Forms.Padding(3);
             this.adminLayerSplitter.Panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.adminLayerSplitter.Size = new System.Drawing.Size(835, 670);
-            this.adminLayerSplitter.SplitterDistance = 202;
+            this.adminLayerSplitter.Size = new System.Drawing.Size(531, 703);
+            this.adminLayerSplitter.SplitterDistance = 187;
             this.adminLayerSplitter.SplitterWidth = 10;
             this.adminLayerSplitter.TabIndex = 8;
             this.adminLayerSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.adminLayerSplitter_SplitterMoved);
@@ -219,8 +219,8 @@
             this.legendSplitter.Panel2.BackColor = System.Drawing.Color.Transparent;
             this.legendSplitter.Panel2.Controls.Add(this.legendButtonTable);
             this.legendSplitter.Panel2MinSize = 33;
-            this.legendSplitter.Size = new System.Drawing.Size(200, 668);
-            this.legendSplitter.SplitterDistance = 634;
+            this.legendSplitter.Size = new System.Drawing.Size(185, 701);
+            this.legendSplitter.SplitterDistance = 667;
             this.legendSplitter.SplitterWidth = 1;
             this.legendSplitter.TabIndex = 0;
             // 
@@ -238,17 +238,17 @@
             this.legendButtonTable.RowCount = 1;
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.legendButtonTable.Size = new System.Drawing.Size(200, 33);
+            this.legendButtonTable.Size = new System.Drawing.Size(185, 33);
             this.legendButtonTable.TabIndex = 0;
             // 
             // btnRemoveLayer
             // 
             this.btnRemoveLayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRemoveLayer.Location = new System.Drawing.Point(103, 3);
+            this.btnRemoveLayer.Location = new System.Drawing.Point(95, 3);
             this.btnRemoveLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnRemoveLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnRemoveLayer.Name = "btnRemoveLayer";
-            this.btnRemoveLayer.Size = new System.Drawing.Size(94, 27);
+            this.btnRemoveLayer.Size = new System.Drawing.Size(87, 27);
             this.btnRemoveLayer.TabIndex = 1;
             this.btnRemoveLayer.Text = "Remove";
             this.btnRemoveLayer.UseVisualStyleBackColor = true;
@@ -261,7 +261,7 @@
             this.btnAddLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnAddLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(94, 27);
+            this.btnAddLayer.Size = new System.Drawing.Size(86, 27);
             this.btnAddLayer.TabIndex = 2;
             this.btnAddLayer.Text = "Add";
             this.btnAddLayer.UseVisualStyleBackColor = true;
@@ -269,7 +269,7 @@
             // 
             // btnAddView
             // 
-            this.btnAddView.Location = new System.Drawing.Point(319, 96);
+            this.btnAddView.Location = new System.Drawing.Point(32, 25);
             this.btnAddView.Name = "btnAddView";
             this.btnAddView.Size = new System.Drawing.Size(75, 23);
             this.btnAddView.TabIndex = 44;
@@ -279,14 +279,14 @@
             // 
             // txtViewName
             // 
-            this.txtViewName.Location = new System.Drawing.Point(400, 96);
+            this.txtViewName.Location = new System.Drawing.Point(113, 25);
             this.txtViewName.Name = "txtViewName";
             this.txtViewName.Size = new System.Drawing.Size(199, 20);
             this.txtViewName.TabIndex = 43;
             // 
             // btnDeleteView
             // 
-            this.btnDeleteView.Location = new System.Drawing.Point(524, 150);
+            this.btnDeleteView.Location = new System.Drawing.Point(228, 51);
             this.btnDeleteView.Name = "btnDeleteView";
             this.btnDeleteView.Size = new System.Drawing.Size(75, 23);
             this.btnDeleteView.TabIndex = 42;
@@ -298,24 +298,24 @@
             // 
             this.chkViewLayers.CheckOnClick = true;
             this.chkViewLayers.FormattingEnabled = true;
-            this.chkViewLayers.Location = new System.Drawing.Point(346, 179);
+            this.chkViewLayers.Location = new System.Drawing.Point(43, 79);
             this.chkViewLayers.Name = "chkViewLayers";
-            this.chkViewLayers.Size = new System.Drawing.Size(241, 169);
+            this.chkViewLayers.Size = new System.Drawing.Size(241, 94);
             this.chkViewLayers.TabIndex = 41;
             // 
             // cmbActiveMapTab
             // 
             this.cmbActiveMapTab.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbActiveMapTab.FormattingEnabled = true;
-            this.cmbActiveMapTab.Location = new System.Drawing.Point(330, 123);
+            this.cmbActiveMapTab.Location = new System.Drawing.Point(43, 52);
             this.cmbActiveMapTab.Name = "cmbActiveMapTab";
-            this.cmbActiveMapTab.Size = new System.Drawing.Size(269, 21);
+            this.cmbActiveMapTab.Size = new System.Drawing.Size(179, 21);
             this.cmbActiveMapTab.TabIndex = 40;
             this.cmbActiveMapTab.SelectedIndexChanged += new System.EventHandler(this.cmbActiveMapTab_SelectedIndexChanged);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(456, 523);
+            this.button1.Location = new System.Drawing.Point(20, 341);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 39;
@@ -326,7 +326,7 @@
             // lblMapBGColor
             // 
             this.lblMapBGColor.AutoSize = true;
-            this.lblMapBGColor.Location = new System.Drawing.Point(175, 630);
+            this.lblMapBGColor.Location = new System.Drawing.Point(168, 667);
             this.lblMapBGColor.Name = "lblMapBGColor";
             this.lblMapBGColor.Size = new System.Drawing.Size(116, 13);
             this.lblMapBGColor.TabIndex = 38;
@@ -335,7 +335,7 @@
             // mapBGColorPanel
             // 
             this.mapBGColorPanel.BackColor = System.Drawing.Color.Black;
-            this.mapBGColorPanel.Location = new System.Drawing.Point(108, 622);
+            this.mapBGColorPanel.Location = new System.Drawing.Point(101, 659);
             this.mapBGColorPanel.Name = "mapBGColorPanel";
             this.mapBGColorPanel.Size = new System.Drawing.Size(48, 26);
             this.mapBGColorPanel.TabIndex = 37;
@@ -345,7 +345,7 @@
             // 
             this.panelRadKeyLocations.Controls.Add(this.radKeyLocationsPolygons);
             this.panelRadKeyLocations.Controls.Add(this.radKeyLocationsPoints);
-            this.panelRadKeyLocations.Location = new System.Drawing.Point(28, 539);
+            this.panelRadKeyLocations.Location = new System.Drawing.Point(21, 576);
             this.panelRadKeyLocations.Name = "panelRadKeyLocations";
             this.panelRadKeyLocations.Size = new System.Drawing.Size(77, 55);
             this.panelRadKeyLocations.TabIndex = 36;
@@ -379,7 +379,7 @@
             // 
             this.panelRadAddress.Controls.Add(this.radAddressPoints);
             this.panelRadAddress.Controls.Add(this.radAddressPolygons);
-            this.panelRadAddress.Location = new System.Drawing.Point(28, 177);
+            this.panelRadAddress.Location = new System.Drawing.Point(21, 214);
             this.panelRadAddress.Name = "panelRadAddress";
             this.panelRadAddress.Size = new System.Drawing.Size(77, 50);
             this.panelRadAddress.TabIndex = 35;
@@ -412,7 +412,7 @@
             // lblKeyLocations
             // 
             this.lblKeyLocations.AutoSize = true;
-            this.lblKeyLocations.Location = new System.Drawing.Point(25, 523);
+            this.lblKeyLocations.Location = new System.Drawing.Point(18, 560);
             this.lblKeyLocations.Name = "lblKeyLocations";
             this.lblKeyLocations.Size = new System.Drawing.Size(77, 13);
             this.lblKeyLocations.TabIndex = 32;
@@ -421,7 +421,7 @@
             // lblHydrants
             // 
             this.lblHydrants.AutoSize = true;
-            this.lblHydrants.Location = new System.Drawing.Point(50, 499);
+            this.lblHydrants.Location = new System.Drawing.Point(43, 536);
             this.lblHydrants.Name = "lblHydrants";
             this.lblHydrants.Size = new System.Drawing.Size(52, 13);
             this.lblHydrants.TabIndex = 31;
@@ -430,7 +430,7 @@
             // lblParcels
             // 
             this.lblParcels.AutoSize = true;
-            this.lblParcels.Location = new System.Drawing.Point(58, 472);
+            this.lblParcels.Location = new System.Drawing.Point(51, 509);
             this.lblParcels.Name = "lblParcels";
             this.lblParcels.Size = new System.Drawing.Size(45, 13);
             this.lblParcels.TabIndex = 30;
@@ -439,7 +439,7 @@
             // lblEsn
             // 
             this.lblEsn.AutoSize = true;
-            this.lblEsn.Location = new System.Drawing.Point(73, 445);
+            this.lblEsn.Location = new System.Drawing.Point(66, 482);
             this.lblEsn.Name = "lblEsn";
             this.lblEsn.Size = new System.Drawing.Size(32, 13);
             this.lblEsn.TabIndex = 29;
@@ -448,7 +448,7 @@
             // lblCellSector
             // 
             this.lblCellSector.AutoSize = true;
-            this.lblCellSector.Location = new System.Drawing.Point(36, 418);
+            this.lblCellSector.Location = new System.Drawing.Point(29, 455);
             this.lblCellSector.Name = "lblCellSector";
             this.lblCellSector.Size = new System.Drawing.Size(66, 13);
             this.lblCellSector.TabIndex = 27;
@@ -457,7 +457,7 @@
             // cmbHydrantsLayer
             // 
             this.cmbHydrantsLayer.FormattingEnabled = true;
-            this.cmbHydrantsLayer.Location = new System.Drawing.Point(108, 496);
+            this.cmbHydrantsLayer.Location = new System.Drawing.Point(101, 533);
             this.cmbHydrantsLayer.Name = "cmbHydrantsLayer";
             this.cmbHydrantsLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbHydrantsLayer.TabIndex = 26;
@@ -466,7 +466,7 @@
             // lblRoads
             // 
             this.lblRoads.AutoSize = true;
-            this.lblRoads.Location = new System.Drawing.Point(61, 261);
+            this.lblRoads.Location = new System.Drawing.Point(54, 298);
             this.lblRoads.Name = "lblRoads";
             this.lblRoads.Size = new System.Drawing.Size(41, 13);
             this.lblRoads.TabIndex = 24;
@@ -475,7 +475,7 @@
             // lblAddresses
             // 
             this.lblAddresses.AutoSize = true;
-            this.lblAddresses.Location = new System.Drawing.Point(46, 161);
+            this.lblAddresses.Location = new System.Drawing.Point(39, 198);
             this.lblAddresses.Name = "lblAddresses";
             this.lblAddresses.Size = new System.Drawing.Size(59, 13);
             this.lblAddresses.TabIndex = 23;
@@ -485,7 +485,7 @@
             // 
             this.chkKeyLocationsLayers.CheckOnClick = true;
             this.chkKeyLocationsLayers.FormattingEnabled = true;
-            this.chkKeyLocationsLayers.Location = new System.Drawing.Point(108, 523);
+            this.chkKeyLocationsLayers.Location = new System.Drawing.Point(101, 560);
             this.chkKeyLocationsLayers.Name = "chkKeyLocationsLayers";
             this.chkKeyLocationsLayers.Size = new System.Drawing.Size(199, 94);
             this.chkKeyLocationsLayers.TabIndex = 22;
@@ -494,7 +494,7 @@
             // cmbParcelsLayer
             // 
             this.cmbParcelsLayer.FormattingEnabled = true;
-            this.cmbParcelsLayer.Location = new System.Drawing.Point(108, 469);
+            this.cmbParcelsLayer.Location = new System.Drawing.Point(101, 506);
             this.cmbParcelsLayer.Name = "cmbParcelsLayer";
             this.cmbParcelsLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbParcelsLayer.TabIndex = 21;
@@ -503,7 +503,7 @@
             // cmbESNLayer
             // 
             this.cmbESNLayer.FormattingEnabled = true;
-            this.cmbESNLayer.Location = new System.Drawing.Point(108, 442);
+            this.cmbESNLayer.Location = new System.Drawing.Point(101, 479);
             this.cmbESNLayer.Name = "cmbESNLayer";
             this.cmbESNLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbESNLayer.TabIndex = 20;
@@ -512,7 +512,7 @@
             // cmbCellSectorLayer
             // 
             this.cmbCellSectorLayer.FormattingEnabled = true;
-            this.cmbCellSectorLayer.Location = new System.Drawing.Point(108, 415);
+            this.cmbCellSectorLayer.Location = new System.Drawing.Point(101, 452);
             this.cmbCellSectorLayer.Name = "cmbCellSectorLayer";
             this.cmbCellSectorLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbCellSectorLayer.TabIndex = 18;
@@ -521,7 +521,7 @@
             // lblCityLimits
             // 
             this.lblCityLimits.AutoSize = true;
-            this.lblCityLimits.Location = new System.Drawing.Point(46, 391);
+            this.lblCityLimits.Location = new System.Drawing.Point(39, 428);
             this.lblCityLimits.Name = "lblCityLimits";
             this.lblCityLimits.Size = new System.Drawing.Size(56, 13);
             this.lblCityLimits.TabIndex = 16;
@@ -530,7 +530,7 @@
             // lblNotes
             // 
             this.lblNotes.AutoSize = true;
-            this.lblNotes.Location = new System.Drawing.Point(64, 364);
+            this.lblNotes.Location = new System.Drawing.Point(57, 401);
             this.lblNotes.Name = "lblNotes";
             this.lblNotes.Size = new System.Drawing.Size(38, 13);
             this.lblNotes.TabIndex = 15;
@@ -539,7 +539,7 @@
             // cmbCityLimitLayer
             // 
             this.cmbCityLimitLayer.FormattingEnabled = true;
-            this.cmbCityLimitLayer.Location = new System.Drawing.Point(108, 388);
+            this.cmbCityLimitLayer.Location = new System.Drawing.Point(101, 425);
             this.cmbCityLimitLayer.Name = "cmbCityLimitLayer";
             this.cmbCityLimitLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbCityLimitLayer.TabIndex = 8;
@@ -549,7 +549,7 @@
             // 
             this.chkRoadLayers.CheckOnClick = true;
             this.chkRoadLayers.FormattingEnabled = true;
-            this.chkRoadLayers.Location = new System.Drawing.Point(108, 261);
+            this.chkRoadLayers.Location = new System.Drawing.Point(101, 298);
             this.chkRoadLayers.Name = "chkRoadLayers";
             this.chkRoadLayers.Size = new System.Drawing.Size(199, 94);
             this.chkRoadLayers.TabIndex = 7;
@@ -559,7 +559,7 @@
             // 
             this.chkAddressLayers.CheckOnClick = true;
             this.chkAddressLayers.FormattingEnabled = true;
-            this.chkAddressLayers.Location = new System.Drawing.Point(108, 161);
+            this.chkAddressLayers.Location = new System.Drawing.Point(101, 198);
             this.chkAddressLayers.Name = "chkAddressLayers";
             this.chkAddressLayers.Size = new System.Drawing.Size(199, 94);
             this.chkAddressLayers.TabIndex = 6;
@@ -568,7 +568,7 @@
             // cmbNotesLayer
             // 
             this.cmbNotesLayer.FormattingEnabled = true;
-            this.cmbNotesLayer.Location = new System.Drawing.Point(108, 361);
+            this.cmbNotesLayer.Location = new System.Drawing.Point(101, 398);
             this.cmbNotesLayer.Name = "cmbNotesLayer";
             this.cmbNotesLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbNotesLayer.TabIndex = 5;
@@ -588,7 +588,7 @@
             this.adminTab_UserManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_UserManagement.Name = "adminTab_UserManagement";
             this.adminTab_UserManagement.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_UserManagement.Size = new System.Drawing.Size(835, 670);
+            this.adminTab_UserManagement.Size = new System.Drawing.Size(531, 703);
             this.adminTab_UserManagement.TabIndex = 3;
             this.adminTab_UserManagement.Text = "User Management";
             this.adminTab_UserManagement.UseVisualStyleBackColor = true;
@@ -684,16 +684,16 @@
             this.adminTab_SearchProperties.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SearchProperties.Name = "adminTab_SearchProperties";
             this.adminTab_SearchProperties.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SearchProperties.Size = new System.Drawing.Size(835, 670);
+            this.adminTab_SearchProperties.Size = new System.Drawing.Size(531, 703);
             this.adminTab_SearchProperties.TabIndex = 4;
             this.adminTab_SearchProperties.Text = "Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
             // btnIndexCancel
             // 
-            this.btnIndexCancel.Location = new System.Drawing.Point(134, 302);
+            this.btnIndexCancel.Location = new System.Drawing.Point(62, 340);
             this.btnIndexCancel.Name = "btnIndexCancel";
-            this.btnIndexCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnIndexCancel.Size = new System.Drawing.Size(71, 23);
             this.btnIndexCancel.TabIndex = 6;
             this.btnIndexCancel.Text = "Cancel";
             this.btnIndexCancel.UseVisualStyleBackColor = true;
@@ -703,7 +703,7 @@
             // 
             this.idxProgressBar.Location = new System.Drawing.Point(20, 513);
             this.idxProgressBar.Name = "idxProgressBar";
-            this.idxProgressBar.Size = new System.Drawing.Size(571, 23);
+            this.idxProgressBar.Size = new System.Drawing.Size(485, 23);
             this.idxProgressBar.TabIndex = 5;
             this.idxProgressBar.Visible = false;
             // 
@@ -711,18 +711,18 @@
             // 
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLayerIndex.Location = new System.Drawing.Point(262, 76);
+            this.dgvLayerIndex.Location = new System.Drawing.Point(203, 76);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvLayerIndex.Size = new System.Drawing.Size(329, 415);
+            this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
             // 
             // btnDeleteIndex
             // 
-            this.btnDeleteIndex.Location = new System.Drawing.Point(96, 251);
+            this.btnDeleteIndex.Location = new System.Drawing.Point(24, 289);
             this.btnDeleteIndex.Name = "btnDeleteIndex";
-            this.btnDeleteIndex.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteIndex.Size = new System.Drawing.Size(71, 23);
             this.btnDeleteIndex.TabIndex = 3;
             this.btnDeleteIndex.Text = "Delete Index";
             this.btnDeleteIndex.UseVisualStyleBackColor = true;
@@ -730,9 +730,9 @@
             // 
             // btnCreateIndex
             // 
-            this.btnCreateIndex.Location = new System.Drawing.Point(177, 251);
+            this.btnCreateIndex.Location = new System.Drawing.Point(105, 289);
             this.btnCreateIndex.Name = "btnCreateIndex";
-            this.btnCreateIndex.Size = new System.Drawing.Size(75, 23);
+            this.btnCreateIndex.Size = new System.Drawing.Size(71, 23);
             this.btnCreateIndex.TabIndex = 2;
             this.btnCreateIndex.Text = "Create Index";
             this.btnCreateIndex.UseVisualStyleBackColor = true;
@@ -751,9 +751,9 @@
             // 
             this.chkLayerIndex.CheckOnClick = true;
             this.chkLayerIndex.FormattingEnabled = true;
-            this.chkLayerIndex.Location = new System.Drawing.Point(36, 76);
+            this.chkLayerIndex.Location = new System.Drawing.Point(9, 76);
             this.chkLayerIndex.Name = "chkLayerIndex";
-            this.chkLayerIndex.Size = new System.Drawing.Size(216, 169);
+            this.chkLayerIndex.Size = new System.Drawing.Size(188, 169);
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
@@ -761,7 +761,7 @@
             // 
             this.btnSplitSave.AutoSize = true;
             this.btnSplitSave.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnSplitSave.Location = new System.Drawing.Point(754, 699);
+            this.btnSplitSave.Location = new System.Drawing.Point(450, 732);
             this.btnSplitSave.MaximumSize = new System.Drawing.Size(85, 28);
             this.btnSplitSave.MinimumSize = new System.Drawing.Size(85, 23);
             this.btnSplitSave.Name = "btnSplitSave";
@@ -774,7 +774,7 @@
             // btnCancel
             // 
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(673, 699);
+            this.btnCancel.Location = new System.Drawing.Point(369, 732);
             this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
             this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
             this.btnCancel.Name = "btnCancel";
@@ -788,7 +788,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(843, 731);
+            this.ClientSize = new System.Drawing.Size(539, 764);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AdminForm";

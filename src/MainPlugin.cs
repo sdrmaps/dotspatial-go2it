@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -46,7 +47,6 @@ namespace Go2It
         {
             // save the project 
             _projManager.SavingProject();
-
 
             // TODO: look into if these are both functioning correctly
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
@@ -182,15 +182,10 @@ namespace Go2It
             // save the current active map tab view to settings
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
-            // refresh the new map tab and update function mode
+            // set the active function mode from previous map tab
             map.FunctionMode = App.Map.FunctionMode;
-            // map.Extent.SetValues(map.Extent.MinX, map.Extent.MinY, map.Extent.MaxX, map.Extent.MaxY);
-            // map.ViewExtents.SetValues(map.Extent.MinX, map.Extent.MinY, map.Extent.MaxX, map.Extent.MaxY);
-            App.Map = map;
-            // TODO: this is not setting extents properly not sure why yet?
-            // App.Map.Extent.SetValues(map.Extent.MinX, map.Extent.MinY, map.Extent.MaxX, map.Extent.MaxY);
-            // App.Map.ViewExtents.SetValues(map.Extent.MinX, map.Extent.MinY, map.Extent.MaxX, map.Extent.MaxY);
-            
+            // set the active map tab to the active application map now
+            App.Map = map;            
             App.Map.Invalidate(); // force a refresh of the map
         }
 

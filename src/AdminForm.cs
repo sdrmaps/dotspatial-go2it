@@ -80,7 +80,6 @@ namespace Go2It
                 Projection = app.Map.Projection,
                 ViewExtents = app.Map.ViewExtents
             };
-
             // set options on our indexing bgworker
             _idxWorker.WorkerReportsProgress = true;
             _idxWorker.WorkerSupportsCancellation = true;
@@ -89,6 +88,10 @@ namespace Go2It
             adminLayerSplitter.Paint += Splitter_Paint;
             // overall events tied to main application
             _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
+
+            // map tracking events on removal and addition of a layer
+            _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
+            _baseMap.Layers.LayerAdded += LayersOnLayerAdded;
 
             // populate all the settings, layers, and maps to the form and attach a legend
             AttachLegend();
@@ -99,7 +102,7 @@ namespace Go2It
             // check if we have any available map tab views
             if (_dockingControl.DockPanelLookup.Count == 0)
             {
-                var txt = MapTabDefaultName;
+                const string txt = MapTabDefaultName;
                 // clean the filename for a key value
                 var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
                 fname = fname.Replace(" ", "");
@@ -120,6 +123,10 @@ namespace Go2It
                 _appManager.DockManager.Add(dp);
                 _appManager.DockManager.SelectPanel(key);
             }
+            else // if there is then select the active tab now
+            {
+                _appManager.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
+            }
 
             // setup all interface events now
             FormClosing += AdminForm_Closed; // check for isdirty changes to project file
@@ -129,10 +136,6 @@ namespace Go2It
             _idxWorker.DoWork += idx_DoWork;
             _idxWorker.ProgressChanged += idx_ProgressChanged;
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
-
-            // map tracking events on removal and addition of a layer
-            _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
-            _baseMap.Layers.LayerAdded += LayersOnLayerAdded;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
         }
@@ -345,19 +348,6 @@ namespace Go2It
                 {
                     var mLayer = (IMapFeatureLayer) layer;
                     if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-                    IFeatureSet fs = FeatureSet.Open(mLayer.DataSet.Filename);
-                    if (mLayer.DataSet.FeatureType.Equals(FeatureType.Line))
-                    {
-                        _lineLayers.Add(fs);
-                    }
-                    if (mLayer.DataSet.FeatureType.Equals(FeatureType.Point))
-                    {
-                        _pointLayers.Add(fs);
-                    }
-                    if (mLayer.DataSet.FeatureType.Equals(FeatureType.Polygon))
-                    {
-                        _polygonLayers.Add(fs);
-                    }
                     _baseMap.Layers.Add(mLayer);
                 }
             }
@@ -785,7 +775,6 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer = ApplyComboBoxSetting(cmbHydrantsLayer);
             // set the map background color
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = mapBGColorPanel.BackColor;
-            // active map panel key and caption are set on active panel changes already
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -815,8 +804,7 @@ namespace Go2It
                     ShowSaveSettingsError(msg);
                     return false;
                 }
-                // apply go2it setting to the app settings
-                // later this is saved to dbase by project manager on serialization event fired just below
+                // this is saved to dbase by project manager on serialization event fired just below
                 ApplyProjectSettings();
                 // swap the active map out with our base map now -> all layers will be serialized (not just active ones)
                 var tMap = _appManager.Map;
@@ -1357,8 +1345,8 @@ namespace Go2It
                         // TODO: account for some sort of logging and inform the user of the issues here
                         return;
                     }
-                    // make sure we have a fid value for lookup
-                    fs.AddFid();  // make sure this featureset has FID values for lookup
+                    // make sure this featureset has FID values for lookup
+                    fs.AddFid(); 
                     fs.Save();
                     string lyrType = GetLayerIndexTable(lyrName);
                     var io = new IndexObject(fs, list, lyrType);
@@ -1436,6 +1424,7 @@ namespace Go2It
                 _appManager.Map.Layers.Remove(lyr);
             }
             _appManager.Map.Invalidate();
+            _dirtyProject = true;
         }
 
         private void btnAddView_Click(object sender, EventArgs e)
@@ -1467,6 +1456,7 @@ namespace Go2It
             var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
             _appManager.DockManager.Add(dp);
             _appManager.DockManager.SelectPanel(key);
+            _dirtyProject = true;
         }
 
         private void btnRemoveView_Click(object sender, EventArgs e)
@@ -1488,6 +1478,7 @@ namespace Go2It
                     chkViewLayers.SetItemCheckState(i, (CheckState.Unchecked));
                 }
             }
+            _dirtyProject = true;
         }
 
         private List<string> AddLayersToIndex(CheckedListBox clb)
@@ -1749,7 +1740,6 @@ namespace Go2It
             }
         }
 
-
         private void idx_DoWork(object sender, DoWorkEventArgs e)
         {
             var io = e.Argument as IndexObject;
@@ -1780,8 +1770,7 @@ namespace Go2It
                     {
                         doc.Add(new Field("FID", dr["FID"].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                         // no need to run an analyzer on numbered values
-                        var kv = new KeyValuePair<string, string>();
-                        kv = list[i];
+                        KeyValuePair<string, string> kv = list[i];
                         if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
                         {
                             doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));

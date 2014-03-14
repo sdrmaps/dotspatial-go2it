@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -13,7 +14,6 @@ using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
-using Go2It.Properties;
 using SdrConfig = SDR.Configuration;
 using SDR.Data.Database;
 
@@ -106,28 +106,13 @@ namespace Go2It
             return SQLiteHelper.CreateSQLiteDatabase(dbPath, "Go2It.Resources.defaultDatabase.sqlite");
         }
 
-        /// <summary>
-        /// Opens a project and updates the maps
-        /// </summary>
-        // public void OpenProject(string projectFileName)
-        //{
-            // App.ProgressHandler.Progress("Opening Project", 0, "Opening Project");
-            // OpenProject will also call the overriden method OpeningProject directly below
-            // App.SerializationManager.OpenProject(projectFileName);
-            // SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFileName);
-            // App.ProgressHandler.Progress("Project opened", 0, "");
-        // }
-
         public void OpeningProject()
         {
             if (App.SerializationManager.CurrentProjectFile == null) return;
             // add the file to recent files list
             SdrConfig.Settings.Instance.AddFileToRecentFiles(App.SerializationManager.CurrentProjectFile);
-            // attempt to reset the projection of the application map
-            if (App.Map.MapFrame.Projection != KnownCoordinateSystems.Projected.World.WebMercator)
-            {
-                MapFrameProjectionHelper.ReprojectMapFrame(App.Map.MapFrame, KnownCoordinateSystems.Projected.World.WebMercator.ToEsriString());
-            }
+            // reset the map extents back to defaults
+            SetDefaultMapExtents();
             // reset the project settings back to default for repopulation
             SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();
             // now clear any map panels that maybe present
@@ -213,32 +198,20 @@ namespace Go2It
                 var txtKey = row["lookup"].ToString();
                 var txtCaption  = row["caption"].ToString();
                 var txtLayers = row["layers"].ToString();
-                var txtExtent = row["extent"].ToString();
+                // unused
+                // var txtExtent = row["extent"].ToString();
                 // var txtBounds = row["bounds"].ToString();
                 var txtViewExtent = row["viewextent"].ToString();
                 var zorder = row["zorder"].ToString();
+
                 var nMap = new Map
                 {
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
-                    Visible = true
-                    // TODO: really need to verify if we have to pass in map functions
-                    // should also set the projection sometime in here i think
-                    // MapFunctions = Dock.BaseMap.MapFunctions
+                    Visible = true,
+                    // give this new map all the same functionality as the original base map
+                    MapFunctions = App.Map.MapFunctions
                 };
-                Extent ext;
-                string r;
-                Extent.TryParse(txtExtent, out ext, out r);
-                if (r == "Y")
-                {
-                    // nMap.MapFrame.Extent
-                    nMap.Extent.SetValues(ext.MinX, ext.MinY, ext.MaxX, ext.MinY);
-                }
-                Extent vext;
-                Extent.TryParse(txtViewExtent, out vext, out r);
-                if (r == "Y")
-                {
-                    nMap.ViewExtents.SetValues(vext.MinX, ext.MinY, ext.MaxX, ext.MinY);
-                }
+
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
                 foreach (IMapLayer ml in App.Map.Layers)
@@ -274,6 +247,14 @@ namespace Go2It
                             }
                         }
                     }
+                }
+                // all layers have been added its safe to set the proper view extent now
+                string r;
+                Extent vExt;
+                Extent.TryParse(txtViewExtent, out vExt, out r);
+                if (r == "Y")
+                {
+                    nMap.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MinY);
                 }
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
@@ -499,7 +480,7 @@ namespace Go2It
                 foreach (DirectoryInfo subdir in dirs)
                 {
                     string temppath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                    DirectoryCopy(subdir.FullName, temppath, true);
                 }
             }
         }
