@@ -356,6 +356,7 @@ namespace Go2It
             var dc = Dock;
             foreach (KeyValuePair<string, DockPanelInfo> dpi in dc.DockPanelLookup)
             {
+                if (!dpi.Key.Trim().StartsWith("kMap")) continue;
                 var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
                 var layers = map.Layers;  // get the layers
                 var txtLayers = string.Empty;  // text block to store layers

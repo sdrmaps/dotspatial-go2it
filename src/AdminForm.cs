@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -74,7 +73,7 @@ namespace Go2It
             // a basemap to hold all layers for the adminlegend
             _baseMap = new Map
             {
-                BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                // BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                 Dock = DockStyle.Fill,
                 Visible = false,
                 Projection = app.Map.Projection,
@@ -110,7 +109,9 @@ namespace Go2It
                 // create a new map to stick to the tab using the settings from _baseMap
                 var nMap = new Map
                 {
-                    BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                    // on load use the background color from the settings
+                    // BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                    BackColor = mapBGColorPanel.BackColor,
                     Dock = DockStyle.Fill,
                     Visible = true,
                     Projection = _baseMap.Projection,
@@ -199,7 +200,8 @@ namespace Go2It
             // we need to cycle through all the available dockpanels check if the layer has been set on that map
             foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
             {
-                var map = (Map) dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
+                if (!dockPanelInfo.Key.Trim().StartsWith("kMap")) continue;
+                var map = (Map)dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
                 map.Layers.Remove(layer);
                 // now set the map back to itself
                 dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
@@ -359,6 +361,7 @@ namespace Go2It
         {
             foreach (KeyValuePair<string, DockPanelInfo> dpi in _dockingControl.DockPanelLookup)
             {
+                if (!dpi.Key.Trim().StartsWith("kMap")) continue;
                 if (!cmbActiveMapTab.Items.Contains(dpi.Value.DotSpatialDockPanel.Caption))
                 {
                     cmbActiveMapTab.Items.Add(dpi.Value.DotSpatialDockPanel.Caption);
@@ -996,6 +999,15 @@ namespace Go2It
             {
                 _dirtyProject = true;
             }
+            var m = (Map) _appManager.Map;
+            m.BackColor = mapBGColorPanel.BackColor;
+            foreach (KeyValuePair<string, DockPanelInfo> dpi in _dockingControl.DockPanelLookup)
+            {
+                if (!dpi.Key.Trim().StartsWith("kMap")) continue;
+                dpi.Value.DotSpatialDockPanel.InnerControl.BackColor = mapBGColorPanel.BackColor;
+                dpi.Value.DotSpatialDockPanel.InnerControl.Refresh();
+            }
+            _appManager.Map.Refresh();
         }
 
         private void btnUsersAddUpdate_Click(object sender, EventArgs e)
@@ -1442,12 +1454,14 @@ namespace Go2It
             // create a new map to stick to the tab using the settings from _baseMap
             var nMap = new Map
             {
-                BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                // BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                BackColor = mapBGColorPanel.BackColor,
                 Dock = DockStyle.Fill,
                 Visible = true,
                 Projection = _baseMap.Projection,
                 ViewExtents = _baseMap.ViewExtents
             };
+            
             // create new dockable panel and stow that shit yo!
             var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
             _appManager.DockManager.Add(dp);
