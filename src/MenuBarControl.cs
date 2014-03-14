@@ -54,7 +54,6 @@ namespace Go2It
             {
                 header.Add(item);
             }
-            // App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             base.Activate();
         }
 

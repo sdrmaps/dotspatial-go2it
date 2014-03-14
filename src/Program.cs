@@ -11,8 +11,6 @@ namespace Go2It
 {
     internal static class Program
     {
-        // private static MainForm _mainForm;
-
         /// <summary>
         /// Main entry point for the application.
         /// </summary>

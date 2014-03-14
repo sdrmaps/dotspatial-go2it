@@ -135,13 +135,12 @@ namespace DotSpatial.SDR.Controls
 
         public void ResetLayout()
         {
-            // remove all the current map dock panels
-            foreach (KeyValuePair<string, IMapLayer> keyValuePair in BaseLayerLookup)
+            // remove all the current map tab panels but leave the tool panels
+            foreach (TabPage mapTab in _mapTabs.TabPages)
             {
-                DockPanelLookup.Remove(keyValuePair.Key);
+                Remove(mapTab.Name);  // same as the tab key (could also use mapTab.Tag)
             }
-            BaseLayerLookup.Clear();  // clear base layer lookup
-            _mapTabs.Controls.Clear();  // clear all map tabs
+            BaseLayerLookup.Clear();  // clear base layer lookup (wipe all layers)
         }
 
         public void SelectPanel(string key)
@@ -163,6 +162,7 @@ namespace DotSpatial.SDR.Controls
 
         public void HidePanel(string key)
         {
+            throw new NotImplementedException();
             /* DockPanelInfo info;
              if (DockPanelLookup.TryGetValue(key, out info))
              {
@@ -305,12 +305,6 @@ namespace DotSpatial.SDR.Controls
                     new Rectangle(p, new Size(3, 3)));
             }
         }
-
-        /* string GetMapKeyFromCaption(string caption)
-        {
-            return (from kvPair in _dockingControl.DockPanelLookup let dockInfo = kvPair.Value where dockInfo.DotSpatialDockPanel.Caption == caption select kvPair.Key).FirstOrDefault();
-        }*/
-
         #endregion
 
         #region Event Handlers

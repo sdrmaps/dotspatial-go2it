@@ -32,6 +32,7 @@ namespace Go2It
             App.SerializationManager.NewProjectCreated += SerializationManagerOnNewProjectCreated;
             App.SerializationManager.Deserializing += SerializationManager_Deserializing;
             App.SerializationManager.Serializing += SerializationManager_Serializing;
+
             // activate all available extensions now
             App.ExtensionsActivated += App_ExtensionsActivated;
            
