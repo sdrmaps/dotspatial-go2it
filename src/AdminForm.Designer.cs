@@ -42,7 +42,6 @@
             this.btnDeleteView = new System.Windows.Forms.Button();
             this.chkViewLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbActiveMapTab = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.lblMapBGColor = new System.Windows.Forms.Label();
             this.mapBGColorPanel = new System.Windows.Forms.Panel();
             this.panelRadKeyLocations = new System.Windows.Forms.Panel();
@@ -172,7 +171,6 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.btnDeleteView);
             this.adminLayerSplitter.Panel2.Controls.Add(this.chkViewLayers);
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbActiveMapTab);
-            this.adminLayerSplitter.Panel2.Controls.Add(this.button1);
             this.adminLayerSplitter.Panel2.Controls.Add(this.lblMapBGColor);
             this.adminLayerSplitter.Panel2.Controls.Add(this.mapBGColorPanel);
             this.adminLayerSplitter.Panel2.Controls.Add(this.panelRadKeyLocations);
@@ -312,16 +310,6 @@
             this.cmbActiveMapTab.Size = new System.Drawing.Size(179, 21);
             this.cmbActiveMapTab.TabIndex = 40;
             this.cmbActiveMapTab.SelectedIndexChanged += new System.EventHandler(this.cmbActiveMapTab_SelectedIndexChanged);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(20, 341);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 39;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // lblMapBGColor
             // 
@@ -835,7 +823,6 @@
         private System.Windows.Forms.Button btnDeleteView;
         private System.Windows.Forms.CheckedListBox chkViewLayers;
         private System.Windows.Forms.ComboBox cmbActiveMapTab;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblMapBGColor;
         private System.Windows.Forms.Panel mapBGColorPanel;
         private System.Windows.Forms.Panel panelRadKeyLocations;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -415,14 +414,14 @@ namespace Go2It
             }
         }
 
-        private static Predicate<IMapFeatureLayer> ByName(string name)
-        {
-            return delegate(IMapFeatureLayer mapLayer)
-            {
-                var ftLayer = (FeatureLayer)mapLayer;
-                return ftLayer.Name == name;
-            };
-        }
+        //private static Predicate<IMapFeatureLayer> ByName(string name)
+        //{
+        //    return delegate(IMapFeatureLayer mapLayer)
+        //    {
+        //        var ftLayer = (FeatureLayer)mapLayer;
+        //        return ftLayer.Name == name;
+        //    };
+        //}
 
         private Dictionary<string, string> CreateLayerDictionary(string layName, string projType)
         {
@@ -451,7 +450,7 @@ namespace Go2It
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             // Get the subdirectories for the specified directory.
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            var dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
 
             if (!dir.Exists)
@@ -497,26 +496,29 @@ namespace Go2It
 
             string currentDbPath = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
             var d = Path.GetDirectoryName(currentDbPath);
-            var currentDirPath = Path.Combine(d, "indexes");
-
-            if (newDbPath != currentDbPath)
+            if (d != null)
             {
-                // copy db to new path. If no db exists, create new db in the new location
-                if (SQLiteHelper.DatabaseExists(currentDbPath))
+                var currentDirPath = Path.Combine(d, "indexes");
+
+                if (newDbPath != currentDbPath)
                 {
-                    File.Copy(currentDbPath, newDbPath, true);
-                    // check if there are any index files available copy them if so
-                    if (Directory.Exists(currentDirPath))
+                    // copy db to new path. If no db exists, create new db in the new location
+                    if (SQLiteHelper.DatabaseExists(currentDbPath))
                     {
-                        DirectoryCopy(currentDirPath, newDirPath, true);
+                        File.Copy(currentDbPath, newDbPath, true);
+                        // check if there are any index files available copy them if so
+                        if (Directory.Exists(currentDirPath))
+                        {
+                            DirectoryCopy(currentDirPath, newDirPath, true);
+                        }
                     }
+                    else
+                    {
+                        CreateNewDatabase(newDbPath);
+                    }
+                    // update application level database configuration settings
+                    SdrConfig.Settings.Instance.ProjectRepoConnectionString = SQLiteHelper.GetSQLiteConnectionString(newDbPath);
                 }
-                else
-                {
-                    CreateNewDatabase(newDbPath);
-                }
-                // update application level database configuration settings
-                SdrConfig.Settings.Instance.ProjectRepoConnectionString = SQLiteHelper.GetSQLiteConnectionString(newDbPath);
             }
             SaveProjectSettings();
             // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);

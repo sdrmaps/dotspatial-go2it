@@ -175,20 +175,20 @@ namespace Go2It
         private void Info_Click(object sender, EventArgs e)
         {
             // AppManager Map
-            Debug.WriteLine("_appManager.Map.Bounds: " + _appManager.Map.Bounds.ToString());
-            Debug.WriteLine("_appManager.Map.Extent: " + _appManager.Map.Extent.ToString());
-            Debug.WriteLine("_appManager.Map.GetMaxExtent: " + _appManager.Map.GetMaxExtent().ToString());
+            Debug.WriteLine("_appManager.Map.Bounds: " + _appManager.Map.Bounds);
+            Debug.WriteLine("_appManager.Map.Extent: " + _appManager.Map.Extent);
+            Debug.WriteLine("_appManager.Map.GetMaxExtent: " + _appManager.Map.GetMaxExtent());
             Debug.WriteLine("_appManager.Map.Projection.ToProj4String: " + _appManager.Map.Projection.ToProj4String());
-            Debug.WriteLine("_appManager.Map.Projection: " + _appManager.Map.Projection.ToString());
-            Debug.WriteLine("_appManager.Map.ViewExtents: " + _appManager.Map.ViewExtents.ToString());
+            Debug.WriteLine("_appManager.Map.Projection: " + _appManager.Map.Projection);
+            Debug.WriteLine("_appManager.Map.ViewExtents: " + _appManager.Map.ViewExtents);
             // AppManager MapFrame
-            Debug.WriteLine("_appManager.Map.MapFrame.Extent: " + _appManager.Map.MapFrame.Extent.ToString());
-            Debug.WriteLine("_appManager.Map.MapFrame.GeographicExtents: " + _appManager.Map.MapFrame.GeographicExtents.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.Extent: " + _appManager.Map.MapFrame.Extent);
+            Debug.WriteLine("_appManager.Map.MapFrame.GeographicExtents: " + _appManager.Map.MapFrame.GeographicExtents);
             Debug.WriteLine("_appManager.Map.MapFrame.Projection.ToProj4String: " + _appManager.Map.MapFrame.Projection.ToProj4String());
-            Debug.WriteLine("_appManager.Map.MapFrame.Projection: " + _appManager.Map.MapFrame.Projection.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.Projection: " + _appManager.Map.MapFrame.Projection);
             Debug.WriteLine("_appManager.Map.MapFrame.ProjectionString: " + _appManager.Map.MapFrame.ProjectionString);
-            Debug.WriteLine("_appManager.Map.MapFrame.View: " + _appManager.Map.MapFrame.View.ToString());
-            Debug.WriteLine("_appManager.Map.MapFrame.ViewExtents: " + _appManager.Map.MapFrame.ViewExtents.ToString());
+            Debug.WriteLine("_appManager.Map.MapFrame.View: " + _appManager.Map.MapFrame.View);
+            Debug.WriteLine("_appManager.Map.MapFrame.ViewExtents: " + _appManager.Map.MapFrame.ViewExtents);
         }
 
         private void OpenProject_Click(object sender, EventArgs e)

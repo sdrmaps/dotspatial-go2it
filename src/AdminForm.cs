@@ -690,10 +690,7 @@ namespace Go2It
 
         private void AdminLegendOnOrderChanged(object sender, EventArgs eventArgs)
         {
-            // todo:
-            // probabley should do some event here to update all map tabs
-            // var g = sender;
-            // var w = eventArgs;
+            // todo:probably should do some event here to update all map tabs
         }
 
         private void btnAddLayer_Click(object sender, EventArgs e)
@@ -1358,9 +1355,8 @@ namespace Go2It
                     // while that runs lets save the settings to the database
                     string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
                     SQLiteHelper.ClearTable(conn, lyrType);
-                    for (int i = 0; i < io.FieldLookup.Count; i++)
+                    foreach (var kv in io.FieldLookup)
                     {
-                        var kv = io.FieldLookup[i];
                         var d = new Dictionary<string, string>
                         {
                             {"lookup", kv.Key},
@@ -1670,40 +1666,6 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            // AppManager Map
-            Debug.WriteLine("_appManager.Map.Bounds: " + _appManager.Map.Bounds.ToString());
-            Debug.WriteLine("_appManager.Map.Extent: " + _appManager.Map.Extent.ToString());
-            Debug.WriteLine("_appManager.Map.GetMaxExtent: " + _appManager.Map.GetMaxExtent().ToString());
-            Debug.WriteLine("_appManager.Map.Projection.ToProj4String: " +  _appManager.Map.Projection.ToProj4String());
-            Debug.WriteLine("_appManager.Map.Projection: " + _appManager.Map.Projection.ToString());
-            Debug.WriteLine("_appManager.Map.ViewExtents: " + _appManager.Map.ViewExtents.ToString());
-            // AppManager MapFrame
-            Debug.WriteLine("_appManager.Map.MapFrame.Extent: " + _appManager.Map.MapFrame.Extent.ToString());
-            Debug.WriteLine("_appManager.Map.MapFrame.GeographicExtents: " + _appManager.Map.MapFrame.GeographicExtents.ToString());
-            Debug.WriteLine("_appManager.Map.MapFrame.Projection.ToProj4String: " + _appManager.Map.MapFrame.Projection.ToProj4String());
-            Debug.WriteLine("_appManager.Map.MapFrame.Projection: " + _appManager.Map.MapFrame.Projection.ToString());
-            Debug.WriteLine("_appManager.Map.MapFrame.ProjectionString: " + _appManager.Map.MapFrame.ProjectionString);
-            Debug.WriteLine("_appManager.Map.MapFrame.View: " + _appManager.Map.MapFrame.View.ToString());
-            Debug.WriteLine("_appManager.Map.MapFrame.ViewExtents: " + _appManager.Map.MapFrame.ViewExtents.ToString());
-            // BaseMap Map
-            Debug.WriteLine("_baseMap.Bounds: " + _baseMap.Bounds.ToString());
-            Debug.WriteLine("_baseMap.Extent: " + _baseMap.Extent.ToString());
-            Debug.WriteLine("_baseMap.GetMaxExtent: " + _baseMap.GetMaxExtent().ToString());
-            Debug.WriteLine("_baseMap.Projection.ToProj4String: " + _baseMap.Projection.ToProj4String());
-            Debug.WriteLine("_baseMap.Projection: " + _baseMap.Projection.ToString());
-            Debug.WriteLine("_baseMap.ViewExtents: " + _baseMap.ViewExtents.ToString());
-            // AppManager MapFrame
-            Debug.WriteLine("_baseMap.MapFrame.Extent: " + _baseMap.MapFrame.Extent.ToString());
-            Debug.WriteLine("_baseMap.MapFrame.GeographicExtents: " + _baseMap.MapFrame.GeographicExtents.ToString());
-            Debug.WriteLine("_baseMap.MapFrame.Projection: " + _baseMap.MapFrame.Projection.ToProj4String());
-            Debug.WriteLine("_baseMap.MapFrame.Projection: " + _baseMap.MapFrame.Projection.ToString());
-            Debug.WriteLine("_baseMap.MapFrame.ProjectionString: " + _baseMap.MapFrame.ProjectionString);
-            Debug.WriteLine("_baseMap.MapFrame.View: " + _baseMap.MapFrame.View.ToString());
-            Debug.WriteLine("_baseMap.MapFrame.ViewExtents: " + _baseMap.MapFrame.ViewExtents.ToString());
         }
 
         private void btnIndexCancel_Click(object sender, EventArgs e)
