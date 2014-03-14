@@ -73,7 +73,6 @@ namespace Go2It
             // a basemap to hold all layers for the adminlegend
             _baseMap = new Map
             {
-                // BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                 Dock = DockStyle.Fill,
                 Visible = false,
                 Projection = app.Map.Projection,
@@ -109,8 +108,6 @@ namespace Go2It
                 // create a new map to stick to the tab using the settings from _baseMap
                 var nMap = new Map
                 {
-                    // on load use the background color from the settings
-                    // BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                     BackColor = mapBGColorPanel.BackColor,
                     Dock = DockStyle.Fill,
                     Visible = true,
@@ -1396,10 +1393,13 @@ namespace Go2It
             var lyrType = GetLayerIndexTable(lyrName);
             var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
             var d = Path.GetDirectoryName(db);
-            var path = Path.Combine(d, "indexes", lyrType);
-            if (System.IO.Directory.Exists(path))
+            if (d != null)
             {
-                System.IO.Directory.Delete(path, true);
+                var path = Path.Combine(d, "indexes", lyrType);
+                if (System.IO.Directory.Exists(path))
+                {
+                    System.IO.Directory.Delete(path, true);
+                }
             }
             string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
             SQLiteHelper.ClearTable(conn, lyrType);
@@ -1454,7 +1454,6 @@ namespace Go2It
             // create a new map to stick to the tab using the settings from _baseMap
             var nMap = new Map
             {
-                // BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                 BackColor = mapBGColorPanel.BackColor,
                 Dock = DockStyle.Fill,
                 Visible = true,
@@ -1727,6 +1726,7 @@ namespace Go2It
                 IFeatureSet fl = io.FeatureSet;
                 var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
                 var d = Path.GetDirectoryName(db);
+                if (d == null) return;
                 var path = Path.Combine(d, "indexes", io.LayerType);
                 DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
                 Directory dir = FSDirectory.Open(di);

@@ -260,7 +260,7 @@ namespace Go2It
                 };
                 App.DockManager.Add(dp);
             }
-            // select the active map tab via the key and go go go
+            // select the active map tab via the key and go go go speed racer!!!
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
         }
 
@@ -473,13 +473,11 @@ namespace Go2It
                 file.CopyTo(temppath, false);
             }
             // If copying subdirectories, copy them and their contents to new location. 
-            if (copySubDirs)
+            if (!copySubDirs) return;
+            foreach (DirectoryInfo subdir in dirs)
             {
-                foreach (DirectoryInfo subdir in dirs)
-                {
-                    string temppath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, temppath, true);
-                }
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, temppath, true);
             }
         }
 
