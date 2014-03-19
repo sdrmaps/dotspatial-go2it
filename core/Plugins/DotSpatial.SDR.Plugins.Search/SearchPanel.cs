@@ -27,19 +27,19 @@ namespace DotSpatial.SDR.Plugins.Search
             if (searchAdds.Checked)
             {
                 searchType = "address";
-                idxType = "Address_Index";
+                idxType = "AddressIndex";
                 idxQuery = "SELECT * FROM " + idxType;
             }
             else if (searchName.Checked)
             {
                 searchType = "name";
-                idxType = "Address_Index";
+                idxType = "AddressIndex";
                 idxQuery = "SELECT * FROM " + idxType;
             } 
             else if (searchPhone.Checked)
             {
                 searchType = "phone";
-                idxType = "Address_Index";
+                idxType = "AddressIndex";
                 idxQuery = "SELECT * FROM " + idxType;
             }
             else if (searchRoad.Checked)

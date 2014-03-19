@@ -111,7 +111,7 @@ namespace Go2It
             // add the file to recent files list
             SdrConfig.Settings.Instance.AddFileToRecentFiles(App.SerializationManager.CurrentProjectFile);
             // reset the map extents back to defaults
-            SetDefaultMapExtents();
+            // SetDefaultMapExtents();
             // reset the project settings back to default for repopulation
             SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();
             // now clear any map panels that maybe present
@@ -207,7 +207,7 @@ namespace Go2It
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                     Visible = true,
                     // give this new map all the same functionality as the original base map
-                    MapFunctions = App.Map.MapFunctions
+                    // MapFunctions = App.Map.MapFunctions (happens on select)
                 };
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');

@@ -200,7 +200,6 @@ namespace Go2It
                 try
                 {
                     App.SerializationManager.OpenProject(dlg.FileName);
-                    // App.Map.Invalidate();
                 }
                 catch (IOException)
                 {

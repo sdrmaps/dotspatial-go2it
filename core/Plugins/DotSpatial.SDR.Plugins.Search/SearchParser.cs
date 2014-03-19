@@ -228,7 +228,6 @@ namespace DotSpatial.SDR.Plugins.Search
                     }
                 }
                 // check if we have a value set for the start of the road name
-                // string strNameEnd = null;
                 string strNameEnd;
                 if (strNamePos == strTypePos)
                 {

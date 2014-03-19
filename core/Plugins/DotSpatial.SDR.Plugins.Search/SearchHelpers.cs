@@ -20,7 +20,10 @@ namespace DotSpatial.SDR.Plugins.Search
     {
         public static List<DataGridViewRow> ExecuteLuceneQuery(string searchType, string searchString, string idxType, string idxQuery)
         {
-            Directory idxDir = FSDirectory.Open(new DirectoryInfo(SdrConfig.Settings.Instance.CurrentProjectDirectory + "\\indexes\\" + idxType));
+            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(db);
+            var path = Path.Combine(d, "indexes", idxType);
+            Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
             IndexReader reader = IndexReader.Open(idxDir, true);
             Searcher searcher = new IndexSearcher(reader);
             Query query = ConstructLuceneQuery(searchType, searchString);

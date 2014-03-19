@@ -449,7 +449,7 @@
             this.cmbHydrantsLayer.Name = "cmbHydrantsLayer";
             this.cmbHydrantsLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbHydrantsLayer.TabIndex = 26;
-            this.cmbHydrantsLayer.SelectionChangeCommitted += new System.EventHandler(this.cmbHydrantsLayer_SelectionChangeCommitted);
+            this.cmbHydrantsLayer.SelectedIndexChanged += new System.EventHandler(this.cmbHydrantsLayer_SelectedIndexChanged);
             // 
             // lblRoads
             // 
@@ -486,7 +486,7 @@
             this.cmbParcelsLayer.Name = "cmbParcelsLayer";
             this.cmbParcelsLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbParcelsLayer.TabIndex = 21;
-            this.cmbParcelsLayer.SelectionChangeCommitted += new System.EventHandler(this.cmbParcelsLayer_SelectionChangeCommitted);
+            this.cmbParcelsLayer.SelectedIndexChanged += new System.EventHandler(this.cmbParcelsLayer_SelectedIndexChanged);
             // 
             // cmbESNLayer
             // 
@@ -495,7 +495,7 @@
             this.cmbESNLayer.Name = "cmbESNLayer";
             this.cmbESNLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbESNLayer.TabIndex = 20;
-            this.cmbESNLayer.SelectionChangeCommitted += new System.EventHandler(this.cmbESNLayer_SelectionChangeCommitted);
+            this.cmbESNLayer.SelectedIndexChanged += new System.EventHandler(this.cmbESNLayer_SelectedIndexChanged);
             // 
             // cmbCellSectorLayer
             // 
@@ -504,7 +504,7 @@
             this.cmbCellSectorLayer.Name = "cmbCellSectorLayer";
             this.cmbCellSectorLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbCellSectorLayer.TabIndex = 18;
-            this.cmbCellSectorLayer.SelectionChangeCommitted += new System.EventHandler(this.cmbCellSectorLayer_SelectionChangeCommitted);
+            this.cmbCellSectorLayer.SelectedIndexChanged += new System.EventHandler(this.cmbCellSectorLayer_SelectedIndexChanged);
             // 
             // lblCityLimits
             // 
@@ -531,7 +531,7 @@
             this.cmbCityLimitLayer.Name = "cmbCityLimitLayer";
             this.cmbCityLimitLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbCityLimitLayer.TabIndex = 8;
-            this.cmbCityLimitLayer.SelectionChangeCommitted += new System.EventHandler(this.cmbCityLimitLayer_SelectionChangeCommitted);
+            this.cmbCityLimitLayer.SelectedIndexChanged += new System.EventHandler(this.cmbCityLimitLayer_SelectedIndexChanged);
             // 
             // chkRoadLayers
             // 
@@ -560,7 +560,7 @@
             this.cmbNotesLayer.Name = "cmbNotesLayer";
             this.cmbNotesLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbNotesLayer.TabIndex = 5;
-            this.cmbNotesLayer.SelectionChangeCommitted += new System.EventHandler(this.cmbNotesLayer_SelectionChangeCommitted);
+            this.cmbNotesLayer.SelectedIndexChanged += new System.EventHandler(this.cmbNotesLayer_SelectedIndexChanged);
             // 
             // adminTab_UserManagement
             // 

@@ -253,7 +253,10 @@ namespace Go2It
             {
                 var caption = dockInfo.DotSpatialDockPanel.Caption;
                 var idx = cmbActiveMapTab.Items.IndexOf(caption);
-                cmbActiveMapTab.SelectedIndex = idx;
+                if (idx >= 0)
+                {
+                    cmbActiveMapTab.SelectedIndex = idx;
+                }
                 chkViewLayers.Items.Clear();
                 // populate all the layers available to the checkbox
                 foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
@@ -397,60 +400,29 @@ namespace Go2It
             cmbHydrantsLayer.SelectedItem = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer;
         }
 
-        private static object[] GetArrayOfAllLayerNames(IEnumerable<IFeatureSet> mapLayers)
-        {
-            string[] strArr =
-                mapLayers.Select(mapFtLayer => Path.GetFileNameWithoutExtension(mapFtLayer.Filename)).ToArray();
-            var objArr = new object[strArr.Length];
-            for (int i = 0; i < strArr.Length; i++)
-            {
-                objArr[i] = strArr[i];
-            }
-            return objArr;
-        }
-
         private void SetupLayerSelectionSwitchers()
         {
-            // line layers
-            object[] lineNames = GetArrayOfAllLayerNames(_lineLayers);
-            chkRoadLayers.Items.AddRange(lineNames);
             _lineLayerSwitcher.Add(chkRoadLayers);
-            // point layers
-            object[] pointNames = GetArrayOfAllLayerNames(_pointLayers);
-            cmbNotesLayer.Items.AddRange(pointNames);
-            cmbNotesLayer.Items.Add(string.Empty);
-            cmbHydrantsLayer.Items.AddRange(pointNames);
-            cmbHydrantsLayer.Items.Add(string.Empty);
-            _pointLayerSwitcher.Add(cmbNotesLayer, cmbHydrantsLayer);
+            _pointLayerSwitcher.Add(cmbNotesLayer);
+            _pointLayerSwitcher.Add(cmbHydrantsLayer);
             if (radAddressPoints.Checked)
             {
-                chkAddressLayers.Items.AddRange(pointNames);
                 _pointLayerSwitcher.Add(chkAddressLayers);
             }
             if (radKeyLocationsPoints.Checked)
             {
-                chkKeyLocationsLayers.Items.AddRange(pointNames);
                 _pointLayerSwitcher.Add(chkKeyLocationsLayers);
             }
-            // polygon layers
-            object[] polygonNames = GetArrayOfAllLayerNames(_polygonLayers);
-            cmbCityLimitLayer.Items.AddRange(polygonNames);
-            cmbCityLimitLayer.Items.Add(string.Empty);
-            cmbCellSectorLayer.Items.AddRange(polygonNames);
-            cmbCellSectorLayer.Items.Add(string.Empty);
-            cmbESNLayer.Items.AddRange(polygonNames);
-            cmbESNLayer.Items.Add(string.Empty);
-            cmbParcelsLayer.Items.AddRange(polygonNames);
-            cmbParcelsLayer.Items.Add(string.Empty);
-            _polygonLayerSwitcher.Add(cmbCityLimitLayer, cmbCellSectorLayer, cmbESNLayer, cmbParcelsLayer);
+            _polygonLayerSwitcher.Add(cmbCityLimitLayer);
+            _polygonLayerSwitcher.Add(cmbCellSectorLayer);
+            _polygonLayerSwitcher.Add(cmbESNLayer);
+            _polygonLayerSwitcher.Add(cmbParcelsLayer);
             if (radAddressPolygons.Checked)
             {
-                chkAddressLayers.Items.AddRange(polygonNames);
                 _polygonLayerSwitcher.Add(chkAddressLayers);
             }
             if (radKeyLocationsPolygons.Checked)
             {
-                chkKeyLocationsLayers.Items.AddRange(polygonNames);
                 _polygonLayerSwitcher.Add(chkKeyLocationsLayers);
             }
         }
@@ -471,7 +443,15 @@ namespace Go2It
             if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
                 _pointLayers.Add(mapLayer); // add to point layer list
+                if (cmbNotesLayer.Items.Count == 0)
+                {
+                    cmbNotesLayer.Items.Add(string.Empty);
+                }
                 cmbNotesLayer.Items.Add(f);
+                if (cmbHydrantsLayer.Items.Count == 0)
+                {
+                    cmbHydrantsLayer.Items.Add(string.Empty);
+                }
                 cmbHydrantsLayer.Items.Add(f);
                 if (radAddressPoints.Checked)
                 {
@@ -485,9 +465,25 @@ namespace Go2It
             if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
                 _polygonLayers.Add(mapLayer); // add to polygon layer list
+                if (cmbCityLimitLayer.Items.Count == 0)
+                {
+                    cmbCityLimitLayer.Items.Add(string.Empty);
+                }
                 cmbCityLimitLayer.Items.Add(f);
+                if (cmbCellSectorLayer.Items.Count == 0)
+                {
+                    cmbCellSectorLayer.Items.Add(string.Empty);
+                }
                 cmbCellSectorLayer.Items.Add(f);
+                if (cmbESNLayer.Items.Count == 0)
+                {
+                    cmbESNLayer.Items.Add(string.Empty);
+                }
                 cmbESNLayer.Items.Add(f);
+                if (cmbParcelsLayer.Items.Count == 0)
+                {
+                    cmbParcelsLayer.Items.Add(string.Empty);
+                }
                 cmbParcelsLayer.Items.Add(f);
                 if (radAddressPolygons.Checked)
                 {
@@ -690,6 +686,7 @@ namespace Go2It
 
         private void AdminLegendOnOrderChanged(object sender, EventArgs eventArgs)
         {
+            var h = "this";
             // todo:probably should do some event here to update all map tabs
         }
 
@@ -721,10 +718,12 @@ namespace Go2It
                     {
                         SaveProject(_appManager.SerializationManager.CurrentProjectFile);
                     }
+                    Close();
                 }
                 else
                 {
                     SaveProjectAs();
+                    Close();
                 }
             else
             {
@@ -1121,7 +1120,7 @@ namespace Go2It
                 return table;
             }
             sc = ApplyCheckBoxSetting(chkKeyLocationsLayers);
-            if (sc.Contains(layName))
+            if (sc !=null && sc.Contains(layName))
             {
                 var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\keyLocation_indexes.txt");
                 foreach (string key in file)
@@ -1172,7 +1171,6 @@ namespace Go2It
         private String GetLayerIndexTable(string layName)
         {
             StringCollection sc = ApplyCheckBoxSetting(chkAddressLayers);
-
             if (sc != null && sc.Contains(layName))
             {
                 return "AddressIndex";
@@ -1187,19 +1185,19 @@ namespace Go2It
             {
                 return "KeyLocationIndex";
             }
-            if (sc != null && layName == ApplyComboBoxSetting(cmbCityLimitLayer))
+            if (layName == ApplyComboBoxSetting(cmbCityLimitLayer))
             {
                 return "CityLimitIndex";
             }
-            if (sc != null && layName == ApplyComboBoxSetting(cmbCellSectorLayer))
+            if (layName == ApplyComboBoxSetting(cmbCellSectorLayer))
             {
                 return "CellSectorIndex";
             }
-            if (sc != null && layName == ApplyComboBoxSetting(cmbESNLayer))
+            if (layName == ApplyComboBoxSetting(cmbESNLayer))
             {
                 return "EsnIndex";
             }
-            if (sc != null && layName == ApplyComboBoxSetting(cmbParcelsLayer))
+            if (layName == ApplyComboBoxSetting(cmbParcelsLayer))
             {
                 return "ParcelIndex";
             }
@@ -1524,29 +1522,6 @@ namespace Go2It
             cmbLayerIndex.Items.AddRange(sels.ToArray());
         }
 
-        private void cmbCityLimitLayer_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var cmb = (ComboBox)sender;
-            var cl = new List<string>();
-            if (cmb.SelectedItem.ToString().Length > 0)
-            {
-                cl.Add(cmb.SelectedItem.ToString());
-            }
-            var ad = AddLayersToIndex(chkAddressLayers);
-            var rd = AddLayersToIndex(chkRoadLayers);
-            var kl = AddLayersToIndex(chkKeyLocationsLayers);
-            var cs = AddLayersToIndex(cmbCellSectorLayer);
-            var es = AddLayersToIndex(cmbESNLayer);
-            var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
-            _dirtyProject = true;
-        }
-
-        private void cmbNotesLayer_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            _dirtyProject = true;
-        }
-
         private void chkRoadLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var clb = (CheckedListBox)sender;
@@ -1594,65 +1569,6 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
-            _dirtyProject = true;
-        }
-
-        private void cmbCellSectorLayer_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var cmb = (ComboBox)sender;
-            var cs = new List<string>();
-            if (cmb.SelectedItem.ToString().Length > 0)
-            {
-                cs.Add(cmb.SelectedItem.ToString());
-            }
-            var ad = AddLayersToIndex(chkAddressLayers);
-            var rd = AddLayersToIndex(chkRoadLayers);
-            var kl = AddLayersToIndex(chkKeyLocationsLayers);
-            var cl = AddLayersToIndex(cmbCityLimitLayer);
-            var es = AddLayersToIndex(cmbESNLayer);
-            var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
-            _dirtyProject = true;
-        }
-
-        private void cmbESNLayer_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var cmb = (ComboBox)sender;
-            var es = new List<string>();
-            if (cmb.SelectedItem.ToString().Length > 0)
-            {
-                es.Add(cmb.SelectedItem.ToString());
-            }
-            var ad = AddLayersToIndex(chkAddressLayers);
-            var rd = AddLayersToIndex(chkRoadLayers);
-            var kl = AddLayersToIndex(chkKeyLocationsLayers);
-            var cs = AddLayersToIndex(cmbCellSectorLayer);
-            var cl = AddLayersToIndex(cmbCityLimitLayer);
-            var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
-            _dirtyProject = true;
-        }
-
-        private void cmbParcelsLayer_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var cmb = (ComboBox)sender;
-            var pl = new List<string>();
-            if (cmb.SelectedItem.ToString().Length > 0)
-            {
-                pl.Add(cmb.SelectedItem.ToString());
-            }
-            var ad = AddLayersToIndex(chkAddressLayers);
-            var rd = AddLayersToIndex(chkRoadLayers);
-            var kl = AddLayersToIndex(chkKeyLocationsLayers);
-            var cs = AddLayersToIndex(cmbCellSectorLayer);
-            var cl = AddLayersToIndex(cmbCityLimitLayer);
-            var es = AddLayersToIndex(cmbESNLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
-            _dirtyProject = true;
-        }
-
-        private void cmbHydrantsLayer_SelectionChangeCommitted(object sender, EventArgs e)
-        {
             _dirtyProject = true;
         }
 
@@ -1792,5 +1708,86 @@ namespace Go2It
             idxProgressBar.Value = e.ProgressPercentage;
         }
 
+        private void cmbCellSectorLayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cmb = (ComboBox)sender;
+            var cs = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                cs.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            _dirtyProject = true;
+        }
+
+        private void cmbNotesLayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _dirtyProject = true;
+        }
+
+        private void cmbCityLimitLayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cmb = (ComboBox)sender;
+            var cl = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                cl.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            _dirtyProject = true;
+        }
+
+        private void cmbESNLayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cmb = (ComboBox)sender;
+            var es = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                es.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            _dirtyProject = true;
+        }
+
+        private void cmbParcelsLayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cmb = (ComboBox)sender;
+            var pl = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                pl.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            _dirtyProject = true;
+        }
+
+        private void cmbHydrantsLayer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _dirtyProject = true;
+        }
     }
 }
