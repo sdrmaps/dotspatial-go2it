@@ -189,6 +189,7 @@ IF /I "%1"=="--Help" (
     Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-install.zip %BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi
     COPY /Y "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\archive\%PRODUCT%"
     DEL /S "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi"
+    DEL /S "%BUILDPATH%\en-us\%PRODUCT%.wixpdb"
     Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-files.zip %BUILDPATH%\*
     goto DELETEFILES
 
