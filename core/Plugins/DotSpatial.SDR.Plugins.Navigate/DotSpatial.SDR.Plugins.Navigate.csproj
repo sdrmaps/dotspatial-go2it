@@ -79,7 +79,7 @@
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
       <HintPath>..\..\..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
       <HintPath>..\..\DotSpatial\DotSpatial.Symbology.dll</HintPath>
