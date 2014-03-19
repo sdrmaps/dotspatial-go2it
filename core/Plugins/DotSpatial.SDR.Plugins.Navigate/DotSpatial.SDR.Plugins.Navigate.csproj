@@ -82,6 +82,7 @@
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
       <HintPath>..\..\..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
       <HintPath>..\..\DotSpatial\DotSpatial.Symbology.dll</HintPath>
@@ -137,9 +138,6 @@
     <Content Include="Resources\zoom_prev_32.png" />
     <Content Include="Resources\zoom_to_layer_16.png" />
     <Content Include="Resources\zoom_to_layer_32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
