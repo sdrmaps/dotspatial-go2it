@@ -60,9 +60,6 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
-  <PropertyGroup>
-    <ReferencePath>..\..\..\build\Release\</ReferencePath>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotSpatial.Controls">
       <HintPath>..\..\DotSpatial\DotSpatial.Controls.dll</HintPath>
@@ -81,7 +78,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
-      <HintPath>..\..\..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
