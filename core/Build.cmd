@@ -106,7 +106,7 @@ IF /I "%1"=="--Help" (
     ECHO.
     REM If cleaning then do the application first to properly unregister from COM (if so it will happen in the proj file)
     IF /I "%TYPE%"=="Clean" (
-        msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\src\%PRODUCT%.csproj
+        msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\%PRODUCT%.sln
 	IF NOT %ERRORLEVEL%==0 ( goto HALT )
     )
     REM Debug mode only compiles the product extension not additional libraries
@@ -120,10 +120,10 @@ IF /I "%1"=="--Help" (
 		msbuild.exe /p:BuildInfo=%BUILD_INFO%;Version=!SUB_VERSION:~1! AssemblyInfo\Versioning.proj
 		IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		IF EXIST Components\%%a\%%a.csproj (
-		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\ Components\%%a\%%a.csproj
+		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\ Components\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		) ELSE (
-		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\Plugins Plugins\%%a\%%a.csproj
+		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\Plugins Plugins\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		)
 	    )
@@ -131,10 +131,10 @@ IF /I "%1"=="--Help" (
 	IF NOT "%TYPE%"=="Release" (
 	    FOR /f "eol=; tokens=* delims= " %%a in (..\config\_components.txt) do (
 		IF EXIST Components\%%a\%%a.csproj (
-		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\ Components\%%a\%%a.csproj
+		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\ Components\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		) ELSE (
-		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\Plugins Plugins\%%a\%%a.csproj
+		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\Plugins Plugins\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		)
 	    )
@@ -149,7 +149,7 @@ IF /I "%1"=="--Help" (
         IF NOT %ERRORLEVEL%==0 ( goto HALT )
     )
     IF NOT %TYPE%=="Clean" (
-        msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\src\%PRODUCT%.csproj
+        msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\%PRODUCT%.csproj
 	IF NOT %ERRORLEVEL%==0 ( goto HALT )
     )
     IF /I "%TYPE%"=="Clean" ( goto DELETEFILES ) ELSE (
