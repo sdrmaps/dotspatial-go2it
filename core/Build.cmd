@@ -189,9 +189,10 @@ IF /I "%1"=="--Help" (
     REM make sure that the archive directory is available
     RD /S/Q "..\archive\%PRODUCT%\"
     IF NOT EXIST "..\archive\%PRODUCT%\" ( MD "..\archive\%PRODUCT%" )
+    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-install.zip %BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi
     COPY /Y "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\archive\%PRODUCT%"
     RD /S/Q "%BUILDPATH%\en-us"
-    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%.zip %BUILDPATH%\*
+    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-files.zip %BUILDPATH%\*
     goto DELETEFILES
 
 :COPYFILES
