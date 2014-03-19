@@ -149,7 +149,7 @@ IF /I "%1"=="--Help" (
         IF NOT %ERRORLEVEL%==0 ( goto HALT )
     )
     IF NOT %TYPE%=="Clean" (
-        msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\%PRODUCT%.csproj
+        msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\%PRODUCT%.sln
 	IF NOT %ERRORLEVEL%==0 ( goto HALT )
     )
     IF /I "%TYPE%"=="Clean" ( goto DELETEFILES ) ELSE (
