@@ -94,19 +94,19 @@
     </Reference>
     <Reference Include="SDR.Authentication">
       <HintPath>..\build\Debug\SDR.Authentication.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SDR.Common">
       <HintPath>..\build\Debug\SDR.Common.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SDR.Configuration">
       <HintPath>..\build\Debug\SDR.Configuration.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SDR.Data">
       <HintPath>..\build\Debug\SDR.Data.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
