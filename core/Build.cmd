@@ -57,8 +57,7 @@ IF /I "%1"=="--Help" (
     goto SETBUILDPATH
 
 :SETBUILDPATH
-    IF "%TYPE%"=="Release" ( SET "BUILDPATH=..\build\%CONFIG%" )
-    IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
+    SET "BUILDPATH=..\build\%CONFIG%"
     goto SETVERSION
 	
 :RELEASE
@@ -178,8 +177,6 @@ IF /I "%1"=="--Help" (
     msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\install\%PRODUCT%.Install.sln
     IF NOT %ERRORLEVEL%==0 ( goto HALT )
     RENAME "%BUILDPATH%\en-us\%PRODUCT%.msi" "%VERSION%.%BUILD_INFO%.msi"
-    REM Echo Sending Completed Installer to FTP for Associate access
-    REM CALL ../Send2Ftp %PRODUCT% %VERSION% %BUILD_INFO%
     goto ZIPARTIFACTS
 	
 :ZIPARTIFACTS
@@ -191,7 +188,7 @@ IF /I "%1"=="--Help" (
     IF NOT EXIST "..\archive\%PRODUCT%\" ( MD "..\archive\%PRODUCT%" )
     Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-install.zip %BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi
     COPY /Y "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\archive\%PRODUCT%"
-    RD /S/Q "%BUILDPATH%\en-us"
+    DEL /S "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi"
     Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-files.zip %BUILDPATH%\*
     goto DELETEFILES
 
