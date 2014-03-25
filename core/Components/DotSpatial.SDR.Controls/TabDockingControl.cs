@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 
@@ -15,6 +19,7 @@ namespace DotSpatial.SDR.Controls
         private TabControl _mapTabs;
         private TablessControl _toolTabs;
         private readonly ImageList _tabImages = new ImageList();
+        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 
         // lookup list of all available tool and map dockpanels
         public readonly Dictionary<string, DockPanelInfo> DockPanelLookup = new Dictionary<string, DockPanelInfo>();
@@ -37,6 +42,10 @@ namespace DotSpatial.SDR.Controls
             
             // create the tab and tabless panel controls
             _mapTabs = new TabControl {Name = "contentTabs", Dock = DockStyle.Fill};
+            // watch for map panel changhes via tab selections
+            
+            _mapTabs.SelectedIndexChanged += MapTabsOnSelectedIndexChanged;
+
             _toolTabs = new TablessControl {Name = "toolTabs", Dock = DockStyle.Fill};
 
             toolPanel.Controls.Add(_toolTabs);
@@ -67,9 +76,7 @@ namespace DotSpatial.SDR.Controls
 
             // create tabpage to hold the control
             var tabPage = new TabPage { Padding = new Padding(0), Margin = new Padding(0) };
-            // setup tabpage enter/selection event
-            tabPage.Enter += tabPage_Enter;
-
+ 
             // add the actual control panel to the tabpage
             tabPage.Controls.Add(innerControl);
             tabPage.Dock = dockStyle;
@@ -90,8 +97,22 @@ namespace DotSpatial.SDR.Controls
 
             if (key.Trim().StartsWith("kMap"))
             {
+                var idx = tabPage.Controls.IndexOf(innerControl);
+                var control = tabPage.Controls[idx];
+                var map = control as Map;
+
+                map.SuspendLayout();
+                map.Layers.SuspendEvents();
+                var mapFrame = map.MapFrame as MapFrame;
+                mapFrame.SuspendEvents();
+                mapFrame.SuspendChangeEvent();
+                var can_zoom_belore = mapFrame.CanZoomToPrevious();
+
                 // kMaps are map tabs
                 _mapTabs.Controls.Add(tabPage);
+
+                var can_zoom_after = mapFrame.CanZoomToPrevious();
+
                 if (_mapTabs.TabCount > 1)
                 {
                     int sortIndex = ConvertSortOrderToIndex(_mapTabs, zorder);
@@ -116,8 +137,6 @@ namespace DotSpatial.SDR.Controls
         {
             if (_mapTabs.Controls.ContainsKey(key))
             {
-                var tabPage = (TabPage)_mapTabs.Controls[_mapTabs.Controls.IndexOfKey(key)];
-                tabPage.Enter -= tabPage_Enter;  // remove the tabpage enter event from the tab
                 _mapTabs.Controls.RemoveByKey(key);
             }
             if (_toolTabs.Controls.ContainsKey(key))
@@ -127,8 +146,6 @@ namespace DotSpatial.SDR.Controls
             // finally lets remove the actual dockpanel now
             DockPanelInfo dockInfo;
             if (!DockPanelLookup.TryGetValue(key, out dockInfo)) return;
-            dockInfo.DockPanelTab.Enter -= tabPage_Enter;
-            // dockInfo.DotSpatialDockPanel.PropertyChanged -= panel_PropertyChanged;
             DockPanelLookup.Remove(key);
             OnPanelRemoved(key);
         }
@@ -143,10 +160,26 @@ namespace DotSpatial.SDR.Controls
             BaseLayerLookup.Clear();  // clear base layer lookup (wipe all layers)
         }
 
+        private void MapTabsOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            var tc = sender as TabControl;
+            if (tc == null) return;
+            var tp = tc.SelectedTab;
+            var txt = tp.Text;
+            var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
+            fname = fname.Replace(" ", "");
+            var key = "kMap_" + fname;
+            SelectPanel(key);
+        }
+
         public void SelectPanel(string key)
         {
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
+            var map = (Map)info.DotSpatialDockPanel.InnerControl;
+            var mapFrame = (MapFrame)map.MapFrame;
+            mapFrame.SuspendEvents();
+
             if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
                 if (_mapTabs.SelectedTab == info.DockPanelTab)
@@ -158,16 +191,24 @@ namespace DotSpatial.SDR.Controls
                     _mapTabs.SelectTab(info.DockPanelTab);
                 }
             }
+            else // these are kPanels (tool panels not map panels)
+            {
+                if (_toolTabs.SelectedTab == info.DockPanelTab)
+                {
+                    OnActivePanelChanged(key);
+                }
+                else
+                {
+                    _toolTabs.SelectTab(info.DockPanelTab);
+                }
+            }
+
+            mapFrame.ResumeEvents();
         }
 
         public void HidePanel(string key)
         {
             throw new NotImplementedException();
-            /* DockPanelInfo info;
-             if (DockPanelLookup.TryGetValue(key, out info))
-             {
-                 info.DockPanelTab.Hide();
-             } */
         }
 
         public void ShowPanel(string key)
@@ -184,12 +225,6 @@ namespace DotSpatial.SDR.Controls
         public event EventHandler<DockablePanelEventArgs> PanelHidden;
 
         #region Private Methods
-
-        void tabPage_Enter(object sender, EventArgs e)
-        {
-            var tabPage = sender as TabPage;
-            if (tabPage != null) OnActivePanelChanged(tabPage.Name);
-        }
 
         private int ConvertSortOrderToIndex(TabControl tc, int sortOrder)
         {
@@ -308,35 +343,6 @@ namespace DotSpatial.SDR.Controls
         #endregion
 
         #region Event Handlers
-
-        /* when the dockable panel property is changed
-        void panel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            /var dp = sender as DockablePanel;
-            if (dp != null)
-            {
-                switch (e.PropertyName)
-                {
-                    case "Caption":
-                        TabPage tp = DockPanelLookup[dp.Key].DockPanelTab;
-                        tp.Text = dp.Caption;
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapCaption = dp.Caption;
-                        break;
-                    case "Key":
-                        string oldKey = SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapKey;
-                        DockPanelInfo dockInfo;
-                        // if the key changed we need to update our dict remove the old and replace
-                        if (DockPanelLookup.TryGetValue(oldKey, out dockInfo))
-                        {
-                            DockPanelLookup.Remove(oldKey);
-                            SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapKey = dp.Key;
-                            dockInfo.DotSpatialDockPanel.Key = dp.Key;
-                            DockPanelLookup.Add(dp.Key, dockInfo);
-                        }
-                        break;
-                }
-            } 
-        }*/
 
         private static void Splitter_Paint(object sender, PaintEventArgs e)
         {

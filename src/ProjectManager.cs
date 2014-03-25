@@ -110,8 +110,6 @@ namespace Go2It
             if (App.SerializationManager.CurrentProjectFile == null) return;
             // add the file to recent files list
             SdrConfig.Settings.Instance.AddFileToRecentFiles(App.SerializationManager.CurrentProjectFile);
-            // reset the map extents back to defaults
-            // SetDefaultMapExtents();
             // reset the project settings back to default for repopulation
             SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();
             // now clear any map panels that maybe present
@@ -197,18 +195,26 @@ namespace Go2It
                 var txtKey = row["lookup"].ToString();
                 var txtCaption  = row["caption"].ToString();
                 var txtLayers = row["layers"].ToString();
-                // unused
-                // var txtExtent = row["extent"].ToString();
-                // var txtBounds = row["bounds"].ToString();
                 var txtViewExtent = row["viewextent"].ToString();
                 var zorder = row["zorder"].ToString();
+                // unused
+                var txtExtent = row["extent"].ToString();
+                var txtBounds = row["bounds"].ToString();
+                
                 var nMap = new Map
                 {
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
-                    Visible = true,
-                    // give this new map all the same functionality as the original base map
-                    // MapFunctions = App.Map.MapFunctions (happens on select)
+                    Visible = true
                 };
+                
+                nMap.SuspendLayout();
+                var nMapFrame = nMap.MapFrame as MapFrame;
+                nMapFrame.SuspendChangeEvent();
+                nMapFrame.SuspendEvents();
+                nMap.Layers.SuspendEvents();
+               
+                // nMapFrame.ViewExtentsChanged -= NMapFrameOnViewExtentsChanged;
+               
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
                 foreach (IMapLayer ml in App.Map.Layers)
@@ -253,6 +259,7 @@ namespace Go2It
                 {
                     nMap.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MinY);
                 }
+                nMapFrame.ViewExtentsChanged += NMapFrameOnViewExtentsChanged;
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
                 {
@@ -262,6 +269,12 @@ namespace Go2It
             }
             // select the active map tab via the key and go go go speed racer!!!
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
+        }
+
+        private void NMapFrameOnViewExtentsChanged(object sender, ExtentArgs extentArgs)
+        {
+            var x = sender;
+            var z = extentArgs;
         }
 
 

@@ -12,6 +12,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
 {
     public class NavigatePlugin : Extension
     {
+        #region Constants and Fields
+
         private Map _map;
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
 
@@ -19,44 +21,97 @@ namespace DotSpatial.SDR.Plugins.Navigate
         private SimpleActionItem _zoomPrevious;
         private SimpleActionItem _zoomToLayer;
 
+        #endregion
+
         #region Public Methods
 
         public override void Activate()
         {
-            IHeaderControl header = App.HeaderControl;
-            header.Add(new SimpleActionItem(HomeMenuKey, "Pan", PanTool_Click) { GroupCaption = "Navigate_Pan", ToolTipText = "Pan", SmallImage = Resources.pan_16, LargeImage = Resources.pan_32 });
-            header.Add(new SimpleActionItem(HomeMenuKey, "In", ZoomIn_Click) { GroupCaption = "Navigate_Zoom_In", ToolTipText = "Zoom In", SmallImage = Resources.zoom_in_16, LargeImage = Resources.zoom_in_32 });
-            header.Add(new SimpleActionItem(HomeMenuKey, "Out", ZoomOut_Click) { GroupCaption = "Navigate_Zoom_Out", ToolTipText = "Zoom Out", SmallImage = Resources.zoom_out_16, LargeImage = Resources.zoom_out_32 });
-            header.Add(new SimpleActionItem(HomeMenuKey, "Extent", ZoomToMaxExtents_Click) { GroupCaption = "Navigate_Zoom_Max_Extent", ToolTipText = "Zoom to Max Extent", SmallImage = Resources.zoom_extent_16, LargeImage = Resources.zoom_extent_32 });
-            // TODO: the extent stuff is messed up in here
-            // _zoomPrevious = new SimpleActionItem(HomeMenuKey, "Previous", ZoomPrevious_Click) { GroupCaption = "Navigate_Zoom_previous", ToolTipText = "Previous Zoom View", SmallImage = Resources.zoom_prev_16, LargeImage = Resources.zoom_prev_32, Enabled = false };
-            // header.Add(_zoomPrevious);
-            // _zoomNext = new SimpleActionItem(HomeMenuKey, "Next", ZoomNext_Click) { GroupCaption = "Navigate_Zoom_Next", ToolTipText = "Next Zoom View", SmallImage = Resources.zoom_next_16, LargeImage = Resources.zoom_next_32, Enabled = false };
-            // header.Add(_zoomNext);
-            // _zoomToLayer = new SimpleActionItem(HomeMenuKey, "To Layer", ZoomToLayer_Click) { GroupCaption = "Navigate_Zoom_To_Layer", ToolTipText = "Zoom To Selected Layer", SmallImage = Resources.zoom_to_layer_16, LargeImage = Resources.zoom_to_layer_32, Enabled = false };
-            // header.Add(_zoomToLayer);
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Pan", PanTool_Click)
+            {
+                GroupCaption = "Navigate_Pan",
+                ToolTipText = "Pan",
+                SmallImage = Resources.pan_16,
+                LargeImage = Resources.pan_32
+            });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "In", ZoomIn_Click)
+            {
+                GroupCaption = "Navigate_Zoom_In",
+                ToolTipText = "Zoom In",
+                SmallImage = Resources.zoom_in_16,
+                LargeImage = Resources.zoom_in_32
+            });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Out", ZoomOut_Click)
+            {
+                GroupCaption = "Navigate_Zoom_Out",
+                ToolTipText = "Zoom Out",
+                SmallImage = Resources.zoom_out_16,
+                LargeImage = Resources.zoom_out_32
+            });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Extent", ZoomToMaxExtents_Click)
+            {
+                GroupCaption = "Navigate_Zoom_Max_Extent",
+                ToolTipText = "Zoom to Max Extent",
+                SmallImage = Resources.zoom_extent_16,
+                LargeImage = Resources.zoom_extent_32
+            });
+            _zoomPrevious = new SimpleActionItem(HomeMenuKey, "Previous", ZoomPrevious_Click)
+            {
+                GroupCaption = "Navigate_Zoom_previous",
+                ToolTipText = "Previous Zoom View",
+                SmallImage = Resources.zoom_prev_16,
+                LargeImage = Resources.zoom_prev_32,
+                Enabled = false
+            };
+            App.HeaderControl.Add(_zoomPrevious);
+            _zoomNext = new SimpleActionItem(HomeMenuKey, "Next", ZoomNext_Click)
+            {
+                GroupCaption = "Navigate_Zoom_Next",
+                ToolTipText = "Next Zoom View",
+                SmallImage = Resources.zoom_next_16,
+                LargeImage = Resources.zoom_next_32,
+                Enabled = false
+            };
+            App.HeaderControl.Add(_zoomNext);
+            _zoomToLayer = new SimpleActionItem(HomeMenuKey, "To Layer", ZoomToLayer_Click)
+            {
+                GroupCaption = "Navigate_Zoom_To_Layer",
+                ToolTipText = "Zoom To Selected Layer",
+                SmallImage = Resources.zoom_to_layer_16,
+                LargeImage = Resources.zoom_to_layer_32,
+                Enabled = false
+            };
+            App.HeaderControl.Add(_zoomToLayer);
 
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
-
             base.Activate();
         }
 
-        private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
+        private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            var dockControl = (TabDockingControl)sender;
-            var key = dockablePanelEventArgs.ActivePanelKey;
             DockPanelInfo dockInfo;
+            var dockControl = (TabDockingControl)sender;
+            var key = e.ActivePanelKey;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
-            // if this is a map tab update the map for navigation
-            if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
-            // first check if there is already a map, if so then remove the events on it
+
+            if (!key.StartsWith("kMap_")) return;
+            // var enable = false;
             if (_map != null)
-            {
+            {   // remove the events on the map layer that is currently active
                 _map.Layers.LayerSelected -= LayersOnLayerSelected;
                 _map.MapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
+                // enable = true;
             }
             // grab the active map from the dockinginfo object
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+            // check if there was a aprevious map and set enable if needed
+            // if (enable)
+            // {
+            MapFrame mf = (MapFrame)_map.MapFrame;
+
+            _zoomNext.Enabled = mf.CanZoomToNext();
+            _zoomPrevious.Enabled = mf.CanZoomToPrevious();
+            // }
             // setup all the events for navigation controls on the map
             _map.Layers.LayerSelected += LayersOnLayerSelected;
             _map.MapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
@@ -65,23 +120,26 @@ namespace DotSpatial.SDR.Plugins.Navigate
         public override void Deactivate()
         {
             App.HeaderControl.RemoveAll();
+            _map.Layers.LayerSelected -= LayersOnLayerSelected;
+            _map.MapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             base.Deactivate();
         }
 
         #endregion
 
         #region Methods
+
         private void LayersOnLayerSelected(object sender, LayerSelectedEventArgs layerSelectedEventArgs)
         {
-            // _zoomToLayer.Enabled = App.Map.Layers.SelectedLayer != null;
+            _zoomToLayer.Enabled = _map.Layers.SelectedLayer != null;
         }
 
         private void MapFrameOnViewExtentsChanged(object sender, ExtentArgs extentArgs)
         {
             var mapFrame = sender as MapFrame;
             if (mapFrame == null) return;
-            // _zoomNext.Enabled = mapFrame.CanZoomToNext();
-            // _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
+            _zoomNext.Enabled = mapFrame.CanZoomToNext();
+            _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
         }
 
         /// <summary>
@@ -156,9 +214,9 @@ namespace DotSpatial.SDR.Plugins.Navigate
             }
             else
             {
-                const double zoomInFactor = 0.05; //fixed zoom-in by 10% - 5% on each side
-                double newExtentWidth = _map.ViewExtents.Width * zoomInFactor;
-                double newExtentHeight = _map.ViewExtents.Height * zoomInFactor;
+                const double zoomInFactor = 0.05; // fixed zoom-in by 10% - 5% on each side
+                var newExtentWidth = _map.ViewExtents.Width * zoomInFactor;
+                var newExtentHeight = _map.ViewExtents.Height * zoomInFactor;
                 layerEnvelope.ExpandBy(newExtentWidth, newExtentHeight);
             }
             _map.ViewExtents = layerEnvelope.ToExtent();

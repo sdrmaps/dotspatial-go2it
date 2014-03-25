@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using DotSpatial.Data;
 using SDR.Common;
-using SDR.Common.logging;
+using ILog = SDR.Common.logging.ILog;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -33,15 +35,30 @@ namespace Go2It
                 Map = new Map
                 {
                     Dock = DockStyle.Fill,
-                    Visible = true
+                    Visible = true,
                 }
             };
+
+            //AppManager.Map.Layers.SuspendEvents();
+            //AppManager.Map.MapFrame.SuspendEvents();
+            //var mapFrame = AppManager.Map.MapFrame as MapFrame;
+            //mapFrame.SuspendChangeEvent();
+            //mapFrame.SuspendEvents();
+            //var map = AppManager.Map as Map;
+            //map.SuspendLayout();
+            //map.ViewExtentsChanged += MapOnViewExtentsChanged;
+
             log.Info("Startup -> AppManager.Map.Projection: " + AppManager.Map.Projection.ToProj4String());
             log.Info("Startup -> AppManager.Map.MapFrame.ProjectionString: " + AppManager.Map.MapFrame.ProjectionString);
             log.Info("Startup -> AppManager.Map.Extent: " + AppManager.Map.Extent);
             log.Info("Startup -> AppManager.Map.ViewExtents: " + AppManager.Map.ViewExtents);
             _shell = this;
             AppManager.LoadExtensions();
+        }
+
+        private void MapOnViewExtentsChanged(object sender, ExtentArgs extentArgs)
+        {
+            throw new NotImplementedException();
         }
     }
 }

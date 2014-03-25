@@ -43,7 +43,6 @@ namespace Go2It
             header.Add(new SimpleActionItem(FileMenuKey, "Open Project", OpenProject_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 10, SmallImage = Resources.open_file_16, LargeImage = Resources.open_file_32 });
             // header.Add(new SimpleActionItem(FileMenuKey, Msg.File_Print, PrintLayout_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 40, SmallImage = Resources.printer_16, LargeImage = Resources.printer_32 });
             header.Add(new SimpleActionItem(FileMenuKey, "New Project", NewLayout_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 200, SmallImage = Resources.filenew_16, LargeImage = Resources.filenew_32 });
-            header.Add(new SimpleActionItem(FileMenuKey, "Map Info", Info_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 2000, });
             header.Add(new SimpleActionItem(FileMenuKey, "Exit", Exit_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 5000, });
             // add the admin menu
             header.Add(new RootItem(AdminMenuKey, "Administration") {SortOrder = -10});
@@ -169,25 +168,6 @@ namespace Go2It
         private void Exit_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void Info_Click(object sender, EventArgs e)
-        {
-            // AppManager Map
-            Debug.WriteLine("_appManager.Map.Bounds: " + _appManager.Map.Bounds);
-            Debug.WriteLine("_appManager.Map.Extent: " + _appManager.Map.Extent);
-            Debug.WriteLine("_appManager.Map.GetMaxExtent: " + _appManager.Map.GetMaxExtent());
-            Debug.WriteLine("_appManager.Map.Projection.ToProj4String: " + _appManager.Map.Projection.ToProj4String());
-            Debug.WriteLine("_appManager.Map.Projection: " + _appManager.Map.Projection);
-            Debug.WriteLine("_appManager.Map.ViewExtents: " + _appManager.Map.ViewExtents);
-            // AppManager MapFrame
-            Debug.WriteLine("_appManager.Map.MapFrame.Extent: " + _appManager.Map.MapFrame.Extent);
-            Debug.WriteLine("_appManager.Map.MapFrame.GeographicExtents: " + _appManager.Map.MapFrame.GeographicExtents);
-            Debug.WriteLine("_appManager.Map.MapFrame.Projection.ToProj4String: " + _appManager.Map.MapFrame.Projection.ToProj4String());
-            Debug.WriteLine("_appManager.Map.MapFrame.Projection: " + _appManager.Map.MapFrame.Projection);
-            Debug.WriteLine("_appManager.Map.MapFrame.ProjectionString: " + _appManager.Map.MapFrame.ProjectionString);
-            Debug.WriteLine("_appManager.Map.MapFrame.View: " + _appManager.Map.MapFrame.View);
-            Debug.WriteLine("_appManager.Map.MapFrame.ViewExtents: " + _appManager.Map.MapFrame.ViewExtents);
         }
 
         private void OpenProject_Click(object sender, EventArgs e)

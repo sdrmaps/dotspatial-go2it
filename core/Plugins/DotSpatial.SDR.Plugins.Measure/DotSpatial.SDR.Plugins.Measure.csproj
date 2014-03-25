@@ -58,6 +58,10 @@
       <HintPath>..\..\DotSpatial\DotSpatial.Projections.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DotSpatial.SDR.Controls">
+      <HintPath>..\..\..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotSpatial.Symbology">
       <HintPath>..\..\DotSpatial\DotSpatial.Symbology.dll</HintPath>
       <Private>False</Private>

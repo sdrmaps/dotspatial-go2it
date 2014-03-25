@@ -15,30 +15,39 @@ namespace Go2It
         internal ContainerControl Shell { get; set; }
 
         private Map _map;
+        private const string HomeMenuKey = DotSpatial.Controls.Header.HeaderControl.HomeRootItemKey;
+
         private RestrictedLegend _userLegend;
         private UserLegendForm _userLegendForm;
 
         public override void Activate()
         {
-            App.HeaderControl.Add(new SimpleActionItem(DotSpatial.Controls.Header.HeaderControl.HomeRootItemKey, "Legend", ToggleLegendTool_Click) { GroupCaption = "Legend_Toggle", ToolTipText = "Toggle Legend Visibility", SmallImage = Resources.legend_16, LargeImage = Resources.legend_32 });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Legend", ToggleLegendTool_Click)
+            {
+                GroupCaption = "Legend_Toggle",
+                ToolTipText = "Toggle Legend Visibility",
+                SmallImage = Resources.legend_16,
+                LargeImage = Resources.legend_32
+            });
+
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             base.Activate();
         }
 
-        private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
+        private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            var dockControl = (DockingControl)sender;
-            var key = dockablePanelEventArgs.ActivePanelKey;
             DockPanelInfo dockInfo;
+            var dockControl = (DockingControl)sender;
+            var key = e.ActivePanelKey;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
-            // if this is a map tab then update the legend to reflect the map tab
-            if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
 
+            if (!key.StartsWith("kMap_")) return;
             if (_userLegend != null)
             {
                 _userLegend.RootNodes.Clear();
             }
-            // update the active )_map for the legend now
+
+            // update the active _map for the legend now
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             _map.Legend = _userLegend;
         }
@@ -46,6 +55,8 @@ namespace Go2It
         public override void Deactivate()
         {
             App.HeaderControl.RemoveAll();
+            App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
+            _userLegendForm.FormClosing -= UserLegend_Closed;
             base.Deactivate();
         }
 
@@ -74,12 +85,6 @@ namespace Go2It
             e.Cancel = true; // cancel the event from closing completion (disposing of legend)
         }
 
-        private void HandleUserLegendFormEvents()
-        {
-            // setup delegates to communicate via events
-            _userLegendForm.FormClosing += UserLegend_Closed;
-        }
-
         private void AttachLegend()
         {
             _userLegend = new RestrictedLegend
@@ -104,10 +109,9 @@ namespace Go2It
                 VerticalScrollEnabled = true
             };
 
-            _userLegendForm = new UserLegendForm();
+            // _userLegendForm = new UserLegendForm();
             _userLegendForm.Controls.Add(_userLegend);
-
-            HandleUserLegendFormEvents();
+            _userLegendForm.FormClosing += UserLegend_Closed;
             // assign the legend to the active _map now
             if (_map != null)
             {

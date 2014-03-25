@@ -128,6 +128,7 @@ namespace Go2It
 
             // setup all interface events now
             FormClosing += AdminForm_Closing; // check for isdirty changes to project file
+            FormClosed += AdminFormClosed;
             chkViewLayers.ItemCheck += chkViewLayers_ItemCheck; // add or remove item to specific map tab view
 
             // setup a background worker for update progress bar on indexing tab
@@ -136,6 +137,21 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
+        }
+
+        private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
+        {
+            // unbind all our events now
+            adminLayerSplitter.Paint -= Splitter_Paint;
+            _appManager.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
+            _baseMap.Layers.LayerRemoved -= LayersOnLayerRemoved;
+            _baseMap.Layers.LayerAdded -= LayersOnLayerAdded;
+            FormClosing -= AdminForm_Closing;
+            chkViewLayers.ItemCheck -= chkViewLayers_ItemCheck;
+            _idxWorker.DoWork -= idx_DoWork;
+            _idxWorker.ProgressChanged -= idx_ProgressChanged;
+            _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
+            FormClosed -= AdminFormClosed;
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
