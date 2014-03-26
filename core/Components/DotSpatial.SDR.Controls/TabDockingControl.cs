@@ -42,9 +42,9 @@ namespace DotSpatial.SDR.Controls
             
             // create the tab and tabless panel controls
             _mapTabs = new TabControl {Name = "contentTabs", Dock = DockStyle.Fill};
-            // watch for map panel changhes via tab selections
-            
-            _mapTabs.SelectedIndexChanged += MapTabsOnSelectedIndexChanged;
+
+            _mapTabs.Selected += MapTabsOnSelected;
+            _mapTabs.Deselected += MapTabsOnDeselected;
 
             _toolTabs = new TablessControl {Name = "toolTabs", Dock = DockStyle.Fill};
 
@@ -97,22 +97,8 @@ namespace DotSpatial.SDR.Controls
 
             if (key.Trim().StartsWith("kMap"))
             {
-                var idx = tabPage.Controls.IndexOf(innerControl);
-                var control = tabPage.Controls[idx];
-                var map = control as Map;
-
-                map.SuspendLayout();
-                map.Layers.SuspendEvents();
-                var mapFrame = map.MapFrame as MapFrame;
-                mapFrame.SuspendEvents();
-                mapFrame.SuspendChangeEvent();
-                var can_zoom_belore = mapFrame.CanZoomToPrevious();
-
                 // kMaps are map tabs
                 _mapTabs.Controls.Add(tabPage);
-
-                var can_zoom_after = mapFrame.CanZoomToPrevious();
-
                 if (_mapTabs.TabCount > 1)
                 {
                     int sortIndex = ConvertSortOrderToIndex(_mapTabs, zorder);
@@ -160,16 +146,14 @@ namespace DotSpatial.SDR.Controls
             BaseLayerLookup.Clear();  // clear base layer lookup (wipe all layers)
         }
 
-        private void MapTabsOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        private void MapTabsOnDeselected(object sender, TabControlEventArgs tabControlEventArgs)
         {
-            var tc = sender as TabControl;
-            if (tc == null) return;
-            var tp = tc.SelectedTab;
-            var txt = tp.Text;
-            var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
-            fname = fname.Replace(" ", "");
-            var key = "kMap_" + fname;
-            SelectPanel(key);
+            HidePanel(tabControlEventArgs.TabPage.Name);
+        }
+
+        private void MapTabsOnSelected(object sender, TabControlEventArgs tabControlEventArgs)
+        {
+            SelectPanel(tabControlEventArgs.TabPage.Name);
         }
 
         public void SelectPanel(string key)
@@ -177,8 +161,7 @@ namespace DotSpatial.SDR.Controls
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
             var map = (Map)info.DotSpatialDockPanel.InnerControl;
-            var mapFrame = (MapFrame)map.MapFrame;
-            mapFrame.SuspendEvents();
+            var mapFrame = map.MapFrame as EventMapFrame;
 
             if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
@@ -203,12 +186,25 @@ namespace DotSpatial.SDR.Controls
                 }
             }
 
-            mapFrame.ResumeEvents();
+            mapFrame.ResumeViewExtentChanged();
         }
 
         public void HidePanel(string key)
         {
-            throw new NotImplementedException();
+            DockPanelInfo info;
+            if (!DockPanelLookup.TryGetValue(key, out info)) return;
+            var map = (Map)info.DotSpatialDockPanel.InnerControl;
+            var mapFrame = map.MapFrame as EventMapFrame;
+            mapFrame.SuspendViewExtentChanged();
+
+            if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
+            {
+                OnPanelDeactivated(key);
+            }
+            else // these are kPanels (tool panels not map panels)
+            {
+                OnPanelDeactivated(key);
+            }
         }
 
         public void ShowPanel(string key)
@@ -242,6 +238,20 @@ namespace DotSpatial.SDR.Controls
             var index = sortOrderList.IndexOf(sortOrder);
             return index;
         }
+
+        #region OnPanelDeactivated
+        /// <summary>
+        /// Triggers the OnPanelDeactivated event.
+        /// </summary>
+        public virtual void OnPanelDeactivated(string panelKey)
+        {
+            var handler = PanelHidden;
+            if (handler != null)
+            {
+                handler(this, new DockablePanelEventArgs(panelKey));
+            }
+        }
+        #endregion
 
         #region OnActivePanelChanged
         /// <summary>

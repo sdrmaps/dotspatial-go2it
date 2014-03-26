@@ -179,11 +179,6 @@ namespace Go2It
             // store the new active map panel caption and key
             var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             var caption = dockInfo.DotSpatialDockPanel.Caption;
-
-            MapFrame mf = map.MapFrame as MapFrame;
-            var k = mf.CanZoomToPrevious();
-
-
             // save the current active map tab view to settings
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
@@ -192,9 +187,6 @@ namespace Go2It
             // set the active map tab to the active application map now
             App.Map = map;            
             App.Map.Invalidate(); // force a refresh of the map
-
-            MapFrame amf = App.Map.MapFrame as MapFrame;
-            var l = amf.CanZoomToPrevious();
         }
 
         /* void HeaderControl_RootItemSelected(object sender, RootItemEventArgs e)

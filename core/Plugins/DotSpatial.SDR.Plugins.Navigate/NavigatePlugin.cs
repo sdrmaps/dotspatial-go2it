@@ -84,7 +84,25 @@ namespace DotSpatial.SDR.Plugins.Navigate
             App.HeaderControl.Add(_zoomToLayer);
 
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
+            App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
             base.Activate();
+        }
+
+        private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
+        {
+            DockPanelInfo dockInfo;
+            var dockControl = (TabDockingControl)sender;
+            var key = e.ActivePanelKey;
+            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
+
+            if (!key.StartsWith("kMap_")) return;
+            // grab the active map from the dockinginfo object
+            _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+
+            // setup all the events for navigation controls on the map
+            _map.Layers.LayerSelected -= LayersOnLayerSelected;
+            _map.MapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -95,23 +113,11 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
-            // var enable = false;
-            if (_map != null)
-            {   // remove the events on the map layer that is currently active
-                _map.Layers.LayerSelected -= LayersOnLayerSelected;
-                _map.MapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
-                // enable = true;
-            }
             // grab the active map from the dockinginfo object
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            // check if there was a aprevious map and set enable if needed
-            // if (enable)
-            // {
-            MapFrame mf = (MapFrame)_map.MapFrame;
+            var mapFrame = _map.MapFrame as MapFrame;
+            // posible set the mapframe here?
 
-            _zoomNext.Enabled = mf.CanZoomToNext();
-            _zoomPrevious.Enabled = mf.CanZoomToPrevious();
-            // }
             // setup all the events for navigation controls on the map
             _map.Layers.LayerSelected += LayersOnLayerSelected;
             _map.MapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;

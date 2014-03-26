@@ -200,20 +200,18 @@ namespace Go2It
                 // unused
                 var txtExtent = row["extent"].ToString();
                 var txtBounds = row["bounds"].ToString();
-                
+
+                var nMapFrame = new EventMapFrame();
+                nMapFrame.SuspendViewExtentChanged();
+
                 var nMap = new Map
                 {
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
-                    Visible = true
+                    Visible = true,
+                    MapFrame = nMapFrame
                 };
-                
-                nMap.SuspendLayout();
-                var nMapFrame = nMap.MapFrame as MapFrame;
-                nMapFrame.SuspendChangeEvent();
-                nMapFrame.SuspendEvents();
-                nMap.Layers.SuspendEvents();
-               
-                // nMapFrame.ViewExtentsChanged -= NMapFrameOnViewExtentsChanged;
+
+                nMapFrame.ViewExtentsChanged += NMapFrameOnViewExtentsChanged;
                
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
@@ -259,15 +257,14 @@ namespace Go2It
                 {
                     nMap.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MinY);
                 }
-                nMapFrame.ViewExtentsChanged += NMapFrameOnViewExtentsChanged;
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
                 {
                     DefaultSortOrder = Convert.ToInt16(zorder)
                 };
                 App.DockManager.Add(dp);
+                nMapFrame.ResumeViewExtentChanged();
             }
-            // select the active map tab via the key and go go go speed racer!!!
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
         }
 
@@ -276,7 +273,6 @@ namespace Go2It
             var x = sender;
             var z = extentArgs;
         }
-
 
         /// <summary>
         /// Creates a new 'empty' project
