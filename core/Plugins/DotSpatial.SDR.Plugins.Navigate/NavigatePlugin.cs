@@ -14,7 +14,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
     {
         #region Constants and Fields
 
-        private Map _map;
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
 
         private SimpleActionItem _zoomNext;
@@ -97,12 +96,12 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
-            // grab the active map from the dockinginfo object
-            _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+            var map = App.Map as Map;
+            var mapFrame = App.Map.MapFrame as EventMapFrame;
 
-            // setup all the events for navigation controls on the map
-            _map.Layers.LayerSelected -= LayersOnLayerSelected;
-            _map.MapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
+            if (mapFrame == null || map == null) return;
+            map.Layers.LayerSelected -= LayersOnLayerSelected;
+            mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -113,21 +112,27 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
-            // grab the active map from the dockinginfo object
-            _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            var mapFrame = _map.MapFrame as MapFrame;
-            // posible set the mapframe here?
+            var map = App.Map as Map;
+            var mapFrame = App.Map.MapFrame as EventMapFrame;
 
-            // setup all the events for navigation controls on the map
-            _map.Layers.LayerSelected += LayersOnLayerSelected;
-            _map.MapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
+            if (mapFrame == null || map == null) return;
+            map.Layers.LayerSelected += LayersOnLayerSelected;
+            mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
+            _zoomNext.Enabled = mapFrame.CanZoomToNext();
+            _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
         }
 
         public override void Deactivate()
         {
             App.HeaderControl.RemoveAll();
-            _map.Layers.LayerSelected -= LayersOnLayerSelected;
-            _map.MapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
+            var map = App.Map as Map;
+            var mapFrame = App.Map.MapFrame as EventMapFrame;
+
+            if (mapFrame == null || map == null) return;
+            {
+                map.Layers.LayerSelected -= LayersOnLayerSelected;
+                mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
+            }
             base.Deactivate();
         }
 
@@ -137,12 +142,12 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         private void LayersOnLayerSelected(object sender, LayerSelectedEventArgs layerSelectedEventArgs)
         {
-            _zoomToLayer.Enabled = _map.Layers.SelectedLayer != null;
+            _zoomToLayer.Enabled = App.Map.Layers.SelectedLayer != null;
         }
 
         private void MapFrameOnViewExtentsChanged(object sender, ExtentArgs extentArgs)
         {
-            var mapFrame = sender as MapFrame;
+            var mapFrame = sender as EventMapFrame;
             if (mapFrame == null) return;
             _zoomNext.Enabled = mapFrame.CanZoomToNext();
             _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
@@ -153,7 +158,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void PanTool_Click(object sender, EventArgs e)
         {
-            _map.FunctionMode = FunctionMode.Pan;
+            App.Map.FunctionMode = FunctionMode.Pan;
         }
 
         /// <summary>
@@ -161,7 +166,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomIn_Click(object sender, EventArgs e)
         {
-            _map.FunctionMode = FunctionMode.ZoomIn;
+            App.Map.FunctionMode = FunctionMode.ZoomIn;
         }
 
         /// <summary>
@@ -169,7 +174,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomNext_Click(object sender, EventArgs e)
         {
-            _map.MapFrame.ZoomToNext();
+            App.Map.MapFrame.ZoomToNext();
         }
 
         /// <summary>
@@ -177,7 +182,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomOut_Click(object sender, EventArgs e)
         {
-            _map.FunctionMode = FunctionMode.ZoomOut;
+            App.Map.FunctionMode = FunctionMode.ZoomOut;
         }
 
         /// <summary>
@@ -185,7 +190,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomPrevious_Click(object sender, EventArgs e)
         {
-            _map.MapFrame.ZoomToPrevious();
+            App.Map.MapFrame.ZoomToPrevious();
         }
 
         /// <summary>
@@ -193,7 +198,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomToLayer_Click(object sender, EventArgs e)
         {
-            var layer = _map.Layers.SelectedLayer;
+            var layer = App.Map.Layers.SelectedLayer;
             if (layer != null)
             {
                 ZoomToLayer(layer);
@@ -207,7 +212,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ZoomToMaxExtents_Click(object sender, EventArgs e)
         {
-            _map.ZoomToMaxExtent();
+            App.Map.ZoomToMaxExtent();
         }
 
         private void ZoomToLayer(IMapLayer layerToZoom)
@@ -221,11 +226,11 @@ namespace DotSpatial.SDR.Plugins.Navigate
             else
             {
                 const double zoomInFactor = 0.05; // fixed zoom-in by 10% - 5% on each side
-                var newExtentWidth = _map.ViewExtents.Width * zoomInFactor;
-                var newExtentHeight = _map.ViewExtents.Height * zoomInFactor;
+                var newExtentWidth = App.Map.ViewExtents.Width * zoomInFactor;
+                var newExtentHeight = App.Map.ViewExtents.Height * zoomInFactor;
                 layerEnvelope.ExpandBy(newExtentWidth, newExtentHeight);
             }
-            _map.ViewExtents = layerEnvelope.ToExtent();
+            App.Map.ViewExtents = layerEnvelope.ToExtent();
         }
 
         #endregion

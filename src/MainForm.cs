@@ -30,13 +30,14 @@ namespace Go2It
         {
             InitializeComponent();
             var log = AppContext.Instance.Get<ILog>();
+            // create the application level app manager and assign base map and mapframe
             AppManager = new AppManager
             {
                 // map placeholder on app manager, used to swap out active map views using tab interface
                 Map = new Map
                 {
                     Dock = DockStyle.Fill,
-                    Visible = true,
+                    Visible = false,
                 }
             };
             log.Info("Startup -> AppManager.Map.Projection: " + AppManager.Map.Projection.ToProj4String());

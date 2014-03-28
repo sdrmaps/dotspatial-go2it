@@ -323,6 +323,8 @@
             // mapBGColorPanel
             // 
             this.mapBGColorPanel.BackColor = System.Drawing.Color.Black;
+            this.mapBGColorPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mapBGColorPanel.ForeColor = System.Drawing.Color.Black;
             this.mapBGColorPanel.Location = new System.Drawing.Point(101, 659);
             this.mapBGColorPanel.Name = "mapBGColorPanel";
             this.mapBGColorPanel.Size = new System.Drawing.Size(48, 26);

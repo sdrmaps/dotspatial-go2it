@@ -78,6 +78,7 @@ namespace Go2It
                 Projection = app.Map.Projection,
                 ViewExtents = app.Map.ViewExtents
             };
+            _baseMap.Extent.SetValues(app.Map.Extent.MinX, app.Map.Extent.MinY, app.Map.Extent.MaxX, app.Map.Extent.MaxY);
             // set options on our indexing bgworker
             _idxWorker.WorkerReportsProgress = true;
             _idxWorker.WorkerSupportsCancellation = true;

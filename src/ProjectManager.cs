@@ -153,7 +153,7 @@ namespace Go2It
             foreach (DataRow row in lyrTable.Rows)
             {
                 var name = row["name"].ToString();
-                // var lyrType = row["layerType"].ToString();
+                // var lyrType = row["layerType"].ToString(); // unused
                 var projType = row["projectType"].ToString();
                 switch (projType)
                 {
@@ -197,22 +197,26 @@ namespace Go2It
                 var txtLayers = row["layers"].ToString();
                 var txtViewExtent = row["viewextent"].ToString();
                 var zorder = row["zorder"].ToString();
-                // unused
                 var txtExtent = row["extent"].ToString();
-                var txtBounds = row["bounds"].ToString();
+                var txtBounds = row["bounds"].ToString(); // unused
 
                 var nMapFrame = new EventMapFrame();
-                nMapFrame.SuspendViewExtentChanged();
+                nMapFrame.SuspendViewExtentChanged(); // suspend all view extent changes while loading
+                // set extents initialized to avoid firing extent resets (set our own below on this routine)
+                nMapFrame.ExtentsInitialized = true;
 
+                nMapFrame.ViewExtentsChanged += NMapFrameOnViewExtentsChanged;
+
+                // What and how does this new map compare with the app map and map frame
                 var nMap = new Map
                 {
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                     Visible = true,
-                    MapFrame = nMapFrame
+                    Dock = DockStyle.Fill,
+                    MapFrame = nMapFrame,
+                    Projection = App.Map.Projection,
                 };
-
-                nMapFrame.ViewExtentsChanged += NMapFrameOnViewExtentsChanged;
-               
+                
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
                 foreach (IMapLayer ml in App.Map.Layers)
@@ -249,13 +253,19 @@ namespace Go2It
                         }
                     }
                 }
-                // all layers have been added its safe to set the proper view extent now
-                string r;
+                string vr;
                 Extent vExt;
-                Extent.TryParse(txtViewExtent, out vExt, out r);
-                if (r == "Y")
+                Extent.TryParse(txtViewExtent, out vExt, out vr);
+                if (vr == "Y")
                 {
-                    nMap.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MinY);
+                    nMapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
+                }
+                string er;
+                Extent eExt;
+                Extent.TryParse(txtExtent, out eExt, out er);
+                if (er == "Y")
+                {
+                    nMapFrame.Extent.SetValues(eExt.MinX, eExt.MinY, eExt.MaxX, eExt.MaxY);
                 }
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
@@ -263,7 +273,6 @@ namespace Go2It
                     DefaultSortOrder = Convert.ToInt16(zorder)
                 };
                 App.DockManager.Add(dp);
-                nMapFrame.ResumeViewExtentChanged();
             }
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
         }
@@ -367,6 +376,7 @@ namespace Go2It
             {
                 if (!dpi.Key.Trim().StartsWith("kMap")) continue;
                 var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
+                var mapFrame = map.MapFrame as MapFrame;
                 var layers = map.Layers;  // get the layers
                 var txtLayers = string.Empty;  // text block to store layers
 
@@ -385,7 +395,6 @@ namespace Go2It
                     }
                     txtLayers = txtLayers + layName + "|";
                 }
-                
                 txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
                 // send this all to a dict to save to dbase as a maptab
                 var dd = new Dictionary<string, string>
@@ -393,8 +402,8 @@ namespace Go2It
                     {"lookup", dpi.Key},
                     {"caption", dpi.Value.DotSpatialDockPanel.Caption},
                     {"zorder", dpi.Value.SortOrder.ToString(CultureInfo.InvariantCulture)},
-                    {"extent", map.Extent.ToString()},
-                    {"viewextent",map.ViewExtents.ToString()},
+                    {"extent", mapFrame.Extent.ToString()},
+                    {"viewextent", mapFrame.ViewExtents.ToString()},
                     {"bounds", map.Bounds.ToString()},
                     {"layers", txtLayers}
                 };

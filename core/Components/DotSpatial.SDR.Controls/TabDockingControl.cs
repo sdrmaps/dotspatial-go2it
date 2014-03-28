@@ -148,20 +148,24 @@ namespace DotSpatial.SDR.Controls
 
         private void MapTabsOnDeselected(object sender, TabControlEventArgs tabControlEventArgs)
         {
-            HidePanel(tabControlEventArgs.TabPage.Name);
+            if (tabControlEventArgs.TabPage != null)
+            {
+                HidePanel(tabControlEventArgs.TabPage.Name);
+            }       
         }
 
         private void MapTabsOnSelected(object sender, TabControlEventArgs tabControlEventArgs)
         {
-            SelectPanel(tabControlEventArgs.TabPage.Name);
+            if (tabControlEventArgs.TabPage != null)
+            {
+                SelectPanel(tabControlEventArgs.TabPage.Name);
+            }
         }
 
         public void SelectPanel(string key)
         {
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
-            var map = (Map)info.DotSpatialDockPanel.InnerControl;
-            var mapFrame = map.MapFrame as EventMapFrame;
 
             if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
@@ -185,26 +189,23 @@ namespace DotSpatial.SDR.Controls
                     _toolTabs.SelectTab(info.DockPanelTab);
                 }
             }
-
-            mapFrame.ResumeViewExtentChanged();
         }
 
         public void HidePanel(string key)
         {
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
-            var map = (Map)info.DotSpatialDockPanel.InnerControl;
-            var mapFrame = map.MapFrame as EventMapFrame;
-            mapFrame.SuspendViewExtentChanged();
 
-            if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
+            OnPanelDeactivated(key);
+
+            /*if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
                 OnPanelDeactivated(key);
             }
             else // these are kPanels (tool panels not map panels)
             {
                 OnPanelDeactivated(key);
-            }
+            }*/
         }
 
         public void ShowPanel(string key)

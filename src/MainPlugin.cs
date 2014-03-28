@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Controls;
@@ -26,6 +24,7 @@ namespace Go2It
         public override void Activate()
         {
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
+            App.DockManager.PanelHidden += DockManagerOnPanelHidden;
             // set the application wide project manager now
             _projManager = new ProjectManager(App);
             // setup new project save and open project serialization events
@@ -168,6 +167,24 @@ namespace Go2It
             Shell.Focus();
         }
 
+        private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
+        {
+            var dockControl = (DockingControl)sender;
+            var key = e.ActivePanelKey;
+            DockPanelInfo dockInfo;
+            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
+            // check if this is a maptab being deselected
+            if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
+            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+            // update the events of the mapframe
+            var mapFrame = map.MapFrame as EventMapFrame;
+            if (mapFrame != null)
+            {
+                // suspend any view changes while not active tab
+                mapFrame.SuspendViewExtentChanged();
+            }
+        }
+
         void DockManager_ActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
             var dockControl = (DockingControl)sender;
@@ -176,16 +193,23 @@ namespace Go2It
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
             // if this is a map tab we need to set map active now
             if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
-            // store the new active map panel caption and key
+            // grab the new active map and key
             var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             var caption = dockInfo.DotSpatialDockPanel.Caption;
-            // save the current active map tab view to settings
+            // set them as the active map key and caption
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
             // set the active function mode from previous map tab
             map.FunctionMode = App.Map.FunctionMode;
+            // update the events of the mapframe
+            var mapFrame = map.MapFrame as EventMapFrame;
+            if (mapFrame != null)
+            {
+                // activate view extent changes event for mapframe
+                mapFrame.ResumeViewExtentChanged();
+            }
             // set the active map tab to the active application map now
-            App.Map = map;            
+            App.Map = map;
             App.Map.Invalidate(); // force a refresh of the map
         }
 
