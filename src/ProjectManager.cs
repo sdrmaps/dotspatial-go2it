@@ -198,25 +198,21 @@ namespace Go2It
                 var txtViewExtent = row["viewextent"].ToString();
                 var zorder = row["zorder"].ToString();
                 var txtExtent = row["extent"].ToString();
-                var txtBounds = row["bounds"].ToString(); // unused
+                // var txtBounds = row["bounds"].ToString(); // unused
 
-                var nMapFrame = new EventMapFrame();
-                nMapFrame.SuspendViewExtentChanged(); // suspend all view extent changes while loading
-                // set extents initialized to avoid firing extent resets (set our own below on this routine)
-                nMapFrame.ExtentsInitialized = true;
-
-                nMapFrame.ViewExtentsChanged += NMapFrameOnViewExtentsChanged;
-
-                // What and how does this new map compare with the app map and map frame
                 var nMap = new Map
                 {
                     BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
                     Visible = true,
                     Dock = DockStyle.Fill,
-                    MapFrame = nMapFrame,
+                    MapFrame = new EventMapFrame(),
                     Projection = App.Map.Projection,
                 };
-                
+                var nMapFrame = nMap.MapFrame as EventMapFrame;
+                nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
+                nMapFrame.SuspendEvents();  // suspend all layer events
+                nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
                 foreach (IMapLayer ml in App.Map.Layers)
@@ -253,6 +249,7 @@ namespace Go2It
                         }
                     }
                 }
+                // manually set all the extents from our settings database
                 string vr;
                 Extent vExt;
                 Extent.TryParse(txtViewExtent, out vExt, out vr);
@@ -275,12 +272,6 @@ namespace Go2It
                 App.DockManager.Add(dp);
             }
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
-        }
-
-        private void NMapFrameOnViewExtentsChanged(object sender, ExtentArgs extentArgs)
-        {
-            var x = sender;
-            var z = extentArgs;
         }
 
         /// <summary>
@@ -397,6 +388,7 @@ namespace Go2It
                 }
                 txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
                 // send this all to a dict to save to dbase as a maptab
+                if (mapFrame == null) continue;
                 var dd = new Dictionary<string, string>
                 {
                     {"lookup", dpi.Key},

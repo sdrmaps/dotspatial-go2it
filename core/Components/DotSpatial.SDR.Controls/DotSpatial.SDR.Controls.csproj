@@ -39,7 +39,7 @@
     <AssemblyOriginatorKeyFile>sdrmaps.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotSpatial.Controls, Version=1.5.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
+    <Reference Include="DotSpatial.Controls, Version=1.6.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\DotSpatial\DotSpatial.Controls.dll</HintPath>
     </Reference>

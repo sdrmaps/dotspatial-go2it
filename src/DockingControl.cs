@@ -15,11 +15,23 @@ namespace Go2It
         [Import("Shell", typeof (ContainerControl))]
         private ContainerControl Shell { get; set; }
 
+        private SplitContainer _toolSplitContainer;
+
+        public void CollapseToolPanel()
+        {
+            _toolSplitContainer.Panel1Collapsed = true;
+        }
+
+        public void ExtendToolPanel()
+        {
+            _toolSplitContainer.Panel1Collapsed = false;
+        }
+
         #region IPartImportsSatisfiedNotification
 
         public void OnImportsSatisfied()
         {
-            var innerContainer = new SplitContainer
+            _toolSplitContainer = new SplitContainer
             {
                 Name = "innerContainer",
                 Orientation = Orientation.Horizontal,
@@ -27,8 +39,10 @@ namespace Go2It
                 Dock = DockStyle.Fill,
                 SplitterWidth = 10,
                 FixedPanel = FixedPanel.Panel1,
-                Panel1MinSize = 0
+                Panel1MinSize = 0,
+                Panel1Collapsed = true
             };
+
             // grab or create the split container as needed
             var container = (SplitContainer) Shell.Controls.Find("outerContainer", false).FirstOrDefault();
             if (container == null)
@@ -42,13 +56,14 @@ namespace Go2It
                     BackColor = Color.Transparent,
                     Dock = DockStyle.Fill,
                     SplitterWidth = 10,
-                    Panel1MinSize = 0
+                    Panel1MinSize = 0,
                 };
                 Shell.Controls.Add(container);
             }
-            container.Panel2.Controls.Add(innerContainer);
-            Initialize(innerContainer);
+            container.Panel2.Controls.Add(_toolSplitContainer);
+            Initialize(_toolSplitContainer);
         }
+
         #endregion
     }
 }

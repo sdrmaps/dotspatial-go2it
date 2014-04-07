@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
-using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Measure.Properties;
 
 namespace DotSpatial.SDR.Plugins.Measure
@@ -12,10 +11,11 @@ namespace DotSpatial.SDR.Plugins.Measure
     {
         #region Constants and Fields
 
-        private Map _map ;
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
 
         private const string PluginKey = "kPanel_Measure";
+        private const string PluginCaption = "Measure Area and Distance";
+
         private MapFunctionMeasure _painter;
         private MeasurePanel _measurePanel;
         private DockablePanel _dockPanel;
@@ -24,7 +24,7 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         public override void Activate()
         {
-            // add the buttons for measurement tool
+            // add in the button controls for this plugin to the header
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Measure", MeasureTool_Click)
             {
                 GroupCaption = "Measure_Area_Distance",
@@ -32,43 +32,11 @@ namespace DotSpatial.SDR.Plugins.Measure
                 SmallImage = Resources.measure_16,
                 LargeImage = Resources.measure_32
             });
-            // generate the measurement tool display panel
+            // generate the measurement tool display panel and add it to the tool panel
             _measurePanel = new MeasurePanel();
-            _dockPanel = new DockablePanel(PluginKey, "Measure_Area_Distance", _measurePanel, DockStyle.Fill);
+            _dockPanel = new DockablePanel(PluginKey, PluginCaption, _measurePanel, DockStyle.Fill);
             App.DockManager.Add(_dockPanel);
-
-            App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             base.Activate();
-        }
-
-        void DockManager_ActivePanelChanged(object sender, DockablePanelEventArgs e)
-        {
-            DockPanelInfo dockInfo;
-            if (e.ActivePanelKey.StartsWith("kMap_"))
-            {
-                // update the measurement toool to ref correct map
-            }
-            if (e.ActivePanelKey == PluginKey)
-            {
-                // activate the panel now
-                // App.DockManager.Remove(PluginKey);
-            }
-            if (e.ActivePanelKey != PluginKey)
-            {
-                // deactivate the panel
-            }
-            //DockPanelInfo dockInfo;
-            //var dockControl = (DockingControl)sender;
-            //var key = dockablePanelEventArgs.ActivePanelKey;
-            //if (!key.StartsWith("kMap_")) return;
-            //if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
-            //if (_userLegend != null)
-            //{
-            //    _userLegend.RootNodes.Clear();
-            //}
-            //// update the active _map for the legend now
-            //_map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            //_map.Legend = _userLegend;
         }
 
         public override void Deactivate()
@@ -80,8 +48,8 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void MeasureTool_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel(PluginKey);
-            
+            App.DockManager.SelectPanel(PluginKey);  // select the display panel
+
             if (_painter == null)
                 _painter = new MapFunctionMeasure(App.Map, _measurePanel);
 

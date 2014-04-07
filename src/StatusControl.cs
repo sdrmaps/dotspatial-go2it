@@ -21,17 +21,13 @@ namespace Go2It
         {
             _statusStrip = new StatusStrip
             {
-                Location = new Point(0, 285),
-                Name = "statusStrip1",
-                Size = new Size(508, 22),
+                Name = "defaultStatusStrip",
                 TabIndex = 0,
                 Text = String.Empty
             };
-
-            //adding the status strip control
+            // adding the status strip control
             Shell.Controls.Add(_statusStrip);
-
-            //adding one initial status panel to the status strip control
+            // adding one initial status panel to the status strip control
             _defaultStatusPanel = new StatusPanel();
             Add(_defaultStatusPanel);
         }
@@ -46,7 +42,7 @@ namespace Go2It
         /// <param name="panel">the user-specified status panel</param>
         public void Add(StatusPanel panel)
         {
-            var myLabel = new ToolStripStatusLabel
+            var statusLabel = new ToolStripStatusLabel
             {
                 Name = panel.Key,
                 Text = panel.Caption,
@@ -54,17 +50,16 @@ namespace Go2It
                 Spring = (panel.Width == 0),
                 TextAlign = ContentAlignment.MiddleLeft
             };
-
             panel.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
                 {
                     var item = sender as StatusPanel;
 
                     if (item == null) return;
-                    myLabel.Text = item.Caption;
-                    myLabel.Width = item.Width;
+                    statusLabel.Text = item.Caption;
+                    statusLabel.Width = item.Width;
                 };
 
-            _statusStrip.Items.Add(myLabel);
+            _statusStrip.Items.Add(statusLabel);
         }
 
         public void Progress(string key, int percent, string message)

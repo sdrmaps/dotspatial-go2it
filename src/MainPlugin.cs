@@ -18,15 +18,17 @@ namespace Go2It
 
         private StartUpForm _startUpForm;
         private ProjectManager _projManager;
-        // private CoordinateDisplay _latLongDisplay;
-        // private SelectionStatusDisplay selectionDisplay;
+        private CoordinateDisplay _latLongDisplay;
+        private SelectionStatusDisplay _selectionStatusDisplay;
 
         public override void Activate()
         {
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
             // set the application wide project manager now
             _projManager = new ProjectManager(App);
+
             // setup new project save and open project serialization events
             App.SerializationManager.NewProjectCreated += SerializationManagerOnNewProjectCreated;
             App.SerializationManager.Deserializing += SerializationManager_Deserializing;
@@ -35,11 +37,12 @@ namespace Go2It
             // activate all available extensions now
             App.ExtensionsActivated += App_ExtensionsActivated;
            
-            // show selection status display
-            // selectionDisplay = new SelectionStatusDisplay(App);
+            // create a selection status display panel
+            _selectionStatusDisplay = new SelectionStatusDisplay(App);
 
-            //show latitude, longitude coordinate display
-            // _latLongDisplay = new CoordinateDisplay(App);
+            // create a new lat/long display panel
+            _latLongDisplay = new CoordinateDisplay(App);
+
             base.Activate();
         }
 
@@ -51,7 +54,7 @@ namespace Go2It
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
             if (App.Map.Projection != null)
             {
-                // _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
+                _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
         }
 
@@ -69,6 +72,7 @@ namespace Go2It
         {
             // disconnect all event binding on deactivation 
             App.ExtensionsActivated -= App_ExtensionsActivated;
+            App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
             App.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
             App.SerializationManager.NewProjectCreated -= SerializationManagerOnNewProjectCreated;
             App.SerializationManager.Deserializing -= SerializationManager_Deserializing;
@@ -134,7 +138,7 @@ namespace Go2It
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
             if (App.Map.Projection != null)
             {
-                // _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
+                _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
         }
 
@@ -160,9 +164,10 @@ namespace Go2It
 
         void startUpForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // check the map for a coordinate/projection system
-            //setup the lat, long coordinate display
-            // _latLongDisplay.ShowCoordinates = true;
+            // display the lat/long status panel
+            _latLongDisplay.ShowCoordinates = true;
+            // display the selection status panel
+            _selectionStatusDisplay.ShowSelectionStatus = false;  // sort of pointless
             // set focus to the main application window
             Shell.Focus();
         }
@@ -171,17 +176,30 @@ namespace Go2It
         {
             var dockControl = (DockingControl)sender;
             var key = e.ActivePanelKey;
+
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
+
             // check if this is a maptab being deselected
-            if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
-            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            // update the events of the mapframe
-            var mapFrame = map.MapFrame as EventMapFrame;
-            if (mapFrame != null)
+            if (key.StartsWith("kMap_"))
             {
-                // suspend any view changes while not active tab
-                mapFrame.SuspendViewExtentChanged();
+                var map = (Map) dockInfo.DotSpatialDockPanel.InnerControl;
+                // update the events of the mapframe
+                var mapFrame = map.MapFrame as EventMapFrame;
+                if (mapFrame != null)
+                {
+                    if (!mapFrame.ViewExtentChangedSuspended)
+                    {
+                        // suspend any view changes while not active tab
+                        mapFrame.SuspendViewExtentChanged();
+                        mapFrame.SuspendEvents();
+                    }
+                }
+            }
+            else if (key.StartsWith("kPanel_"))
+            {
+                if (key == "kPanel_Clear") return;  // controls the panel collapse
+                dockControl.CollapseToolPanel();
             }
         }
 
@@ -191,60 +209,35 @@ namespace Go2It
             var key = e.ActivePanelKey;
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
+
             // if this is a map tab we need to set map active now
-            if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
-            // grab the new active map and key
-            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            var caption = dockInfo.DotSpatialDockPanel.Caption;
-            // set them as the active map key and caption
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
-            // set the active function mode from previous map tab
-            map.FunctionMode = App.Map.FunctionMode;
-            // update the events of the mapframe
-            var mapFrame = map.MapFrame as EventMapFrame;
-            if (mapFrame != null)
+            if (key.StartsWith("kMap_"))
             {
-                // activate view extent changes event for mapframe
-                mapFrame.ResumeViewExtentChanged();
+                // grab the new active map and key
+                var map = (Map) dockInfo.DotSpatialDockPanel.InnerControl;
+                var caption = dockInfo.DotSpatialDockPanel.Caption;
+                // set them as the active map key and caption
+                SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
+                // set the active function mode from previous map tab
+                map.FunctionMode = App.Map.FunctionMode;
+                // update the events of the mapframe
+                var mapFrame = map.MapFrame as EventMapFrame;
+                if (mapFrame != null)
+                {
+                    // activate view extent changes event for mapframe
+                    mapFrame.ResumeViewExtentChanged();
+                    mapFrame.ResumeEvents();
+                }
+                // set the active map tab to the active application map now
+                App.Map = map;
+                App.Map.Invalidate(); // force a refresh of the map
             }
-            // set the active map tab to the active application map now
-            App.Map = map;
-            App.Map.Invalidate(); // force a refresh of the map
+            else if (key.StartsWith("kPanel_"))
+            {
+                if (key == "kPanel_Clear") return;  // controls the panel collapse
+                dockControl.ExtendToolPanel();
+            }
         }
-
-        /* void HeaderControl_RootItemSelected(object sender, RootItemEventArgs e)
-        {
-            Boolean showCoordinates = false;
-
-            if (e.SelectedRootKey == SharedConstants.SearchRootkey || e.SelectedRootKey == HeaderControl.HomeRootItemKey)
-            {
-                App.SerializationManager.SetCustomSetting("SearchRootClicked", true);
-                App.DockManager.SelectPanel("kMap");
-                App.DockManager.SelectPanel("kLegend");
-                App.DockManager.ShowPanel(SharedConstants.SeriesViewKey);
-                showCoordinates = true;
-            }
-            else if (e.SelectedRootKey == "RootRibbonHydroModeler")
-            {
-                //hide panels
-                App.DockManager.HidePanel("kLegend");
-                App.DockManager.HidePanel(HydroDesktop.Common.SharedConstants.SeriesViewKey);
-                App.DockManager.SelectPanel("kHydroModelerDock");
-            }
-            else if (e.SelectedRootKey == "kHydroGraph_01" || e.SelectedRootKey == SharedConstants.TableRootKey || e.SelectedRootKey == "kHydroEditView" || e.SelectedRootKey == "kHydroR")
-            {
-                App.DockManager.SelectPanel(HydroDesktop.Common.SharedConstants.SeriesViewKey);
-                App.DockManager.ShowPanel("kLegend");
-            }
-
-            if (e.SelectedRootKey == "kHydroSearchV3")
-                showCoordinates = true;
-            else
-                App.SerializationManager.SetCustomSetting("SearchRootClicked", false);
-
-            if (latLongDisplay != null)
-                latLongDisplay.ShowCoordinates = showCoordinates;
-        }*/
     }
 }

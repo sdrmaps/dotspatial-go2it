@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 
@@ -19,7 +15,6 @@ namespace DotSpatial.SDR.Controls
         private TabControl _mapTabs;
         private TablessControl _toolTabs;
         private readonly ImageList _tabImages = new ImageList();
-        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 
         // lookup list of all available tool and map dockpanels
         public readonly Dictionary<string, DockPanelInfo> DockPanelLookup = new Dictionary<string, DockPanelInfo>();
@@ -47,6 +42,13 @@ namespace DotSpatial.SDR.Controls
             _mapTabs.Deselected += MapTabsOnDeselected;
 
             _toolTabs = new TablessControl {Name = "toolTabs", Dock = DockStyle.Fill};
+
+            // add a default clear panel to the tool panel
+            var dp = new DockablePanel("kPanel_Clear", "Default Clear/Close Panel", new Panel(), DockStyle.Fill);
+            Add(dp);  // this is basically just a clean and clear panel for hiding inactive tabs
+
+            _toolTabs.Selected += ToolTabsOnSelected;
+            _toolTabs.Deselected += ToolTabsOnDeselected;
 
             toolPanel.Controls.Add(_toolTabs);
             mapPanel.Controls.Add(_mapTabs);
@@ -95,7 +97,7 @@ namespace DotSpatial.SDR.Controls
             // add the tab panel to the dictionary for easy lookup later
             DockPanelLookup.Add(key, new DockPanelInfo(panel, tabPage, zorder));
 
-            if (key.Trim().StartsWith("kMap"))
+            if (key.Trim().StartsWith("kMap_"))
             {
                 // kMaps are map tabs
                 _mapTabs.Controls.Add(tabPage);
@@ -105,7 +107,7 @@ namespace DotSpatial.SDR.Controls
                     _mapTabs.TabIndex = sortIndex;
                 }
             }
-            else if ((panel.Key.Trim().StartsWith("kPanel")))
+            else if ((panel.Key.Trim().StartsWith("kPanel_")))
             {
                 // kPanels are tool panels
                 _toolTabs.Controls.Add(tabPage);
@@ -162,12 +164,28 @@ namespace DotSpatial.SDR.Controls
             }
         }
 
+        private void ToolTabsOnDeselected(object sender, TabControlEventArgs tabControlEventArgs)
+        {
+            if (tabControlEventArgs.TabPage != null)
+            {
+                HidePanel(tabControlEventArgs.TabPage.Name);
+            }       
+        }
+
+        private void ToolTabsOnSelected(object sender, TabControlEventArgs tabControlEventArgs)
+        {
+            if (tabControlEventArgs.TabPage != null)
+            {
+                SelectPanel(tabControlEventArgs.TabPage.Name);
+            }
+        }
+
         public void SelectPanel(string key)
         {
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
 
-            if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
+            if (key.StartsWith("kMap_"))
             {
                 if (_mapTabs.SelectedTab == info.DockPanelTab)
                 {
@@ -178,7 +196,7 @@ namespace DotSpatial.SDR.Controls
                     _mapTabs.SelectTab(info.DockPanelTab);
                 }
             }
-            else // these are kPanels (tool panels not map panels)
+            else if (key.StartsWith("kPanel_"))
             {
                 if (_toolTabs.SelectedTab == info.DockPanelTab)
                 {
@@ -195,17 +213,7 @@ namespace DotSpatial.SDR.Controls
         {
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
-
             OnPanelDeactivated(key);
-
-            /*if (info.DotSpatialDockPanel.Key.StartsWith("kMap_"))
-            {
-                OnPanelDeactivated(key);
-            }
-            else // these are kPanels (tool panels not map panels)
-            {
-                OnPanelDeactivated(key);
-            }*/
         }
 
         public void ShowPanel(string key)

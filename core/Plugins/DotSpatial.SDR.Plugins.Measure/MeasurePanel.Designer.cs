@@ -219,7 +219,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(535, 164);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(535, 88);
             this.tableLayoutPanel1.TabIndex = 22;
             // 
             // MeasurePanel
@@ -231,7 +231,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "MeasurePanel";
-            this.Size = new System.Drawing.Size(535, 212);
+            this.Size = new System.Drawing.Size(535, 136);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);

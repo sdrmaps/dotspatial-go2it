@@ -18,40 +18,47 @@ namespace Go2It
     {
         private Map _map;
         private readonly AppManager _appManager;
-
-        readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Properties.Resources.wgs_84_esri_string);
-        ProjectionInfo _currentMapProjection;
-        readonly StatusPanel _latLonStatusPanel;
-        bool _isWgs84 = true;
-        bool _showCoordinates;
+        private readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Properties.Resources.wgs_84_esri_string);
+        private ProjectionInfo _currentMapProjection;
+        private readonly StatusPanel _latLonStatusPanel;
+        private bool _isWgs84 = true;
+        private bool _showCoordinates;
 
         public CoordinateDisplay(AppManager app)
         {
-            _latLonStatusPanel = new StatusPanel {Width = 400};
-            app.ProgressHandler.Add(_latLonStatusPanel);
+            _latLonStatusPanel = new StatusPanel { Width = 400 };
             // set the application manager and the panel changed event to update coords
             _appManager = app;
             _appManager.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
+            _appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
+        }
+
+        private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
+        {
+            DockPanelInfo dockInfo;
+            var dockControl = (TabDockingControl)sender;
+            var key = e.ActivePanelKey;
+            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
+
+            if (!key.StartsWith("kMap_")) return;
+
+            if (_map == null) return;
+            _map.MouseMove -= map_MouseMove;
+            _map.ProjectionChanged -= map_ProjectionChanged;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
         {
+            DockPanelInfo dockInfo;
             var dockControl = (DockingControl)sender;
             var key = dockablePanelEventArgs.ActivePanelKey;
-            DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
-            // if this is a map tab update the map events for display of lat/long
-            if (!dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_")) return;
-            // first check if there is already a map, if so then remove the events on it
-            if (_map != null)
-            {
-                _map.MouseMove -= map_MouseMove;
-                _map.ProjectionChanged -= map_ProjectionChanged;
-            }
-            // grab the active map from the dockinginfo object
+
+            if (!key.StartsWith("kMap_")) return;
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            // grab the projection string of this map panel for events
-            string mapProjEsriString = _map.Projection.ToEsriString();
+            if (_map == null) return;
+
+            var mapProjEsriString = _map.Projection.ToEsriString();
             _isWgs84 = (mapProjEsriString == Properties.Resources.wgs_84_esri_string);
             _currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
             // setup all the events for this coordinate display on the map
@@ -119,7 +126,7 @@ namespace Go2It
                 Reproject.ReprojectPoints(xy, z, _currentMapProjection, _wgs84Projection, 0, 1);
             }
 
-            //Convert to Degrees Minutes Seconds
+            // convert to Degrees Minutes Seconds
             var coord = new double[2];
             coord[0] = Math.Abs(xy[0]);
             coord[1] = Math.Abs(xy[1]);

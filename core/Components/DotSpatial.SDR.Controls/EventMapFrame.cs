@@ -4,38 +4,23 @@ using DotSpatial.Controls;
 namespace DotSpatial.SDR.Controls
 {
     /// <summary>
-    /// Imherited Implementation of the DotSpatial MapFrame for ViewExtent Events
+    /// Inherited Implementation of the DotSpatial MapFrame for ViewExtent Events
     /// </summary>
     [Serializable]
     public class EventMapFrame : MapFrame
     {
-        private bool _viewExtentSuspended;
-
-        public EventMapFrame()
-        {
-            _viewExtentSuspended = false;
-        }
+        public bool ViewExtentChangedSuspended { get; private set; }
 
         public void SuspendViewExtentChanged()
         {
-            _viewExtentSuspended = true;
-            // var collection = base.Layers;
-            // Ignore_Layer_Events(collection);
-            base.SuspendExtentChanged();
+            ViewExtentChangedSuspended = true;
+            SuspendExtentChanged();
         }
 
         public void ResumeViewExtentChanged()
         {
-            _viewExtentSuspended = false;
-            // var collection = base.Layers;
-            // Handle_Layer_Events(collection);
-            base.ResumeExtentChanged();   
+            ViewExtentChangedSuspended = false;
+            ResumeExtentChanged();   
         }
-
-        public bool ViewExtentChangesSuspended
-        {
-            get { return _viewExtentSuspended;  }
-        }
-
     }
 }

@@ -520,7 +520,7 @@ namespace Go2It
         private void RemoveLayer(IFeatureSet mapLayer)
         {
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
-            string f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
+            var f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
             if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Remove(mapLayer); // remove from layer list
@@ -1570,7 +1570,7 @@ namespace Go2It
             var ad = new List<string>();
             foreach (var item in clb.CheckedItems)
             {
-                if (item != clb.Items[e.Index].ToString())
+                if (item.ToString() != clb.Items[e.Index].ToString())
                 {
                     ad.Add(item.ToString());
                 }

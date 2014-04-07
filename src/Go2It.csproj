@@ -159,6 +159,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="DockingControl.cs" />
+    <Compile Include="SelectionStatusDisplay.cs" />
     <Compile Include="StartUpForm.cs">
       <SubType>Form</SubType>
     </Compile>

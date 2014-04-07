@@ -18,10 +18,27 @@ namespace DotSpatial.SDR.Plugins.Selection
 
         public override void Activate()
         {
-            IHeaderControl header = App.HeaderControl;
-            header.Add(new SimpleActionItem(HomeMenuKey, "Select", SelectionTool_Click) { GroupCaption = "Selection_Select", ToolTipText = "Select Features", SmallImage = Resources.select_16, LargeImage = Resources.select_32 });
-            header.Add(new SimpleActionItem(HomeMenuKey, "Deselect", DeselectAllTool_Click) { GroupCaption = "Selection_Deselect", ToolTipText = "Deselect all Features", SmallImage = Resources.unselect_16, LargeImage = Resources.unselect_32 });
-            header.Add(new SimpleActionItem(HomeMenuKey, "Identify", IdentifierTool_Click) { GroupCaption = "Selection_Identify", ToolTipText = "Identify Features", SmallImage = Resources.identify_16, LargeImage = Resources.identify_32 });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Select", SelectionTool_Click)
+            {
+                GroupCaption = "Selection_Select",
+                ToolTipText = "Select Features",
+                SmallImage = Resources.select_16,
+                LargeImage = Resources.select_32
+            });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Deselect", DeselectAllTool_Click)
+            {
+                GroupCaption = "Selection_Deselect",
+                ToolTipText = "Deselect all Features",
+                SmallImage = Resources.unselect_16,
+                LargeImage = Resources.unselect_32
+            });
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Identify", IdentifierTool_Click)
+            {
+                GroupCaption = "Selection_Identify",
+                ToolTipText = "Identify Features",
+                SmallImage = Resources.identify_16,
+                LargeImage = Resources.identify_32
+            });
             base.Activate();
         }
 
@@ -38,6 +55,7 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void IdentifierTool_Click(object sender, EventArgs e)
         {
+            App.DockManager.SelectPanel("kPanel_Clear");
             App.Map.FunctionMode = FunctionMode.Info;
         }
 
@@ -46,6 +64,7 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void SelectionTool_Click(object sender, EventArgs e)
         {
+            App.DockManager.SelectPanel("kPanel_Clear");
             App.Map.FunctionMode = FunctionMode.Select;
         }
 
@@ -54,16 +73,9 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void DeselectAllTool_Click(object sender, EventArgs e)
         {
+            App.DockManager.SelectPanel("kPanel_Clear");
             IEnvelope env;
             App.Map.MapFrame.ClearSelection(out env);
-            
-            //foreach (IMapLayer layer in App.Map.MapFrame.GetAllLayers())
-            //{
-            //    IMapFeatureLayer mapFeatureLayer = layer as IMapFeatureLayer;
-            //    {
-            //        mapFeatureLayer.UnSelectAll();
-            //    }
-            //}
         }
     }
 }
