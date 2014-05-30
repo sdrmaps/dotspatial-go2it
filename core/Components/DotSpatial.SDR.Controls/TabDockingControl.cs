@@ -24,7 +24,6 @@ namespace DotSpatial.SDR.Controls
         private int _splitterDistance;  // hold the size of the splitter for invalidation
 
         #region Constructor
-
         public void Initialize(SplitContainer sc)
         {
             _splitContainer = sc;
@@ -53,11 +52,9 @@ namespace DotSpatial.SDR.Controls
             toolPanel.Controls.Add(_toolTabs);
             mapPanel.Controls.Add(_mapTabs);
         }
-
         #endregion
 
         #region Public Methods
-
         public void Add(DockablePanel panel)
         {
             if (panel == null) return;
@@ -220,7 +217,6 @@ namespace DotSpatial.SDR.Controls
         {
             throw new NotImplementedException();
         }
-
         #endregion
 
         public event EventHandler<DockablePanelEventArgs> ActivePanelChanged;
@@ -230,7 +226,6 @@ namespace DotSpatial.SDR.Controls
         public event EventHandler<DockablePanelEventArgs> PanelHidden;
 
         #region Private Methods
-
         private int ConvertSortOrderToIndex(TabControl tc, int sortOrder)
         {
             var sortOrderList = new List<int>();
@@ -362,7 +357,6 @@ namespace DotSpatial.SDR.Controls
         #endregion
 
         #region Event Handlers
-
         private static void Splitter_Paint(object sender, PaintEventArgs e)
         {
             PaintSplitterDots((SplitContainer)sender, e);
@@ -382,7 +376,6 @@ namespace DotSpatial.SDR.Controls
                 sc.SplitterDistance = _splitterDistance;
             }
         }
-
         #endregion
     }
 }
