@@ -1,1 +1,0 @@
-﻿Basic legend control.
