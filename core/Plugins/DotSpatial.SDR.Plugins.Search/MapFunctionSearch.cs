@@ -21,15 +21,15 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <param name="sp"></param>
         public MapFunctionSearch(SearchPanel sp)
         {
-            //_searchPanel = sp;
-            //Configure();
+            _searchPanel = sp;
+            Configure();
         }
 
         private void Configure()
         {
-            //YieldStyle = YieldStyles.AlwaysOn;
-            //HandleSearchPanelEvents();
-            //Name = "MapFunctionSearch";
+            YieldStyle = YieldStyles.AlwaysOn;
+            HandleSearchPanelEvents();
+            Name = "MapFunctionSearch";
         }
 
         private void HandleSearchPanelEvents()
@@ -71,13 +71,13 @@ namespace DotSpatial.SDR.Plugins.Search
 
         protected override void OnActivate()
         {
-           /* if (_searchPanel == null || _searchPanel.IsDisposed)
+            if (_searchPanel == null || _searchPanel.IsDisposed)
             {
                 _searchPanel = new SearchPanel();
                 HandleSearchPanelEvents();
             }
             _searchPanel.Show();
-            base.OnActivate();*/
+            base.OnActivate();
         }
 
         #endregion

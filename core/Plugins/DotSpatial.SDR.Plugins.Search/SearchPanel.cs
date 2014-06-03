@@ -19,7 +19,7 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchPanel()
         {
             InitializeComponent();
-            // _searchMode = SearchMode.Addresses;
+            _searchMode = SearchMode.Address;
         }
 
         #endregion
@@ -28,7 +28,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public void ClearSearches()
         {
-            // if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
+            if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
         }
 
         #endregion
@@ -36,14 +36,14 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <summary>
         /// Gets or sets which type of search to perfrom
         /// </summary>
-       /* public SearchMode SearchMode
+        public SearchMode SearchMode
         {
             get { return _searchMode; }
             set
             {
                 _searchMode = value;
             }
-        }*/
+        }
 
         /// <summary>
         /// Occurs when the search mode has been changed.
@@ -161,12 +161,12 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void searchClear_Click(object sender, EventArgs e)
         {
-           // if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
+           if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
         }
 
         private void OnSearchModeChanged()
         {
-           // if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
+           if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
         }
     }
 }

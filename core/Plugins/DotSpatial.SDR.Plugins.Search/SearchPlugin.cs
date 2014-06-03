@@ -60,7 +60,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (_mapFunction == null)
             {
-               // _mapFunction = new MapFunctionSearch(_searchPanel);
+               _mapFunction = new MapFunctionSearch(_searchPanel);
             }
         }
 
@@ -128,8 +128,8 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         private void SearchTool_Click(object sender, EventArgs e)
         {
-          //  App.DockManager.SelectPanel(PluginKey); // select the display panel
-          //  _activeFunction = true;
+          App.DockManager.SelectPanel(PluginKey); // select the display panel
+          _activeFunction = true;
         }
     }
 }
