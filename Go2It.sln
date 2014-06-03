@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE036C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.Measure", "core\Plugins\DotSpatial.SDR.Plugins.Measure\DotSpatial.SDR.Plugins.Measure.csproj", "{93C9C779-903D-491F-AA1F-5BE25E4F5188}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.Search", "core\Plugins\DotSpatial.SDR.Plugins.Search\DotSpatial.SDR.Plugins.Search.csproj", "{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,16 @@ Global
 		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|x86.ActiveCfg = Release|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -42,6 +42,10 @@
       <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DotSpatial.SDR.Controls">
+      <HintPath>..\..\..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotSpatial.Symbology">
       <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Symbology.dll</HintPath>
       <Private>False</Private>
@@ -79,6 +83,7 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="MapFunctionSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -86,6 +91,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SearchHelpers.cs" />
+    <Compile Include="SearchMode.cs" />
     <Compile Include="SearchPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -105,8 +111,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\info_rhombus_16x16.png" />
-    <Content Include="Resources\info_rhombus_32x32.png" />
+    <Content Include="Resources\info_16.png" />
+    <Content Include="Resources\info_32.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

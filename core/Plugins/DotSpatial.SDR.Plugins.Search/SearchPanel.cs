@@ -8,14 +8,62 @@ namespace DotSpatial.SDR.Plugins.Search
 {
     public partial class SearchPanel : UserControl
     {
+        private SearchMode _searchMode;
+
+        #region Private Variables
+        // include filed names and such here?
+        #endregion
+
+        #region Constructors
+
         public SearchPanel()
         {
             InitializeComponent();
+            // _searchMode = SearchMode.Addresses;
         }
+
+        #endregion
+
+        #region Properties
+
+        public void ClearSearches()
+        {
+            // if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets or sets which type of search to perfrom
+        /// </summary>
+       /* public SearchMode SearchMode
+        {
+            get { return _searchMode; }
+            set
+            {
+                _searchMode = value;
+            }
+        }*/
+
+        /// <summary>
+        /// Occurs when the search mode has been changed.
+        /// </summary>
+        public event EventHandler SearchModeChanged;
+
+        /// <summary>
+        /// Occurs when the clear button has been pressed.
+        /// </summary>
+        public event EventHandler SearchesCleared;
+
+        /// <summary>
+        /// Occurs when the hydrant button has been pressed.
+        /// </summary>
+        public event EventHandler HydrantLocate;
+
         // determine the type of query and go..
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            if (txtSearch.Text.Length < 0) return;  // make sure a query has even been submitted
+            /*if (txtSearch.Text.Length < 0) return;  // make sure a query has even been submitted
             // clear any existing data shown on the datagridview currently
             searchDGV.Rows.Clear();
             searchDGV.Columns.Clear();
@@ -58,34 +106,34 @@ namespace DotSpatial.SDR.Plugins.Search
             foreach(DataGridViewRow row in rows) 
             {
                 searchDGV.Rows.Add(row);
-            }
+            }*/
         }
 
         private void searchName_Click(object sender, EventArgs e)
         {
-            searchName.Checked = true;
+            /* searchName.Checked = true;
             searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchRoad.Checked = false;
-            searchIntersection.Checked = false;
+            searchIntersection.Checked = false;*/
         }
 
         private void searchAdds_Click(object sender, EventArgs e)
         {
-            searchAdds.Checked = true;
+            /*searchAdds.Checked = true;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
-            searchRoad.Checked = false;
+            searchRoad.Checked = false;*/
         }
 
         private void searchPhone_Click(object sender, EventArgs e)
         {
-            searchPhone.Checked = true;
+            /*searchPhone.Checked = true;
             searchAdds.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
-            searchRoad.Checked = false;
+            searchRoad.Checked = false;*/
         }
 
         private void searchHydrant_Click(object sender, EventArgs e)
@@ -93,27 +141,32 @@ namespace DotSpatial.SDR.Plugins.Search
 
         }
 
-        private void searchClear_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void searchRoad_Click(object sender, EventArgs e)
         {
-            searchAdds.Checked = false;
+            /*searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
-            searchRoad.Checked = true;
+            searchRoad.Checked = true;*/
         }
 
         private void searchIntersection_Click(object sender, EventArgs e)
         {
-            searchAdds.Checked = false;
+            /*searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = true;
-            searchRoad.Checked = false;
+            searchRoad.Checked = false;*/
+        }
+
+        private void searchClear_Click(object sender, EventArgs e)
+        {
+           // if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
+        }
+
+        private void OnSearchModeChanged()
+        {
+           // if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
         }
     }
 }

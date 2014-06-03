@@ -89,7 +89,7 @@
             this.searchAdds.Checked = true;
             this.searchAdds.CheckOnClick = true;
             this.searchAdds.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchAdds.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchAdds.Name = "searchAdds";
             this.searchAdds.Size = new System.Drawing.Size(64, 42);
@@ -101,7 +101,7 @@
             // searchName
             // 
             this.searchName.CheckOnClick = true;
-            this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchName.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchName.Name = "searchName";
             this.searchName.Size = new System.Drawing.Size(43, 42);
@@ -113,7 +113,7 @@
             // searchPhone
             // 
             this.searchPhone.CheckOnClick = true;
-            this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchPhone.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchPhone.Name = "searchPhone";
             this.searchPhone.Size = new System.Drawing.Size(45, 42);
@@ -125,7 +125,7 @@
             // searchHydrant
             // 
             this.searchHydrant.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchHydrant.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchHydrant.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchHydrant.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchHydrant.Name = "searchHydrant";
             this.searchHydrant.Size = new System.Drawing.Size(54, 42);
@@ -137,7 +137,7 @@
             // searchClear
             // 
             this.searchClear.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchClear.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchClear.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchClear.Name = "searchClear";
             this.searchClear.Size = new System.Drawing.Size(38, 42);
@@ -149,7 +149,7 @@
             // searchRoad
             // 
             this.searchRoad.CheckOnClick = true;
-            this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchRoad.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchRoad.Name = "searchRoad";
             this.searchRoad.Size = new System.Drawing.Size(38, 42);
@@ -160,7 +160,7 @@
             // 
             // searchIntersection
             // 
-            this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_rhombus_32x32;
+            this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchIntersection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchIntersection.Name = "searchIntersection";
             this.searchIntersection.Size = new System.Drawing.Size(73, 42);
@@ -229,13 +229,13 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton searchAdds;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.DataGridView searchDGV;
         private System.Windows.Forms.ToolStripButton searchName;
         private System.Windows.Forms.ToolStripButton searchPhone;
         private System.Windows.Forms.ToolStripButton searchHydrant;
         private System.Windows.Forms.ToolStripButton searchClear;
         private System.Windows.Forms.ToolStripButton searchRoad;
         private System.Windows.Forms.ToolStripButton searchIntersection;
+        private System.Windows.Forms.DataGridView searchDGV;
 
     }
 }

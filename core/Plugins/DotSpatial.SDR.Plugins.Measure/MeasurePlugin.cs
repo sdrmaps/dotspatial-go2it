@@ -98,7 +98,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Cross;
                     _painter.Activate();
-
                 }
             }
         }
@@ -148,6 +147,11 @@ namespace DotSpatial.SDR.Plugins.Measure
             App.Map.Invalidate();
         }
 
+        /// <summary>
+        /// Measure Area and Distance Tool
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MeasureTool_Click(object sender, EventArgs e)
         {
             App.DockManager.SelectPanel(PluginKey);  // select the display panel
