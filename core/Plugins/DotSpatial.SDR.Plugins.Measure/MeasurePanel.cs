@@ -103,6 +103,10 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
         }
 
+        public void ClearMeasurements()
+        {
+            if (MeasurementsCleared != null) MeasurementsCleared(this, EventArgs.Empty);
+        }
         #endregion
 
         /// <summary>

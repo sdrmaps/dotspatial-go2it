@@ -47,40 +47,30 @@ namespace DotSpatial.SDR.Plugins.Measure
         private Point _mousePosition;
         private double _previousDistance;
         private List<List<Coordinate>> _previousParts;
-
         private bool _standBy;
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the MapFunctionMeasure class.
+        /// Creates a new instance of MapMeasureFunction, with panel
         /// </summary>
-        public MapFunctionMeasure()
-        {
-            Configure();
-        }
-
-        /// <summary>
-        /// Creates a new instance of AddShapeFunction, but specifies
-        /// the Map that this function should be applied to.
-        /// </summary>
-        /// <param name="map"></param>
         /// <param name="mp"></param>
-        public MapFunctionMeasure(IMap map, MeasurePanel mp)
-            : base(map)
+        public MapFunctionMeasure(MeasurePanel mp)
         {
             _measurePanel = mp;
             Configure();
         }
 
         /// <summary>
-        /// Creates a new instance of AddShapeFunction, but specifies
+        /// CCreates a new instance of MapMeasureFunction, with panel, and
         /// the Map that this function should be applied to.
         /// </summary>
+        /// <param name="mp"></param>
         /// <param name="map"></param>
-        public MapFunctionMeasure(IMap map)
+        public MapFunctionMeasure(MeasurePanel mp, IMap map)
             : base(map)
         {
+            _measurePanel = mp;
             Configure();
         }
 
@@ -88,26 +78,17 @@ namespace DotSpatial.SDR.Plugins.Measure
         {
             _previousParts = new List<List<Coordinate>>();
             YieldStyle = YieldStyles.LeftButton | YieldStyles.RightButton;
-            HandleMeasureDialogEvents();
-
-            var map = Map as Control;
-            if (map != null) map.MouseLeave += map_MouseLeave;
+            HandleMeasurePanelEvents();
             Name = "MapFunctionMeasure";
         }
 
-        private void map_MouseLeave(object sender, EventArgs e)
+        private void HandleMeasurePanelEvents()
         {
-            Map.Invalidate();
+            _measurePanel.MeasureModeChanged += MeasurePanel_MeasureModeChanged;
+            _measurePanel.MeasurementsCleared += MeasurePanel_MeasurementsCleared;
         }
 
-        private void HandleMeasureDialogEvents()
-        {
-            _measurePanel.MeasureModeChanged += MeasureDialogMeasureModeChanged;
-            // _measurePanel.FormClosing += CoordinateDialogFormClosing;
-            _measurePanel.MeasurementsCleared += MeasureDialog_MeasurementsCleared;
-        }
-
-        private void MeasureDialog_MeasurementsCleared(object sender, EventArgs e)
+        private void MeasurePanel_MeasurementsCleared(object sender, EventArgs e)
         {
             _previousParts.Clear();
             if (_coordinates != null)
@@ -134,7 +115,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             if (_measurePanel == null || _measurePanel.IsDisposed)
             {
                 _measurePanel = new MeasurePanel();
-                HandleMeasureDialogEvents();
+                HandleMeasurePanelEvents();
             }
             _measurePanel.Show();
             if (_standBy == false)
@@ -464,14 +445,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             Map.Invalidate();
         }
 
-        /* private void CoordinateDialogFormClosing(object sender, FormClosingEventArgs e1)
-        {
-            // This signals that we are done with editing, and should therefore close up shop
-            Enabled = false;
-            Map.Invalidate();
-        } */
-
-        private void MeasureDialogMeasureModeChanged(object sender, EventArgs e)
+        private void MeasurePanel_MeasureModeChanged(object sender, EventArgs e)
         {
             _previousParts.Clear();
 
