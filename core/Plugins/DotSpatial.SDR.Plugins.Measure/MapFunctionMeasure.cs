@@ -62,7 +62,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         }
 
         /// <summary>
-        /// CCreates a new instance of MapMeasureFunction, with panel, and
+        /// Creates a new instance of MapMeasureFunction, with panel, and
         /// the Map that this function should be applied to.
         /// </summary>
         /// <param name="mp"></param>
@@ -301,7 +301,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                     area *= Map.Projection.Unit.Meters * Map.Projection.Unit.Meters;
                 }
             }
-            // _measurePanel.Area = area;
             return area;
         }
 
@@ -375,7 +374,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                 return;
             }
             // Add the current point to the featureset
-
             if (e.Button == MouseButtons.Right)
             {
                 if (_coordinates.Count > 1)

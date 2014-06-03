@@ -83,26 +83,22 @@ namespace DotSpatial.SDR.Plugins.Measure
                 AddMeasureMapFunction();
                 if (_activeFunction)
                 {
-                    // add local map event binding
-                    // var map = App.Map as Control;
-                    // map.MouseLeave += MapOnMouseLeave;
-                    // activate the new local map function
-                    _painter.Activate();
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Cross;
+                    _painter.Activate();
+                    // add local map event binding
+                    var map = App.Map as Control;
+                    if (map != null) map.MouseLeave += MapOnMouseLeave;
                 }
             }
             else if (key == PluginKey)
             {
                 if (!_activeFunction)
                 {
-                    // _painter = App.Map.GetMapFunction("MapFunctionMeasure") as MapFunctionMeasure;
-                    // var mFunc = App.Map.GetMapFunction("MapFunctionMeasure") as MapFunctionMeasure;
-                    // mFunc.Activate();
-                    _painter.Activate();
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Cross;
-                    //_painter.Activate();
+                    _painter.Activate();
+
                 }
             }
         }
@@ -123,28 +119,26 @@ namespace DotSpatial.SDR.Plugins.Measure
                 if (_activeFunction)
                 {
                     // remove local map event binding
-                    // var map = App.Map as Control;
-                    // map.MouseLeave -= MapOnMouseLeave;
-                    // deactivate the local map function
-                    // var mapFunc = App.Map.GetMapFunction("MapFunctionMeasure") as MapFunctionMeasure;
-                    // mapFunc.Deactivate();
-                    // set the defaults back for this map
-                    _painter.Deactivate();
+                    var map = App.Map as Control;
+                    if (map != null) map.MouseLeave -= MapOnMouseLeave;
+                    // deactivate the local map function mode
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Default;
+                    _painter.Deactivate();
                 }
             }
             else if (key == PluginKey)
             {
                 if (_activeFunction)
                 {
-                    _activeFunction = false;
-                    _painter.Deactivate();
+                    // remove local map event binding
+                    var map = App.Map as Control;
+                    if (map != null) map.MouseLeave -= MapOnMouseLeave;
+                    // deactivate the local map function mode
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Default;
-                    // var map = App.Map as Control;
-                    // map.MouseLeave -= MapOnMouseLeave;
-                    // _painter.Deactivate();
+                    _painter.Deactivate();
+                    _activeFunction = false; // no longer an active function
                 }
             }
         }
