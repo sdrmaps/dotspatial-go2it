@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.SDR.Controls;
@@ -65,9 +68,18 @@ namespace Go2It
         // on save this is passed to the dockingcontrol baselayerlookup dict
         private readonly Dictionary<string, IMapLayer> _localBaseMapLayerLookup = new Dictionary<string, IMapLayer>();
 
+        // default sql row creation for an indexing row in the db
+        private readonly  Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
+        // temp store added index until creation is activated
+        // indie dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
+        private Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>(); 
+
         public AdminForm(AppManager app)
         {
             InitializeComponent();
+            _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
+            _indexLookupFields.Add("lookup", "TEXT");
+            _indexLookupFields.Add("fieldname", "TEXT");
             _appManager = app;
             _dockingControl = (DockingControl) app.DockManager;
             // a basemap to hold all layers for the adminlegend
@@ -1185,7 +1197,7 @@ namespace Go2It
             return null;
         }
 
-        private String GetLayerIndexTable(string layName)
+        private String GetLayerIndexTableType(string layName)
         {
             StringCollection sc = ApplyCheckBoxSetting(chkAddressLayers);
             if (sc != null && sc.Contains(layName))
@@ -1260,12 +1272,21 @@ namespace Go2It
                 }
             }
             // determine what type of layer we have and set lookup indexes
-            string lyrIndexTable = GetLayerIndexTable(lyrName);
+            string lyrType = GetLayerIndexTableType(lyrName);
             string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            string query = "SELECT * FROM " + lyrIndexTable;
             DataTable defaults = GetLayerTypeIndexes(lyrName);
-            DataTable table = SQLiteHelper.GetDataTable(conn, query);
-            if (table.Rows.Count == 0)
+            string indexTableName = lyrType + "_" + lyrName;
+            DataTable table = new DataTable();
+            if (SQLiteHelper.TableExists(conn, indexTableName))
+            {
+                string query = "SELECT * FROM " + indexTableName;
+                table = SQLiteHelper.GetDataTable(conn, query);
+                if (table.Rows.Count == 0)
+                {
+                    table = defaults;
+                }
+            }
+            else
             {
                 table = defaults;
             }
@@ -1334,23 +1355,53 @@ namespace Go2It
             }
         }
 
+        private void btnAddIndex_Click(object sender, EventArgs e)
+        {
+            if (cmbLayerIndex.SelectedItem.ToString().Length > 0)
+            {
+                string lyrName = cmbLayerIndex.SelectedItem.ToString();
+                if (!chkLayersToIndex.Items.Contains(lyrName))
+                {
+                    chkLayersToIndex.Items.Add(lyrName);
+                    chkLayersToIndex.SetItemChecked(chkLayersToIndex.Items.Count - 1, true);
+                }
+                var indexList = new List<Dictionary<string, string>>();
+                for (int i = 0; i < dgvLayerIndex.Rows.Count; i++)
+                {   
+                    if (dgvLayerIndex.Rows[i].Cells[1].Value.ToString().Length > 0)
+                    {
+                        var d = new Dictionary<string, string>
+                        {
+                            {"lookup", dgvLayerIndex.Rows[i].Cells[0].Value.ToString()},
+                            {"fieldname", dgvLayerIndex.Rows[i].Cells[1].Value.ToString()}
+                        };
+                        indexList.Add(d);
+                    }
+                }
+                _indexQueue.Add(lyrName, indexList);
+            }
+        }
+
         private void btnCreateIndex_Click(object sender, EventArgs e)
         {
             if (_idxWorker.IsBusy != true)
             {
-                if (cmbLayerIndex.SelectedItem.ToString().Length > 0)
+                string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+                IndexObject[] iobjects = new IndexObject[_indexQueue.Count];
+                int count = 0;
+                foreach (KeyValuePair<string, List<Dictionary<string, string>>> keyValuePair in _indexQueue)
                 {
-                    string lyrName = cmbLayerIndex.SelectedItem.ToString();
-                    var list = new List<KeyValuePair<string, string>>();
-                    for (int i = 0; i < dgvLayerIndex.Rows.Count; i++)
+                    string lyrName = keyValuePair.Key;
+                    string lyrType = GetLayerIndexTableType(lyrName);
+                    // string indexName = lyrType + "_" + lyrName;
+                    // check if the table exists clear and clean or create
+                    if (SQLiteHelper.TableExists(conn, lyrType))
                     {
-                        if (dgvLayerIndex.Rows[i].Cells[1].Value.ToString().Length > 0)
-                        {
-                            // set the value of the lookup for each field to index
-                            var kv = new KeyValuePair<string, string>(dgvLayerIndex.Rows[i].Cells[0].Value.ToString(),
-                                dgvLayerIndex.Rows[i].Cells[1].Value.ToString());
-                            list.Add(kv);
-                        }
+                        SQLiteHelper.ClearTable(conn, lyrType);
+                    }
+                    else
+                    {
+                        SQLiteHelper.CreateTable(conn, lyrType, _indexLookupFields);
                     }
                     // setup everything else we need to generate ouselves a lucene index      
                     IMapLayer mapLyr;
@@ -1369,28 +1420,123 @@ namespace Go2It
                     // make sure this featureset has FID values for lookup
                     fs.AddFid(); 
                     fs.Save();
-                    string lyrType = GetLayerIndexTable(lyrName);
-                    var io = new IndexObject(fs, list, lyrType);
-                    idxProgressBar.Visible = true;
-                    idxProgressBar.Minimum = 0;
-                    idxProgressBar.Maximum = 100;
-                    idxProgressBar.Value = 0;
-                    _idxWorker.RunWorkerAsync(io);
-                    // while that runs lets save the settings to the database
-                    string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-                    SQLiteHelper.ClearTable(conn, lyrType);
-                    foreach (var kv in io.FieldLookup)
+                    // array of indexobjects we will add to the index
+                    List<Dictionary<string, string>> indexList = keyValuePair.Value;
+                    var list = new List<KeyValuePair<string, string>>();
+                    // iterate through all the field indexes
+                    for (int i = 0; i <= indexList.Count - 1; i++)
                     {
-                        var d = new Dictionary<string, string>
-                        {
-                            {"lookup", kv.Key},
-                            {"fieldname", kv.Value}
-                        };
+                        Dictionary<string, string> d = indexList[i];
                         SQLiteHelper.Insert(conn, lyrType, d);
+                        var kvPair = new KeyValuePair<string, string>(d["lookup"], d["fieldname"]);
+                        list.Add(kvPair);
                     }
+                    var io = new IndexObject(fs, list, lyrType);
+                    iobjects.SetValue(io, count);
+                    count++;
+                    // idxProgressBar.Visible = true;
+                    // idxProgressBar.Minimum = 0;
+                    // idxProgressBar.Maximum = 100;
+                    // idxProgressBar.Value = 0;
                 }
+                _idxWorker.RunWorkerAsync(iobjects);
             }
         }
+
+
+        private void idx_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var iobjects = e.Argument as IndexObject[];
+            var worker = sender as BackgroundWorker;  // our worker for running the indexing operation
+            if (iobjects.Length > 0)
+            {
+                long startMin = DateTime.Now.Minute;
+                long startSec = DateTime.Now.Second;
+
+                var done = Parallel.ForEach<IndexObject>(iobjects, delegate(IndexObject o, ParallelLoopState state)
+                {
+                    IFeatureSet fl = o.FeatureSet;
+                    var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+                    var d = Path.GetDirectoryName(db);
+                    if (d == null) return;
+
+                    var path = Path.Combine(d, "indexes", o.IndexName);
+                    DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
+                    Directory dir = FSDirectory.Open(di);
+
+                    for (int x = 0; x < fl.DataTable.Rows.Count; x++)
+                    {
+                        if (worker != null && (worker.CancellationPending))
+                        {
+                            e.Cancel = true;
+                            break;
+                        }
+                        // grab a row from the datatable and index that shit
+                        DataRow dr = fl.DataTable.Rows[x];
+                        var doc = new Document();  // generate a document for indexing by lucene
+                        doc.Add(new Field("FID", dr["FID"].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+
+                        // get the field names for lookup
+                        var list = o.FieldLookup;
+                        foreach (KeyValuePair<string, string> kv in list)
+                        {
+                            if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
+                            {
+                                doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                            }
+                            else  // run analyzer on all remaining field types
+                            {
+                                doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
+                            }
+                        }
+
+
+                        // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+                        // either create a new index or update an existing index
+                        // var writer = x == 0 ? new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) : new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
+                        // writer.AddDocument(doc);
+                        // writer.Optimize();
+                        // writer.Dispose();
+
+                        // get the current ratio of the list we are indexing
+                        // double ratio = (double)fl.DataTable.Rows.Count / 100;
+                        // update the progress bar on the main thread interface
+                        // int result = Convert.ToInt32((x + 1) / ratio);
+                        // if (worker != null) worker.ReportProgress((result));
+                    }
+                });
+
+                long endMin = DateTime.Now.Minute;
+                long endSec = DateTime.Now.Second;
+
+                long totMin = endMin - startMin;
+                long totSec = endSec - startSec;
+
+                Debug.WriteLine("Indexing took " + totMin + " mins" + totSec + " secs");
+            }
+        }
+
+        private void idx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                idxProgressBar.Hide();
+                DeleteIndex();
+            }
+            else if (e.Error != null)
+            {
+                // TODO:this.tbProgress.Text = ("Error: " + e.Error.Message);
+                MessageBox.Show(@"Error on Indexing Layer");
+            }
+            idxProgressBar.Hide();
+        }
+
+        private void idx_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // idxProgressBar.Text = (e.ProgressPercentage.ToString() + "%");
+            idxProgressBar.Value = e.ProgressPercentage;
+        }
+
 
         private void btnDeleteIndex_Click(object sender, EventArgs e)
         {
@@ -1405,7 +1551,7 @@ namespace Go2It
             if (cmbLayerIndex.SelectedItem.ToString().Length <= 0) return;
 
             var lyrName = cmbLayerIndex.SelectedItem.ToString();
-            var lyrType = GetLayerIndexTable(lyrName);
+            var lyrType = GetLayerIndexTableType(lyrName);
             var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
             var d = Path.GetDirectoryName(db);
             if (d != null)
@@ -1622,16 +1768,16 @@ namespace Go2It
             }
         }
 
-        private class IndexObject
+        internal class IndexObject
         {
             public IFeatureSet FeatureSet { get; private set; }
-            public string LayerType { get; private set; }
+            public string IndexName { get; private set; }
             public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
-            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerType)
+            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string indexName)
             {
                 FeatureSet = featureSet;
                 FieldLookup = fieldLookup;
-                LayerType = layerType;
+                IndexName = indexName;
             }
         }
 
@@ -1646,83 +1792,6 @@ namespace Go2It
             {
                 _appManager.DockManager.SelectPanel(key);
             }
-        }
-
-        private void idx_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var io = e.Argument as IndexObject;
-            // our worker for running the indexing operation
-            var worker = sender as BackgroundWorker;
-            // setup everything else we need to generate ourselves a lucene index
-            if (io != null)
-            {
-                IFeatureSet fl = io.FeatureSet;
-                var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-                var d = Path.GetDirectoryName(db);
-                if (d == null) return;
-                var path = Path.Combine(d, "indexes", io.LayerType);
-                DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
-                Directory dir = FSDirectory.Open(di);
-                
-                for (int x = 0; x < fl.DataTable.Rows.Count; x++)
-                {
-                    if (worker != null && (worker.CancellationPending))
-                    {
-                        e.Cancel = true;
-                        break;
-                    }
-                    // grab a row from the datatable and index that shit
-                    DataRow dr = fl.DataTable.Rows[x];
-                    var doc = new Document();  // generate a document for indexing by lucene
-                    var list = io.FieldLookup;
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        doc.Add(new Field("FID", dr["FID"].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        // no need to run an analyzer on numbered values
-                        KeyValuePair<string, string> kv = list[i];
-                        if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
-                        {
-                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        }
-                        else  // run analyzer on all remaining field types
-                        {
-                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
-                        }
-                    }
-                    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-                    // either create a new index or update an existing index
-                    var writer = x == 0 ? new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) : new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
-                    writer.AddDocument(doc);
-                    writer.Optimize();
-                    writer.Dispose();
-                    // get the current ratio of the list we are indexing
-                    double ratio = (double)fl.DataTable.Rows.Count / 100;
-                    // update the progress bar on the main thread interface
-                    int result = Convert.ToInt32((x + 1) / ratio);
-                    if (worker != null) worker.ReportProgress((result));
-                }
-            }
-        }
-
-        private void idx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Cancelled)
-            {
-                idxProgressBar.Hide();
-                DeleteIndex();
-            }
-            else if (e.Error != null)
-            {
-                // TODO:this.tbProgress.Text = ("Error: " + e.Error.Message);
-                MessageBox.Show(@"Error on Indexing Layer");
-            }
-            idxProgressBar.Hide();
-        }
-
-        private void idx_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            // idxProgressBar.Text = (e.ProgressPercentage.ToString() + "%");
-            idxProgressBar.Value = e.ProgressPercentage;
         }
 
         private void cmbCellSectorLayer_SelectedIndexChanged(object sender, EventArgs e)

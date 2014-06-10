@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SDR.Data.Database
 {
@@ -176,6 +177,42 @@ namespace SDR.Data.Database
             {
                 ExecuteNonQuery(conn, String.Format("delete from {0};", table));
                 return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool CreateTable(string conn, string table, Dictionary<string, string> fields)
+        {
+            try
+            {
+                string sql = string.Empty;
+                foreach (KeyValuePair<string, string> keyValuePair in fields)
+                {
+                    sql = sql + keyValuePair.Key + " " + keyValuePair.Value + ",";
+                }
+                sql = sql.Remove(sql.Length - 1);
+                ExecuteNonQuery(conn, String.Format("create table {0} (" + sql + ")", table));
+                // ExecuteNonQuery(conn, String.Format("create table {0} (key INTEGER PRIMARY KEY, lookup TEXT, fieldname TEXT)", table));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool TableExists(string conn, string table)
+        {
+            try
+            {
+                var cnn = new SQLiteConnection(conn);
+                cnn.Open();
+                DataRow[] rows = cnn.GetSchema("Tables").Select(string.Format("Table_Name = '{0}'", table));
+                var tableExists = (rows.Length > 0);
+                return tableExists;
             }
             catch
             {

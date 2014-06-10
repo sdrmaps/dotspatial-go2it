@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using SdrConfig = SDR.Configuration;
-
 
 namespace DotSpatial.SDR.Plugins.Search
 {
     public partial class SearchPanel : UserControl
     {
-        private SearchMode _searchMode;
-
         #region Private Variables
-        // include filed names and such here?
+
+        private string _searchQuery;
+        private SearchMode _searchMode;
+        private DataGridView _dataGridView;
+
         #endregion
 
         #region Constructors
@@ -19,6 +19,8 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchPanel()
         {
             InitializeComponent();
+            _searchQuery = string.Empty;
+            _dataGridView = searchDGV;
             _searchMode = SearchMode.Address;
         }
 
@@ -46,6 +48,24 @@ namespace DotSpatial.SDR.Plugins.Search
         }
 
         /// <summary>
+        /// Gets or sets the datagrid view for query display
+        /// </summary>
+        public DataGridView DataGridDisplay
+        {
+            get { return _dataGridView; }
+            set { _dataGridView = value; }
+        }
+
+        public string SearchQuery
+        {
+            get { return _searchQuery; }
+            set
+            {
+                _searchQuery = value;
+            }
+        }
+
+        /// <summary>
         /// Occurs when the search mode has been changed.
         /// </summary>
         public event EventHandler SearchModeChanged;
@@ -60,103 +80,83 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         public event EventHandler HydrantLocate;
 
-        // determine the type of query and go..
+        /// <summary>
+        /// Occurs when the search button has been pressed.
+        /// </summary>
+        public event EventHandler PerformSearch;
+
+        /// <summary>
+        /// Occurs when a row has been double clicked
+        /// </summary>
+        public event EventHandler RowDoubleClicked;
+
+
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            /*if (txtSearch.Text.Length < 0) return;  // make sure a query has even been submitted
-            // clear any existing data shown on the datagridview currently
-            searchDGV.Rows.Clear();
-            searchDGV.Columns.Clear();
-            // lists for storing the columns and rows to populate dgv
-            string searchType = string.Empty;
-            string idxType = string.Empty;
-            var idxQuery = string.Empty;
-            // now set the settings as required
-            if (searchAdds.Checked)
-            {
-                searchType = "address";
-                idxType = "AddressIndex";
-                idxQuery = "SELECT * FROM " + idxType;
-            }
-            else if (searchName.Checked)
-            {
-                searchType = "name";
-                idxType = "AddressIndex";
-                idxQuery = "SELECT * FROM " + idxType;
-            } 
-            else if (searchPhone.Checked)
-            {
-                searchType = "phone";
-                idxType = "AddressIndex";
-                idxQuery = "SELECT * FROM " + idxType;
-            }
-            else if (searchRoad.Checked)
-            {
-            }
-            else if (searchIntersection.Checked)
-            {
-            }
-            // complete the datagridview population
-            List<DataGridViewTextBoxColumn> cols = SearchHelpers.GetQueryColumns(idxQuery);
-            foreach(DataGridViewTextBoxColumn col in cols)
-            {
-                searchDGV.Columns.Add(col);
-            }
-            List<DataGridViewRow> rows = SearchHelpers.ExecuteLuceneQuery(searchType, txtSearch.Text, idxType, idxQuery);
-            foreach(DataGridViewRow row in rows) 
-            {
-                searchDGV.Rows.Add(row);
-            }*/
+            // make sure we have a valid query to submit
+            if (txtSearch.Text.Length < 0) return;  
+            _searchQuery = txtSearch.Text;
+            OnPerformSearch();
         }
 
         private void searchName_Click(object sender, EventArgs e)
         {
-            /* searchName.Checked = true;
+            _searchMode = SearchMode.Name;
+            searchName.Checked = true;
             searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchRoad.Checked = false;
-            searchIntersection.Checked = false;*/
+            searchIntersection.Checked = false;
+            OnSearchModeChanged();
         }
 
         private void searchAdds_Click(object sender, EventArgs e)
         {
-            /*searchAdds.Checked = true;
+            _searchMode = SearchMode.Address;
+            searchAdds.Checked = true;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
-            searchRoad.Checked = false;*/
+            searchRoad.Checked = false;
+            OnSearchModeChanged();
         }
 
         private void searchPhone_Click(object sender, EventArgs e)
         {
-            /*searchPhone.Checked = true;
+            _searchMode = SearchMode.Phone;
+            searchPhone.Checked = true;
             searchAdds.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
-            searchRoad.Checked = false;*/
-        }
-
-        private void searchHydrant_Click(object sender, EventArgs e)
-        {
-
+            searchRoad.Checked = false;
+            OnSearchModeChanged();
         }
 
         private void searchRoad_Click(object sender, EventArgs e)
         {
-            /*searchAdds.Checked = false;
+            _searchMode = SearchMode.Road;
+            searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
-            searchRoad.Checked = true;*/
+            searchRoad.Checked = true;
+            OnSearchModeChanged();
         }
 
         private void searchIntersection_Click(object sender, EventArgs e)
         {
-            /*searchAdds.Checked = false;
+            _searchMode = SearchMode.Intersection;
+            searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = true;
-            searchRoad.Checked = false;*/
+            searchRoad.Checked = false;
+            OnSearchModeChanged();
+        }
+
+        private void searchHydrant_Click(object sender, EventArgs e)
+        {
+            if (HydrantLocate != null) HydrantLocate(this, EventArgs.Empty);
         }
 
         private void searchClear_Click(object sender, EventArgs e)
@@ -167,6 +167,16 @@ namespace DotSpatial.SDR.Plugins.Search
         private void OnSearchModeChanged()
         {
            if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
+        }
+
+        private void OnPerformSearch()
+        {
+            if (PerformSearch != null) PerformSearch(this, new EventArgs());
+        }
+
+        private void searchDGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (RowDoubleClicked != null) RowDoubleClicked(this, e);
         }
     }
 }

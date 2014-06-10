@@ -90,7 +90,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SearchHelpers.cs" />
     <Compile Include="SearchMode.cs" />
     <Compile Include="SearchPanel.cs">
       <SubType>UserControl</SubType>

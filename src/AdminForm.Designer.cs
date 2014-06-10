@@ -79,6 +79,8 @@
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
+            this.chkLayersToIndex = new System.Windows.Forms.CheckedListBox();
+            this.btnAddIndex = new System.Windows.Forms.Button();
             this.btnIndexCancel = new System.Windows.Forms.Button();
             this.idxProgressBar = new System.Windows.Forms.ProgressBar();
             this.dgvLayerIndex = new System.Windows.Forms.DataGridView();
@@ -664,6 +666,8 @@
             // 
             // adminTab_SearchProperties
             // 
+            this.adminTab_SearchProperties.Controls.Add(this.chkLayersToIndex);
+            this.adminTab_SearchProperties.Controls.Add(this.btnAddIndex);
             this.adminTab_SearchProperties.Controls.Add(this.btnIndexCancel);
             this.adminTab_SearchProperties.Controls.Add(this.idxProgressBar);
             this.adminTab_SearchProperties.Controls.Add(this.dgvLayerIndex);
@@ -679,9 +683,27 @@
             this.adminTab_SearchProperties.Text = "Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
+            // chkLayersToIndex
+            // 
+            this.chkLayersToIndex.FormattingEnabled = true;
+            this.chkLayersToIndex.Location = new System.Drawing.Point(8, 252);
+            this.chkLayersToIndex.Name = "chkLayersToIndex";
+            this.chkLayersToIndex.Size = new System.Drawing.Size(187, 139);
+            this.chkLayersToIndex.TabIndex = 8;
+            // 
+            // btnAddIndex
+            // 
+            this.btnAddIndex.Location = new System.Drawing.Point(121, 214);
+            this.btnAddIndex.Name = "btnAddIndex";
+            this.btnAddIndex.Size = new System.Drawing.Size(75, 23);
+            this.btnAddIndex.TabIndex = 7;
+            this.btnAddIndex.Text = "Add";
+            this.btnAddIndex.UseVisualStyleBackColor = true;
+            this.btnAddIndex.Click += new System.EventHandler(this.btnAddIndex_Click);
+            // 
             // btnIndexCancel
             // 
-            this.btnIndexCancel.Location = new System.Drawing.Point(62, 340);
+            this.btnIndexCancel.Location = new System.Drawing.Point(115, 512);
             this.btnIndexCancel.Name = "btnIndexCancel";
             this.btnIndexCancel.Size = new System.Drawing.Size(71, 23);
             this.btnIndexCancel.TabIndex = 6;
@@ -691,7 +713,7 @@
             // 
             // idxProgressBar
             // 
-            this.idxProgressBar.Location = new System.Drawing.Point(20, 513);
+            this.idxProgressBar.Location = new System.Drawing.Point(28, 637);
             this.idxProgressBar.Name = "idxProgressBar";
             this.idxProgressBar.Size = new System.Drawing.Size(485, 23);
             this.idxProgressBar.TabIndex = 5;
@@ -701,7 +723,7 @@
             // 
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLayerIndex.Location = new System.Drawing.Point(203, 76);
+            this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -710,7 +732,7 @@
             // 
             // btnDeleteIndex
             // 
-            this.btnDeleteIndex.Location = new System.Drawing.Point(24, 289);
+            this.btnDeleteIndex.Location = new System.Drawing.Point(124, 397);
             this.btnDeleteIndex.Name = "btnDeleteIndex";
             this.btnDeleteIndex.Size = new System.Drawing.Size(71, 23);
             this.btnDeleteIndex.TabIndex = 3;
@@ -720,7 +742,7 @@
             // 
             // btnCreateIndex
             // 
-            this.btnCreateIndex.Location = new System.Drawing.Point(105, 289);
+            this.btnCreateIndex.Location = new System.Drawing.Point(38, 512);
             this.btnCreateIndex.Name = "btnCreateIndex";
             this.btnCreateIndex.Size = new System.Drawing.Size(71, 23);
             this.btnCreateIndex.TabIndex = 2;
@@ -731,7 +753,7 @@
             // cmbLayerIndex
             // 
             this.cmbLayerIndex.FormattingEnabled = true;
-            this.cmbLayerIndex.Location = new System.Drawing.Point(36, 34);
+            this.cmbLayerIndex.Location = new System.Drawing.Point(8, 12);
             this.cmbLayerIndex.Name = "cmbLayerIndex";
             this.cmbLayerIndex.Size = new System.Drawing.Size(344, 21);
             this.cmbLayerIndex.TabIndex = 1;
@@ -741,7 +763,7 @@
             // 
             this.chkLayerIndex.CheckOnClick = true;
             this.chkLayerIndex.FormattingEnabled = true;
-            this.chkLayerIndex.Location = new System.Drawing.Point(9, 76);
+            this.chkLayerIndex.Location = new System.Drawing.Point(8, 39);
             this.chkLayerIndex.Name = "chkLayerIndex";
             this.chkLayerIndex.Size = new System.Drawing.Size(188, 169);
             this.chkLayerIndex.TabIndex = 0;
@@ -869,6 +891,8 @@
         private System.Windows.Forms.Button btnCreateIndex;
         private System.Windows.Forms.ComboBox cmbLayerIndex;
         private System.Windows.Forms.CheckedListBox chkLayerIndex;
+        private System.Windows.Forms.Button btnAddIndex;
+        private System.Windows.Forms.CheckedListBox chkLayersToIndex;
 
     }
 }

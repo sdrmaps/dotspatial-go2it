@@ -202,6 +202,7 @@
             this.searchDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.searchDGV.Size = new System.Drawing.Size(711, 138);
             this.searchDGV.TabIndex = 2;
+            this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
             // 
             // SearchPanel
             // 
