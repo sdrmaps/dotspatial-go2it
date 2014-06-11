@@ -81,8 +81,6 @@
             this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
             this.chkLayersToIndex = new System.Windows.Forms.CheckedListBox();
             this.btnAddIndex = new System.Windows.Forms.Button();
-            this.btnIndexCancel = new System.Windows.Forms.Button();
-            this.idxProgressBar = new System.Windows.Forms.ProgressBar();
             this.dgvLayerIndex = new System.Windows.Forms.DataGridView();
             this.btnDeleteIndex = new System.Windows.Forms.Button();
             this.btnCreateIndex = new System.Windows.Forms.Button();
@@ -668,8 +666,6 @@
             // 
             this.adminTab_SearchProperties.Controls.Add(this.chkLayersToIndex);
             this.adminTab_SearchProperties.Controls.Add(this.btnAddIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.btnIndexCancel);
-            this.adminTab_SearchProperties.Controls.Add(this.idxProgressBar);
             this.adminTab_SearchProperties.Controls.Add(this.dgvLayerIndex);
             this.adminTab_SearchProperties.Controls.Add(this.btnDeleteIndex);
             this.adminTab_SearchProperties.Controls.Add(this.btnCreateIndex);
@@ -700,24 +696,6 @@
             this.btnAddIndex.Text = "Add";
             this.btnAddIndex.UseVisualStyleBackColor = true;
             this.btnAddIndex.Click += new System.EventHandler(this.btnAddIndex_Click);
-            // 
-            // btnIndexCancel
-            // 
-            this.btnIndexCancel.Location = new System.Drawing.Point(115, 512);
-            this.btnIndexCancel.Name = "btnIndexCancel";
-            this.btnIndexCancel.Size = new System.Drawing.Size(71, 23);
-            this.btnIndexCancel.TabIndex = 6;
-            this.btnIndexCancel.Text = "Cancel";
-            this.btnIndexCancel.UseVisualStyleBackColor = true;
-            this.btnIndexCancel.Click += new System.EventHandler(this.btnIndexCancel_Click);
-            // 
-            // idxProgressBar
-            // 
-            this.idxProgressBar.Location = new System.Drawing.Point(28, 637);
-            this.idxProgressBar.Name = "idxProgressBar";
-            this.idxProgressBar.Size = new System.Drawing.Size(485, 23);
-            this.idxProgressBar.TabIndex = 5;
-            this.idxProgressBar.Visible = false;
             // 
             // dgvLayerIndex
             // 
@@ -884,8 +862,6 @@
         private System.Windows.Forms.TextBox txtVerifyPassword;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TabPage adminTab_SearchProperties;
-        private System.Windows.Forms.Button btnIndexCancel;
-        private System.Windows.Forms.ProgressBar idxProgressBar;
         private System.Windows.Forms.DataGridView dgvLayerIndex;
         private System.Windows.Forms.Button btnDeleteIndex;
         private System.Windows.Forms.Button btnCreateIndex;
