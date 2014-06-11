@@ -32,6 +32,59 @@ namespace SDR.Data.Database
         /// <summary>
         /// run a query against the Database.
         /// </summary>
+        public static string[] GetAllTableNames(string conn)
+        {
+            List<string> list = new List<string>();
+            try
+            {
+                const string sql = "SELECT name FROM sqlite_master WHERE type='table';";
+                var cnn = new SQLiteConnection(conn);
+                cnn.Open();
+                var mycommand = new SQLiteCommand(cnn) { CommandText = sql };
+                var reader = mycommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    list.Add(reader.GetString(0));
+                }
+                reader.Close();
+                cnn.Close();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// run a query against the Database.
+        /// </summary>
+        public static string[] GetResultsAsArray(string conn, string sql)
+        {
+            List<string> list = new List<string>();
+            try
+            {
+                var cnn = new SQLiteConnection(conn);
+                cnn.Open();
+                var mycommand = new SQLiteCommand(cnn) { CommandText = sql };
+                var reader = mycommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    list.Add(reader.GetString(0));
+                }
+                reader.Close();
+                cnn.Close();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return list.ToArray();
+        }
+
+        /// <summary>
+        /// run a query against the Database.
+        /// </summary>
         public static DataTable GetDataTable(string conn, string sql)
         {
             var dt = new DataTable();

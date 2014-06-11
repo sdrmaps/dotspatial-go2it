@@ -72,7 +72,10 @@ namespace Go2It
         private readonly  Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
         // temp storage of layers to index until the "create" button is activated
         // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
-        private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>(); 
+        private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
+        // lookup names for locating the actual searched item
+        private const string Fid = "FID";
+        private const string Lyrname = "LYRNAME";
 
         public AdminForm(AppManager app)
         {
@@ -109,6 +112,7 @@ namespace Go2It
             PopulateMapViews();
             PopulateSettingsToForm();
             PopulateUsersToForm();
+            PopulateIndexesToForm();
 
             // check if we have any available map tab views
             if (_dockingControl.DockPanelLookup.Count == 0)
@@ -1197,6 +1201,43 @@ namespace Go2It
             return null;
         }
 
+        private void PopulateIndexesToForm()
+        {
+            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            string[] tblNames = SQLiteHelper.GetAllTableNames(conn);
+            foreach (string tblName in tblNames)
+            {
+                string[] split = tblName.Split('_');
+                if (split.Length >= 2)
+                {
+                    switch (split[0])
+                    {
+                        case "AddressIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(13));
+                            break;
+                        case "RoadIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(10));
+                            break;
+                        case "KeyLocationIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(17));
+                            break;
+                        case "CityLimitIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(15));
+                            break;
+                        case "CellSectorIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(16));
+                            break;
+                        case "ParcelIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(12));
+                            break;
+                        case "EsnIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(9));
+                            break;
+                    }
+                }
+            }
+        }
+
         private String GetLayerIndexTableType(string layName)
         {
             StringCollection sc = ApplyCheckBoxSetting(chkAddressLayers);
@@ -1276,21 +1317,46 @@ namespace Go2It
             string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
             DataTable defaults = GetLayerTypeIndexes(lyrName);
             DataTable table = new DataTable();
-            if (SQLiteHelper.TableExists(conn, lyrType))
+
+            // check if this layer has already been added to queue
+            if (chkLayersToIndex.Items.Contains(lyrName))
             {
-                string query = "SELECT * FROM " + lyrType;
-                table = SQLiteHelper.GetDataTable(conn, query);
-                if (table.Rows.Count == 0)
+                // in this case we will use the temp set values from up top
+                List<Dictionary<string, string>> idx = new List<Dictionary<string, string>>();
+                _indexQueue.TryGetValue(lyrName, out idx);
+                // generate the table for population
+                table.Columns.Add("lookup");
+                table.Columns.Add("fieldname");
+                foreach (Dictionary<string, string> d in idx)
+                {
+                    DataRow dr = table.NewRow();
+                    string lookup;
+                    d.TryGetValue("lookup", out lookup);
+                    dr["lookup"] = lookup;
+                    string fieldname;
+                    d.TryGetValue("fieldname", out fieldname);
+                    dr["fieldname"] = fieldname;
+                    table.Rows.Add(dr);
+                }
+            }
+            else // no active queue lets check the table for one instead
+            {
+                if (SQLiteHelper.TableExists(conn, lyrType + "_" + lyrName))
+                {
+                    string query = "SELECT * FROM " + lyrType + "_" + lyrName;
+                    table = SQLiteHelper.GetDataTable(conn, query);
+                    if (table.Rows.Count == 0)
+                    {
+                        table = defaults;
+                    }
+                }
+                else // none saved to table, set as the defaults
                 {
                     table = defaults;
                 }
             }
-            else
-            {
-                table = defaults;
-            }
 
-            // go ahead and populate our data grid view
+            // go ahead and populate our data grid view with our table data
             for (int i = 0; i < defaults.Rows.Count; i++)
             {
                 DataRow r = defaults.Rows[i];
@@ -1366,6 +1432,16 @@ namespace Go2It
                     chkLayersToIndex.Items.Add(lyrName);
                     chkLayersToIndex.SetItemChecked(chkLayersToIndex.Items.Count - 1, true);
                 }
+                else // if its already on the list make sure it is checked
+                {
+                    for (int i = 0; i <= chkLayersToIndex.Items.Count - 1; i++)
+                    {
+                        if (chkLayersToIndex.Items[i].ToString().Equals(lyrName))
+                        {
+                            chkLayersToIndex.SetItemChecked(i, true);
+                        }
+                    }
+                }
                 var indexList = new List<Dictionary<string, string>>();
                 for (int i = 0; i < dgvLayerIndex.Rows.Count; i++)
                 {   
@@ -1393,15 +1469,15 @@ namespace Go2It
                 foreach (KeyValuePair<string, List<Dictionary<string, string>>> keyValuePair in _indexQueue)
                 {
                     string lyrName = keyValuePair.Key;
-                    string lyrType = GetLayerIndexTableType(lyrName);
+                    string idxType = GetLayerIndexTableType(lyrName);
                     // check if the table exists clear and clean or create
-                    if (SQLiteHelper.TableExists(conn, lyrType))
+                    if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
                     {
-                        SQLiteHelper.ClearTable(conn, lyrType);
+                        SQLiteHelper.ClearTable(conn, idxType + "_" + lyrName);
                     }
                     else
                     {
-                        SQLiteHelper.CreateTable(conn, lyrType, _indexLookupFields);
+                        SQLiteHelper.CreateTable(conn, idxType + "_" + lyrName, _indexLookupFields);
                     }
                     // setup everything else we need to generate ouselves a lucene index      
                     IMapLayer mapLyr;
@@ -1427,11 +1503,12 @@ namespace Go2It
                     for (int i = 0; i <= indexList.Count - 1; i++)
                     {
                         Dictionary<string, string> d = indexList[i];
-                        SQLiteHelper.Insert(conn, lyrType, d);
+                        SQLiteHelper.Insert(conn, idxType + "_" + lyrName, d);
                         var kvPair = new KeyValuePair<string, string>(d["lookup"], d["fieldname"]);
                         list.Add(kvPair);
                     }
-                    var io = new IndexObject(fs, list, lyrType);
+                    var io = new IndexObject(fs, list, lyrName, idxType);
+                    // add the indexobject to our array for creation
                     iobjects.SetValue(io, count);
                     count++;
                 }
@@ -1453,7 +1530,8 @@ namespace Go2It
                         // grab a row from the datatable and index that shit
                         DataRow dr = fl.DataTable.Rows[x];
                         var doc = new Document(); // generate a document for indexing by lucene
-                        doc.Add(new Field("FID", dr["FID"].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.Add(new Field(Fid, dr[Fid].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        doc.Add(new Field(Lyrname, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
                         // get the field names for lookup
                         var list = o.FieldLookup;
                         foreach (KeyValuePair<string, string> kv in list)
@@ -1470,16 +1548,16 @@ namespace Go2It
                         }
                         docList.Add(doc);
                     }
-                    if (docs.ContainsKey(o.IndexName))
+                    if (docs.ContainsKey(o.IndexType))
                     {
                         // if this index is already in existence, just append our new docs
                         var oldList = new List<Document>();
-                        docs.TryGetValue(o.IndexName, out oldList);
+                        docs.TryGetValue(o.IndexType, out oldList);
                         oldList.AddRange(docList);
                     }
                     else
                     {
-                        docs.Add(o.IndexName, docList);
+                        docs.Add(o.IndexType, docList);
                     }
                 }
             }
@@ -1550,7 +1628,7 @@ namespace Go2It
         {
             if (e.Cancelled)
             {
-                DeleteIndex();
+                // DeleteIndex();
             }
             else if (e.Error != null)
             {
@@ -1573,7 +1651,7 @@ namespace Go2It
 
         private void DeleteIndex()
         {
-            if (cmbLayerIndex.SelectedItem.ToString().Length <= 0) return;
+           /* if (cmbLayerIndex.SelectedItem.ToString().Length <= 0) return;
 
             var lyrName = cmbLayerIndex.SelectedItem.ToString();
             var lyrType = GetLayerIndexTableType(lyrName);
@@ -1598,7 +1676,7 @@ namespace Go2It
             foreach (int i in chkLayerIndex.CheckedIndices)
             {
                 chkLayerIndex.SetItemCheckState(i, CheckState.Unchecked);
-            }
+            }*/
         }
 
         private void chkViewLayers_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -1796,13 +1874,15 @@ namespace Go2It
         internal class IndexObject
         {
             public IFeatureSet FeatureSet { get; private set; }
-            public string IndexName { get; private set; }
+            public string LayerName { get; private set; }
+            public string IndexType { get; private set; }
             public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
-            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string indexName)
+            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, string indexType)
             {
                 FeatureSet = featureSet;
                 FieldLookup = fieldLookup;
-                IndexName = indexName;
+                LayerName = layerName;
+                IndexType = indexType;
             }
         }
 

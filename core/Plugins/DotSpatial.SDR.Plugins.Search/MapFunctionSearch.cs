@@ -30,9 +30,11 @@ namespace DotSpatial.SDR.Plugins.Search
     {
         private SearchPanel _searchPanel;
         private SearchMode _searchMode;
-        private DataGridView _dataGridView;
+        private readonly DataGridView _dataGridView;
         private string _indexType;
-        private string _indexQuery;
+        private string[] _columnNames;
+        private const string Fid = "FID";
+        private const string Lyrname = "LYRNAME";
 
         #region Constructors
         
@@ -83,14 +85,9 @@ namespace DotSpatial.SDR.Plugins.Search
             if (evnt != null)
             {
                 DataGridViewRow dgvr = _dataGridView.Rows[evnt.RowIndex];
-                int idx = GetColumnIndex("FID");
-                string fid = dgvr.Cells[idx].Value.ToString();
-
-                //switch (_searchMode)
-                //{
-
-                //    SdrConfig.Project.Go2ItProjectSettings.Instance.AddressLayers
-                //}
+                int fidIdx = GetColumnIndex(Fid);
+                int lyrIdx = GetColumnIndex(Lyrname);
+                // string fid = dgvr.Cells[idx].Value.ToString();
             }
         }
 
@@ -98,22 +95,55 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             _searchPanel.ClearSearches();
             var searchQuery = _searchPanel.SearchQuery;
-
-            List<DataGridViewTextBoxColumn> cols = GetQueryColumns(_indexQuery);
-            foreach (DataGridViewTextBoxColumn col in cols)
+            // create all the datagridview columns (field names)
+            foreach (var columnName in _columnNames)
             {
-                _dataGridView.Columns.Add(col);
+                var txtCol = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = columnName,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                    SortMode = DataGridViewColumnSortMode.Automatic
+                };
+                _dataGridView.Columns.Add(txtCol);
             }
-            List<DataGridViewRow> rows = ExecuteLuceneQuery(searchQuery);
-            foreach (DataGridViewRow row in rows)
+            var fidCol = new DataGridViewTextBoxColumn()
             {
-                _dataGridView.Rows.Add(row);
-            }
+                HeaderText = Fid,
+                Visible = false
+            };
+            _dataGridView.Columns.Add(fidCol);
+            var lyrCol = new DataGridViewTextBoxColumn()
+            {
+                HeaderText = Lyrname,
+                Visible = false
+            };
+            _dataGridView.Columns.Add(lyrCol);
+            ExecuteLuceneQuery(searchQuery);
         }
 
         private void SearchPanelOnHydrantLocate(object sender, EventArgs eventArgs)
         {
             MessageBox.Show("locate hydrant");
+        }
+
+        private string[] GetColumnNames()
+        {
+            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            var tblNames = SQLiteHelper.GetAllTableNames(conn);
+            var sql = string.Empty;
+
+            foreach (string tblName in tblNames.Where(tblName => tblName.StartsWith(_indexType)))
+            {
+                if (sql.Length == 0)
+                {
+                    sql = "SELECT lookup FROM " + tblName;
+                }
+                else
+                {
+                    sql = sql + " UNION SELECT lookup FROM " + tblName;
+                }
+            }
+            return SQLiteHelper.GetResultsAsArray(conn, sql);
         }
 
         private void SetSearchVariables()
@@ -123,23 +153,19 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 case SearchMode.Address:
                     _indexType = "AddressIndex";
-                    _indexQuery = "SELECT * FROM " + _indexType;
+                    _columnNames = GetColumnNames(); // uses the _indexType variable
                     break;
                 case SearchMode.Intersection:
-                    // _indexType = "AddressIndex";
-                    // _indexQuery = "SELECT * FROM " + _indexType;
+                    // TODO:
                     break;
                 case SearchMode.Name:
-                    // _indexType = "AddressIndex";
-                    // _indexQuery = "SELECT * FROM " + _indexType;
+                    // TODO:
                     break;
                 case SearchMode.Phone:
-                    // _indexType = "AddressIndex";
-                    // _indexQuery = "SELECT * FROM " + _indexType;
+                    // TODO:
                     break;
                 case SearchMode.Road:
-                    // _indexType = "AddressIndex";
-                    // _indexQuery = "SELECT * FROM " + _indexType;
+                    // TODO:
                     break;
             }
         }
@@ -168,36 +194,6 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             _searchPanel.Show();
             base.OnActivate();
-        }
-
-        private static List<DataGridViewTextBoxColumn> GetQueryColumns(string query)
-        {
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            DataTable table = SQLiteHelper.GetDataTable(conn, query);
-            var columns = new List<DataGridViewTextBoxColumn>();
-            // lets see what key/ValueType pairs have been set
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                object[] row = table.Rows[i].ItemArray;
-                // verify that a value exists for a key before adding it
-                if (row[1].ToString().Length > 0)
-                {
-                    var txtCol = new DataGridViewTextBoxColumn
-                    {
-                        HeaderText = row[2].ToString(),
-                        AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                        SortMode = DataGridViewColumnSortMode.Automatic
-                    };
-                    columns.Add(txtCol);
-                }
-            }
-            var fidCol = new DataGridViewTextBoxColumn
-            {
-                HeaderText = "FID"
-            };
-            fidCol.Visible = false;
-            columns.Add(fidCol);
-            return columns;
         }
 
         private static Query ConstructAddressQuery(string search)
@@ -279,57 +275,46 @@ namespace DotSpatial.SDR.Plugins.Search
             return null;
         }
 
-        private List<DataGridViewRow> FormatAddressIndexQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
+        private void FormatAddressIndexQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
         {
-            var rowList = new List<DataGridViewRow>();
-            // get the names of all the indexed fields now
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            DataTable fieldsTable = SQLiteHelper.GetDataTable(conn, _indexQuery);
-            var fieldsList = new List<string>();
-            for (int i = 0; i < fieldsTable.Rows.Count; i++)
-            {
-                object[] row = fieldsTable.Rows[i].ItemArray;
-                if (row[1].ToString().Length > 0)
-                {
-                    fieldsList.Add(row[1].ToString());
-                }
-            }
             foreach (var hit in hits)
             {
                 var dgvRow = new DataGridViewRow();  // our new row to add to the datagridview
                 var doc = searcher.Doc(hit.Doc);  // snatch the ranked document
-                foreach (string field in fieldsList)
+                foreach (var field in _columnNames)
                 {
-                    var dgvCell = new DataGridViewTextBoxCell { Value = doc.Get(field) };
-                    dgvRow.Cells.Add(dgvCell);
+                    var val = doc.Get(field);
+                    if (val != null)
+                    {
+                        var dgvCell = new DataGridViewTextBoxCell { Value = val };
+                        dgvRow.Cells.Add(dgvCell);
+                    }
                 }
-                // make sure we have a FID lookup value
-                var fidCell = new DataGridViewTextBoxCell {Value = doc.Get("FID")};
+                // add the fid and layrname textbox cells (hide them as we use them for getting the real item)
+                var fidCell = new DataGridViewTextBoxCell {Value = doc.Get(Fid)};
                 dgvRow.Cells.Add(fidCell);
-                rowList.Add(dgvRow);
+                var lyrCell = new DataGridViewTextBoxCell {Value = doc.Get(Lyrname)};
+                dgvRow.Cells.Add(lyrCell);
+                _dataGridView.Rows.Add(dgvRow);
             }
             searcher.Dispose();
-            return rowList;
         }
 
-        private List<DataGridViewRow> FormatQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
+        private void FormatQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
         {
             switch (_searchMode)
             {
                 case SearchMode.Address:
-                    return FormatAddressIndexQueryResults(hits, searcher);
+                    FormatAddressIndexQueryResults(hits, searcher);
+                    break;
                 case SearchMode.Name:
-                    return null;
-                    // return FormatAddressIndexQueryResults(hits, searcher, idxQuery);
+                    break;
                 case SearchMode.Phone:
-                    return null;
-                    // return FormatAddressIndexQueryResults(hits, searcher, idxQuery);
+                    break;
             }
-            return null;
-            
         }
 
-        private List<DataGridViewRow> ExecuteLuceneQuery(string searchString)
+        private void ExecuteLuceneQuery(string searchString)
         {
             var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
             var d = Path.GetDirectoryName(db);
@@ -344,73 +329,17 @@ namespace DotSpatial.SDR.Plugins.Search
             ScoreDoc[] hits = docs.ScoreDocs;
             idxDir.Dispose();  // wipe the directory ref out now
 
-            return FormatQueryResults(hits, searcher);
+            FormatQueryResults(hits, searcher);
         }
 
 
         private static Query ConstructPhoneQuery(string searchQuery)
         {
-            /*var values = new ArrayList();
-            var fields = new ArrayList();
-            var occurs = new ArrayList();
-            // lets strip everything except actual digits
-            // string clean_query = new String(search_query.Where(Char.IsDigit).ToArray());
-            values.Add(searchQuery);
-            fields.Add("Phone");
-            occurs.Add(Occur.MUST);
-            // values.Add(search_query);
-            // fields.Add("Aux. Phone");
-            // occurs.Add(Occur.SHOULD);
-
-            var vals = (string[])values.ToArray(typeof(string));
-            var flds = (string[])fields.ToArray(typeof(string));
-            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
-            // setup the query search cursor
-            Query query = MultiFieldQueryParser.Parse(
-                Version.LUCENE_30,
-                vals,
-                flds,
-                ocrs,
-                new StandardAnalyzer(Version.LUCENE_30)
-                );
-            return query;*/
             return null;
         }
 
         private static Query ConstructNameQuery(string searchQuery)
         {
-            /*var values = new ArrayList();
-            var fields = new ArrayList();
-            var occurs = new ArrayList();
-
-            // strip all non alpha numerics now
-            char[] arr = searchQuery.Where(c => (Char.IsLetterOrDigit(c) ||
-                                                 Char.IsWhiteSpace(c) ||
-                                                 c == '-')).ToArray();
-            var cleanQuery = new string(arr);
-            var search = cleanQuery.Split();
-
-            foreach (string t in search)
-            {
-                values.Add(t);
-                fields.Add("First Name");
-                occurs.Add(Occur.SHOULD);
-                values.Add(t);
-                fields.Add("Last Name");
-                occurs.Add(Occur.SHOULD);
-            }
-            var vals = (string[])values.ToArray(typeof(string));
-            var flds = (string[])fields.ToArray(typeof(string));
-            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
-            // setup the query search cursor
-            Query query = MultiFieldQueryParser.Parse(
-                Version.LUCENE_30,
-                vals,
-                flds,
-                ocrs,
-                new StandardAnalyzer(Version.LUCENE_30)
-                );
-            return query;*/
             return null;
         }
 

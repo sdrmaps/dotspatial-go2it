@@ -79,6 +79,7 @@
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
+            this.lstExistingIndexes = new System.Windows.Forms.ListBox();
             this.chkLayersToIndex = new System.Windows.Forms.CheckedListBox();
             this.btnAddIndex = new System.Windows.Forms.Button();
             this.dgvLayerIndex = new System.Windows.Forms.DataGridView();
@@ -664,6 +665,7 @@
             // 
             // adminTab_SearchProperties
             // 
+            this.adminTab_SearchProperties.Controls.Add(this.lstExistingIndexes);
             this.adminTab_SearchProperties.Controls.Add(this.chkLayersToIndex);
             this.adminTab_SearchProperties.Controls.Add(this.btnAddIndex);
             this.adminTab_SearchProperties.Controls.Add(this.dgvLayerIndex);
@@ -679,17 +681,25 @@
             this.adminTab_SearchProperties.Text = "Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
+            // lstExistingIndexes
+            // 
+            this.lstExistingIndexes.FormattingEnabled = true;
+            this.lstExistingIndexes.Location = new System.Drawing.Point(202, 517);
+            this.lstExistingIndexes.Name = "lstExistingIndexes";
+            this.lstExistingIndexes.Size = new System.Drawing.Size(311, 95);
+            this.lstExistingIndexes.TabIndex = 9;
+            // 
             // chkLayersToIndex
             // 
             this.chkLayersToIndex.FormattingEnabled = true;
-            this.chkLayersToIndex.Location = new System.Drawing.Point(8, 252);
+            this.chkLayersToIndex.Location = new System.Drawing.Point(10, 315);
             this.chkLayersToIndex.Name = "chkLayersToIndex";
             this.chkLayersToIndex.Size = new System.Drawing.Size(187, 139);
             this.chkLayersToIndex.TabIndex = 8;
             // 
             // btnAddIndex
             // 
-            this.btnAddIndex.Location = new System.Drawing.Point(121, 214);
+            this.btnAddIndex.Location = new System.Drawing.Point(189, 643);
             this.btnAddIndex.Name = "btnAddIndex";
             this.btnAddIndex.Size = new System.Drawing.Size(75, 23);
             this.btnAddIndex.TabIndex = 7;
@@ -710,7 +720,7 @@
             // 
             // btnDeleteIndex
             // 
-            this.btnDeleteIndex.Location = new System.Drawing.Point(124, 397);
+            this.btnDeleteIndex.Location = new System.Drawing.Point(270, 643);
             this.btnDeleteIndex.Name = "btnDeleteIndex";
             this.btnDeleteIndex.Size = new System.Drawing.Size(71, 23);
             this.btnDeleteIndex.TabIndex = 3;
@@ -720,7 +730,7 @@
             // 
             // btnCreateIndex
             // 
-            this.btnCreateIndex.Location = new System.Drawing.Point(38, 512);
+            this.btnCreateIndex.Location = new System.Drawing.Point(347, 643);
             this.btnCreateIndex.Name = "btnCreateIndex";
             this.btnCreateIndex.Size = new System.Drawing.Size(71, 23);
             this.btnCreateIndex.TabIndex = 2;
@@ -741,9 +751,9 @@
             // 
             this.chkLayerIndex.CheckOnClick = true;
             this.chkLayerIndex.FormattingEnabled = true;
-            this.chkLayerIndex.Location = new System.Drawing.Point(8, 39);
+            this.chkLayerIndex.Location = new System.Drawing.Point(9, 39);
             this.chkLayerIndex.Name = "chkLayerIndex";
-            this.chkLayerIndex.Size = new System.Drawing.Size(188, 169);
+            this.chkLayerIndex.Size = new System.Drawing.Size(188, 199);
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
@@ -869,6 +879,7 @@
         private System.Windows.Forms.CheckedListBox chkLayerIndex;
         private System.Windows.Forms.Button btnAddIndex;
         private System.Windows.Forms.CheckedListBox chkLayersToIndex;
+        private System.Windows.Forms.ListBox lstExistingIndexes;
 
     }
 }
