@@ -30,7 +30,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Measure", MeasureTool_Click)
             {
                 GroupCaption = "Measure_Area_Distance",
-                ToolTipText = "Measure Map Area and Distance",
+                ToolTipText = "Click to Measure Area and Distance",
                 SmallImage = Resources.measure_16,
                 LargeImage = Resources.measure_32
             });

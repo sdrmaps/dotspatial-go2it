@@ -18,9 +18,7 @@ namespace DotSpatial.SDR.Controls
         bool _skipNextOpen;
         Rectangle _dropDownRectangle;
         bool _showSplit;
-
         bool _isSplitMenuVisible;
-
 
         ContextMenuStrip _mSplitMenuStrip;
         ContextMenu _mSplitMenu;
@@ -795,10 +793,10 @@ namespace DotSpatial.SDR.Controls
 
         protected override void WndProc(ref Message m)
         {
-            //0x0212 == WM_EXITMENULOOP
+            // 0x0212 == WM_EXITMENULOOP
             if (m.Msg == 0x0212)
             {
-                //this message is only sent when a ContextMenu is closed (not a ContextMenuStrip)
+                // this message is only sent when a ContextMenu is closed (not a ContextMenuStrip)
                 _isSplitMenuVisible = false;
                 SetButtonDrawState();
             }

@@ -15,11 +15,12 @@ namespace DotSpatial.SDR.Plugins.Navigate
         #region Constants and Fields
 
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
+        private const string ClearPanel = "kPanel_Clear";
 
         private SimpleActionItem _zoomNext;
         private SimpleActionItem _zoomPrevious;
         private SimpleActionItem _zoomToLayer;
-
+        
         #endregion
 
         #region Public Methods
@@ -158,7 +159,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void PanTool_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             App.Map.FunctionMode = FunctionMode.Pan;
         }
 
@@ -167,7 +168,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomIn_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             App.Map.FunctionMode = FunctionMode.ZoomIn;
         }
 
@@ -176,7 +177,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomNext_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             App.Map.MapFrame.ZoomToNext();
         }
 
@@ -185,7 +186,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomOut_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             App.Map.FunctionMode = FunctionMode.ZoomOut;
         }
 
@@ -194,7 +195,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomPrevious_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             App.Map.MapFrame.ZoomToPrevious();
         }
 
@@ -203,7 +204,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomToLayer_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             var layer = App.Map.Layers.SelectedLayer;
             if (layer != null)
             {
@@ -218,13 +219,13 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ZoomToMaxExtents_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             App.Map.ZoomToMaxExtent();
         }
 
         private void ZoomToLayer(IMapLayer layerToZoom)
         {
-            App.DockManager.SelectPanel("kPanel_Clear");
+            App.DockManager.SelectPanel(ClearPanel);
             const double eps = 1e-7;
             IEnvelope layerEnvelope = layerToZoom.Extent.ToEnvelope();
             if (layerEnvelope.Width > eps && layerEnvelope.Height > eps)

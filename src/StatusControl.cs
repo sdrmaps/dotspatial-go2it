@@ -68,8 +68,8 @@ namespace Go2It
 
             if (!_statusStrip.InvokeRequired)
             {
-                // most actions happen on one thread and the status bar never repaints itself until the end of a process unless
-                // we call Application.DoEvents() or refresh the control.
+                // most actions happen on one thread, as such the status bar never repaints itself until the end of a process
+                // to fix this we call Application.DoEvents() or refresh the control.
                 _statusStrip.Refresh();
             }
         }

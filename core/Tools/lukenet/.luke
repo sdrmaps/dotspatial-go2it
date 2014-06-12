@@ -5,6 +5,9 @@
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\CityLimit_Index</anyType>
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\Road_Index</anyType>
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\AddressIndex</anyType>
+    <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\ParcelIndex</anyType>
+    <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\RoadIndex</anyType>
+    <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\CityLimitIndex</anyType>
   </MruList>
   <UseCompound>false</UseCompound>
 </PrefsData>

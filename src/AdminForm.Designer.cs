@@ -79,6 +79,7 @@
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
+            this.btnRemoveIndex = new System.Windows.Forms.Button();
             this.lstExistingIndexes = new System.Windows.Forms.ListBox();
             this.chkLayersToIndex = new System.Windows.Forms.CheckedListBox();
             this.btnAddIndex = new System.Windows.Forms.Button();
@@ -665,6 +666,7 @@
             // 
             // adminTab_SearchProperties
             // 
+            this.adminTab_SearchProperties.Controls.Add(this.btnRemoveIndex);
             this.adminTab_SearchProperties.Controls.Add(this.lstExistingIndexes);
             this.adminTab_SearchProperties.Controls.Add(this.chkLayersToIndex);
             this.adminTab_SearchProperties.Controls.Add(this.btnAddIndex);
@@ -681,10 +683,20 @@
             this.adminTab_SearchProperties.Text = "Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
+            // btnRemoveIndex
+            // 
+            this.btnRemoveIndex.Location = new System.Drawing.Point(90, 286);
+            this.btnRemoveIndex.Name = "btnRemoveIndex";
+            this.btnRemoveIndex.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveIndex.TabIndex = 10;
+            this.btnRemoveIndex.Text = "Remove";
+            this.btnRemoveIndex.UseVisualStyleBackColor = true;
+            this.btnRemoveIndex.Click += new System.EventHandler(this.btnRemoveIndex_Click);
+            // 
             // lstExistingIndexes
             // 
             this.lstExistingIndexes.FormattingEnabled = true;
-            this.lstExistingIndexes.Location = new System.Drawing.Point(202, 517);
+            this.lstExistingIndexes.Location = new System.Drawing.Point(202, 460);
             this.lstExistingIndexes.Name = "lstExistingIndexes";
             this.lstExistingIndexes.Size = new System.Drawing.Size(311, 95);
             this.lstExistingIndexes.TabIndex = 9;
@@ -699,7 +711,7 @@
             // 
             // btnAddIndex
             // 
-            this.btnAddIndex.Location = new System.Drawing.Point(189, 643);
+            this.btnAddIndex.Location = new System.Drawing.Point(9, 286);
             this.btnAddIndex.Name = "btnAddIndex";
             this.btnAddIndex.Size = new System.Drawing.Size(75, 23);
             this.btnAddIndex.TabIndex = 7;
@@ -720,7 +732,7 @@
             // 
             // btnDeleteIndex
             // 
-            this.btnDeleteIndex.Location = new System.Drawing.Point(270, 643);
+            this.btnDeleteIndex.Location = new System.Drawing.Point(442, 561);
             this.btnDeleteIndex.Name = "btnDeleteIndex";
             this.btnDeleteIndex.Size = new System.Drawing.Size(71, 23);
             this.btnDeleteIndex.TabIndex = 3;
@@ -730,7 +742,7 @@
             // 
             // btnCreateIndex
             // 
-            this.btnCreateIndex.Location = new System.Drawing.Point(347, 643);
+            this.btnCreateIndex.Location = new System.Drawing.Point(126, 460);
             this.btnCreateIndex.Name = "btnCreateIndex";
             this.btnCreateIndex.Size = new System.Drawing.Size(71, 23);
             this.btnCreateIndex.TabIndex = 2;
@@ -873,13 +885,14 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TabPage adminTab_SearchProperties;
         private System.Windows.Forms.DataGridView dgvLayerIndex;
-        private System.Windows.Forms.Button btnDeleteIndex;
         private System.Windows.Forms.Button btnCreateIndex;
         private System.Windows.Forms.ComboBox cmbLayerIndex;
         private System.Windows.Forms.CheckedListBox chkLayerIndex;
         private System.Windows.Forms.Button btnAddIndex;
         private System.Windows.Forms.CheckedListBox chkLayersToIndex;
         private System.Windows.Forms.ListBox lstExistingIndexes;
+        private System.Windows.Forms.Button btnRemoveIndex;
+        private System.Windows.Forms.Button btnDeleteIndex;
 
     }
 }

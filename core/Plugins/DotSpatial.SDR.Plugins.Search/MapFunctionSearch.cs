@@ -156,7 +156,8 @@ namespace DotSpatial.SDR.Plugins.Search
                     _columnNames = GetColumnNames(); // uses the _indexType variable
                     break;
                 case SearchMode.Intersection:
-                    // TODO:
+                    _indexType = "RoadIndex";
+                    _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Name:
                     // TODO:
@@ -289,8 +290,13 @@ namespace DotSpatial.SDR.Plugins.Search
                         var dgvCell = new DataGridViewTextBoxCell { Value = val };
                         dgvRow.Cells.Add(dgvCell);
                     }
+                    else
+                    {
+                        // TODO:
+                        var x = "this is null";
+                    }
                 }
-                // add the fid and layrname textbox cells (hide them as we use them for getting the real item)
+                // add the fid and layrname textbox cells
                 var fidCell = new DataGridViewTextBoxCell {Value = doc.Get(Fid)};
                 dgvRow.Cells.Add(fidCell);
                 var lyrCell = new DataGridViewTextBoxCell {Value = doc.Get(Lyrname)};

@@ -21,6 +21,8 @@ namespace Go2It
         private CoordinateDisplay _latLongDisplay;
         private SelectionStatusDisplay _selectionStatusDisplay;
 
+        private const string ClearPanel = "kPanel_Clear";
+
         public override void Activate()
         {
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
@@ -198,7 +200,7 @@ namespace Go2It
             }
             else if (key.StartsWith("kPanel_"))
             {
-                if (key == "kPanel_Clear") return;  // controls the panel collapse
+                if (key == ClearPanel) return;  // controls the panel collapse
                 dockControl.CollapseToolPanel();
             }
         }
@@ -235,7 +237,7 @@ namespace Go2It
             }
             else if (key.StartsWith("kPanel_"))
             {
-                if (key == "kPanel_Clear") return;  // controls the panel collapse
+                if (key == ClearPanel) return;  // controls the panel collapse
                 dockControl.ExtendToolPanel();
             }
         }

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,7 +17,10 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
+using Lucene.Net.QueryParsers;
+using Lucene.Net.Search;
 using Lucene.Net.Store;
+using SDR.Common;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -29,6 +30,7 @@ using DotSpatial.Controls;
 using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
+using ILog = SDR.Common.logging.ILog;
 using Point = System.Drawing.Point;
 using SdrConfig = SDR.Configuration;
 
@@ -41,9 +43,16 @@ namespace Go2It
 
         // name of the initial map tab
         private const string MapTabDefaultName = "My Map";
+        // internal lookup names used in lucene to get the actual feature from the layer
+        private const string Fid = "FID";
+        private const string Lyrname = "LYRNAME";
 
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+        // default sql row creation for an indexing row in the db (key, lookup, fieldname)
+        private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
+        // background worker to handle the indexing process
         private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
+        private ProgressPanel _progressPanel;
 
         // change tracking flags for project changes as well as mapview changes
         private bool _dirtyProject;
@@ -59,27 +68,22 @@ namespace Go2It
         private readonly List<IFeatureSet> _polygonLayers = new List<IFeatureSet>();
         private readonly List<IFeatureSet> _lineLayers = new List<IFeatureSet>();
 
-        // switch routines to handle options of check/unchek on admin form
+        // switch routines to handle options of check/uncheck on admin form
         private readonly LayerSelectionSwitcher _pointLayerSwitcher = new LayerSelectionSwitcher();
         private readonly LayerSelectionSwitcher _lineLayerSwitcher = new LayerSelectionSwitcher();
         private readonly LayerSelectionSwitcher _polygonLayerSwitcher = new LayerSelectionSwitcher();
 
         // temp dict holds all base map layers for selection/removal on map tabs
-        // on save this is passed to the dockingcontrol baselayerlookup dict
+        // on save this is passed to the dockingcontrol baselayerlookup dict (basically this thing holds all the layers available)
         private readonly Dictionary<string, IMapLayer> _localBaseMapLayerLookup = new Dictionary<string, IMapLayer>();
-
-        // default sql row creation for an indexing row in the db
-        private readonly  Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
-        // temp storage of layers to index until the "create" button is activated
+        // temp storage of layers to index until the "create" button is activated (queued indexes)
         // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
-        // lookup names for locating the actual searched item
-        private const string Fid = "FID";
-        private const string Lyrname = "LYRNAME";
 
         public AdminForm(AppManager app)
         {
             InitializeComponent();
+            // setup the default indexing field names
             _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
             _indexLookupFields.Add("lookup", "TEXT");
             _indexLookupFields.Add("fieldname", "TEXT");
@@ -95,8 +99,8 @@ namespace Go2It
             };
             _baseMap.Extent.SetValues(app.Map.Extent.MinX, app.Map.Extent.MinY, app.Map.Extent.MaxX, app.Map.Extent.MaxY);
             // set options on our indexing bgworker
-            _idxWorker.WorkerReportsProgress = true;
-            _idxWorker.WorkerSupportsCancellation = true;
+            _idxWorker.WorkerReportsProgress = false;
+            _idxWorker.WorkerSupportsCancellation = false;
             // splitter stuff
             adminLayerSplitter.SplitterWidth = 10;
             adminLayerSplitter.Paint += Splitter_Paint;
@@ -150,7 +154,6 @@ namespace Go2It
 
             // setup a background worker for update progress bar on indexing tab
             _idxWorker.DoWork += idx_DoWork;
-            _idxWorker.ProgressChanged += idx_ProgressChanged;
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
@@ -166,7 +169,6 @@ namespace Go2It
             FormClosing -= AdminForm_Closing;
             chkViewLayers.ItemCheck -= chkViewLayers_ItemCheck;
             _idxWorker.DoWork -= idx_DoWork;
-            _idxWorker.ProgressChanged -= idx_ProgressChanged;
             _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
             FormClosed -= AdminFormClosed;
         }
@@ -311,8 +313,9 @@ namespace Go2It
                     if (fileName != null) chkViewLayers.Items.Add(fileName);
                 }
                 // now set the selections of active layers on active map tab view
-                foreach (IMapLayer layer in _appManager.Map.MapFrame.GetAllLayers())
+                foreach (var lyr in _appManager.Map.MapFrame.GetAllLayers())
                 {
+                    var layer = (IMapLayer) lyr;
                     if (layer == null) continue;
                     string fileName;
                     if (layer.GetType().Name == "MapImageLayer")
@@ -468,6 +471,7 @@ namespace Go2It
         {
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
             var f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
+            if (f == null) return;
             if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Add(mapLayer); // add to line layer list
@@ -537,6 +541,7 @@ namespace Go2It
         {
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
             var f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
+            if (f == null) return;
             if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Remove(mapLayer); // remove from layer list
@@ -712,15 +717,14 @@ namespace Go2It
                 Dock = DockStyle.Fill,
                 VerticalScrollEnabled = true
             };
-            // _adminLegend.OrderChanged += AdminLegendOnOrderChanged;
+            _adminLegend.OrderChanged += AdminLegendOnOrderChanged;
             _baseMap.Legend = _adminLegend;
             legendSplitter.Panel1.Controls.Add(_adminLegend);
         }
 
         private void AdminLegendOnOrderChanged(object sender, EventArgs eventArgs)
         {
-            var h = "this";
-            // todo:probably should do some event here to update all map tabs
+            // todo: some event here to update all map tabs
         }
 
         private void btnAddLayer_Click(object sender, EventArgs e)
@@ -1315,28 +1319,32 @@ namespace Go2It
             // determine what type of layer we have and set lookup indexes
             string lyrType = GetLayerIndexTableType(lyrName);
             string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+
             DataTable defaults = GetLayerTypeIndexes(lyrName);
-            DataTable table = new DataTable();
+            var table = new DataTable();
 
             // check if this layer has already been added to queue
             if (chkLayersToIndex.Items.Contains(lyrName))
             {
-                // in this case we will use the temp set values from up top
-                List<Dictionary<string, string>> idx = new List<Dictionary<string, string>>();
+                // in this case we will use the temp set values
+                List<Dictionary<string, string>> idx;
                 _indexQueue.TryGetValue(lyrName, out idx);
                 // generate the table for population
                 table.Columns.Add("lookup");
                 table.Columns.Add("fieldname");
-                foreach (Dictionary<string, string> d in idx)
+                if (idx != null)
                 {
-                    DataRow dr = table.NewRow();
-                    string lookup;
-                    d.TryGetValue("lookup", out lookup);
-                    dr["lookup"] = lookup;
-                    string fieldname;
-                    d.TryGetValue("fieldname", out fieldname);
-                    dr["fieldname"] = fieldname;
-                    table.Rows.Add(dr);
+                    foreach (Dictionary<string, string> d in idx)
+                    {
+                        DataRow dr = table.NewRow();
+                        string lookup;
+                        d.TryGetValue("lookup", out lookup);
+                        dr["lookup"] = lookup;
+                        string fieldname;
+                        d.TryGetValue("fieldname", out fieldname);
+                        dr["fieldname"] = fieldname;
+                        table.Rows.Add(dr);
+                    }
                 }
             }
             else // no active queue lets check the table for one instead
@@ -1455,6 +1463,11 @@ namespace Go2It
                         indexList.Add(d);
                     }
                 }
+                // check if its already in our queue, remove and readd if so
+                if (_indexQueue.ContainsKey(lyrName))
+                {
+                    _indexQueue.Remove(lyrName);
+                }
                 _indexQueue.Add(lyrName, indexList);
             }
         }
@@ -1463,9 +1476,13 @@ namespace Go2It
         {
             if (_idxWorker.IsBusy != true)
             {
+                _progressPanel = new ProgressPanel();
+                _progressPanel.StartProgress("Creating Indexes...");
+
                 string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-                IndexObject[] iobjects = new IndexObject[_indexQueue.Count];
+                var iobjects = new IndexObject[_indexQueue.Count];
                 int count = 0;
+
                 foreach (KeyValuePair<string, List<Dictionary<string, string>>> keyValuePair in _indexQueue)
                 {
                     string lyrName = keyValuePair.Key;
@@ -1490,7 +1507,8 @@ namespace Go2It
                     }
                     else
                     {
-                        // TODO: account for some sort of logging and inform the user of the issues here
+                        var log = AppContext.Instance.Get<ILog>();
+                        log.Warn("Error on Create Index, FeatureDataset is null", new Exception());
                         return;
                     }
                     // make sure this featureset has FID values for lookup
@@ -1516,49 +1534,48 @@ namespace Go2It
             }
         }
 
-        private Dictionary<string, List<Document>> GetDocuments(IndexObject[] iobjects)
+        private static Dictionary<string, List<Document>> GetDocuments(IndexObject[] iobjects)
         {
             var docs = new Dictionary<string, List<Document>>();
-            if (iobjects.Length > 0)
+            if (iobjects.Length <= 0) return docs;
+
+            foreach (IndexObject o in iobjects)
             {
-                foreach (IndexObject o in iobjects)
+                var docList = new List<Document>();
+                IFeatureSet fl = o.FeatureSet;
+                for (int x = 0; x < fl.DataTable.Rows.Count; x++)
                 {
-                    List<Document> docList = new List<Document>();
-                    IFeatureSet fl = o.FeatureSet;
-                    for (int x = 0; x < fl.DataTable.Rows.Count; x++)
+                    // grab a row from the datatable and index that shit
+                    DataRow dr = fl.DataTable.Rows[x];
+                    var doc = new Document(); // generate a document for indexing by lucene
+                    doc.Add(new Field(Fid, dr[Fid].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.Add(new Field(Lyrname, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    // get the field names for lookup
+                    var list = o.FieldLookup;
+                    foreach (KeyValuePair<string, string> kv in list)
                     {
-                        // grab a row from the datatable and index that shit
-                        DataRow dr = fl.DataTable.Rows[x];
-                        var doc = new Document(); // generate a document for indexing by lucene
-                        doc.Add(new Field(Fid, dr[Fid].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        doc.Add(new Field(Lyrname, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
-                        // get the field names for lookup
-                        var list = o.FieldLookup;
-                        foreach (KeyValuePair<string, string> kv in list)
+                        if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
                         {
-                            if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
-                            {
-                                doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES,
-                                    Field.Index.NOT_ANALYZED));
-                            }
-                            else // run analyzer on all remaining field types
-                            {
-                                doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
-                            }
+                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES,
+                                Field.Index.NOT_ANALYZED));
                         }
-                        docList.Add(doc);
+                        else // run analyzer on all remaining field types
+                        {
+                            doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
+                        }
                     }
-                    if (docs.ContainsKey(o.IndexType))
-                    {
-                        // if this index is already in existence, just append our new docs
-                        var oldList = new List<Document>();
-                        docs.TryGetValue(o.IndexType, out oldList);
-                        oldList.AddRange(docList);
-                    }
-                    else
-                    {
-                        docs.Add(o.IndexType, docList);
-                    }
+                    docList.Add(doc);
+                }
+                if (docs.ContainsKey(o.IndexType))
+                {
+                    // if this index is already in existence, just append our new docs
+                    List<Document> oldList;
+                    docs.TryGetValue(o.IndexType, out oldList);
+                    if (oldList != null) oldList.AddRange(docList);
+                }
+                else
+                {
+                    docs.Add(o.IndexType, docList);
                 }
             }
             return docs;
@@ -1567,78 +1584,81 @@ namespace Go2It
         private void idx_DoWork(object sender, DoWorkEventArgs e)
         {
             // var worker = sender as BackgroundWorker;  // our worker for running the indexing operation
-
-            var iobjects = e.Argument as IndexObject[];
-            Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
-            if (docs.Count > 0)
+            try
             {
-                Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-                var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-                var d = Path.GetDirectoryName(db);
-                if (d == null) return;
-
-                long startMin = DateTime.Now.Minute;
-                long startSec = DateTime.Now.Second;
-
-                foreach (KeyValuePair<string, List<Document>> keyValuePair in docs)
+                var iobjects = e.Argument as IndexObject[];
+                Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
+                if (docs.Count > 0)
                 {
-                    var path = Path.Combine(d, "indexes", keyValuePair.Key);
-                    DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
-                    Directory dir = FSDirectory.Open(di);
+                    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+                    var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+                    var d = Path.GetDirectoryName(db);
+                    if (d == null) return;
 
-                    FileInfo[] fi = di.GetFiles();
-                    IndexWriter writer;
-                    if (fi.Length == 0)
+                    foreach (KeyValuePair<string, List<Document>> keyValuePair in docs)
                     {
-                        writer = new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+                        var path = Path.Combine(d, "indexes", keyValuePair.Key);
+                        DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
+                        Directory dir = FSDirectory.Open(di);
+                        FileInfo[] fi = di.GetFiles();
+                        
+                        IndexWriter writer = fi.Length == 0 ?
+                            new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) :
+                            new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
+
+                        // iterate all our documents and add them
+                        var documents = keyValuePair.Value;
+                        Parallel.ForEach(documents, delegate(Document document, ParallelLoopState state)
+                        {
+                            writer.AddDocument(document);
+                        });
+                        writer.Optimize();
+                        writer.Dispose();
                     }
-                    else
-                    {
-                        writer = new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
-                    }
-                    // iterate all our documents and add them
-                    var documents = keyValuePair.Value;
-                    Parallel.ForEach(documents, delegate(Document document, ParallelLoopState state)
-                    {
-                        writer.AddDocument(document);
-                    });
-                    writer.Optimize();
-                    writer.Dispose();
                 }
-
-                long endMin = DateTime.Now.Minute;
-                long endSec = DateTime.Now.Second;
-
-                long totMin = endMin - startMin;
-                long totSec = endSec - startSec;
-
-                Debug.WriteLine("Indexing took " + totMin + " mins " + totSec + " secs");
-                
-
-                        // if (worker != null && (worker.CancellationPending))
-                        // {
-                        //    e.Cancel = true;
-                        //    break;
-                        // }
-                        // if (worker != null) worker.ReportProgress((result));
+            }
+            catch (Exception ex)
+            {
+                var log = AppContext.Instance.Get<ILog>();
+                log.Error("Error on creating index :: BackgroundWorker Failed", ex);
             }
         }
 
         private void idx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Cancelled)
-            {
-                // DeleteIndex();
-            }
-            else if (e.Error != null)
-            {
-                // TODO:this.tbProgress.Text = ("Error: " + e.Error.Message);
-                MessageBox.Show(@"Error on Indexing Layer");
-            }
-        }
+            // kill the progress indicator
+            _progressPanel.StopProgress();
+            _progressPanel = null;
 
-        private void idx_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
+            var cleanQueue = new List<string>();
+            for (int i = 0; i >= chkLayersToIndex.Items.Count - 1; i++)
+            {
+                if (chkLayersToIndex.GetItemChecked(i))
+                {
+                    var item = chkLayersToIndex.Items[i].ToString();
+                    // remove this from our overall queue
+                    _indexQueue.Remove(item);
+                    // check if its already on completed indexes add if not
+                    if (!lstExistingIndexes.Items.Contains(item))
+                    {
+                        lstExistingIndexes.Items.Add(item);
+                    }
+                }
+                else
+                {
+                    cleanQueue.Add(chkLayersToIndex.Items[i].ToString());
+                }
+            }
+            // wipe the queue checkbox and repopulate any items that were left behind
+            chkLayersToIndex.Items.Clear();
+            foreach (var item in cleanQueue)
+            {
+                chkLayersToIndex.Items.Add(item, false);
+            }
+
+            if (e.Error == null) return;
+            var log = AppContext.Instance.Get<ILog>();
+            log.Error("Error on creating index :: BackgroundWorker Completed with Error", e.Error);
         }
 
         private void btnDeleteIndex_Click(object sender, EventArgs e)
@@ -1651,32 +1671,41 @@ namespace Go2It
 
         private void DeleteIndex()
         {
-           /* if (cmbLayerIndex.SelectedItem.ToString().Length <= 0) return;
-
-            var lyrName = cmbLayerIndex.SelectedItem.ToString();
-            var lyrType = GetLayerIndexTableType(lyrName);
-            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            var d = Path.GetDirectoryName(db);
-            if (d != null)
+            string lyrName = lstExistingIndexes.SelectedItem.ToString();
+            if (lyrName.Length > 0)
             {
-                var path = Path.Combine(d, "indexes", lyrType);
-                if (System.IO.Directory.Exists(path))
+                try
                 {
-                    System.IO.Directory.Delete(path, true);
+                    // remove the layer name from the existing listbox
+                    lstExistingIndexes.Items.Remove(lyrName);
+                    // now remove the keyvalue lookups from the config database
+                    string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+                    string idxType = GetLayerIndexTableType(lyrName);
+                    // check if the table exists and drop it if so
+                    if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
+                    {
+                        SQLiteHelper.DropTable(conn, idxType + "_" + lyrName);
+                    }
+                    // time to update our lucene indexes
+                    var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+                    var d = Path.GetDirectoryName(db);
+                    if (d == null) return;
+
+                    var path = Path.Combine(d, "indexes", idxType);
+                    Directory dir = FSDirectory.Open(new DirectoryInfo(path));
+                    IndexWriter writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
+                    Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
+                    writer.DeleteDocuments(q);
+                    writer.Commit();
+                    writer.Optimize();
+                    writer.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    var log = AppContext.Instance.Get<ILog>();
+                    log.Error("Error on creating index :: BackgroundWorker Failed", ex);
                 }
             }
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            SQLiteHelper.ClearTable(conn, lyrType);
-            // reset the existing table
-            DataGridViewRowCollection rows = dgvLayerIndex.Rows;
-            foreach (DataGridViewRow row in rows)
-            {
-                row.Cells[1].Value = string.Empty;
-            }
-            foreach (int i in chkLayerIndex.CheckedIndices)
-            {
-                chkLayerIndex.SetItemCheckState(i, CheckState.Unchecked);
-            }*/
         }
 
         private void chkViewLayers_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -1756,12 +1785,7 @@ namespace Go2It
 
         private List<string> AddLayersToIndex(CheckedListBox clb)
         {
-            var l  = new List<string>();
-            foreach (var item in clb.CheckedItems)
-            {
-                l.Add(item.ToString());
-            }
-            return l;
+            return (from object item in clb.CheckedItems select item.ToString()).ToList();
         }
 
         private List<string> AddLayersToIndex(ComboBox cmbBox)
@@ -1791,14 +1815,7 @@ namespace Go2It
         private void chkRoadLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var clb = (CheckedListBox)sender;
-            var rd = new List<string>();
-            foreach (var item in clb.CheckedItems)
-            {
-                if (item != clb.Items[e.Index].ToString())
-                {
-                    rd.Add(item.ToString());
-                }
-            }
+            var rd = (from object item in clb.CheckedItems where item.ToString() != clb.Items[e.Index].ToString() select item.ToString()).ToList();
             if (e.NewValue == CheckState.Checked)
             {
                 rd.Add(clb.Items[e.Index].ToString());
@@ -1816,14 +1833,7 @@ namespace Go2It
         private void chkAddressLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var clb = (CheckedListBox)sender;
-            var ad = new List<string>();
-            foreach (var item in clb.CheckedItems)
-            {
-                if (item.ToString() != clb.Items[e.Index].ToString())
-                {
-                    ad.Add(item.ToString());
-                }
-            }
+            var ad = (from object item in clb.CheckedItems where item.ToString() != clb.Items[e.Index].ToString() select item.ToString()).ToList();
             if (e.NewValue == CheckState.Checked)
             {
                 ad.Add(clb.Items[e.Index].ToString());
@@ -1841,14 +1851,7 @@ namespace Go2It
         private void chkKeyLocationsLayers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var clb = (CheckedListBox)sender;
-            var kl = new List<string>();
-            foreach (var item in clb.CheckedItems)
-            {
-                if (item != clb.Items[e.Index].ToString())
-                {
-                    kl.Add(item.ToString());   
-                }
-            }
+            var kl = (from object item in clb.CheckedItems where item.ToString() != clb.Items[e.Index].ToString() select item.ToString()).ToList();
             if (e.NewValue == CheckState.Checked)
             {
                 kl.Add(clb.Items[e.Index].ToString());
@@ -1861,14 +1864,6 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
             _dirtyProject = true;
-        }
-
-        private void btnIndexCancel_Click(object sender, EventArgs e)
-        {
-            if (_idxWorker.WorkerSupportsCancellation)
-            {
-                _idxWorker.CancelAsync();
-            }
         }
 
         internal class IndexObject
@@ -1979,6 +1974,16 @@ namespace Go2It
         private void cmbHydrantsLayer_SelectedIndexChanged(object sender, EventArgs e)
         {
             _dirtyProject = true;
+        }
+
+        private void btnRemoveIndex_Click(object sender, EventArgs e)
+        {
+            string lyrName = chkLayersToIndex.SelectedItem.ToString();
+            if (lyrName.Length > 0)
+            {
+                chkLayersToIndex.Items.Remove(lyrName);
+                _indexQueue.Remove(lyrName);
+            }
         }
     }
 }

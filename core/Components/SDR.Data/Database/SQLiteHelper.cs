@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace SDR.Data.Database
 {
@@ -34,7 +33,7 @@ namespace SDR.Data.Database
         /// </summary>
         public static string[] GetAllTableNames(string conn)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
             try
             {
                 const string sql = "SELECT name FROM sqlite_master WHERE type='table';";
@@ -61,7 +60,7 @@ namespace SDR.Data.Database
         /// </summary>
         public static string[] GetResultsAsArray(string conn, string sql)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
             try
             {
                 var cnn = new SQLiteConnection(conn);
@@ -132,8 +131,8 @@ namespace SDR.Data.Database
         ///  </summary>
         public static bool Update(string conn, String tableName, Dictionary<string,string> data, String where)
         {
-            String vals = "";
-            Boolean returnCode = true;
+            var vals = "";
+            var returnCode = true;
             if (data.Count >= 1)
             {
                 vals = data.Aggregate(vals, (current, val) => current + String.Format(" {0} = '{1}',", val.Key, val.Value));
@@ -180,7 +179,7 @@ namespace SDR.Data.Database
             String columns = "";
             String values = "";
             Boolean returnCode = true;
-            foreach (KeyValuePair<string, string> val in data)
+            foreach (var val in data)
             {
                 columns += String.Format(" {0},", val.Key);
                 values += String.Format(" '{0}',", val.Value);
@@ -237,18 +236,26 @@ namespace SDR.Data.Database
             }
         }
 
+        public static bool DropTable(string conn, string table)
+        {
+            try
+            {
+                ExecuteNonQuery(conn, String.Format("drop table {0};", table));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static bool CreateTable(string conn, string table, Dictionary<string, string> fields)
         {
             try
             {
-                string sql = string.Empty;
-                foreach (KeyValuePair<string, string> keyValuePair in fields)
-                {
-                    sql = sql + keyValuePair.Key + " " + keyValuePair.Value + ",";
-                }
+                var sql = fields.Aggregate(string.Empty, (current, keyValuePair) => current + keyValuePair.Key + " " + keyValuePair.Value + ",");
                 sql = sql.Remove(sql.Length - 1);
                 ExecuteNonQuery(conn, String.Format("create table {0} (" + sql + ")", table));
-                // ExecuteNonQuery(conn, String.Format("create table {0} (key INTEGER PRIMARY KEY, lookup TEXT, fieldname TEXT)", table));
                 return true;
             }
             catch
@@ -263,7 +270,7 @@ namespace SDR.Data.Database
             {
                 var cnn = new SQLiteConnection(conn);
                 cnn.Open();
-                DataRow[] rows = cnn.GetSchema("Tables").Select(string.Format("Table_Name = '{0}'", table));
+                var rows = cnn.GetSchema("Tables").Select(string.Format("Table_Name = '{0}'", table));
                 var tableExists = (rows.Length > 0);
                 return tableExists;
             }
@@ -324,7 +331,7 @@ namespace SDR.Data.Database
             catch (UnauthorizedAccessException ex)
             {
                 Debug.WriteLine("Error creating the default database " + dbPath +
-                    ". Please check the write permissions for HydroDesktop. " + ex.Message);
+                    ". Please check your write permissions. " + ex.Message);
                 return false;
             }
             catch (Exception ex)
@@ -359,11 +366,7 @@ namespace SDR.Data.Database
                 return false;
             }
             var dbFileInfo = new FileInfo(dbPath);
-            if (dbFileInfo.Length == 0)
-            {
-                return false;
-            }
-            return true;
+            return dbFileInfo.Length != 0;
         }
     }
 }

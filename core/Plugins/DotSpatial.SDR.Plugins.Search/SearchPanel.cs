@@ -10,7 +10,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private string _searchQuery;
         private SearchMode _searchMode;
-        private DataGridView _dataGridView;
 
         #endregion
 
@@ -20,7 +19,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             InitializeComponent();
             _searchQuery = string.Empty;
-            _dataGridView = searchDGV;
+            DataGridDisplay = searchDGV;
             _searchMode = SearchMode.Address;
         }
 
@@ -50,11 +49,7 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <summary>
         /// Gets or sets the datagrid view for query display
         /// </summary>
-        public DataGridView DataGridDisplay
-        {
-            get { return _dataGridView; }
-            set { _dataGridView = value; }
-        }
+        public DataGridView DataGridDisplay { get; set; }
 
         public string SearchQuery
         {

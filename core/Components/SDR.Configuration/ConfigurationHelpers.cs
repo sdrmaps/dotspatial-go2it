@@ -15,33 +15,31 @@ namespace SDR.Configuration
         {
             string baseAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             // check if this directory can be created             
-            string hdAppData = Path.Combine(baseAppData, appName);
-            CheckDirectory(hdAppData);
-            return hdAppData;
+            string theAppData = Path.Combine(baseAppData, appName);
+            CheckDirectory(theAppData);
+            return theAppData;
         }
 
         public static string FindOrCreateTempDirectory(string appName)
         {
             string basePath = Path.GetTempPath();
             // check if this directory can be created             
-            string hdTempDir = Path.Combine(basePath, appName);
-            CheckDirectory(hdTempDir);
-            return hdTempDir;
+            string theTempDir = Path.Combine(basePath, appName);
+            CheckDirectory(theTempDir);
+            return theTempDir;
         }
 
         private static void CheckDirectory(string directoryName)
         {
-            if (!Directory.Exists(directoryName))
+            if (Directory.Exists(directoryName)) return;
+            try
             {
-                try
-                {
-                    Directory.CreateDirectory(directoryName);
-                }
-                catch (Exception ex)
-                {
-                    throw new UnauthorizedAccessException("Error creating directory " +
-                        directoryName + ". " + ex.Message);
-                }
+                Directory.CreateDirectory(directoryName);
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedAccessException("Error creating directory " +
+                                                      directoryName + ". " + ex.Message);
             }
         }
     }
