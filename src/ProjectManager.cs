@@ -425,15 +425,6 @@ namespace Go2It
             }
         }
 
-        //private static Predicate<IMapFeatureLayer> ByName(string name)
-        //{
-        //    return delegate(IMapFeatureLayer mapLayer)
-        //    {
-        //        var ftLayer = (FeatureLayer)mapLayer;
-        //        return ftLayer.Name == name;
-        //    };
-        //}
-
         private Dictionary<string, string> CreateLayerDictionary(string layName, string projType)
         {
             if (layName.Length == 0) return null;

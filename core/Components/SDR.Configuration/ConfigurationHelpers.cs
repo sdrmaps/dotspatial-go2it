@@ -11,15 +11,6 @@ namespace SDR.Configuration
     /// </summary>
     public static class ConfigurationHelper
     {
-        public static string FindOrCreateAppDataDirectory(string appName)
-        {
-            string baseAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            // check if this directory can be created             
-            string theAppData = Path.Combine(baseAppData, appName);
-            CheckDirectory(theAppData);
-            return theAppData;
-        }
-
         public static string FindOrCreateTempDirectory(string appName)
         {
             string basePath = Path.GetTempPath();
@@ -38,8 +29,7 @@ namespace SDR.Configuration
             }
             catch (Exception ex)
             {
-                throw new UnauthorizedAccessException("Error creating directory " +
-                                                      directoryName + ". " + ex.Message);
+                throw new UnauthorizedAccessException("Error creating directory " + directoryName + ". " + ex.Message);
             }
         }
     }

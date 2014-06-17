@@ -8,8 +8,9 @@
 SDR.Data
 SDR.Authentication
 SDR.Configuration
-SDR.Common
 DotSpatial.SDR.Controls
+SDR.Common
 DotSpatial.SDR.Plugins.Measure
 DotSpatial.SDR.Plugins.Navigate
 DotSpatial.SDR.Plugins.Selection
+DotSpatial.SDR.Plugins.Search

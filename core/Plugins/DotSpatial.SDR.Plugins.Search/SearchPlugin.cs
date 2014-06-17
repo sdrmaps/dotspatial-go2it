@@ -21,6 +21,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private MapFunctionSearch _mapFunction;
         private SearchPanel _searchPanel;
         private DockablePanel _dockPanel;
+        
         private bool _activeFunction;
 
         #endregion
@@ -60,8 +61,16 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (_mapFunction == null)
             {
-               _mapFunction = new MapFunctionSearch(_searchPanel);
+               _mapFunction = new MapFunctionSearch(_searchPanel)
+               {
+                   TabDockingControl = App.DockManager as TabDockingControl
+               };
             }
+            if (!App.Map.MapFunctions.Contains(_mapFunction))
+            {
+                App.Map.MapFunctions.Add(_mapFunction);
+            }
+            _mapFunction.Map = App.Map;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
@@ -74,12 +83,16 @@ namespace DotSpatial.SDR.Plugins.Search
 
             if (key.StartsWith("kMap_"))
             {
+                if (App.Map == null) return;
                 AddSearchMapFunction();
                 if (_activeFunction)
                 {
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Default;
                     _mapFunction.Activate();
+                    // if local map binding is needed do it here
+                    // var map = App.Map as Control;
+                    // if (map != null) map.MouseLeave += MapOnMouseLeave;
                 }
             }
             else if (key == PluginKey)
@@ -108,6 +121,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     // deactivate the local map function mode
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Default;
+                    _mapFunction.Deactivate();
                 }
             }
             else if (key == PluginKey)
@@ -131,5 +145,6 @@ namespace DotSpatial.SDR.Plugins.Search
             App.DockManager.SelectPanel(PluginKey); // select the display panel
             _activeFunction = true;
         }
+
     }
 }

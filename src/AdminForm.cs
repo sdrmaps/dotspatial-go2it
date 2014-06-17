@@ -1554,6 +1554,7 @@ namespace Go2It
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
                     {
+                        // TODO: do some sort of lookup here, which also allows users to set names they choose
                         if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
                         {
                             doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES,
@@ -1583,7 +1584,6 @@ namespace Go2It
 
         private void idx_DoWork(object sender, DoWorkEventArgs e)
         {
-            // var worker = sender as BackgroundWorker;  // our worker for running the indexing operation
             try
             {
                 var iobjects = e.Argument as IndexObject[];
@@ -1693,7 +1693,7 @@ namespace Go2It
 
                     var path = Path.Combine(d, "indexes", idxType);
                     Directory dir = FSDirectory.Open(new DirectoryInfo(path));
-                    IndexWriter writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
+                    var writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
                     Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
                     writer.DeleteDocuments(q);
                     writer.Commit();
@@ -1703,7 +1703,7 @@ namespace Go2It
                 catch (Exception ex)
                 {
                     var log = AppContext.Instance.Get<ILog>();
-                    log.Error("Error on creating index :: BackgroundWorker Failed", ex);
+                    log.Error("Error on deleting index", ex);
                 }
             }
         }

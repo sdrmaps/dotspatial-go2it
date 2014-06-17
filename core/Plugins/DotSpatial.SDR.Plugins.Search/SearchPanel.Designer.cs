@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -190,15 +191,20 @@
             // 
             this.searchDGV.AllowUserToAddRows = false;
             this.searchDGV.AllowUserToDeleteRows = false;
+            this.searchDGV.AllowUserToOrderColumns = true;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Gainsboro;
+            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.searchDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.searchDGV.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.searchDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.tableLayoutPanel1.SetColumnSpan(this.searchDGV, 2);
             this.searchDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchDGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.searchDGV.Location = new System.Drawing.Point(3, 32);
             this.searchDGV.MultiSelect = false;
             this.searchDGV.Name = "searchDGV";
             this.searchDGV.ReadOnly = true;
+            this.searchDGV.RowHeadersVisible = false;
             this.searchDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.searchDGV.Size = new System.Drawing.Size(711, 138);
             this.searchDGV.TabIndex = 2;

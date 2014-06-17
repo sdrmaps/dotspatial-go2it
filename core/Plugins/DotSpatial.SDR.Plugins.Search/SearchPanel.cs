@@ -85,7 +85,6 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         public event EventHandler RowDoubleClicked;
 
-
         private void btnSearch_Click(object sender, EventArgs e)
         {
             // make sure we have a valid query to submit

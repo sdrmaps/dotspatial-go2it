@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Go2It", "src\Go2It.csproj", "{ABF4CE56-E282-42CD-B5AF-91487517944D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE036C51-F522-4F4F-8568-9FE84E25A002}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -12,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE036C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.Search", "core\Plugins\DotSpatial.SDR.Plugins.Search\DotSpatial.SDR.Plugins.Search.csproj", "{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDR.Data", "core\Components\SDR.Data\SDR.Data.csproj", "{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Go2It", "src\Go2It.csproj", "{ABF4CE56-E282-42CD-B5AF-91487517944D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,16 +22,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|x86.ActiveCfg = Debug|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|x86.Build.0 = Debug|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Any CPU.ActiveCfg = Release|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Mixed Platforms.Build.0 = Release|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.ActiveCfg = Release|x86
-		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.Build.0 = Release|x86
 		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -44,16 +32,16 @@ Global
 		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2A654CAE-B1BA-422B-9177-D8F5DB3B7C43}.Release|x86.ActiveCfg = Release|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|x86.ActiveCfg = Debug|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Debug|x86.Build.0 = Debug|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Any CPU.ActiveCfg = Release|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Mixed Platforms.Build.0 = Release|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.ActiveCfg = Release|x86
+		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Collections;
-using System.Runtime.Remoting.Messaging;
+using DotSpatial.Data;
+using DotSpatial.SDR.Controls;
+using DotSpatial.Symbology;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
@@ -13,10 +16,8 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using SDR.Data.Database;
 using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
-using Lucene.Net.Search;
-using Lucene.Net.Store;
+
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 
@@ -28,13 +29,15 @@ namespace DotSpatial.SDR.Plugins.Search
     /// </summary>
     public class MapFunctionSearch : MapFunction
     {
+        internal TabDockingControl TabDockingControl;
+
         private SearchPanel _searchPanel;
         private SearchMode _searchMode;
         private readonly DataGridView _dataGridView;
         private string _indexType;
         private string[] _columnNames;
-        private const string Fid = "FID";
-        private const string Lyrname = "LYRNAME";
+        private const string FID = "FID";
+        private const string LYRNAME = "LYRNAME";
 
         #region Constructors
         
@@ -66,17 +69,45 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.RowDoubleClicked += SearchPanelOnRowDoublelicked;
         }
 
-        private int GetColumnIndex(string headerText)
+        private int GetColumnDisplayIndex(string name)
         {
-
             for (int i = 0; i <= _dataGridView.ColumnCount - 1; i++)
             {
-                if (_dataGridView.Columns[i].HeaderText == headerText)
+                if (_dataGridView.Columns[i].Name == name)
                 {
-                    return i;
+                    return _dataGridView.Columns[i].DisplayIndex;
                 }
             }
             return -1;
+        }
+
+        private string[] GetMapTabKeysContainingLayer(string lyrName)
+        {
+            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            const string sql = "SELECT layers, lookup FROM MapTabs";
+            DataTable mapTabsTable = SQLiteHelper.GetDataTable(conn, sql);
+
+            List<string> mapPanelKeys = new List<string>();
+            foreach (DataRow row in mapTabsTable.Rows)
+            {
+                // parse the layers string into layer names
+                bool lyrMatch = false;
+                string[] lyrs = row["layers"].ToString().Split('|');
+                foreach (string lyr in lyrs)
+                {
+                    // check that this tab has the map layer we are looking for
+                    if (lyr == lyrName)
+                    {
+                        lyrMatch = true;
+                        break;
+                    }
+                }
+                if (lyrMatch)
+                {
+                    mapPanelKeys.Add(row["lookup"].ToString());
+                }
+            }
+            return mapPanelKeys.ToArray();
         }
 
         private void SearchPanelOnRowDoublelicked(object sender, EventArgs eventArgs)
@@ -85,40 +116,130 @@ namespace DotSpatial.SDR.Plugins.Search
             if (evnt != null)
             {
                 DataGridViewRow dgvr = _dataGridView.Rows[evnt.RowIndex];
-                int fidIdx = GetColumnIndex(Fid);
-                int lyrIdx = GetColumnIndex(Lyrname);
-                // string fid = dgvr.Cells[idx].Value.ToString();
+                int fidIdx = GetColumnDisplayIndex(FID);
+                int lyrIdx = GetColumnDisplayIndex(LYRNAME);
+                string fid = dgvr.Cells[fidIdx].Value.ToString();
+                string lyr = dgvr.Cells[lyrIdx].Value.ToString();
+
+                string[] mapTabs = GetMapTabKeysContainingLayer(lyr);
+                
+                if (!mapTabs.Contains(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
+                {
+                    // TODO:
+                    // we are going to have to select a new maptab panel to display this result
+                }
+
+                // ok now we cycle through layers of our active map and find the layer we want
+                var layers = Map.GetFeatureLayers();
+                foreach (IMapFeatureLayer mapLayer in layers)
+                {
+                    if (mapLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
+                    IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
+                    if (fs != null && fs.Name == lyr)
+                    {
+                        mapLayer.SelectByAttribute("[FID] =" + fid);
+                        mapLayer.ZoomToSelectedFeatures();
+                    }
+                }
             }
+        }
+
+        private Dictionary<string, string> GetIndexColumnsOrder()
+        {
+            switch (_searchMode)
+            {
+                case SearchMode.Address:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                case SearchMode.Intersection:
+                    // TODO:
+                    break;
+                case SearchMode.Name:
+                    // TODO:
+                    break;
+                case SearchMode.Phone:
+                    // TODO:
+                    break;
+                case SearchMode.Road:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+            }
+            return null;
         }
 
         private void SearchPanelOnPerformSearch(object sender, EventArgs eventArgs)
         {
             _searchPanel.ClearSearches();
             var searchQuery = _searchPanel.SearchQuery;
-            // create all the datagridview columns (field names)
+            // get any sort order created by the user if it exists
+            var orderDict = GetIndexColumnsOrder();
             foreach (var columnName in _columnNames)
             {
                 var txtCol = new DataGridViewTextBoxColumn
                 {
                     HeaderText = columnName,
+                    Name = columnName,
                     AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                     SortMode = DataGridViewColumnSortMode.Automatic
                 };
+                // check if there is any sort order set
+                if (orderDict != null)
+                {
+                    // validate if this column display index has been saved previously
+                    string s = orderDict[columnName];
+                    int i = -1;
+                    int.TryParse(s, out i);
+                    if (i >= 0)
+                    {
+                        txtCol.DisplayIndex = i;
+                    }
+                }
                 _dataGridView.Columns.Add(txtCol);
             }
             var fidCol = new DataGridViewTextBoxColumn()
             {
-                HeaderText = Fid,
+                HeaderText = FID,
+                Name = FID,
                 Visible = false
             };
             _dataGridView.Columns.Add(fidCol);
-            var lyrCol = new DataGridViewTextBoxColumn()
+            var lyrCol = new DataGridViewTextBoxColumn
             {
-                HeaderText = Lyrname,
+                HeaderText = LYRNAME,
+                Name = LYRNAME,
                 Visible = false
             };
             _dataGridView.Columns.Add(lyrCol);
+            // perform the query and display that shit
             ExecuteLuceneQuery(searchQuery);
+            // setup event binding if user reorders columns, save user settings
+            _dataGridView.ColumnDisplayIndexChanged += DataGridViewOnColumnDisplayIndexChanged;
+        }
+
+        private void DataGridViewOnColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs dataGridViewColumnEventArgs)
+        {
+            var newOrder = new Dictionary<string, string>();
+            foreach (DataGridViewColumn col in _dataGridView.Columns)
+            {
+                var i = GetColumnDisplayIndex(col.Name);
+                newOrder.Add(col.Name, i.ToString(CultureInfo.InvariantCulture));
+            }
+            switch (_searchMode)
+            {
+                case SearchMode.Address:
+                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    break;
+                case SearchMode.Intersection:
+                    // TODO:
+                    break;
+                case SearchMode.Name:
+                    // TODO:
+                    break;
+                case SearchMode.Phone:
+                    // TODO:
+                    break;
+                case SearchMode.Road:
+                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
+                    break;
+            }
         }
 
         private void SearchPanelOnHydrantLocate(object sender, EventArgs eventArgs)
@@ -178,6 +299,9 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SearchPanelOnSearchesCleared(object sender, EventArgs eventArgs)
         {
+            // unbind the column order index stuff
+            _dataGridView.ColumnDisplayIndexChanged -= DataGridViewOnColumnDisplayIndexChanged;
+            // now clear the datagridview
             _dataGridView.Rows.Clear();
             _dataGridView.Columns.Clear();
         }
@@ -280,26 +404,28 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             foreach (var hit in hits)
             {
-                var dgvRow = new DataGridViewRow();  // our new row to add to the datagridview
-                var doc = searcher.Doc(hit.Doc);  // snatch the ranked document
+                // generate all the empty cells we need for a full row
+                var newCells = new DataGridViewCell[_columnNames.Length];
+                for (int i = 0; i <= _columnNames.Length - 1; i++)
+                {
+                    var txtCell = new DataGridViewTextBoxCell();
+                    newCells[i] = txtCell;
+                }
+                // create the row and populate it
+                var dgvRow = new DataGridViewRow();
+                dgvRow.Cells.AddRange(newCells);
+                // snatch the ranked document
+                var doc = searcher.Doc(hit.Doc);
                 foreach (var field in _columnNames)
                 {
+                    var idx = GetColumnDisplayIndex(field);
                     var val = doc.Get(field);
-                    if (val != null)
-                    {
-                        var dgvCell = new DataGridViewTextBoxCell { Value = val };
-                        dgvRow.Cells.Add(dgvCell);
-                    }
-                    else
-                    {
-                        // TODO:
-                        var x = "this is null";
-                    }
+                    dgvRow.Cells[idx].Value = val;
                 }
                 // add the fid and layrname textbox cells
-                var fidCell = new DataGridViewTextBoxCell {Value = doc.Get(Fid)};
+                var fidCell = new DataGridViewTextBoxCell {Value = doc.Get(FID)};
                 dgvRow.Cells.Add(fidCell);
-                var lyrCell = new DataGridViewTextBoxCell {Value = doc.Get(Lyrname)};
+                var lyrCell = new DataGridViewTextBoxCell {Value = doc.Get(LYRNAME)};
                 dgvRow.Cells.Add(lyrCell);
                 _dataGridView.Rows.Add(dgvRow);
             }
@@ -324,8 +450,9 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
             var d = Path.GetDirectoryName(db);
-            var path = Path.Combine(d, "indexes", _indexType);
+            if (d == null) return;
 
+            var path = Path.Combine(d, "indexes", _indexType);
             Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
             IndexReader reader = IndexReader.Open(idxDir, true);
             Searcher searcher = new IndexSearcher(reader);
@@ -334,10 +461,9 @@ namespace DotSpatial.SDR.Plugins.Search
             TopDocs docs = searcher.Search(query, reader.MaxDoc);
             ScoreDoc[] hits = docs.ScoreDocs;
             idxDir.Dispose();  // wipe the directory ref out now
-
+            // prep the results for display to the datagridview
             FormatQueryResults(hits, searcher);
         }
-
 
         private static Query ConstructPhoneQuery(string searchQuery)
         {

@@ -43,19 +43,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotSpatial.Controls">
-      <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\..\DotSpatial\DotSpatial.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Data">
-      <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Data.dll</HintPath>
+      <HintPath>..\..\DotSpatial\DotSpatial.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Extensions">
-      <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Extensions.dll</HintPath>
+      <HintPath>..\..\DotSpatial\DotSpatial.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Projections">
-      <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\..\DotSpatial\DotSpatial.Projections.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
@@ -63,11 +63,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
-      <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Symbology.dll</HintPath>
+      <HintPath>..\..\DotSpatial\DotSpatial.Symbology.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Topology">
-      <HintPath>..\..\..\..\dotspatial\Trunk\bin\Debug\DotSpatial.Topology.dll</HintPath>
+      <HintPath>..\..\DotSpatial\DotSpatial.Topology.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

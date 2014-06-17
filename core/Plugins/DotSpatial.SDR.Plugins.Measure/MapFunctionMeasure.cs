@@ -460,6 +460,6 @@ namespace DotSpatial.SDR.Plugins.Measure
         /// <summary>
         /// Gets or sets the featureset to modify
         /// </summary>
-        public IFeatureSet FeatureSet { get; set; }
+        // public IFeatureSet FeatureSet { get; set; }
     }
 }

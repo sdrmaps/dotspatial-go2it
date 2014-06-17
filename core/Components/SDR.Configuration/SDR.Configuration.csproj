@@ -75,6 +75,8 @@
       <DependentUpon>AppSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="User\Go2ItUserSettings.cs" />
+    <Compile Include="Utf8StringWriter.cs" />
+    <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
