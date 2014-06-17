@@ -47,7 +47,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
-      <HintPath>..\..\..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
@@ -68,11 +68,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Configuration">
-      <HintPath>..\..\..\build\Debug\SDR.Configuration.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Data">
-      <HintPath>..\..\..\build\Debug\SDR.Data.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
