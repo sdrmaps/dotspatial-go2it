@@ -13,3 +13,4 @@ SDR.Common
 DotSpatial.SDR.Plugins.Measure
 DotSpatial.SDR.Plugins.Navigate
 DotSpatial.SDR.Plugins.Selection
+DotSpatial.SDR.Plugins.Search

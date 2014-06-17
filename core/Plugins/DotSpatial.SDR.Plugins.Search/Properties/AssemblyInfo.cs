@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DotSpatial.SDR.Search")]
+[assembly: AssemblyTitle("DotSpatial.SDR.Plugins.Search")]
 [assembly: AssemblyDescription("Tools for Searching")]
-[assembly: AssemblyProduct("DotSpatial.SDR.Search")]
+[assembly: AssemblyProduct("DotSpatial.SDR.Plugins.Search")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
