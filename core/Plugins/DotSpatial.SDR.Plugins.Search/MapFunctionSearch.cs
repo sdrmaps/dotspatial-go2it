@@ -351,6 +351,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.SHOULD);
             }
+            if (streetAddress.PreType != null)
+            {
+                values.Add(streetAddress.PreType);
+                fields.Add("Pre Type");
+                occurs.Add(Occur.SHOULD);
+            }
             if (streetAddress.StreetName != null)
             {
                 values.Add(streetAddress.StreetName);

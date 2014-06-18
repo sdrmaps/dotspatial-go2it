@@ -8,7 +8,7 @@ namespace DotSpatial.SDR.Plugins.Search
     {
         public string Number { get; set; }
         public string Predirectional { get; set; }
-        // public string PreType { get; set; }
+        public string PreType { get; set; }
         public string StreetName { get; set; }
         public string StreetType { get; set; }
         public string Postdirectional { get; set; }
@@ -18,6 +18,9 @@ namespace DotSpatial.SDR.Plugins.Search
 
     public class StreetAddressParser
     {
+        // words to search for on streetnames looking for pretypes
+        private static readonly string[] PreTypes = {"HIGHWAY", "HWY", "HIWAY", "HIWY", "HWAY", "ROAD", "RD"};
+
         public static StreetAddress Parse(string address)
         {
             if (string.IsNullOrEmpty(address))  // make sure there is a query to start with
@@ -30,15 +33,15 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 string numberPos = null;
                 string predirPos = null;
-                // string preType = null;
                 string strNamePos = null;
                 string strTypePos = null;
                 string postdirPos = null;
                 string subtypePos = null;
                 string subvalPos = null;
 
-                var last = input.Length - 1;
+                var last = input.Length - 1;  // the last poistion available for parsing
                 var result = new StreetAddress();
+
                 // first lets see if the last word is postdirectional value
                 if (Directionals.ContainsValue(input[last]) || Directionals.ContainsKey(input[last]))
                 {
@@ -47,10 +50,10 @@ namespace DotSpatial.SDR.Plugins.Search
                     // only continue the check if there is more than one word present
                     if (last - 1 > 0)
                     {
-                        // check if the previous word is a valid road type
+                        // check if the previous word is a valid street type
                         if (Suffixes.ContainsValue(input[last - 1]) || Suffixes.ContainsKey(input[last - 1]))
                         {
-                            // the second to last word is a valid road type
+                            // the second to last word is a valid street type
                             strTypePos = (last - 1).ToString(CultureInfo.InvariantCulture);
                         }
                     }
@@ -132,9 +135,9 @@ namespace DotSpatial.SDR.Plugins.Search
                 // ok that covers all the end of string stuff lets look at the start of the string now
                 try
                 {
-                    // lets see if the first word is a number value (attempt to cast)
+                    // see if the first word is an int (attempt to cast -> try/catch)
                     Convert.ToInt32(input[0]);
-                    numberPos = "0";
+                    numberPos = "0";  // we know the first position is a structure number
                     if (input.Length > 1)  // make sure that another word exists in the input
                     {
                         // check the next word is a unranged subtype
@@ -259,7 +262,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 // no road type, no postdirectional, no subtype, we shouldnt ever get here but lets look for a subvalue
                 else if (subvalPos != null && Convert.ToInt32(subvalPos) > Convert.ToInt32(strNamePos))
                 {
-                    // somehow we have a subvalue and no subtype so we can assume the previous word is end of road name
+                    // somehow we have a subvalue and no subtype, we can assume the previous word is end of road name and FUCKED
                     strNameEnd = (Convert.ToInt32(subvalPos) - 1).ToString(CultureInfo.InvariantCulture);
                 }
                 // there are no positions beyond the end of the string name
@@ -292,14 +295,52 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     result.Postdirectional = input[Convert.ToInt32(postdirPos)];
                 }
-                if (strNamePos == null) return result;
-                string x = string.Empty;
+                if (strNamePos == null) return result;  // no street name return it as is
+
+                // assemble the temp streetname value now
+                var strNameTmp = string.Empty;
                 for (var i = Convert.ToInt32(strNamePos); i <= Convert.ToInt32(strNameEnd); i++)
                 {
-                    x = x + input[i] + " ";
+                    strNameTmp = strNameTmp + input[i] + " ";
                 }
-                // set the value of the road name here
-                result.StreetName = x.Trim();
+                // break this apart once more to search for pretype values
+                string[] strNameArr = strNameTmp.ToUpper().Split(' ');
+                // check for pretypes within the street name
+                if (strNameArr.Length >= 2)
+                {
+                    switch (strNameArr[0])
+                    {
+                        case "INTERSTATE":
+                            // assign pretype and street name
+                            result.PreType = strNameArr[0];
+                            result.StreetName = strNameTmp.Replace(strNameArr[0], "").Trim();
+                            break;
+                        case "COUNTY":
+                        case "STATE":
+                        case "US":
+                            // check if the second word is one of the pretypes (HIGHWAY, ROAD, and abrv's)
+                            var exists = Array.Exists(PreTypes, s => s.Equals(strNameArr[1]));
+                            if (exists)
+                            {
+                                // assign pretype and street name
+                                var pretype = strNameArr[0] + " " + strNameArr[1];
+                                result.PreType = pretype;
+                                result.StreetName = strNameTmp.Replace(pretype, "").Trim();
+                            }
+                            else // no pretype set the whole thing as streetname
+                            {
+                                result.StreetName = strNameTmp.Trim();
+                            }
+                            break;
+                        default:  // no pretype again set the whole thing as streetname
+                            result.StreetName = strNameTmp.Trim();
+                            break;
+                    }
+                }
+                else // no pretype is possible assign the streetname
+                {
+                    result.StreetName = strNameTmp.Trim();
+                }
                 return result;
             }
             return null;
