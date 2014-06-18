@@ -18,21 +18,20 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchPanel()
         {
             InitializeComponent();
-            _searchQuery = string.Empty;
             DataGridDisplay = searchDGV;
+            _searchQuery = string.Empty;
             _searchMode = SearchMode.Address;
         }
 
         #endregion
 
-        #region Properties
-
+        /// <summary>
+        /// Clear Search
+        /// </summary>
         public void ClearSearches()
         {
             if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
         }
-
-        #endregion
 
         /// <summary>
         /// Gets or sets which type of search to perfrom

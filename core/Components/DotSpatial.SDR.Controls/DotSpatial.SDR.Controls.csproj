@@ -78,6 +78,12 @@
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
     <Compile Include="EventMapFrame.cs" />
+    <Compile Include="MultiSelectMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiSelectMessageBox.Designer.cs">
+      <DependentUpon>MultiSelectMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProgressPanel.cs" />
     <Compile Include="ProgressPanelForm.cs">
       <SubType>Form</SubType>
@@ -112,6 +118,9 @@
     <None Include="sdrmaps.snk" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MultiSelectMessageBox.resx">
+      <DependentUpon>MultiSelectMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProgressPanelForm.resx">
       <DependentUpon>ProgressPanelForm.cs</DependentUpon>
     </EmbeddedResource>

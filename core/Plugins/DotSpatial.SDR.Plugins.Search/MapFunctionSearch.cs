@@ -7,7 +7,7 @@ using System.Linq;
 using System.Collections;
 using DotSpatial.Data;
 using DotSpatial.SDR.Controls;
-using DotSpatial.Symbology;
+using DotSpatial.Topology;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
@@ -17,10 +17,8 @@ using DotSpatial.Controls;
 using SDR.Data.Database;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
-
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
-
 
 namespace DotSpatial.SDR.Plugins.Search
 {
@@ -29,6 +27,7 @@ namespace DotSpatial.SDR.Plugins.Search
     /// </summary>
     public class MapFunctionSearch : MapFunction
     {
+        // overall tab docking control for selecting map and tool tabs
         internal TabDockingControl TabDockingControl;
 
         private SearchPanel _searchPanel;
@@ -44,7 +43,7 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <summary>
         /// Creates a new instance of MapMeasureFunction, with panel
         /// </summary>
-        /// <param name="sp"></param>
+        /// <param name="sp">Search Panel</param>
         public MapFunctionSearch(SearchPanel sp)
         {
             _searchPanel = sp;
@@ -81,33 +80,24 @@ namespace DotSpatial.SDR.Plugins.Search
             return -1;
         }
 
-        private string[] GetMapTabKeysContainingLayer(string lyrName)
+        private Dictionary<string, string> GetMapTabKeysContainingLayer(string lyrName)
         {
             var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            const string sql = "SELECT layers, lookup FROM MapTabs";
+            const string sql = "SELECT layers, lookup, caption FROM MapTabs";
             DataTable mapTabsTable = SQLiteHelper.GetDataTable(conn, sql);
+            var mapPanelsLookup = new Dictionary<string, string>();
 
-            List<string> mapPanelKeys = new List<string>();
             foreach (DataRow row in mapTabsTable.Rows)
             {
                 // parse the layers string into layer names
-                bool lyrMatch = false;
-                string[] lyrs = row["layers"].ToString().Split('|');
-                foreach (string lyr in lyrs)
-                {
-                    // check that this tab has the map layer we are looking for
-                    if (lyr == lyrName)
-                    {
-                        lyrMatch = true;
-                        break;
-                    }
-                }
+                var lyrs = row["layers"].ToString().Split('|');
+                var lyrMatch = lyrs.Any(lyr => lyr == lyrName);
                 if (lyrMatch)
                 {
-                    mapPanelKeys.Add(row["lookup"].ToString());
+                    mapPanelsLookup.Add(row["lookup"].ToString(), row["caption"].ToString());
                 }
             }
-            return mapPanelKeys.ToArray();
+            return mapPanelsLookup;
         }
 
         private void SearchPanelOnRowDoublelicked(object sender, EventArgs eventArgs)
@@ -121,12 +111,28 @@ namespace DotSpatial.SDR.Plugins.Search
                 string fid = dgvr.Cells[fidIdx].Value.ToString();
                 string lyr = dgvr.Cells[lyrIdx].Value.ToString();
 
-                string[] mapTabs = GetMapTabKeysContainingLayer(lyr);
-                
-                if (!mapTabs.Contains(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
+                Dictionary<string, string> mapPanels = GetMapTabKeysContainingLayer(lyr);
+                if (!mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
                 {
-                    // TODO:
-                    // we are going to have to select a new maptab panel to display this result
+                    if (mapPanels.Count == 1)
+                    {
+                        TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
+                    }
+                    else if (mapPanels.Count > 1)
+                    {
+                        var v = mapPanels.Values;
+                        var msgBox = new MultiSelectMessageBox(
+                            "Multiple Map Tabs",
+                            "Multiple map tabs contain this feature, please select the tab to map the feature below.",
+                            v.ToArray());
+                        msgBox.ShowDialog();
+                        var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
+                        TabDockingControl.SelectPanel(key);
+                    }
+                    else
+                    {
+                        return; // something bad happened here
+                    }
                 }
 
                 // ok now we cycle through layers of our active map and find the layer we want
@@ -151,14 +157,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Address:
                     return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Intersection:
-                    // TODO:
-                    break;
+                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
                 case SearchMode.Name:
-                    // TODO:
-                    break;
+                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Phone:
-                    // TODO:
-                    break;
+                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Road:
                     return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
             }
@@ -194,7 +197,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 }
                 _dataGridView.Columns.Add(txtCol);
             }
-            var fidCol = new DataGridViewTextBoxColumn()
+            var fidCol = new DataGridViewTextBoxColumn
             {
                 HeaderText = FID,
                 Name = FID,
@@ -228,13 +231,13 @@ namespace DotSpatial.SDR.Plugins.Search
                     SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Intersection:
-                    // TODO:
+                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Name:
-                    // TODO:
+                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Phone:
-                    // TODO:
+                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Road:
                     SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
@@ -281,13 +284,16 @@ namespace DotSpatial.SDR.Plugins.Search
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Name:
-                    // TODO:
+                    _indexType = "AddressIndex";
+                    _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Phone:
-                    // TODO:
+                    _indexType = "AddressIndex";
+                    _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Road:
-                    // TODO:
+                    _indexType = "RoadIndex";
+                    _columnNames = GetColumnNames();
                     break;
             }
         }
@@ -304,6 +310,9 @@ namespace DotSpatial.SDR.Plugins.Search
             // now clear the datagridview
             _dataGridView.Rows.Clear();
             _dataGridView.Columns.Clear();
+            // clear any map selections as well
+            IEnvelope env;
+            Map.MapFrame.ClearSelection(out env);
         }
 
         #endregion

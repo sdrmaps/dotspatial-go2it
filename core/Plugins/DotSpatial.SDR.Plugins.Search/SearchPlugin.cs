@@ -63,6 +63,7 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                _mapFunction = new MapFunctionSearch(_searchPanel)
                {
+                   // set the tab docking control so we can do panel selections from MapFunctionSearch.cs
                    TabDockingControl = App.DockManager as TabDockingControl
                };
             }
@@ -90,9 +91,6 @@ namespace DotSpatial.SDR.Plugins.Search
                     App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Default;
                     _mapFunction.Activate();
-                    // if local map binding is needed do it here
-                    // var map = App.Map as Control;
-                    // if (map != null) map.MouseLeave += MapOnMouseLeave;
                 }
             }
             else if (key == PluginKey)

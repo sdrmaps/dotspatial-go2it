@@ -8,6 +8,7 @@ namespace DotSpatial.SDR.Plugins.Search
     {
         public string Number { get; set; }
         public string Predirectional { get; set; }
+        // public string PreType { get; set; }
         public string StreetName { get; set; }
         public string StreetType { get; set; }
         public string Postdirectional { get; set; }
@@ -29,6 +30,7 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 string numberPos = null;
                 string predirPos = null;
+                // string preType = null;
                 string strNamePos = null;
                 string strTypePos = null;
                 string postdirPos = null;
@@ -130,10 +132,8 @@ namespace DotSpatial.SDR.Plugins.Search
                 // ok that covers all the end of string stuff lets look at the start of the string now
                 try
                 {
-                    // lets see if the first word is a number value
-                    // ReSharper disable ReturnValueOfPureMethodIsNotUsed
+                    // lets see if the first word is a number value (attempt to cast)
                     Convert.ToInt32(input[0]);
-                    // ReSharper restore ReturnValueOfPureMethodIsNotUsed
                     numberPos = "0";
                     if (input.Length > 1)  // make sure that another word exists in the input
                     {
