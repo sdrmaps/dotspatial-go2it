@@ -87,8 +87,10 @@ namespace Go2It
             _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
             _indexLookupFields.Add("lookup", "TEXT");
             _indexLookupFields.Add("fieldname", "TEXT");
+
             _appManager = app;
             _dockingControl = (DockingControl) app.DockManager;
+
             // a basemap to hold all layers for the adminlegend
             _baseMap = new Map
             {
@@ -113,6 +115,7 @@ namespace Go2It
 
             // populate all the settings, layers, and maps to the form and attach a legend
             AttachLegend();
+            _adminLegend.OrderChanged += AdminLegendOnOrderChanged;
             PopulateMapViews();
             PopulateSettingsToForm();
             PopulateUsersToForm();
@@ -166,6 +169,9 @@ namespace Go2It
             _appManager.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
             _baseMap.Layers.LayerRemoved -= LayersOnLayerRemoved;
             _baseMap.Layers.LayerAdded -= LayersOnLayerAdded;
+            _adminLegend.OrderChanged -= AdminLegendOnOrderChanged;
+            // remove the legend from the control, otherwise leaves disposed object behind
+            legendSplitter.Panel1.Controls.Remove(_adminLegend);
             FormClosing -= AdminForm_Closing;
             chkViewLayers.ItemCheck -= chkViewLayers_ItemCheck;
             _idxWorker.DoWork -= idx_DoWork;
@@ -717,7 +723,6 @@ namespace Go2It
                 Dock = DockStyle.Fill,
                 VerticalScrollEnabled = true
             };
-            _adminLegend.OrderChanged += AdminLegendOnOrderChanged;
             _baseMap.Legend = _adminLegend;
             legendSplitter.Panel1.Controls.Add(_adminLegend);
         }
@@ -1631,7 +1636,7 @@ namespace Go2It
             _progressPanel = null;
 
             var cleanQueue = new List<string>();
-            for (int i = 0; i >= chkLayersToIndex.Items.Count - 1; i++)
+            for (int i = 0; i <= chkLayersToIndex.Items.Count - 1; i++)
             {
                 if (chkLayersToIndex.GetItemChecked(i))
                 {

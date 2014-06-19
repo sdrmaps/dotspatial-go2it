@@ -267,7 +267,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     sql = sql + " UNION SELECT lookup FROM " + tblName;
                 }
             }
-            return SQLiteHelper.GetResultsAsArray(conn, sql);
+            return sql.Length == 0 ? new string[0] : SQLiteHelper.GetResultsAsArray(conn, sql);
         }
 
         private void SetSearchVariables()

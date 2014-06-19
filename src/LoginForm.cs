@@ -42,6 +42,7 @@ namespace Go2It
             }
             else
             {
+                MessageBox.Show(@"Invalid username or password, please check credentials and try again.", @"Failed Login");
                 OnFormLogout();
             }
             Close();
@@ -55,6 +56,8 @@ namespace Go2It
             string conn = SdrConfig.Settings.Instance.ApplicationRepoConnectionString;
             string query = "SELECT username, salt, hash FROM logins WHERE username='" + username + "'";
             DataTable table = SQLiteHelper.GetDataTable(conn, query);
+
+            if (table.Rows.Count <= 0) return false;
             DataRow r = table.Rows[0];
             string salt = r["salt"].ToString();
             string hash = r["hash"].ToString();

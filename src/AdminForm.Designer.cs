@@ -722,7 +722,10 @@
             // dgvLayerIndex
             // 
             this.dgvLayerIndex.AllowUserToAddRows = false;
+            this.dgvLayerIndex.AllowUserToDeleteRows = false;
+            this.dgvLayerIndex.AllowUserToResizeRows = false;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";

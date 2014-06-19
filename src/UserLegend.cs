@@ -42,14 +42,16 @@ namespace Go2It
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
+
             if (_userLegend != null)
             {
                 _userLegend.RootNodes.Clear();
             }
-
+            
             // update the active _map for the legend now
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             _map.Legend = _userLegend;
+
         }
 
         public override void Deactivate()
