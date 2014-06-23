@@ -135,17 +135,18 @@ namespace DotSpatial.SDR.Plugins.Search
                     }
                 }
 
-                // ok now we cycle through layers of our active map and find the layer we want
+                // now we cycle through layers of our active map and find the layer we want
                 var layers = Map.GetFeatureLayers();
                 foreach (IMapFeatureLayer mapLayer in layers)
                 {
                     if (mapLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
+                    if (mapLayer == null) continue;
+
                     IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
-                    if (fs != null && fs.Name == lyr)
-                    {
-                        mapLayer.SelectByAttribute("[FID] =" + fid);
-                        mapLayer.ZoomToSelectedFeatures();
-                    }
+                    if (fs == null || fs.Name != lyr) continue;
+
+                    mapLayer.SelectByAttribute("[FID] =" + fid);
+                    mapLayer.ZoomToSelectedFeatures();
                 }
             }
         }
@@ -172,10 +173,13 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             _searchPanel.ClearSearches();
             var searchQuery = _searchPanel.SearchQuery;
-            // get any sort order created by the user if it exists
+            var colArr = new DataGridViewColumn[_columnNames.Count()];
+            // check for any sort order the user may have set
             var orderDict = GetIndexColumnsOrder();
-            foreach (var columnName in _columnNames)
+            // add our columns to the datagridview 
+            for (var i = 0; i < _columnNames.Count(); i++)
             {
+                var columnName = _columnNames[i];
                 var txtCol = new DataGridViewTextBoxColumn
                 {
                     HeaderText = columnName,
@@ -186,17 +190,20 @@ namespace DotSpatial.SDR.Plugins.Search
                 // check if there is any sort order set
                 if (orderDict != null)
                 {
-                    // validate if this column display index has been saved previously
-                    string s = orderDict[columnName];
-                    int i = -1;
-                    int.TryParse(s, out i);
-                    if (i >= 0)
-                    {
-                        txtCol.DisplayIndex = i;
-                    }
+                    var s = orderDict[columnName];
+                    var j = -1;
+                    int.TryParse(s, out j);
+                    if (j < 0) continue;
+
+                    txtCol.DisplayIndex = j;
+                    colArr[j] = txtCol;
                 }
-                _dataGridView.Columns.Add(txtCol);
+                else
+                {
+                    colArr[i] = txtCol;
+                }
             }
+            _dataGridView.Columns.AddRange(colArr);
             var fidCol = new DataGridViewTextBoxColumn
             {
                 HeaderText = FID,
@@ -330,10 +337,64 @@ namespace DotSpatial.SDR.Plugins.Search
             base.OnActivate();
         }
 
+        private static void LogSearchQuery(string q, StreetAddress sa)
+        {
+            var p = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\SDR\\" +
+                       SdrConfig.Settings.Instance.ApplicationName;
+            var d = new DirectoryInfo(p);
+            if (!d.Exists)
+            {
+                d.Create();
+            }
+            var f = p + "\\parsed_searches.txt";
+            using (var sw = File.AppendText(f))
+            {
+                sw.WriteLine("Query        : " + q);
+                sw.WriteLine("--------------------------------------------------------");
+                if (sa.Number != null)
+                {
+                    sw.WriteLine("StructNum    : " + sa.Number);
+                }
+                if (sa.Predirectional != null)
+                {
+                    sw.WriteLine("PreDir       : " + sa.Predirectional);
+                }
+                if (sa.PreType != null)
+                {
+                    sw.WriteLine("PreType      : " + sa.PreType);
+                }
+                if (sa.StreetName != null)
+                {
+                    sw.WriteLine("StreetName   : " + sa.StreetName);
+                }
+                if (sa.StreetType != null)
+                {
+                    sw.WriteLine("StreetType   : " + sa.StreetType);
+                }
+                if (sa.Postdirectional != null)
+                {
+                    sw.WriteLine("PostDir      : " + sa.Postdirectional);
+                }
+                if (sa.SubUnitType != null)
+                {
+                    sw.WriteLine("SubUnitType  : " + sa.SubUnitType);
+                }
+                if (sa.SubUnitValue != null)
+                {
+                    sw.WriteLine("SubUnitValue : " + sa.SubUnitValue);
+                }
+                sw.WriteLine("========================================================");
+                sw.Close();
+            }
+        }
+
         private static Query ConstructAddressQuery(string search)
         {
             // parse our input address into a valid streetaddress object
-            StreetAddress streetAddress = StreetAddressParser.Parse(search);
+            // TODO: perform check to determine if user is using pretypes fields
+            StreetAddress streetAddress = StreetAddressParser.Parse(search, true);
+            LogSearchQuery(search, streetAddress);
+
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
             var fields = new ArrayList();
@@ -470,6 +531,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var path = Path.Combine(d, "indexes", _indexType);
             Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
             IndexReader reader = IndexReader.Open(idxDir, true);
+
             Searcher searcher = new IndexSearcher(reader);
             Query query = ConstructLuceneQuery(searchString);
             
@@ -478,6 +540,7 @@ namespace DotSpatial.SDR.Plugins.Search
             idxDir.Dispose();  // wipe the directory ref out now
             // prep the results for display to the datagridview
             FormatQueryResults(hits, searcher);
+            // TODO? should se dispose of the searcher here not inside?
         }
 
         private static Query ConstructPhoneQuery(string searchQuery)

@@ -21,6 +21,7 @@ using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using SDR.Common;
+using SDR.Common.UserMessage;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -44,8 +45,8 @@ namespace Go2It
         // name of the initial map tab
         private const string MapTabDefaultName = "My Map";
         // internal lookup names used in lucene to get the actual feature from the layer
-        private const string Fid = "FID";
-        private const string Lyrname = "LYRNAME";
+        private const string FID = "FID";
+        private const string LYRNAME = "LYRNAME";
 
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
@@ -1512,8 +1513,8 @@ namespace Go2It
                     }
                     else
                     {
-                        var log = AppContext.Instance.Get<ILog>();
-                        log.Warn("Error on Create Index, FeatureDataset is null", new Exception());
+                        var msg = AppContext.Instance.Get<IUserMessage>();
+                        msg.Warn("Error on Create Index, FeatureDataset is null", new Exception());
                         return;
                     }
                     // make sure this featureset has FID values for lookup
@@ -1553,8 +1554,8 @@ namespace Go2It
                     // grab a row from the datatable and index that shit
                     DataRow dr = fl.DataTable.Rows[x];
                     var doc = new Document(); // generate a document for indexing by lucene
-                    doc.Add(new Field(Fid, dr[Fid].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                    doc.Add(new Field(Lyrname, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.Add(new Field(FID, dr[FID].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.Add(new Field(LYRNAME, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
                     // get the field names for lookup
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
@@ -1607,6 +1608,7 @@ namespace Go2It
                         Directory dir = FSDirectory.Open(di);
                         FileInfo[] fi = di.GetFiles();
                         
+                        // single indexwriter is thread safe so lets use it in parallel
                         IndexWriter writer = fi.Length == 0 ?
                             new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) :
                             new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
@@ -1615,6 +1617,16 @@ namespace Go2It
                         var documents = keyValuePair.Value;
                         Parallel.ForEach(documents, delegate(Document document, ParallelLoopState state)
                         {
+                            // check if this document already exists in the index
+                            var fid = document.GetField(FID).StringValue;
+                            var lyr = document.GetField(LYRNAME).StringValue;
+
+                            Query qfid = new TermQuery(new Term(FID, fid));
+                            Query qlyr = new TermQuery(new Term(LYRNAME, lyr));
+
+                            var query = new BooleanQuery {{qfid, Occur.MUST}, {qlyr, Occur.MUST}};
+
+                            writer.DeleteDocuments(query);
                             writer.AddDocument(document);
                         });
                         writer.Optimize();
@@ -1624,8 +1636,8 @@ namespace Go2It
             }
             catch (Exception ex)
             {
-                var log = AppContext.Instance.Get<ILog>();
-                log.Error("Error on creating index :: BackgroundWorker Failed", ex);
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error("Error on creating index :: BackgroundWorker Failed", ex);
             }
         }
 
@@ -1662,8 +1674,8 @@ namespace Go2It
             }
 
             if (e.Error == null) return;
-            var log = AppContext.Instance.Get<ILog>();
-            log.Error("Error on creating index :: BackgroundWorker Completed with Error", e.Error);
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            msg.Error("Error on creating index :: BackgroundWorker Completed with Error", e.Error);
         }
 
         private void btnDeleteIndex_Click(object sender, EventArgs e)
@@ -1701,14 +1713,14 @@ namespace Go2It
                     var writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
                     Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
                     writer.DeleteDocuments(q);
-                    writer.Commit();
                     writer.Optimize();
+                    writer.Commit();
                     writer.Dispose();
                 }
                 catch (Exception ex)
                 {
-                    var log = AppContext.Instance.Get<ILog>();
-                    log.Error("Error on deleting index", ex);
+                    var msg = AppContext.Instance.Get<IUserMessage>();
+                    msg.Error("Error on deleting index", ex);
                 }
             }
         }

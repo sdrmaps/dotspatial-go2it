@@ -8,6 +8,7 @@
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\ParcelIndex</anyType>
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\RoadIndex</anyType>
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\CityLimitIndex</anyType>
+    <anyType xsi:type="xsd:string">H:\Data\Go2It_Test\indexes\AddressIndex</anyType>
   </MruList>
   <UseCompound>false</UseCompound>
 </PrefsData>
