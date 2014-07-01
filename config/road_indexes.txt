@@ -3,6 +3,8 @@ Pre Type
 Street Name
 Street Type
 Post Directional
+Right Ranges
+Left Ranges
 Right Zip Community
 Left Zip Community
 Right MSAG Community

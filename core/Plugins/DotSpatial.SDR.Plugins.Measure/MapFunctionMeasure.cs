@@ -454,12 +454,6 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
             Map.Invalidate();
         }
-
         #endregion
-
-        /// <summary>
-        /// Gets or sets the featureset to modify
-        /// </summary>
-        // public IFeatureSet FeatureSet { get; set; }
     }
 }

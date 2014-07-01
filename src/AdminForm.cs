@@ -4,21 +4,28 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
+using DotSpatial.Topology.Utilities;
+// using GeoAPI.Geometries;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
+// using Lucene.Net.Spatial;
+// using Lucene.Net.Spatial.Prefix;
+// using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Store;
 using SDR.Common;
 using SDR.Common.UserMessage;
@@ -31,6 +38,8 @@ using DotSpatial.Controls;
 using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
+using Coordinate = DotSpatial.Topology.Coordinate;
+using IGeometry = DotSpatial.Topology.IGeometry;
 using ILog = SDR.Common.logging.ILog;
 using Point = System.Drawing.Point;
 using SdrConfig = SDR.Configuration;
@@ -47,6 +56,7 @@ namespace Go2It
         // internal lookup names used in lucene to get the actual feature from the layer
         private const string FID = "FID";
         private const string LYRNAME = "LYRNAME";
+        private const string GEOSHAPE = "GEOSHAPE";
 
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
@@ -80,6 +90,8 @@ namespace Go2It
         // temp storage of layers to index until the "create" button is activated (queued indexes)
         // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
+
+        private static readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Resources.wgs_84_esri_string);
 
         public AdminForm(AppManager app)
         {
@@ -1531,16 +1543,64 @@ namespace Go2It
                         var kvPair = new KeyValuePair<string, string>(d["lookup"], d["fieldname"]);
                         list.Add(kvPair);
                     }
-                    var io = new IndexObject(fs, list, lyrName, idxType);
+                    var io = new IndexObject(fs, list, lyrName, mapLyr.Projection, idxType);
                     // add the indexobject to our array for creation
                     iobjects.SetValue(io, count);
                     count++;
                 }
-                _idxWorker.RunWorkerAsync(iobjects);
+                // _idxWorker.RunWorkerAsync(iobjects);
+                Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
             }
         }
 
-        private static Dictionary<string, List<Document>> GetDocuments(IndexObject[] iobjects)
+        private IGeometry NormalizeGeometry(IGeometry geometry, ProjectionInfo projection)
+        {
+            // account for two coordinates per point (x, y)
+            var xy = new double[geometry.Coordinates.Count * 2];
+            var z = new double[geometry.Coordinates.Count];
+            var c = 0; // internal count of xy array
+            for (var i = 0; i < geometry.Coordinates.Count; i++)
+            {
+                z[i] = geometry.Coordinates[i].Z;
+                xy[c] = geometry.Coordinates[i].X;
+                c++;
+                xy[c] = geometry.Coordinates[i].Y;
+                c++;
+            }
+            // reproject the points
+            Reproject.ReprojectPoints(xy, z, projection, _wgs84Projection, 0, geometry.Coordinates.Count);
+            // determine what type of geometry to create
+            switch (geometry.FeatureType)
+            {
+                case FeatureType.Point:
+                    var vertex = new Vertex(xy[0], xy[1]);
+                    var point = new Shape(vertex) {Z = z};
+                    return point.ToGeometry(new GeometryFactory());
+                case FeatureType.Line:
+                    
+                    break;
+                case FeatureType.MultiPoint:
+                    // var multipoint = new Shape()
+                    break;
+                case FeatureType.Polygon:
+                    // Polygon geom = new Polygon(vertices);
+                    break;
+                default:
+                    break;
+            }
+
+
+            // list of cordinates converted from array
+            List<Coordinate> vertices = new List<Coordinate>();
+            for (var i = 0; i < z.Length; i++)
+            {
+                vertices.Add(new Coordinate(xy[i], xy[i + 1], z[i]));
+            }
+            return null;
+
+        }
+
+        private Dictionary<string, List<Document>> GetDocuments(IndexObject[] iobjects)
         {
             var docs = new Dictionary<string, List<Document>>();
             if (iobjects.Length <= 0) return docs;
@@ -1548,14 +1608,49 @@ namespace Go2It
             foreach (IndexObject o in iobjects)
             {
                 var docList = new List<Document>();
-                IFeatureSet fl = o.FeatureSet;
-                for (int x = 0; x < fl.DataTable.Rows.Count; x++)
+                IFeatureSet fs = o.FeatureSet;
+
+                for (int x = 0; x < fs.NumRows(); x++)
                 {
                     // grab a row from the datatable and index that shit
-                    DataRow dr = fl.DataTable.Rows[x];
+                    DataRow dr = fs.DataTable.Rows[x];
                     var doc = new Document(); // generate a document for indexing by lucene
                     doc.Add(new Field(FID, dr[FID].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.Add(new Field(LYRNAME, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
+
+                    // get the shape and normalize coords to lat long
+                    var dsShape = fs.GetShape(x, false);
+                    var geometry = dsShape.ToGeometry(new GeometryFactory());
+
+                    // check if we need to reproject the geometry
+                    if (o.LayerProjection.ToEsriString() != Resources.wgs_84_esri_string)
+                    {
+                        geometry = NormalizeGeometry(geometry, o.LayerProjection);
+                    }
+
+
+
+                    // TODO:
+                    var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
+                    Spatial4n.Core.Shapes.Shape shps = ctx.ReadShape("Point(-160 30)");
+
+
+                    // convert the geometry into wkt for read by spatial4n of lat long and storage to indexes
+                    var wktWriter = new WktWriter();
+                    var wkt = wktWriter.Write((Geometry)geometry);
+
+                    // SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 10), GEOSHAPE);
+                    // Spatial4n.Core.Shapes.Shape shape = ctx.ReadShape(wkt);
+
+
+                    //wkt = "POINT (-97.6418927769545000 34.5055886148638000)"
+
+
+                    // Spatial4n.Core.Io.ShapeReadWriter ntsReader = new ShapeReadWriter(ctx);
+                    // var xxxxx = ntsReader.ReadShape(wkt);
+
+                    // var flds = strategy.CreateIndexableFields(shape);
+
                     // get the field names for lookup
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
@@ -1592,7 +1687,7 @@ namespace Go2It
         {
             try
             {
-                var iobjects = e.Argument as IndexObject[];
+               var iobjects = e.Argument as IndexObject[];
                 Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
                 if (docs.Count > 0)
                 {
@@ -1887,13 +1982,15 @@ namespace Go2It
         {
             public IFeatureSet FeatureSet { get; private set; }
             public string LayerName { get; private set; }
+            public ProjectionInfo LayerProjection { get; set; }
             public string IndexType { get; private set; }
             public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
-            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, string indexType)
+            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, ProjectionInfo projectionInfo, string indexType)
             {
                 FeatureSet = featureSet;
                 FieldLookup = fieldLookup;
                 LayerName = layerName;
+                LayerProjection = projectionInfo;
                 IndexType = indexType;
             }
         }

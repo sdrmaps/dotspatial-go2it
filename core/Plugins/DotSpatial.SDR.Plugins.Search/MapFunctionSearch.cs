@@ -176,6 +176,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var colArr = new DataGridViewColumn[_columnNames.Count()];
             // check for any sort order the user may have set
             var orderDict = GetIndexColumnsOrder();
+            List<DataGridViewColumn> tList = new List<DataGridViewColumn>();
             // add our columns to the datagridview 
             for (var i = 0; i < _columnNames.Count(); i++)
             {
@@ -190,19 +191,39 @@ namespace DotSpatial.SDR.Plugins.Search
                 // check if there is any sort order set
                 if (orderDict != null)
                 {
-                    var s = orderDict[columnName];
-                    var j = -1;
-                    int.TryParse(s, out j);
-                    if (j < 0) continue;
+                    if (orderDict.ContainsKey(columnName))
+                    {
+                        var s = orderDict[columnName];
+                        var j = -1;
+                        int.TryParse(s, out j);
+                        if (j < 0) continue;
 
-                    txtCol.DisplayIndex = j;
-                    colArr[j] = txtCol;
+                        txtCol.DisplayIndex = j;
+                        colArr[j] = txtCol;
+                    }
+                    else
+                    {
+                        // field doesnt exists in column order
+                        // save it temp and append after others have been "set"
+                        tList.Add(txtCol);
+                    }
                 }
                 else
                 {
                     colArr[i] = txtCol;
                 }
             }
+            // check if we added any cols to temp list for later appending
+            foreach (var tCol in tList)
+            {
+                for (var x = 0; x < colArr.Length; x++)
+                {
+                    if (colArr[x] != null) continue;
+                    colArr[x] = tCol;
+                    break;
+                }
+            }
+            // add in our columns for data feature lookup
             _dataGridView.Columns.AddRange(colArr);
             var fidCol = new DataGridViewTextBoxColumn
             {
@@ -505,7 +526,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 dgvRow.Cells.Add(lyrCell);
                 _dataGridView.Rows.Add(dgvRow);
             }
-            searcher.Dispose();
         }
 
         private void FormatQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
@@ -532,15 +552,16 @@ namespace DotSpatial.SDR.Plugins.Search
             Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
             IndexReader reader = IndexReader.Open(idxDir, true);
 
-            Searcher searcher = new IndexSearcher(reader);
+            var searcher = new IndexSearcher(reader);
             Query query = ConstructLuceneQuery(searchString);
             
             TopDocs docs = searcher.Search(query, reader.MaxDoc);
             ScoreDoc[] hits = docs.ScoreDocs;
             idxDir.Dispose();  // wipe the directory ref out now
+
             // prep the results for display to the datagridview
             FormatQueryResults(hits, searcher);
-            // TODO? should se dispose of the searcher here not inside?
+            searcher.Dispose();
         }
 
         private static Query ConstructPhoneQuery(string searchQuery)

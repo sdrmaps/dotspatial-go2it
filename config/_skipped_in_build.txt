@@ -1,1 +1,1 @@
-files prefixed with underscores "_" are skipped by the build process
+files prefixed with underscores "_" are removed by the build process

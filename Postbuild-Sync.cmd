@@ -27,7 +27,7 @@ SET /A COUNT=1
     )
 IF DEFINED VERSION GOTO NEXTVAR
 
-SET DROPBOX="D:\Dropbox\Public\_Installs\SDR\%PRODUCT%\%PRODUCT%-%MAJ%.%MIN%\Build-%MAJ%.%MIN%.%BLD%.%REV%"
+SET DROPBOX="D:\Dropbox\Public\_Installs\SDR\%PRODUCT%\%JOB_NAME%-%MAJ%.%MIN%\Build-%MAJ%.%MIN%.%BLD%.%REV%"
 IF NOT EXIST %DROPBOX% ( MD %DROPBOX% )
 
 COPY /Y "archive\%PRODUCT%\*" %DROPBOX%\ 

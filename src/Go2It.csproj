@@ -93,12 +93,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\core\DotSpatial\DotSpatial.Topology.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
+    <Reference Include="GeoAPI">
+      <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite">
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\NetTopologySuite.dll</HintPath>
+    </Reference>
+    <Reference Include="PowerCollections">
+      <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="SDR.Authentication">
       <HintPath>..\build\Debug\SDR.Authentication.dll</HintPath>
@@ -115,6 +123,9 @@
     <Reference Include="SDR.Data">
       <HintPath>..\build\Debug\SDR.Data.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Spatial4n.Core.NTS">
+      <HintPath>..\packages\Spatial4n.Core.NTS.0.3\lib\net40\Spatial4n.Core.NTS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
