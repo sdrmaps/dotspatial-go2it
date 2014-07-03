@@ -35,6 +35,36 @@ namespace SDR.Configuration.User
             }
         }
 
+        public string ActiveFunctionPanel
+        {
+            get { return UserSettings.Default.ActiveFunctionPanel; }
+            set
+            {
+                UserSettings.Default.ActiveFunctionPanel = value;
+                UserSettings.Default.Save();
+            }
+        }
+
+        public string ActiveFunctionPanelMode
+        {
+            get { return UserSettings.Default.ActiveFunctionPanelMode; }
+            set
+            {
+                UserSettings.Default.ActiveFunctionPanelMode = value;
+                UserSettings.Default.Save();
+            }
+        }
+
+        public string ActiveFunctionMode
+        {
+            get { return UserSettings.Default.ActiveFunctionMode; }
+            set
+            {
+                UserSettings.Default.ActiveFunctionMode = value;
+                UserSettings.Default.Save();
+            }
+        }
+
         public Dictionary<string, string> RoadIndexColumnOrder
         {
             get { return FetchDictionarySetting(UserSettings.Default.RoadIndexColumnOrder); }
@@ -54,6 +84,7 @@ namespace SDR.Configuration.User
                 UserSettings.Default.Save();
             }
         }
+
 
         private static string DictionarySettingsString(Dictionary<string, string> settings)
         {

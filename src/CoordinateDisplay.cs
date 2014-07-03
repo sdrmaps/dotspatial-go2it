@@ -42,6 +42,7 @@ namespace Go2It
 
             if (!key.StartsWith("kMap_")) return;
 
+            // remove active map tab binding
             if (_map == null) return;
             _map.MouseMove -= map_MouseMove;
             _map.ProjectionChanged -= map_ProjectionChanged;
@@ -61,6 +62,7 @@ namespace Go2It
             var mapProjEsriString = _map.Projection.ToEsriString();
             _isWgs84 = (mapProjEsriString == Properties.Resources.wgs_84_esri_string);
             _currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
+
             // setup all the events for this coordinate display on the map
             _map.MouseMove += map_MouseMove;
             _map.ProjectionChanged += map_ProjectionChanged;

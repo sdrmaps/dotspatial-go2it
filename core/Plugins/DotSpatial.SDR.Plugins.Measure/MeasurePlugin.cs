@@ -5,6 +5,7 @@ using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
 using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Measure.Properties;
+using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Measure
 {
@@ -17,10 +18,9 @@ namespace DotSpatial.SDR.Plugins.Measure
         private const string PluginKey = "kPanel_Measure";
         private const string PluginCaption = "Measure Area and Distance";
 
-        private MapFunctionMeasure _painter;
+        private MapFunctionMeasure _mapFunction;
         private MeasurePanel _measurePanel;
         private DockablePanel _dockPanel;
-        private bool _activeFunction;
 
         #endregion
 
@@ -38,7 +38,6 @@ namespace DotSpatial.SDR.Plugins.Measure
             _measurePanel = new MeasurePanel();
             _dockPanel = new DockablePanel(PluginKey, PluginCaption, _measurePanel, DockStyle.Fill);
             App.DockManager.Add(_dockPanel);
-
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
@@ -58,15 +57,15 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void AddMeasureMapFunction()
         {
-            if (_painter == null)
+            if (_mapFunction == null)
             {
-                _painter = new MapFunctionMeasure(_measurePanel);
+                _mapFunction = new MapFunctionMeasure(_measurePanel);
             }
-            if (!App.Map.MapFunctions.Contains(_painter))
+            if (!App.Map.MapFunctions.Contains(_mapFunction))
             {
-                App.Map.MapFunctions.Add(_painter);
+                App.Map.MapFunctions.Add(_mapFunction);
             }
-            _painter.Map = App.Map;
+            _mapFunction.Map = App.Map;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -79,13 +78,17 @@ namespace DotSpatial.SDR.Plugins.Measure
 
             if (key.StartsWith("kMap_"))
             {
-                if (App.Map == null) return;
-                AddMeasureMapFunction();
-                if (_activeFunction)
+                if (App.Map == null) return;  // check for a map
+                AddMeasureMapFunction();  // check if we have the measurement functions on this map
+                // setup an event binding to watch for any time the functionmode changes
+                App.Map.FunctionModeChanged += MapOnFunctionModeChanged;
+                // verify that a functionmode is not currently active
+                // and that the active tool panel is in fact this panel (check that this tool is active)
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
-                    App.Map.FunctionMode = FunctionMode.None;
                     App.Map.Cursor = Cursors.Cross;
-                    _painter.Activate();
+                    _mapFunction.Activate();
                     // add local map event binding
                     var map = App.Map as Control;
                     if (map != null) map.MouseLeave += MapOnMouseLeave;
@@ -93,12 +96,26 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
             else if (key == PluginKey)
             {
-                if (!_activeFunction)
+                // check if this tool function panel is the active function or not
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
-                    App.Map.FunctionMode = FunctionMode.None;
-                    App.Map.Cursor = Cursors.Cross;
-                    _painter.Activate();
+                    if (_mapFunction != null)
+                    {
+                        App.Map.Cursor = Cursors.Cross;
+                        _mapFunction.Activate();
+                    }
                 }
+            }
+        }
+
+        private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
+        {
+            // update the user settings to reflect active functionmode
+            var map = sender as Map;
+            if (map.FunctionMode != FunctionMode.None)
+            {
+                _mapFunction.Deactivate();
             }
         }
 
@@ -115,29 +132,36 @@ namespace DotSpatial.SDR.Plugins.Measure
 
             if (key.StartsWith("kMap_"))
             {
-                if (_activeFunction)
+                // remove the event binding on this map (since its being hidden) on functionmodechanges
+                App.Map.FunctionModeChanged += MapOnFunctionModeChanged;
+
+                // lets look and see if this tool is currently the active tool and deactivate it if so
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
                     // remove local map event binding
                     var map = App.Map as Control;
                     if (map != null) map.MouseLeave -= MapOnMouseLeave;
-                    // deactivate the local map function mode
-                    App.Map.FunctionMode = FunctionMode.None;
-                    App.Map.Cursor = Cursors.Default;
-                    _painter.Deactivate();
+                    if (_mapFunction != null)
+                    {
+                        _mapFunction.Deactivate();
+                    }
                 }
             }
             else if (key == PluginKey)
             {
-                if (_activeFunction)
+                // check if this tool function panel is the active function or not
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
                     // remove local map event binding
                     var map = App.Map as Control;
                     if (map != null) map.MouseLeave -= MapOnMouseLeave;
-                    // deactivate the local map function mode
-                    App.Map.FunctionMode = FunctionMode.None;
-                    App.Map.Cursor = Cursors.Default;
-                    _painter.Deactivate();
-                    _activeFunction = false; // no longer an active function
+
+                    if (_mapFunction != null)
+                    {
+                        _mapFunction.Deactivate();
+                    }
                 }
             }
         }
@@ -154,8 +178,10 @@ namespace DotSpatial.SDR.Plugins.Measure
         /// <param name="e"></param>
         private void MeasureTool_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel(PluginKey);  // select the display panel
-            _activeFunction = true;
+            // update the prefs for tracking the active tools modes and panels
+            App.Map.FunctionMode = FunctionMode.None;
+            App.DockManager.SelectPanel(PluginKey);
+            // SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanelMode = MeasureMode.Distance.ToString();
         }
     }
 }

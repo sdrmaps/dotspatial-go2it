@@ -41,11 +41,6 @@ namespace DotSpatial.SDR.Controls
             _mapTabs.Deselected += MapTabsOnDeselected;
 
             _toolTabs = new TablessControl {Name = "toolTabs", Dock = DockStyle.Fill};
-
-            // add a default clear panel to the tool panel
-            var dp = new DockablePanel("kPanel_Clear", "Default Clear/Close Panel", new Panel(), DockStyle.Fill);
-            Add(dp);  // this is basically just a clean and clear panel for hiding inactive tabs
-
             _toolTabs.Selected += ToolTabsOnSelected;
             _toolTabs.Deselected += ToolTabsOnDeselected;
 

@@ -61,5 +61,44 @@ namespace SDR.Configuration.Properties {
                 this["RoadIndexColumnOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string ActiveFunctionMode {
+            get {
+                return ((string)(this["ActiveFunctionMode"]));
+            }
+            set {
+                this["ActiveFunctionMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string ActiveFunctionPanelMode {
+            get {
+                return ((string)(this["ActiveFunctionPanelMode"]));
+            }
+            set {
+                this["ActiveFunctionPanelMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("kPanel_Measure")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string ActiveFunctionPanel {
+            get {
+                return ((string)(this["ActiveFunctionPanel"]));
+            }
+            set {
+                this["ActiveFunctionPanel"] = value;
+            }
+        }
     }
 }

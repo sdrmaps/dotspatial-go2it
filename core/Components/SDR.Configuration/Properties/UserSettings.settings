@@ -11,5 +11,14 @@
     <Setting Name="RoadIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ActiveFunctionMode" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="ActiveFunctionPanelMode" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ActiveFunctionPanel" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">kPanel_Measure</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -93,7 +93,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\core\DotSpatial\DotSpatial.Topology.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI">
+    <Reference Include="GeoAPI, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeoAPI.1.7.2\lib\net40-client\GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
@@ -102,10 +102,13 @@
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite">
+    <Reference Include="Lucene.Net.Contrib.Spatial">
+      <HintPath>..\packages\Lucene.Net.Contrib.Spatial.3.0.3\lib\net40\Lucene.Net.Contrib.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\NetTopologySuite.dll</HintPath>
     </Reference>
-    <Reference Include="PowerCollections">
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net40-client\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="SDR.Authentication">
@@ -124,8 +127,9 @@
       <HintPath>..\build\Debug\SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Spatial4n.Core.NTS">
-      <HintPath>..\packages\Spatial4n.Core.NTS.0.3\lib\net40\Spatial4n.Core.NTS.dll</HintPath>
+    <Reference Include="Spatial4n.Core.NTS, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\references\Spatial4n.Core.NTS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -249,7 +253,12 @@
     <Content Include="Resources\filenew_32.png" />
     <Content Include="Resources\go2it2.ico" />
     <Content Include="Resources\Go2It_Logo.bmp" />
-    <None Include="packages.config" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Resources\legend_16.png" />
     <None Include="Resources\legend_32.png" />
     <None Include="Resources\open_file_32.png" />

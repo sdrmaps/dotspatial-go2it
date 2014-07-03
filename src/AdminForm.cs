@@ -26,9 +26,14 @@ using Lucene.Net.Search;
 // using Lucene.Net.Spatial;
 // using Lucene.Net.Spatial.Prefix;
 // using Lucene.Net.Spatial.Prefix.Tree;
+using Lucene.Net.Spatial;
+using Lucene.Net.Spatial.Prefix;
+using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Store;
+using NetTopologySuite.IO;
 using SDR.Common;
 using SDR.Common.UserMessage;
+using Spatial4n.Core.Context.Nts;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -1621,24 +1626,34 @@ namespace Go2It
                     // get the shape and normalize coords to lat long
                     var dsShape = fs.GetShape(x, false);
                     var geometry = dsShape.ToGeometry(new GeometryFactory());
-
                     // check if we need to reproject the geometry
                     if (o.LayerProjection.ToEsriString() != Resources.wgs_84_esri_string)
                     {
                         geometry = NormalizeGeometry(geometry, o.LayerProjection);
                     }
-
-
-
-                    // TODO:
-                    var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
-                    Spatial4n.Core.Shapes.Shape shps = ctx.ReadShape("Point(-160 30)");
-
-
                     // convert the geometry into wkt for read by spatial4n of lat long and storage to indexes
                     var wktWriter = new WktWriter();
                     var wkt = wktWriter.Write((Geometry)geometry);
 
+                    var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
+                    Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(wkt);
+
+                    // var c = "kjhsdflk";
+                    // NetTopologySuite.Geometries.GeometryFactory factory = new nts
+                    // SpatialPrefixTree grid = new GeohashPrefixTree(ctx, 10);
+
+                    /// var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
+
+
+                    // GeoAPI.Geometries.IGeometryFactory geoFact = new NetTopologySuite.Geometries.GeometryFactory();
+
+
+                    // var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
+                    // Spatial4n.Core.Shapes.Shape shps = ctx.ReadShape("Point(-160 30)");
+
+
+                    // var xxxx = new GeohashPrefixTree(ctx, 10);
+                   
                     // SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 10), GEOSHAPE);
                     // Spatial4n.Core.Shapes.Shape shape = ctx.ReadShape(wkt);
 
