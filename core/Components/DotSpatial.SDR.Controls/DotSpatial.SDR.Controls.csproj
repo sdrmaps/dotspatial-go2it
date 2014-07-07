@@ -78,6 +78,7 @@
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
     <Compile Include="EventMapFrame.cs" />
+    <Compile Include="HotKeyManager.cs" />
     <Compile Include="MultiSelectMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>

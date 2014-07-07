@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using DotSpatial.SDR.Controls;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -36,6 +37,13 @@ namespace Go2It
             };
             _shell = this;
             AppManager.LoadExtensions();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // custom hotkeymanager for communicating to extension tools (static)
+            // returns a bool to indicate if event was handled or no
+            return HotKeyManager.FireHotKeyEvent(ref msg, keyData) || base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

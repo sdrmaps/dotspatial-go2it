@@ -68,7 +68,7 @@
             this.chkRoadLayers = new System.Windows.Forms.CheckedListBox();
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
-            this.adminTab_UserManagement = new System.Windows.Forms.TabPage();
+            this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
             this.btnUsersDelete = new System.Windows.Forms.Button();
             this.btnUsersAddUpdate = new System.Windows.Forms.Button();
             this.lstUsers = new System.Windows.Forms.ListBox();
@@ -103,7 +103,7 @@
             this.legendButtonTable.SuspendLayout();
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
-            this.adminTab_UserManagement.SuspendLayout();
+            this.adminTab_ProgramManagement.SuspendLayout();
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
             this.SuspendLayout();
@@ -129,7 +129,7 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.adminTab_Control, 2);
             this.adminTab_Control.Controls.Add(this.adminTab_LayerManagement);
-            this.adminTab_Control.Controls.Add(this.adminTab_UserManagement);
+            this.adminTab_Control.Controls.Add(this.adminTab_ProgramManagement);
             this.adminTab_Control.Controls.Add(this.adminTab_SearchProperties);
             this.adminTab_Control.Dock = System.Windows.Forms.DockStyle.Fill;
             this.adminTab_Control.Location = new System.Drawing.Point(0, 0);
@@ -566,24 +566,24 @@
             this.cmbNotesLayer.TabIndex = 5;
             this.cmbNotesLayer.SelectedIndexChanged += new System.EventHandler(this.cmbNotesLayer_SelectedIndexChanged);
             // 
-            // adminTab_UserManagement
+            // adminTab_ProgramManagement
             // 
-            this.adminTab_UserManagement.Controls.Add(this.btnUsersDelete);
-            this.adminTab_UserManagement.Controls.Add(this.btnUsersAddUpdate);
-            this.adminTab_UserManagement.Controls.Add(this.lstUsers);
-            this.adminTab_UserManagement.Controls.Add(this.label3);
-            this.adminTab_UserManagement.Controls.Add(this.label2);
-            this.adminTab_UserManagement.Controls.Add(this.label1);
-            this.adminTab_UserManagement.Controls.Add(this.txtUsername);
-            this.adminTab_UserManagement.Controls.Add(this.txtVerifyPassword);
-            this.adminTab_UserManagement.Controls.Add(this.txtPassword);
-            this.adminTab_UserManagement.Location = new System.Drawing.Point(4, 22);
-            this.adminTab_UserManagement.Name = "adminTab_UserManagement";
-            this.adminTab_UserManagement.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_UserManagement.Size = new System.Drawing.Size(531, 703);
-            this.adminTab_UserManagement.TabIndex = 3;
-            this.adminTab_UserManagement.Text = "User Management";
-            this.adminTab_UserManagement.UseVisualStyleBackColor = true;
+            this.adminTab_ProgramManagement.Controls.Add(this.btnUsersDelete);
+            this.adminTab_ProgramManagement.Controls.Add(this.btnUsersAddUpdate);
+            this.adminTab_ProgramManagement.Controls.Add(this.lstUsers);
+            this.adminTab_ProgramManagement.Controls.Add(this.label3);
+            this.adminTab_ProgramManagement.Controls.Add(this.label2);
+            this.adminTab_ProgramManagement.Controls.Add(this.label1);
+            this.adminTab_ProgramManagement.Controls.Add(this.txtUsername);
+            this.adminTab_ProgramManagement.Controls.Add(this.txtVerifyPassword);
+            this.adminTab_ProgramManagement.Controls.Add(this.txtPassword);
+            this.adminTab_ProgramManagement.Location = new System.Drawing.Point(4, 22);
+            this.adminTab_ProgramManagement.Name = "adminTab_ProgramManagement";
+            this.adminTab_ProgramManagement.Padding = new System.Windows.Forms.Padding(3);
+            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(531, 703);
+            this.adminTab_ProgramManagement.TabIndex = 3;
+            this.adminTab_ProgramManagement.Text = "Program Management";
+            this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
             // 
             // btnUsersDelete
             // 
@@ -825,8 +825,8 @@
             this.panelRadKeyLocations.PerformLayout();
             this.panelRadAddress.ResumeLayout(false);
             this.panelRadAddress.PerformLayout();
-            this.adminTab_UserManagement.ResumeLayout(false);
-            this.adminTab_UserManagement.PerformLayout();
+            this.adminTab_ProgramManagement.ResumeLayout(false);
+            this.adminTab_ProgramManagement.PerformLayout();
             this.adminTab_SearchProperties.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.ResumeLayout(false);
@@ -876,7 +876,7 @@
         private System.Windows.Forms.CheckedListBox chkRoadLayers;
         private System.Windows.Forms.CheckedListBox chkAddressLayers;
         private System.Windows.Forms.ComboBox cmbNotesLayer;
-        private System.Windows.Forms.TabPage adminTab_UserManagement;
+        private System.Windows.Forms.TabPage adminTab_ProgramManagement;
         private System.Windows.Forms.Button btnUsersDelete;
         private System.Windows.Forms.Button btnUsersAddUpdate;
         private System.Windows.Forms.ListBox lstUsers;
