@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -55,9 +57,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 SmallImage = Resources.zoom_extent_16,
                 LargeImage = Resources.zoom_extent_32
             });
-            
-            // TODO: integrate some sort of admin panel lookup stuff
-            HotKeyManager.AddHotKey(new HotKey(Keys.F1), "Zoom to Max Extent");
+            // TODO: testing of adding the hotkeys and that shit
+            HotKeyManager.AddHotKey(new HotKey(Keys.F1, "Zoom to Max Extent"), "Navigate_Zoom_Max_Extent");
 
             _zoomPrevious = new SimpleActionItem(HomeMenuKey, "Previous", ZoomPrevious_Click)
             {
@@ -90,7 +91,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
-            // watch for hotkeys activated via the main form plugin
+            // watch for hotkeys activated via the mainform plugin
             HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
         }
@@ -99,7 +100,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         {
             switch (action)
             {
-                case "Zoom to Max Extent":
+                case "Navigate_Zoom_Max_Extent":
                     ZoomToMaxExtents_Click(null, null);
                     break;
                 default:

@@ -69,6 +69,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
+            this.dgvHotKeys = new System.Windows.Forms.DataGridView();
             this.btnUsersDelete = new System.Windows.Forms.Button();
             this.btnUsersAddUpdate = new System.Windows.Forms.Button();
             this.lstUsers = new System.Windows.Forms.ListBox();
@@ -104,6 +105,7 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
             this.SuspendLayout();
@@ -568,6 +570,7 @@
             // 
             // adminTab_ProgramManagement
             // 
+            this.adminTab_ProgramManagement.Controls.Add(this.dgvHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.btnUsersDelete);
             this.adminTab_ProgramManagement.Controls.Add(this.btnUsersAddUpdate);
             this.adminTab_ProgramManagement.Controls.Add(this.lstUsers);
@@ -584,6 +587,18 @@
             this.adminTab_ProgramManagement.TabIndex = 3;
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
+            // 
+            // dgvHotKeys
+            // 
+            this.dgvHotKeys.AllowUserToAddRows = false;
+            this.dgvHotKeys.AllowUserToDeleteRows = false;
+            this.dgvHotKeys.AllowUserToResizeRows = false;
+            this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvHotKeys.Location = new System.Drawing.Point(27, 334);
+            this.dgvHotKeys.MultiSelect = false;
+            this.dgvHotKeys.Name = "dgvHotKeys";
+            this.dgvHotKeys.Size = new System.Drawing.Size(483, 311);
+            this.dgvHotKeys.TabIndex = 9;
             // 
             // btnUsersDelete
             // 
@@ -827,6 +842,7 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
             this.adminTab_SearchProperties.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.ResumeLayout(false);
@@ -876,16 +892,6 @@
         private System.Windows.Forms.CheckedListBox chkRoadLayers;
         private System.Windows.Forms.CheckedListBox chkAddressLayers;
         private System.Windows.Forms.ComboBox cmbNotesLayer;
-        private System.Windows.Forms.TabPage adminTab_ProgramManagement;
-        private System.Windows.Forms.Button btnUsersDelete;
-        private System.Windows.Forms.Button btnUsersAddUpdate;
-        private System.Windows.Forms.ListBox lstUsers;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtUsername;
-        private System.Windows.Forms.TextBox txtVerifyPassword;
-        private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TabPage adminTab_SearchProperties;
         private System.Windows.Forms.DataGridView dgvLayerIndex;
         private System.Windows.Forms.Button btnCreateIndex;
@@ -896,6 +902,17 @@
         private System.Windows.Forms.ListBox lstExistingIndexes;
         private System.Windows.Forms.Button btnRemoveIndex;
         private System.Windows.Forms.Button btnDeleteIndex;
+        private System.Windows.Forms.TabPage adminTab_ProgramManagement;
+        private System.Windows.Forms.DataGridView dgvHotKeys;
+        private System.Windows.Forms.Button btnUsersDelete;
+        private System.Windows.Forms.Button btnUsersAddUpdate;
+        private System.Windows.Forms.ListBox lstUsers;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.TextBox txtVerifyPassword;
+        private System.Windows.Forms.TextBox txtPassword;
 
     }
 }

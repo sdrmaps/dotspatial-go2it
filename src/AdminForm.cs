@@ -137,6 +137,7 @@ namespace Go2It
             PopulateMapViews();
             PopulateSettingsToForm();
             PopulateUsersToForm();
+            PopulateHotKeysToForm();
             PopulateIndexesToForm();
 
             // check if we have any available map tab views
@@ -178,6 +179,13 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // TODO: add in hotkey setup to the admin form
+            var x = msg;
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
@@ -371,6 +379,46 @@ namespace Go2It
                 DataRow r = table.Rows[i];
                 var username = r["username"].ToString();
                 lstUsers.Items.Add(username);
+            }
+        }
+
+        private void PopulateHotKeysToForm()
+        {
+            // create the columns on the datagridview
+            dgvHotKeys.Rows.Clear();
+            dgvHotKeys.Columns.Clear();
+
+            var keyCol = new DataGridViewTextBoxColumn
+            {
+                HeaderText = @"Keys",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader,
+            };
+            dgvHotKeys.Columns.Add(keyCol);
+            // dgvLayerIndex.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            var desCol = new DataGridViewTextBoxColumn
+            {
+                HeaderText = @"Action",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                ReadOnly = true
+            };
+            dgvHotKeys.Columns.Add(desCol);
+
+            Dictionary<HotKey, string> hotKeys = HotKeyManager.HotKeysDictionary();
+            for (int i = 0; i < hotKeys.Count; i++)
+            {
+                var kvPair = hotKeys.ElementAt(i);
+                HotKey hKey = kvPair.Key;
+                DataGridViewRow dgvRow = new DataGridViewRow();
+                var txtKey = new DataGridViewTextBoxCell { Value = hKey.Key.ToString() };
+                var txtAction = new DataGridViewTextBoxCell
+                {
+                    Value = hKey.Description,
+                    Tag = kvPair.Value
+                };
+                dgvRow.Cells.Add(txtKey);
+                dgvRow.Cells.Add(txtAction);
+                dgvHotKeys.Rows.Add(dgvRow);
             }
         }
 
@@ -1113,7 +1161,7 @@ namespace Go2It
 
         private void btnUsersDelete_Click(object sender, EventArgs e)
         {
-            if (lstUsers.Items.Count <= 0)
+            if (lstUsers.Items.Count == 1)
             {
                 MessageBox.Show(@"Delete not available, there is only one user");
                 return;

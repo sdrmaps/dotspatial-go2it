@@ -25,6 +25,8 @@ namespace Go2It
         public MainForm()
         {
             InitializeComponent();
+            // load any custom set hotkeys from the app db / else hotkeys load on extension assembly load
+            HotKeyManager.LoadHotKeys();
             // create the application level app manager and assign base map and mapframe
             AppManager = new AppManager
             {
@@ -41,8 +43,8 @@ namespace Go2It
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            // custom hotkeymanager for communicating to extension tools (static)
-            // returns a bool to indicate if event was handled or no
+            // custom static hotkeymanager for communicating with tools in extensions
+            // returns a bool to indicate if the hotkey event was handled or not
             return HotKeyManager.FireHotKeyEvent(ref msg, keyData) || base.ProcessCmdKey(ref msg, keyData);
         }
     }
