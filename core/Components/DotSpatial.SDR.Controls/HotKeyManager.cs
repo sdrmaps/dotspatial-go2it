@@ -76,11 +76,10 @@ namespace DotSpatial.SDR.Controls
                 {
                     string cmd; // get the command to fire
                     HotKeys.TryGetValue(hKey, out cmd);
-                    if (!string.IsNullOrEmpty(cmd))
-                    {
-                        HotKeyEvent(cmd);
-                        return true;
-                    }
+                    if (string.IsNullOrEmpty(cmd)) return false;
+
+                    HotKeyEvent(cmd);
+                    return true;
                 }
                 return false;
             }
@@ -125,9 +124,39 @@ namespace DotSpatial.SDR.Controls
             }
         }
 
+        public static void ClearHotKeys()
+        {
+            HotKeys.Clear();    
+        }
+
         public static Dictionary<HotKey, string> HotKeysDictionary()
         {
             return HotKeys;
+        }
+
+        public static bool SaveHotKeys()
+        {
+            try
+            {
+                string conn = SdrConfig.Settings.Instance.ApplicationRepoConnectionString;
+                SQLiteHelper.ClearTable(conn, "hotkeys");
+                foreach (KeyValuePair<HotKey, string> kvPair in HotKeys)
+                {
+                    HotKey hKey = kvPair.Key;
+                    var d = new Dictionary<string, string>
+                {
+                    {"keys", hKey.Key.ToString()},
+                    {"description", hKey.Description},
+                    {"command", kvPair.Value}
+                };
+                    SQLiteHelper.Insert(conn, "hotkeys", d);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static bool LoadHotKeys()

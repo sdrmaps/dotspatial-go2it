@@ -270,7 +270,7 @@
     <Content Include="Resources\logout_16.png" />
     <Content Include="Resources\logout_32.png" />
     <Content Include="Resources\settingsDatabase.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="sdrmaps.snk" />
   </ItemGroup>

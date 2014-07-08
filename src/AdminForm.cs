@@ -183,8 +183,13 @@ namespace Go2It
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            // TODO: add in hotkey setup to the admin form
-            var x = msg;
+            // update the hotkey datagridview as needed
+            if (dgvHotKeys.Focused)
+            {
+                var selRow = dgvHotKeys.SelectedRows[0];
+                var selKey = selRow.Cells[0];
+                selKey.Value = keyData.ToString();
+            }
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -394,11 +399,10 @@ namespace Go2It
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader,
             };
             dgvHotKeys.Columns.Add(keyCol);
-            // dgvLayerIndex.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
 
             var desCol = new DataGridViewTextBoxColumn
             {
-                HeaderText = @"Action",
+                HeaderText = @"Command",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 ReadOnly = true
             };
@@ -1601,6 +1605,7 @@ namespace Go2It
                     iobjects.SetValue(io, count);
                     count++;
                 }
+                // TODO: add this back in afterr spatial indexing is working
                 // _idxWorker.RunWorkerAsync(iobjects);
                 Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
             }
@@ -1690,7 +1695,7 @@ namespace Go2It
                     // NetTopologySuite.Geometries.GeometryFactory factory = new nts
                     // SpatialPrefixTree grid = new GeohashPrefixTree(ctx, 10);
 
-                    /// var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
+                    // var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
 
 
                     // GeoAPI.Geometries.IGeometryFactory geoFact = new NetTopologySuite.Geometries.GeometryFactory();
@@ -2161,6 +2166,21 @@ namespace Go2It
                 chkLayersToIndex.Items.Remove(lyrName);
                 _indexQueue.Remove(lyrName);
             }
+        }
+
+        private void btnSaveHotKeys_Click(object sender, EventArgs e)
+        {
+            // clear the existing hotkeys dictionary from the manager
+            HotKeyManager.ClearHotKeys();
+            foreach (DataGridViewRow row in dgvHotKeys.Rows)
+            {
+                var cellKeys = row.Cells[0];
+                var cellCmd = row.Cells[1];
+                // parse into key enum
+                var keys = (Keys)Enum.Parse(typeof(Keys), cellKeys.Value.ToString());
+                HotKeyManager.AddHotKey(new HotKey(keys, cellCmd.Value.ToString()), cellCmd.Tag.ToString());
+            }
+            HotKeyManager.SaveHotKeys();
         }
     }
 }

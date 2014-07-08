@@ -89,8 +89,9 @@
             this.btnCreateIndex = new System.Windows.Forms.Button();
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
-            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
+            this.btnSaveHotKeys = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -570,6 +571,7 @@
             // 
             // adminTab_ProgramManagement
             // 
+            this.adminTab_ProgramManagement.Controls.Add(this.btnSaveHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.dgvHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.btnUsersDelete);
             this.adminTab_ProgramManagement.Controls.Add(this.btnUsersAddUpdate);
@@ -594,9 +596,11 @@
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(27, 334);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
+            this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 311);
             this.dgvHotKeys.TabIndex = 9;
             // 
@@ -787,6 +791,19 @@
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(369, 732);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -801,18 +818,15 @@
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
             // 
-            // btnCancel
+            // btnSaveHotKeys
             // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(369, 732);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnSaveHotKeys.Location = new System.Drawing.Point(435, 651);
+            this.btnSaveHotKeys.Name = "btnSaveHotKeys";
+            this.btnSaveHotKeys.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveHotKeys.TabIndex = 10;
+            this.btnSaveHotKeys.Text = "Save";
+            this.btnSaveHotKeys.UseVisualStyleBackColor = true;
+            this.btnSaveHotKeys.Click += new System.EventHandler(this.btnSaveHotKeys_Click);
             // 
             // AdminForm
             // 
@@ -913,6 +927,7 @@
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.TextBox txtVerifyPassword;
         private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.Button btnSaveHotKeys;
 
     }
 }
