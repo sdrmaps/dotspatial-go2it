@@ -58,15 +58,6 @@
       <HintPath>..\..\DotSpatial\DotSpatial.Topology.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="SDR.Common">
       <HintPath>..\..\..\build\$(Configuration)\SDR.Common.dll</HintPath>
       <Private>False</Private>
@@ -124,9 +115,6 @@
   <ItemGroup>
     <Content Include="Resources\info_16.png" />
     <Content Include="Resources\info_32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
