@@ -101,7 +101,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\references\Lucene.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Lucene.Net.Contrib.Spatial.NTS">
+    <Reference Include="Lucene.Net.Contrib.Spatial.NTS, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\references\Lucene.Net.Contrib.Spatial.NTS.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite">
@@ -126,7 +127,8 @@
       <HintPath>..\build\Debug\SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Spatial4n.Core.NTS">
+    <Reference Include="Spatial4n.Core.NTS, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\references\Spatial4n.Core.NTS.dll</HintPath>
     </Reference>
     <Reference Include="System" />

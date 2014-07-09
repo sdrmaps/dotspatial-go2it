@@ -34,6 +34,7 @@ using NetTopologySuite.IO;
 using SDR.Common;
 using SDR.Common.UserMessage;
 using Spatial4n.Core.Context.Nts;
+using Spatial4n.Core.Io;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -1688,36 +1689,13 @@ namespace Go2It
                     var wktWriter = new WktWriter();
                     var wkt = wktWriter.Write((Geometry)geometry);
 
-                    var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
+                    var ctx = NtsSpatialContext.GEO;  // geo nts context spatial4n
+                    SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 10), GEOSHAPE);
                     Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(wkt);
-
-                    // var c = "kjhsdflk";
-                    // NetTopologySuite.Geometries.GeometryFactory factory = new nts
-                    // SpatialPrefixTree grid = new GeohashPrefixTree(ctx, 10);
-
-                    // var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
-
-
-                    // GeoAPI.Geometries.IGeometryFactory geoFact = new NetTopologySuite.Geometries.GeometryFactory();
-
-
-                    // var ctx = Spatial4n.Core.Context.Nts.NtsSpatialContext.GEO;
-                    // Spatial4n.Core.Shapes.Shape shps = ctx.ReadShape("Point(-160 30)");
-
-
-                    // var xxxx = new GeohashPrefixTree(ctx, 10);
-                   
-                    // SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 10), GEOSHAPE);
-                    // Spatial4n.Core.Shapes.Shape shape = ctx.ReadShape(wkt);
-
-
-                    //wkt = "POINT (-97.6418927769545000 34.5055886148638000)"
-
+                    var flds = strategy.CreateIndexableFields(shp);
 
                     // Spatial4n.Core.Io.ShapeReadWriter ntsReader = new ShapeReadWriter(ctx);
                     // var xxxxx = ntsReader.ReadShape(wkt);
-
-                    // var flds = strategy.CreateIndexableFields(shape);
 
                     // get the field names for lookup
                     var list = o.FieldLookup;
