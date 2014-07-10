@@ -1554,9 +1554,7 @@ namespace Go2It
             if (_idxWorker.IsBusy != true)
             {
                 _progressPanel = new ProgressPanel();
-
-                var z = new SortedList<string, Form>{{"Creating Indexes...", this}};
-                _progressPanel.StartProgress(z);
+                _progressPanel.StartProgress("Creating Indexes...");
 
                 string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
                 var iobjects = new IndexObject[_indexQueue.Count];

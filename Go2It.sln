@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AE036C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Go2It", "src\Go2It.csproj", "{ABF4CE56-E282-42CD-B5AF-91487517944D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Controls", "core\Components\DotSpatial.SDR.Controls\DotSpatial.SDR.Controls.csproj", "{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,16 +30,6 @@ Global
 		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.ActiveCfg = Release|x86
 		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.Build.0 = Release|x86
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FF83AD42-DC0B-418B-944F-17FF9BCE36FE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
