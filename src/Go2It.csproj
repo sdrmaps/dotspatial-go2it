@@ -255,6 +255,7 @@
     <Content Include="Resources\Go2It_Logo.bmp" />
     <None Include="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Resources\legend_16.png" />
     <None Include="Resources\legend_32.png" />

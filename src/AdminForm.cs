@@ -33,6 +33,7 @@ using Lucene.Net.Store;
 using NetTopologySuite.IO;
 using SDR.Common;
 using SDR.Common.UserMessage;
+using Spatial4n.Core.Context;
 using Spatial4n.Core.Context.Nts;
 using Spatial4n.Core.Io;
 using Version = Lucene.Net.Util.Version;
@@ -1553,7 +1554,9 @@ namespace Go2It
             if (_idxWorker.IsBusy != true)
             {
                 _progressPanel = new ProgressPanel();
-                _progressPanel.StartProgress("Creating Indexes...");
+
+                var z = new SortedList<string, Form>{{"Creating Indexes...", this}};
+                _progressPanel.StartProgress(z);
 
                 string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
                 var iobjects = new IndexObject[_indexQueue.Count];
@@ -1606,57 +1609,44 @@ namespace Go2It
                     iobjects.SetValue(io, count);
                     count++;
                 }
-                // TODO: add this back in afterr spatial indexing is working
-                // _idxWorker.RunWorkerAsync(iobjects);
-                Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
+                _idxWorker.RunWorkerAsync(iobjects);
             }
         }
 
-        private IGeometry NormalizeGeometry(IGeometry geometry, ProjectionInfo projection)
+        private static void LogGeometryIndexError(string file, string ftId, Shape shape, string wkt, Exception ex)
         {
-            // account for two coordinates per point (x, y)
-            var xy = new double[geometry.Coordinates.Count * 2];
-            var z = new double[geometry.Coordinates.Count];
-            var c = 0; // internal count of xy array
-            for (var i = 0; i < geometry.Coordinates.Count; i++)
+            shape.ToGeometry().Coordinate.ToString();
+            
+            var p = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\SDR\\" +
+                       SdrConfig.Settings.Instance.ApplicationName;
+            var d = new DirectoryInfo(p);
+            if (!d.Exists)
             {
-                z[i] = geometry.Coordinates[i].Z;
-                xy[c] = geometry.Coordinates[i].X;
-                c++;
-                xy[c] = geometry.Coordinates[i].Y;
-                c++;
+                d.Create();
             }
-            // reproject the points
-            Reproject.ReprojectPoints(xy, z, projection, _wgs84Projection, 0, geometry.Coordinates.Count);
-            // determine what type of geometry to create
-            switch (geometry.FeatureType)
+            var f = p + "\\" + file + "_indexing_errors.txt";
+            using (var sw = File.AppendText(f))
             {
-                case FeatureType.Point:
-                    var vertex = new Vertex(xy[0], xy[1]);
-                    var point = new Shape(vertex) {Z = z};
-                    return point.ToGeometry(new GeometryFactory());
-                case FeatureType.Line:
-                    
-                    break;
-                case FeatureType.MultiPoint:
-                    // var multipoint = new Shape()
-                    break;
-                case FeatureType.Polygon:
-                    // Polygon geom = new Polygon(vertices);
-                    break;
-                default:
-                    break;
+                sw.WriteLine("FeatureID: " + ftId);
+                sw.WriteLine("-- Exception -------------------------------------------");
+                sw.WriteLine(ex);
+                sw.WriteLine("-- Geometry --------------------------------------------");
+                sw.WriteLine("FeatureType: " + shape.ToGeometry().FeatureType);
+                sw.WriteLine("GeometryType: " + shape.ToGeometry().GeometryType);
+                sw.WriteLine("IsEmpty: " + shape.ToGeometry().IsEmpty);
+                sw.WriteLine("IsRectangle: " + shape.ToGeometry().IsRectangle);
+                sw.WriteLine("IsSimple: " + shape.ToGeometry().IsSimple);
+                sw.WriteLine("IsValid: " + shape.ToGeometry().IsValid);
+                sw.WriteLine("NumGeometries: " + shape.ToGeometry().NumGeometries);
+                sw.WriteLine("NumPoints: " + shape.ToGeometry().NumPoints);
+                sw.WriteLine("Centroid: " + shape.ToGeometry().Centroid.Coordinate.ToString());
+                sw.WriteLine("PrecisionModel: " + shape.ToGeometry().PrecisionModel);
+                sw.WriteLine("SRID: " + shape.ToGeometry().Srid);
+                sw.WriteLine("-- WKT -------------------------------------------------");
+                sw.WriteLine(wkt);
+                sw.WriteLine("========================================================");
+                sw.Close();
             }
-
-
-            // list of cordinates converted from array
-            List<Coordinate> vertices = new List<Coordinate>();
-            for (var i = 0; i < z.Length; i++)
-            {
-                vertices.Add(new Coordinate(xy[i], xy[i + 1], z[i]));
-            }
-            return null;
-
         }
 
         private Dictionary<string, List<Document>> GetDocuments(IndexObject[] iobjects)
@@ -1668,40 +1658,49 @@ namespace Go2It
             {
                 var docList = new List<Document>();
                 IFeatureSet fs = o.FeatureSet;
-
-                for (int x = 0; x < fs.NumRows(); x++)
+                if (o.LayerProjection.ToEsriString() != KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString())
                 {
-                    // grab a row from the datatable and index that shit
-                    DataRow dr = fs.DataTable.Rows[x];
-                    var doc = new Document(); // generate a document for indexing by lucene
+                    // reproject the in-memory representation of our featureset (actual file remains unchanged)
+                    fs.Reproject(KnownCoordinateSystems.Geographic.World.WGS1984);
+                }
+                foreach (ShapeRange shapeRange in fs.ShapeIndices)  // cycle through each shape/record
+                {
+                    var doc = new Document();  // new index doc for this record
+                    // snatch the row and shape affiliated with the shape-range
+                    Shape shp = fs.GetShape(shapeRange.RecordNumber - 1, false);
+                    DataRow dr = fs.DataTable.Rows[shapeRange.RecordNumber - 1];
+                    IGeometry geom = shp.ToGeometry();  // cast shape into geometry for wkt serialization
+
+                    // add standardized lookup fields for each record
                     doc.Add(new Field(FID, dr[FID].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.Add(new Field(LYRNAME, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
-
-                    // get the shape and normalize coords to lat long
-                    var dsShape = fs.GetShape(x, false);
-                    var geometry = dsShape.ToGeometry(new GeometryFactory());
-                    // check if we need to reproject the geometry
-                    if (o.LayerProjection.ToEsriString() != Resources.wgs_84_esri_string)
-                    {
-                        geometry = NormalizeGeometry(geometry, o.LayerProjection);
-                    }
-                    // convert the geometry into wkt for read by spatial4n of lat long and storage to indexes
+                    
+                    // serialize the geometry into wkt (used by spatial4n to read geometry for lucene indexing)
                     var wktWriter = new WktWriter();
-                    var wkt = wktWriter.Write((Geometry)geometry);
+                    var wkt = wktWriter.Write((Geometry)geom);
 
-                    var ctx = NtsSpatialContext.GEO;  // geo nts context spatial4n
+                    // create our strategy for spatial indexing using NTS context
+                    var ctx = NtsSpatialContext.GEO;  // using NTS (provides polygon/line/point models)
                     SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 10), GEOSHAPE);
-                    Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(wkt);
-                    var flds = strategy.CreateIndexableFields(shp);
-
-                    // Spatial4n.Core.Io.ShapeReadWriter ntsReader = new ShapeReadWriter(ctx);
-                    // var xxxxx = ntsReader.ReadShape(wkt);
-
-                    // get the field names for lookup
+                    try  // the esri and ogc defs regarding polygons seem to differ and cause issues here
+                    {
+                        Spatial4n.Core.Shapes.Shape wktShp = ctx.ReadShape(wkt);
+                        foreach (var f in strategy.CreateIndexableFields(wktShp))
+                        {
+                            doc.Add(f);  // add the geometry to the index for queries
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogGeometryIndexError(o.LayerName, dr[FID].ToString(), shp, wkt, ex);
+                        var msg = AppContext.Instance.Get<IUserMessage>();
+                        msg.Error("Error creating index :: FeatureClass: " + o.LayerName + " FeatureID: " + dr[FID], ex);
+                    }
+                    // handle all other non-spatial field lookups
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
                     {
-                        // TODO: do some sort of lookup here, which also allows users to set names they choose
+                        // TODO: include the field type with the lookup?
                         if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
                         {
                             doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES,
@@ -1712,11 +1711,12 @@ namespace Go2It
                             doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES, Field.Index.ANALYZED));
                         }
                     }
-                    docList.Add(doc);
+                    docList.Add(doc);  // add the new document to the documents list
                 }
                 if (docs.ContainsKey(o.IndexType))
                 {
                     // if this index is already in existence, just append our new docs
+                    // TODO: do some sort of check that removes duplicates?
                     List<Document> oldList;
                     docs.TryGetValue(o.IndexType, out oldList);
                     if (oldList != null) oldList.AddRange(docList);
