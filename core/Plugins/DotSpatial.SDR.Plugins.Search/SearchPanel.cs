@@ -1,5 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
+using DotSpatial.Topology.Utilities;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
+using Lucene.Net.Store;
+using SDR.Data.Database;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Search
@@ -8,8 +16,10 @@ namespace DotSpatial.SDR.Plugins.Search
     {
         #region Private Variables
 
-        private string _searchQuery;
         private SearchMode _searchMode;
+        private TableLayoutPanel _addressPanel;
+        private TableLayoutPanel _roadPanel;
+        private TableLayoutPanel _intersectionPanel;
 
         #endregion
 
@@ -19,19 +29,15 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             InitializeComponent();
             DataGridDisplay = searchDGV;
-            _searchQuery = string.Empty;
+            SearchQuery = string.Empty;
+            CreateQueryPanels();
             _searchMode = SearchMode.Address;
+            searchAdds_Click(null, null);
         }
 
         #endregion
 
-        /// <summary>
-        /// Clear Search
-        /// </summary>
-        public void ClearSearches()
-        {
-            if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
-        }
+        #region Properties
 
         /// <summary>
         /// Gets or sets which type of search to perfrom
@@ -50,15 +56,15 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         public DataGridView DataGridDisplay { get; set; }
 
-        public string SearchQuery
-        {
-            get { return _searchQuery; }
-            set
-            {
-                _searchQuery = value;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the search query
+        /// </summary>
+        public string SearchQuery { get; set; }
 
+        public ComboBox RoadComboBox { get; set; }
+        #endregion
+
+        #region Event Handlers
         /// <summary>
         /// Occurs when the search mode has been changed.
         /// </summary>
@@ -84,66 +90,102 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         public event EventHandler RowDoubleClicked;
 
+        #endregion
+
+        #region Events
+
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            // make sure we have a valid query to submit
-            if (txtSearch.Text.Length < 0) return;  
-            _searchQuery = txtSearch.Text;
+            switch (_searchMode)
+            {
+                case SearchMode.Address:
+                    SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
+                    break;
+                case SearchMode.Road:
+                    SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
+                    break;
+                case SearchMode.Intersection:
+                    SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                        _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                    break;
+            }
             OnPerformSearch();
         }
 
         private void searchName_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Name;
+            // toggle the button for this tool
             searchName.Checked = true;
             searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchRoad.Checked = false;
             searchIntersection.Checked = false;
-            OnSearchModeChanged();
-        }
-
-        private void searchAdds_Click(object sender, EventArgs e)
-        {
-            _searchMode = SearchMode.Address;
-            searchAdds.Checked = true;
-            searchPhone.Checked = false;
-            searchName.Checked = false;
-            searchIntersection.Checked = false;
-            searchRoad.Checked = false;
+            // setup the search panel for this tool
+            ClearSearchPanel();
+            searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
             OnSearchModeChanged();
         }
 
         private void searchPhone_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Phone;
+            // toggle the button for this tool
             searchPhone.Checked = true;
             searchAdds.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
             searchRoad.Checked = false;
+            // setup the search panel for this tool
+            ClearSearchPanel();
+            searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
             OnSearchModeChanged();
         }
 
         private void searchRoad_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Road;
+            // toggle the button for this tool
             searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = false;
             searchRoad.Checked = true;
+            // setup search panel for this tool
+            ClearSearchPanel();
+            searchLayoutPanel.Controls.Add(_roadPanel, 0, 0);
+            PopulateRoadsToCombo();
+            OnSearchModeChanged();
+        }
+
+        private void searchAdds_Click(object sender, EventArgs e)
+        {
+            _searchMode = SearchMode.Address;
+            // toggle the button for this tool
+            searchAdds.Checked = true;
+            searchPhone.Checked = false;
+            searchName.Checked = false;
+            searchIntersection.Checked = false;
+            searchRoad.Checked = false;
+            // setup the search panel for this tool
+            ClearSearchPanel();
+            searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
             OnSearchModeChanged();
         }
 
         private void searchIntersection_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Intersection;
+            // toggle the button for this tool
             searchAdds.Checked = false;
             searchPhone.Checked = false;
             searchName.Checked = false;
             searchIntersection.Checked = true;
             searchRoad.Checked = false;
+            // setup the search panel for this tool
+            ClearSearchPanel();
+            searchLayoutPanel.Controls.Add(_intersectionPanel, 0, 0);
+            PopulateRoadsToCombo();
             OnSearchModeChanged();
         }
 
@@ -154,12 +196,12 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void searchClear_Click(object sender, EventArgs e)
         {
-           if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
+            if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
         }
 
         private void OnSearchModeChanged()
         {
-           if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
+            if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
         }
 
         private void OnPerformSearch()
@@ -171,5 +213,223 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (RowDoubleClicked != null) RowDoubleClicked(this, e);
         }
+
+        #endregion
+
+        # region Methods
+
+        /// <summary>
+        /// Create all the tablepanels for search types input
+        /// </summary>
+        private void CreateQueryPanels()
+        {
+            /*--------------------------------------------------------*/
+            // address search panel
+            _addressPanel = new TableLayoutPanel
+            {
+                Name = "addressPanel",
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 1
+            };
+            _addressPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _addressPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
+            var txtAddressSearch = new TextBox {Name = "txtAddressSearch", Dock = DockStyle.Fill};
+            _addressPanel.Controls.Add(txtAddressSearch, 0, 0);
+
+            /*--------------------------------------------------------*/
+            // road search panel
+            _roadPanel = new TableLayoutPanel
+            {
+                Name = "roadPanel",
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 1
+            };
+            _roadPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _roadPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
+            var cmbRoadSearch = new ComboBox {Name = "cmbRoadSearch", Dock = DockStyle.Fill};
+            // fixes auto suggestion when the list is dropped down
+            cmbRoadSearch.DropDown += (sender, e) => cmbRoadSearch.AutoCompleteMode = AutoCompleteMode.None;
+            cmbRoadSearch.DropDownClosed += delegate
+            {
+                cmbRoadSearch.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
+                OnPerformSearch();
+            };
+            cmbRoadSearch.SelectedValueChanged += delegate
+            {
+                SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
+                OnPerformSearch();
+            };
+            _roadPanel.Controls.Add(cmbRoadSearch, 0, 0);
+
+            /*--------------------------------------------------------*/
+            // intersection search panel
+            _intersectionPanel = new TableLayoutPanel
+            {
+                Name = "intersectionPanel",
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 1
+            };
+            _intersectionPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _intersectionPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            _intersectionPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 85));
+            _intersectionPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+
+            var btnIntSearch = new Button {Text = @"Intersections", Name = "btnIntSearch", Dock = DockStyle.Fill};
+            btnIntSearch.Click += delegate
+            {
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
+                OnPerformSearch();
+            };
+            var cmbIntSearch1 = new ComboBox {Name = "cmbIntSearch1", Dock = DockStyle.Fill};
+            // fixes auto suggestion when the list is dropped down
+            cmbIntSearch1.DropDown += (sender, e) => cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.None;
+            cmbIntSearch1.DropDownClosed += delegate
+            {
+                cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
+                OnPerformSearch();
+            };
+            cmbIntSearch1.SelectedValueChanged += delegate
+            {
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
+                OnPerformSearch();
+            };
+            var cmbIntSearch2 = new ComboBox {Name = "cmbIntSearch2", Dock = DockStyle.Fill};
+            // fixes auto suggestion when the list is dropped down
+            cmbIntSearch2.DropDown += (sender, e) => cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.None;
+            cmbIntSearch2.DropDownClosed += delegate
+            {
+                cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                OnPerformSearch();
+            };
+            cmbIntSearch2.SelectedValueChanged += delegate
+            {
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                OnPerformSearch();
+            };
+            _intersectionPanel.Controls.Add(cmbIntSearch1, 0, 0);
+            _intersectionPanel.Controls.Add(btnIntSearch, 1, 0);
+            _intersectionPanel.Controls.Add(cmbIntSearch2, 2, 0);
+        }
+
+        /// <summary>
+        /// Clear Search
+        /// </summary>
+        public void ClearSearches()
+        {
+            if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
+        }
+
+        private void PopulateRoadsToCombo()
+        {
+            Query query = ConstructAllRoadsQuery();
+            Filter filter = ConstructAllRoadsFilter();
+            ExecuteAllRoadsLuceneQuery(query, filter);
+        }
+
+        public void ExecuteAllRoadsLuceneQuery(Query query, Filter filter)
+        {
+            // get the current index type directory
+            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(db);
+            if (d == null) return;
+            // open up an index reader
+            var path = Path.Combine(d, "indexes", "RoadIndex");
+            if (!System.IO.Directory.Exists(path)) return;
+            // open the index directory up and read that shiz
+            Lucene.Net.Store.Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
+            IndexReader reader = IndexReader.Open(idxDir, true);
+            // create index searcher
+            var searcher = new IndexSearcher(reader);
+            // perform our search
+            TopDocs docs = searcher.Search(query, filter, reader.MaxDoc);
+            ScoreDoc[] hits = docs.ScoreDocs;
+            idxDir.Dispose();  // wipe the directory ref out now
+            // prep results for population to combobox
+            FormatAllRoadsQueryResults(hits, searcher);
+            searcher.Dispose();
+        }
+
+        private Query ConstructAllRoadsQuery()
+        {
+            var query = new MatchAllDocsQuery();
+            return query;
+        }
+
+        private Filter ConstructAllRoadsFilter()
+        {
+            Filter filter = new DuplicateFilter("Street Name");
+            return filter;
+        }
+
+        private void ClearSearchPanel()
+        {
+            var c = searchLayoutPanel.GetControlFromPosition(0, 0);
+            if (c != null)
+            {
+                searchLayoutPanel.Controls.Remove(c);
+            }
+        }
+
+        private void FormatAllRoadsQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
+        {
+            // snag the combobox of the search mode
+            var cmb = new ComboBox();
+            switch (_searchMode)
+            {
+                case SearchMode.Road:
+                    cmb = _roadPanel.Controls["cmbRoadSearch"] as ComboBox;
+                    break;
+                case SearchMode.Intersection:
+                    cmb = _intersectionPanel.Controls["cmbIntSearch1"] as ComboBox;
+                    break;
+            }
+            if (cmb == null) return;
+
+            cmb.Items.Clear();
+            foreach (var hit in hits)
+            {
+                // snatch the ranked document
+                var doc = searcher.Doc(hit.Doc);
+                var val = string.Empty;
+                // create the full string and add to combobox
+                if (doc.Get("Pre Directional") != null)
+                {
+                    val = val + doc.Get("Pre Directional").Trim() + " ";
+                }
+                if (doc.Get("Pre Type") != null)
+                {
+                    val = val + doc.Get("Pre Type").Trim() + " ";
+                }
+                if (doc.Get("Street Name") != null)
+                {
+                    val = val + doc.Get("Street Name").Trim() + " ";
+                }
+                if (doc.Get("Street Type") != null)
+                {
+                    val = val + doc.Get("Street Type").Trim() + " ";
+                }
+                if (doc.Get("Post Directional") != null)
+                {
+                    val = val + doc.Get("Post Directional").Trim() + " ";
+                }
+                if (val.Length > 0)
+                {
+                    cmb.Items.Add(val.Trim());
+                }
+            }
+            cmb.Sorted = true;
+            cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb.AutoCompleteSource = AutoCompleteSource.ListItems;
+        }
+
+        #endregion
     }
 }

@@ -6,11 +6,22 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 using DotSpatial.Data;
+using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Topology;
+using DotSpatial.Topology.Utilities;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
+using Lucene.Net.Search.Function;
+using Lucene.Net.Spatial;
+using Lucene.Net.Spatial.Prefix;
+using Lucene.Net.Spatial.Prefix.Tree;
+using Lucene.Net.Spatial.Queries;
 using Lucene.Net.Store;
+using Spatial4n.Core.Context.Nts;
+using Spatial4n.Core.Distance;
+using Spatial4n.Core.Shapes.Impl;
+using Spatial4n.Core.Shapes.Nts;
 using SdrConfig = SDR.Configuration;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -37,11 +48,12 @@ namespace DotSpatial.SDR.Plugins.Search
         private string[] _columnNames;
         private const string FID = "FID";
         private const string LYRNAME = "LYRNAME";
+        private const string GEOSHAPE = "GEOSHAPE";
 
         #region Constructors
-        
+
         /// <summary>
-        /// Creates a new instance of MapMeasureFunction, with panel
+        /// Creates a new instance of MapFunctionSearch, with panel
         /// </summary>
         /// <param name="sp">Search Panel</param>
         public MapFunctionSearch(SearchPanel sp)
@@ -68,111 +80,80 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.RowDoubleClicked += SearchPanelOnRowDoublelicked;
         }
 
-        private int GetColumnDisplayIndex(string name)
+        protected override void OnActivate()
         {
-            for (int i = 0; i <= _dataGridView.ColumnCount - 1; i++)
+            if (_searchPanel == null || _searchPanel.IsDisposed)
             {
-                if (_dataGridView.Columns[i].Name == name)
-                {
-                    return _dataGridView.Columns[i].DisplayIndex;
-                }
+                _searchPanel = new SearchPanel();
+                HandleSearchPanelEvents();
             }
-            return -1;
+            _searchPanel.Show();
+            base.OnActivate();
         }
 
-        private Dictionary<string, string> GetMapTabKeysContainingLayer(string lyrName)
-        {
-            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            const string sql = "SELECT layers, lookup, caption FROM MapTabs";
-            DataTable mapTabsTable = SQLiteHelper.GetDataTable(conn, sql);
-            var mapPanelsLookup = new Dictionary<string, string>();
+        #endregion
 
-            foreach (DataRow row in mapTabsTable.Rows)
+        #region Events
+
+        /// <summary>
+        /// Set and Store column ordering preferences for the user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="dataGridViewColumnEventArgs"></param>
+        private void DataGridViewOnColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs dataGridViewColumnEventArgs)
+        {
+            var newOrder = new Dictionary<string, string>();
+            foreach (DataGridViewColumn col in _dataGridView.Columns)
             {
-                // parse the layers string into layer names
-                var lyrs = row["layers"].ToString().Split('|');
-                var lyrMatch = lyrs.Any(lyr => lyr == lyrName);
-                if (lyrMatch)
-                {
-                    mapPanelsLookup.Add(row["lookup"].ToString(), row["caption"].ToString());
-                }
+                var i = GetColumnDisplayIndex(col.Name);
+                newOrder.Add(col.Name, i.ToString(CultureInfo.InvariantCulture));
             }
-            return mapPanelsLookup;
-        }
-
-        private void SearchPanelOnRowDoublelicked(object sender, EventArgs eventArgs)
-        {
-            var evnt = eventArgs as DataGridViewCellEventArgs;
-            if (evnt != null)
-            {
-                DataGridViewRow dgvr = _dataGridView.Rows[evnt.RowIndex];
-                int fidIdx = GetColumnDisplayIndex(FID);
-                int lyrIdx = GetColumnDisplayIndex(LYRNAME);
-                string fid = dgvr.Cells[fidIdx].Value.ToString();
-                string lyr = dgvr.Cells[lyrIdx].Value.ToString();
-
-                Dictionary<string, string> mapPanels = GetMapTabKeysContainingLayer(lyr);
-                if (!mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
-                {
-                    if (mapPanels.Count == 1)
-                    {
-                        TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
-                    }
-                    else if (mapPanels.Count > 1)
-                    {
-                        var v = mapPanels.Values;
-                        var msgBox = new MultiSelectMessageBox(
-                            "Multiple Map Tabs",
-                            "Multiple map tabs contain this feature, please select the tab to map the feature below.",
-                            v.ToArray());
-                        msgBox.ShowDialog();
-                        var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
-                        TabDockingControl.SelectPanel(key);
-                    }
-                    else
-                    {
-                        return; // something bad happened here
-                    }
-                }
-
-                // now we cycle through layers of our active map and find the layer we want
-                var layers = Map.GetFeatureLayers();
-                foreach (IMapFeatureLayer mapLayer in layers)
-                {
-                    if (mapLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
-                    if (mapLayer == null) continue;
-
-                    IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
-                    if (fs == null || fs.Name != lyr) continue;
-
-                    mapLayer.SelectByAttribute("[FID] =" + fid);
-                    mapLayer.ZoomToSelectedFeatures();
-                }
-            }
-        }
-
-        private Dictionary<string, string> GetIndexColumnsOrder()
-        {
             switch (_searchMode)
             {
+                //  TODO: need to seperate all these?
                 case SearchMode.Address:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    break;
                 case SearchMode.Intersection:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
+                    break;
                 case SearchMode.Name:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    break;
                 case SearchMode.Phone:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    break;
                 case SearchMode.Road:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
+                    break;
             }
-            return null;
+        }
+
+        private void SearchPanelOnSearchModeChanged(object sender, EventArgs eventArgs)
+        {
+            SetSearchVariables();
+        }
+
+        private void SearchPanelOnSearchesCleared(object sender, EventArgs eventArgs)
+        {
+            // unbind the column order index stuff
+            _dataGridView.ColumnDisplayIndexChanged -= DataGridViewOnColumnDisplayIndexChanged;
+            // now clear the datagridview
+            _dataGridView.Rows.Clear();
+            _dataGridView.Columns.Clear();
+            // clear any map selections as well
+            // TODO: this slows things down a lot, need a better approach
+            // IEnvelope env;
+            // Map.MapFrame.ClearSelection(out env);
         }
 
         private void SearchPanelOnPerformSearch(object sender, EventArgs eventArgs)
         {
-            _searchPanel.ClearSearches();
+            if (_searchPanel.SearchQuery.Length <= 0) return;
+            // set the search query
             var searchQuery = _searchPanel.SearchQuery;
+            _searchPanel.ClearSearches();  // clear any existing searches
+            // setup the columns and ordering
             var colArr = new DataGridViewColumn[_columnNames.Count()];
             // check for any sort order the user may have set
             var orderDict = GetIndexColumnsOrder();
@@ -239,43 +220,152 @@ namespace DotSpatial.SDR.Plugins.Search
                 Visible = false
             };
             _dataGridView.Columns.Add(lyrCol);
-            // perform the query and display that shit
-            ExecuteLuceneQuery(searchQuery);
+            var shpCol = new DataGridViewTextBoxColumn
+            {
+                HeaderText = GEOSHAPE,
+                Name = GEOSHAPE,
+                Visible = false
+            };
+            _dataGridView.Columns.Add(shpCol);
             // setup event binding if user reorders columns, save user settings
             _dataGridView.ColumnDisplayIndexChanged += DataGridViewOnColumnDisplayIndexChanged;
+
+            // setup and execute the lucene query
+            Query query = ConstructLuceneQuery(searchQuery);
+            Filter filter = ConstructLuceneFilter(searchQuery);
+            ExecuteLuceneQuery(query, filter);
         }
 
-        private void DataGridViewOnColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs dataGridViewColumnEventArgs)
+        private void SearchPanelOnRowDoublelicked(object sender, EventArgs eventArgs)
         {
-            var newOrder = new Dictionary<string, string>();
-            foreach (DataGridViewColumn col in _dataGridView.Columns)
+            var evnt = eventArgs as DataGridViewCellEventArgs;
+            if (evnt != null)
             {
-                var i = GetColumnDisplayIndex(col.Name);
-                newOrder.Add(col.Name, i.ToString(CultureInfo.InvariantCulture));
-            }
-            switch (_searchMode)
-            {
-                case SearchMode.Address:
-                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
-                    break;
-                case SearchMode.Intersection:
-                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
-                    break;
-                case SearchMode.Name:
-                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
-                    break;
-                case SearchMode.Phone:
-                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
-                    break;
-                case SearchMode.Road:
-                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
-                    break;
+                DataGridViewRow dgvr = _dataGridView.Rows[evnt.RowIndex];
+                int fidIdx = GetColumnDisplayIndex(FID);
+                int lyrIdx = GetColumnDisplayIndex(LYRNAME);
+                string fid = dgvr.Cells[fidIdx].Value.ToString();
+                string lyr = dgvr.Cells[lyrIdx].Value.ToString();
+
+                Dictionary<string, string> mapPanels = GetMapTabKeysContainingLayer(lyr);
+                if (!mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
+                {
+                    if (mapPanels.Count == 1)
+                    {
+                        TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
+                    }
+                    else if (mapPanels.Count > 1)
+                    {
+                        var v = mapPanels.Values;
+                        var msgBox = new MultiSelectMessageBox(
+                            "Multiple Map Tabs",
+                            "Multiple map tabs contain this feature, please select the tab to map the feature below.",
+                            v.ToArray());
+                        msgBox.ShowDialog();
+                        var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
+                        TabDockingControl.SelectPanel(key);
+                    }
+                    else
+                    {
+                        return; // something bad happened here
+                    }
+                }
+
+                // now we cycle through layers of our active map and find the layer we want
+                var layers = Map.GetFeatureLayers();
+                foreach (IMapFeatureLayer mapLayer in layers)
+                {
+                    if (mapLayer != null &&
+                        String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
+                    if (mapLayer == null) continue;
+
+                    IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
+                    if (fs == null || fs.Name != lyr) continue;
+
+                    mapLayer.SelectByAttribute("[FID] =" + fid);
+                    mapLayer.ZoomToSelectedFeatures();
+                }
             }
         }
 
         private void SearchPanelOnHydrantLocate(object sender, EventArgs eventArgs)
         {
             MessageBox.Show("locate hydrant");
+        }
+        #endregion
+
+        #region Methods
+
+        private void ExecuteLuceneQuery(Query query, Filter filter)
+        {
+            // get the current index type directory
+            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(db);
+            if (d == null) return;
+            // open up an index reader
+            var path = Path.Combine(d, "indexes", _indexType);
+            Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
+            IndexReader reader = IndexReader.Open(idxDir, true);
+            // create index searcher
+            var searcher = new IndexSearcher(reader);
+            // perform our search
+            TopDocs docs = searcher.Search(query, filter, reader.MaxDoc);
+            ScoreDoc[] hits = docs.ScoreDocs;
+            idxDir.Dispose();  // wipe the directory ref out now
+            // prep the results for display to the datagridview
+            FormatQueryResults(hits, searcher);
+            searcher.Dispose();
+        }
+
+        private int GetColumnDisplayIndex(string name)
+        {
+            for (int i = 0; i <= _dataGridView.ColumnCount - 1; i++)
+            {
+                if (_dataGridView.Columns[i].Name == name)
+                {
+                    return _dataGridView.Columns[i].DisplayIndex;
+                }
+            }
+            return -1;
+        }
+
+        private Dictionary<string, string> GetMapTabKeysContainingLayer(string lyrName)
+        {
+            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            const string sql = "SELECT layers, lookup, caption FROM MapTabs";
+            DataTable mapTabsTable = SQLiteHelper.GetDataTable(conn, sql);
+            var mapPanelsLookup = new Dictionary<string, string>();
+
+            foreach (DataRow row in mapTabsTable.Rows)
+            {
+                // parse the layers string into layer names
+                var lyrs = row["layers"].ToString().Split('|');
+                var lyrMatch = lyrs.Any(lyr => lyr == lyrName);
+                if (lyrMatch)
+                {
+                    mapPanelsLookup.Add(row["lookup"].ToString(), row["caption"].ToString());
+                }
+            }
+            return mapPanelsLookup;
+        }
+
+        private Dictionary<string, string> GetIndexColumnsOrder()
+        {
+            // TODO: update these so they are all seperate and not shared
+            switch (_searchMode)
+            {
+                case SearchMode.Address:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                case SearchMode.Intersection:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+                case SearchMode.Name:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                case SearchMode.Phone:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                case SearchMode.Road:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+            }
+            return null;
         }
 
         private string[] GetColumnNames()
@@ -326,42 +416,10 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-        private void SearchPanelOnSearchModeChanged(object sender, EventArgs eventArgs)
-        {
-            SetSearchVariables();
-        }
-
-        private void SearchPanelOnSearchesCleared(object sender, EventArgs eventArgs)
-        {
-            // unbind the column order index stuff
-            _dataGridView.ColumnDisplayIndexChanged -= DataGridViewOnColumnDisplayIndexChanged;
-            // now clear the datagridview
-            _dataGridView.Rows.Clear();
-            _dataGridView.Columns.Clear();
-            // clear any map selections as well
-            IEnvelope env;
-            Map.MapFrame.ClearSelection(out env);
-        }
-
-        #endregion
-
-        #region Methods
-
-        protected override void OnActivate()
-        {
-            if (_searchPanel == null || _searchPanel.IsDisposed)
-            {
-                _searchPanel = new SearchPanel();
-                HandleSearchPanelEvents();
-            }
-            _searchPanel.Show();
-            base.OnActivate();
-        }
-
-        private static void LogSearchQuery(string q, StreetAddress sa)
+        private static void LogStreetAddressParsedQuery(string q, StreetAddress sa)
         {
             var p = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\SDR\\" +
-                       SdrConfig.Settings.Instance.ApplicationName;
+                    SdrConfig.Settings.Instance.ApplicationName;
             var d = new DirectoryInfo(p);
             if (!d.Exists)
             {
@@ -409,12 +467,13 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-        private static Query ConstructAddressQuery(string search)
+        private static Query ConstructScoredAddressQuery(string search)
         {
             // parse our input address into a valid streetaddress object
             // TODO: perform check to determine if user is using pretypes fields
+            // TODO: Not sure how to best handle this, what if they mix types??
             StreetAddress streetAddress = StreetAddressParser.Parse(search, true);
-            LogSearchQuery(search, streetAddress);
+            LogStreetAddressParsedQuery(search, streetAddress);
 
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -469,6 +528,63 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Sub Unit Designation");
                 occurs.Add(Occur.SHOULD);
             }
+            var vals = (string[]) values.ToArray(typeof (string));
+            var flds = (string[]) fields.ToArray(typeof (string));
+            var ocrs = (Occur[]) occurs.ToArray(typeof (Occur));
+            // setup the query search cursor
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            return query;
+        }
+
+        private static Query ConstructScoredRoadQuery(string search)
+        {
+            // parse our input address into a valid streetaddress object
+            // TODO: perform check to determine if user is using pretypes fields
+            // TODO: Not sure how to best handle this, what if they mix types??
+            StreetAddress streetAddress = StreetAddressParser.Parse(search, true);
+            LogStreetAddressParsedQuery(search, streetAddress);
+
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+            // assemble our query string now
+            if (streetAddress.Predirectional != null)
+            {
+                values.Add(streetAddress.Predirectional);
+                fields.Add("Pre Directional");
+                occurs.Add(Occur.SHOULD);
+            }
+            if (streetAddress.PreType != null)
+            {
+                values.Add(streetAddress.PreType);
+                fields.Add("Pre Type");
+                occurs.Add(Occur.SHOULD);
+            }
+            if (streetAddress.StreetName != null)
+            {
+                values.Add(streetAddress.StreetName);
+                fields.Add("Street Name");
+                occurs.Add(Occur.MUST);
+            }
+            if (streetAddress.StreetType != null)
+            {
+                values.Add(streetAddress.StreetType);
+                fields.Add("Street Type");
+                occurs.Add(Occur.SHOULD);
+            }
+            if (streetAddress.Postdirectional != null)
+            {
+                values.Add(streetAddress.Postdirectional);
+                fields.Add("Post Directional");
+                occurs.Add(Occur.SHOULD);
+            }
             var vals = (string[])values.ToArray(typeof(string));
             var flds = (string[])fields.ToArray(typeof(string));
             var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
@@ -479,8 +595,133 @@ namespace DotSpatial.SDR.Plugins.Search
                 flds,
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
-            );
+                );
             return query;
+        }
+
+        private static Query ConstructExactRoadQuery(string search)
+        {
+            // parse our input address into a valid streetaddress object
+            // TODO: perform check to determine if user is using pretypes fields
+            // TODO: Not sure how to best handle this, what if they mix types??
+            StreetAddress streetAddress = StreetAddressParser.Parse(search, true);
+            LogStreetAddressParsedQuery(search, streetAddress);
+
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+            // assemble our query string now
+            if (streetAddress.Predirectional != null)
+            {
+                values.Add(streetAddress.Predirectional);
+                fields.Add("Pre Directional");
+                occurs.Add(Occur.MUST);
+            }
+            if (streetAddress.PreType != null)
+            {
+                values.Add(streetAddress.PreType);
+                fields.Add("Pre Type");
+                occurs.Add(Occur.MUST);
+            }
+            if (streetAddress.StreetName != null)
+            {
+                values.Add(streetAddress.StreetName);
+                fields.Add("Street Name");
+                occurs.Add(Occur.MUST);
+            }
+            if (streetAddress.StreetType != null)
+            {
+                values.Add(streetAddress.StreetType);
+                fields.Add("Street Type");
+                occurs.Add(Occur.MUST);
+            }
+            if (streetAddress.Postdirectional != null)
+            {
+                values.Add(streetAddress.Postdirectional);
+                fields.Add("Post Directional");
+                occurs.Add(Occur.MUST);
+            }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // setup the query search cursor
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            return query;
+        }
+
+        private Filter ConstructLuceneFilter(string searchQuery)
+        {
+            switch (_searchMode)
+            {
+                case SearchMode.Address:
+                    return null;
+                case SearchMode.Road:
+                    return null;
+                case SearchMode.Intersection:
+                    return null;
+            }
+            return null;
+        }
+
+        private Query ConstructIntersectionQuery(string searchQuery)
+        {
+            Query query = null;
+            // get the current index type directory
+            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(db);
+            if (d != null)
+            {
+                var path = Path.Combine(d, "indexes", _indexType);
+                Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
+                IndexReader reader = IndexReader.Open(idxDir, true);
+                var searcher = new IndexSearcher(reader);
+                // lets figure out if we have both features or just one and need intersections
+                var arr = searchQuery.Split('|');
+                if (arr[1].Length > 0)
+                {
+                    // we need to get the actual lat long of this intersection and zoom to it
+                }
+                else
+                {
+                    // get the actual features with this query
+                    query = ConstructExactRoadQuery(arr[0]);
+                    TopDocs docs = searcher.Search(query, reader.MaxDoc);
+                    ScoreDoc[] hits = docs.ScoreDocs;
+
+                    var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
+                    SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
+                    // iterate the features from that result and build a list of all intersecting features
+                    foreach (var hit in hits)
+                    {
+                        var doc = searcher.Doc(hit.Doc);
+                        var strShp = doc.Get(GEOSHAPE);
+                        Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(strShp);
+
+                        SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects, shp);
+                        strategy.MakeQuery(args);
+
+                        TopDocs topDocs = searcher.Search(strategy.MakeQuery(args), reader.NumDocs());
+                        ScoreDoc[] scoreDocs = topDocs.ScoreDocs;
+
+                        foreach (var scoreDoc in scoreDocs)
+                        {
+                            var dc = searcher.Doc(scoreDoc.Doc);
+                            var xxxx = dc;
+                        }
+                    }
+                }
+                // cleanup after yourself you fucking slob
+                idxDir.Dispose();
+                searcher.Dispose();
+            }
+            return null;
         }
 
         private Query ConstructLuceneQuery(string searchQuery)
@@ -488,16 +729,16 @@ namespace DotSpatial.SDR.Plugins.Search
             switch (_searchMode)
             {
                 case SearchMode.Address:
-                    return ConstructAddressQuery(searchQuery);
-                case SearchMode.Name:
-                    return ConstructNameQuery(searchQuery);
-                case SearchMode.Phone:
-                    return ConstructPhoneQuery(searchQuery);
+                    return ConstructScoredAddressQuery(searchQuery);
+                case SearchMode.Road:
+                    return ConstructScoredRoadQuery(searchQuery);
+                case SearchMode.Intersection:
+                    return ConstructIntersectionQuery(searchQuery);
             }
             return null;
         }
 
-        private void FormatAddressIndexQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
+        private void FormatIndexQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
         {
             foreach (var hit in hits)
             {
@@ -524,6 +765,8 @@ namespace DotSpatial.SDR.Plugins.Search
                 dgvRow.Cells.Add(fidCell);
                 var lyrCell = new DataGridViewTextBoxCell {Value = doc.Get(LYRNAME)};
                 dgvRow.Cells.Add(lyrCell);
+                var shpCell = new DataGridViewTextBoxCell { Value = doc.Get(GEOSHAPE) };
+                dgvRow.Cells.Add(shpCell);
                 _dataGridView.Rows.Add(dgvRow);
             }
         }
@@ -533,45 +776,15 @@ namespace DotSpatial.SDR.Plugins.Search
             switch (_searchMode)
             {
                 case SearchMode.Address:
-                    FormatAddressIndexQueryResults(hits, searcher);
+                    FormatIndexQueryResults(hits, searcher);
                     break;
-                case SearchMode.Name:
+                case SearchMode.Road:
+                    FormatIndexQueryResults(hits, searcher);
                     break;
-                case SearchMode.Phone:
+                case SearchMode.Intersection:
+                    FormatIndexQueryResults(hits, searcher);
                     break;
             }
-        }
-
-        private void ExecuteLuceneQuery(string searchString)
-        {
-            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            var d = Path.GetDirectoryName(db);
-            if (d == null) return;
-
-            var path = Path.Combine(d, "indexes", _indexType);
-            Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
-            IndexReader reader = IndexReader.Open(idxDir, true);
-
-            var searcher = new IndexSearcher(reader);
-            Query query = ConstructLuceneQuery(searchString);
-            
-            TopDocs docs = searcher.Search(query, reader.MaxDoc);
-            ScoreDoc[] hits = docs.ScoreDocs;
-            idxDir.Dispose();  // wipe the directory ref out now
-
-            // prep the results for display to the datagridview
-            FormatQueryResults(hits, searcher);
-            searcher.Dispose();
-        }
-
-        private static Query ConstructPhoneQuery(string searchQuery)
-        {
-            return null;
-        }
-
-        private static Query ConstructNameQuery(string searchQuery)
-        {
-            return null;
         }
 
         #endregion

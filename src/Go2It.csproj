@@ -101,6 +101,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\references\Lucene.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net.Contrib.Queries">
+      <HintPath>..\references\Lucene.Net.Contrib.Queries.dll</HintPath>
+    </Reference>
     <Reference Include="Lucene.Net.Contrib.Spatial.NTS, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\references\Lucene.Net.Contrib.Spatial.NTS.dll</HintPath>

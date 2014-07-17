@@ -21,14 +21,12 @@ namespace DotSpatial.SDR.Plugins.Search
         // words to search for on streetnames looking for pretypes
         private static readonly string[] PreTypes = {"HIGHWAY", "HWY", "HIWAY", "HIWY", "HWAY", "ROAD", "RD"};
 
-        // public static StreetAddress Parse(string )
         public static StreetAddress Parse(string query, bool usePreTypes)
         {
-            if (string.IsNullOrEmpty(query)) // make sure there is a query to start with
+            if (string.IsNullOrEmpty(query))  // make sure there is a query to start with
             {
                 return new StreetAddress();
             }
-
             // parse our query into individual string chunks
             string[] input = query.ToUpper().Split(' ');
             // if not valid query return an empty streetaddress object
@@ -114,7 +112,6 @@ namespace DotSpatial.SDR.Plugins.Search
                             {
                                 // looks like the word previous to subunit type is a directional
                                 postdirPos = (last - 2).ToString(CultureInfo.InvariantCulture);
-
                                 if (last - 3 > 0)  // validate that enough words exist to continue
                                 {
                                     // now lets look and see if the word previous to that is a valid road type
@@ -264,7 +261,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // no road type, no postdirectional, no subtype, we shouldnt ever get here but lets look for a subvalue
             else if (subvalPos != null && Convert.ToInt32(subvalPos) > Convert.ToInt32(strNamePos))
             {
-                // somehow we have a subvalue and no subtype, assume the previous word is end of road name and that it is TOTALLY FUCKED
+                // somehow we have a subvalue and no subtype, assume the previous word is end of road name // TOTALLY FUCKED
                 strNameEnd = (Convert.ToInt32(subvalPos) - 1).ToString(CultureInfo.InvariantCulture);
             }
             // there are no positions beyond the end of the string name

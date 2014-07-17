@@ -98,7 +98,7 @@ namespace Go2It
         // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
 
-        private static readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Resources.wgs_84_esri_string);
+        // private static readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Resources.wgs_84_esri_string);
 
         public AdminForm(AppManager app)
         {
@@ -1656,6 +1656,7 @@ namespace Go2It
             {
                 var docList = new List<Document>();
                 IFeatureSet fs = o.FeatureSet;
+
                 if (o.LayerProjection.ToEsriString() != KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString())
                 {
                     // reproject the in-memory representation of our featureset (actual file remains unchanged)
@@ -1664,37 +1665,46 @@ namespace Go2It
                 foreach (ShapeRange shapeRange in fs.ShapeIndices)  // cycle through each shape/record
                 {
                     var doc = new Document();  // new index doc for this record
-                    // snatch the row and shape affiliated with the shape-range
-                    Shape shp = fs.GetShape(shapeRange.RecordNumber - 1, false);
+                    // snatch the row affiliated with this shape-range
                     DataRow dr = fs.DataTable.Rows[shapeRange.RecordNumber - 1];
-                    IGeometry geom = shp.ToGeometry();  // cast shape into geometry for wkt serialization
-
                     // add standardized lookup fields for each record
                     doc.Add(new Field(FID, dr[FID].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
                     doc.Add(new Field(LYRNAME, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
-                    
-                    // serialize the geometry into wkt (used by spatial4n to read geometry for lucene indexing)
-                    var wktWriter = new WktWriter();
-                    var wkt = wktWriter.Write((Geometry)geom);
 
-                    // create our strategy for spatial indexing using NTS context
-                    var ctx = NtsSpatialContext.GEO;  // using NTS (provides polygon/line/point models)
-                    SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 10), GEOSHAPE);
-                    try  // the esri and ogc defs regarding polygons seem to differ and cause issues here
+                    // TODO: currently the polygon indexing seems to have issues (diff between esri and opengeo defs)
+                    // TODO: investigate and come up with a solution for this self-intersecting bullshite
+                    if (fs.FeatureType.ToString() != "Polygon")
                     {
-                        Spatial4n.Core.Shapes.Shape wktShp = ctx.ReadShape(wkt);
-                        foreach (var f in strategy.CreateIndexableFields(wktShp))
+                        // snatch the shape affiliated with the shape-range
+                        Shape shp = fs.GetShape(shapeRange.RecordNumber - 1, false);
+                        IGeometry geom = shp.ToGeometry(); // cast shape to geometry for wkt serialization
+                        // serialize the geometry into wkt (which will be read by spatial4n for lucene indexing)
+                        var wktWriter = new WktWriter();
+                        var wkt = wktWriter.Write((Geometry) geom);
+
+                        // create our strategy for spatial indexing using NTS context
+                        var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
+                        SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
+                        try // the esri and ogc defs regarding polygons seem to differ and cause issues here
                         {
-                            doc.Add(f);  // add the geometry to the index for queries
+                            Spatial4n.Core.Shapes.Shape wktShp = ctx.ReadShape(wkt);
+                            foreach (var f in strategy.CreateIndexableFields(wktShp))
+                            {
+                                doc.Add(f); // add the geometry to the index for queries
+                            }
+                            // store the actual shape for later use on intersections and such
+                            doc.Add(new Field(strategy.GetFieldName(), ctx.ToString(wktShp), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                        }
+                        catch (Exception ex)
+                        {
+                            LogGeometryIndexError(o.LayerName, dr[FID].ToString(), shp, wkt, ex);
+                            var msg = AppContext.Instance.Get<IUserMessage>();
+                            msg.Error(
+                                "Error creating index :: FeatureClass: " + o.LayerName + " FeatureID: " + dr[FID], ex);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        LogGeometryIndexError(o.LayerName, dr[FID].ToString(), shp, wkt, ex);
-                        var msg = AppContext.Instance.Get<IUserMessage>();
-                        msg.Error("Error creating index :: FeatureClass: " + o.LayerName + " FeatureID: " + dr[FID], ex);
-                    }
                     // handle all other non-spatial field lookups
+                    // TODO: refactor so we dont need 2 loops use the shp and grab attributes at same time as above
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
                     {
@@ -1731,7 +1741,7 @@ namespace Go2It
         {
             try
             {
-               var iobjects = e.Argument as IndexObject[];
+                var iobjects = e.Argument as IndexObject[];
                 Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
                 if (docs.Count > 0)
                 {

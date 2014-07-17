@@ -212,6 +212,14 @@ namespace DotSpatial.SDR.Controls
         {
             throw new NotImplementedException();
         }
+
+        public IMapFeatureLayer GetMapFeatureLayerByName(string lyrName)
+        {
+            IMapLayer layer = null;
+            BaseLayerLookup.TryGetValue(lyrName, out layer);
+            return layer as IMapFeatureLayer;
+        }
+
         #endregion
 
         public event EventHandler<DockablePanelEventArgs> ActivePanelChanged;

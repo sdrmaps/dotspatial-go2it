@@ -3,7 +3,7 @@
     public enum SearchMode
     {
         /// <summary>
-        /// Search Addresses
+        /// Search addresses attributes
         /// </summary>
         Address,
         /// <summary>
@@ -15,11 +15,11 @@
         /// </summary>
         Phone,
         /// <summary>
-        /// Search Roads
+        /// Search Roads attributes
         /// </summary>
         Road,
         /// <summary>
-        /// Search Intersections
+        /// Search Spatial Intersections
         /// </summary>
         Intersection,
     }

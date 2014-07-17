@@ -47,7 +47,7 @@ namespace DotSpatial.SDR.Controls
             return (Int32)_keys;
         }
 
-        // custom comparison to ignore the decription and only compare hashcode
+        // custom comparison to ignore the description and only compare hashcodes
         public override bool Equals(object obj)
         {
             if (_keys != Keys.None)
@@ -64,7 +64,7 @@ namespace DotSpatial.SDR.Controls
 
         // dict for storing all hotkeys and their lookup actions
         private static readonly Dictionary<HotKey, string> HotKeys = new Dictionary<HotKey, string>();
-        // msg and keys data recieved from MainForm ProcessCmdKey method
+        // msg and keys data received from MainForm ProcessCmdKey method
         public static bool FireHotKeyEvent(ref Message msg, Keys keyData)
         {
             try
