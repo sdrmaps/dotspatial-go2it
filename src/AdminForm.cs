@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,26 +15,19 @@ using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
 using DotSpatial.Topology.Utilities;
-// using GeoAPI.Geometries;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
-// using Lucene.Net.Spatial;
-// using Lucene.Net.Spatial.Prefix;
-// using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Spatial;
 using Lucene.Net.Spatial.Prefix;
 using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Store;
-using NetTopologySuite.IO;
 using SDR.Common;
 using SDR.Common.UserMessage;
-using Spatial4n.Core.Context;
 using Spatial4n.Core.Context.Nts;
-using Spatial4n.Core.Io;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -45,9 +37,7 @@ using DotSpatial.Controls;
 using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
-using Coordinate = DotSpatial.Topology.Coordinate;
 using IGeometry = DotSpatial.Topology.IGeometry;
-using ILog = SDR.Common.logging.ILog;
 using Point = System.Drawing.Point;
 using SdrConfig = SDR.Configuration;
 
@@ -60,7 +50,7 @@ namespace Go2It
 
         // name of the initial map tab
         private const string MapTabDefaultName = "My Map";
-        // internal lookup names used in lucene to get the actual feature from the layer
+        // internal lookup names used in lucene to get the actual feature from the layer also holds (normalized) shape
         private const string FID = "FID";
         private const string LYRNAME = "LYRNAME";
         private const string GEOSHAPE = "GEOSHAPE";
@@ -97,8 +87,6 @@ namespace Go2It
         // temp storage of layers to index until the "create" button is activated (queued indexes)
         // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
-
-        // private static readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Resources.wgs_84_esri_string);
 
         public AdminForm(AppManager app)
         {
@@ -415,7 +403,7 @@ namespace Go2It
             {
                 var kvPair = hotKeys.ElementAt(i);
                 HotKey hKey = kvPair.Key;
-                DataGridViewRow dgvRow = new DataGridViewRow();
+                var dgvRow = new DataGridViewRow();
                 var txtKey = new DataGridViewTextBoxCell { Value = hKey.Key.ToString() };
                 var txtAction = new DataGridViewTextBoxCell
                 {
@@ -1095,7 +1083,7 @@ namespace Go2It
 
         private void adminLayerSplitter_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            // we might have to handle map redraws here / not sure yet
+            // TODO: investigate redraws here, look for more efficient methods
         }
 
         private void mapBGColorPanel_Click(object sender, EventArgs e)
@@ -1622,7 +1610,7 @@ namespace Go2It
             {
                 d.Create();
             }
-            var f = p + "\\" + file + "_indexing_errors.txt";
+            var f = p + "\\" + file + "_geoindexing_errors.txt";
             using (var sw = File.AppendText(f))
             {
                 sw.WriteLine("FeatureID: " + ftId);
@@ -1672,7 +1660,7 @@ namespace Go2It
                     doc.Add(new Field(LYRNAME, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
                     // TODO: currently the polygon indexing seems to have issues (diff between esri and opengeo defs)
-                    // TODO: investigate and come up with a solution for this self-intersecting bullshite
+                    // TODO: investigate and come up with a solution for self-intersecting bullshit
                     if (fs.FeatureType.ToString() != "Polygon")
                     {
                         // snatch the shape affiliated with the shape-range
@@ -1708,7 +1696,7 @@ namespace Go2It
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
                     {
-                        // TODO: include the field type with the lookup?
+                        // TODO: include the field type with the lookup? (more dynamic)
                         if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
                         {
                             doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES,

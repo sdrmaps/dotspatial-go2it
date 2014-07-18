@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using DotSpatial.Topology.Utilities;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
@@ -28,7 +26,6 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchPanel()
         {
             InitializeComponent();
-            DataGridDisplay = searchDGV;
             SearchQuery = string.Empty;
             CreateQueryPanels();
             _searchMode = SearchMode.Address;
@@ -45,23 +42,21 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchMode SearchMode
         {
             get { return _searchMode; }
-            set
-            {
-                _searchMode = value;
-            }
         }
 
         /// <summary>
         /// Gets or sets the datagrid view for query display
         /// </summary>
-        public DataGridView DataGridDisplay { get; set; }
+        public DataGridView DataGridDisplay
+        {
+            get { return searchDGV; }
+        }
 
         /// <summary>
         /// Gets or sets the search query
         /// </summary>
         public string SearchQuery { get; set; }
 
-        public ComboBox RoadComboBox { get; set; }
         #endregion
 
         #region Event Handlers
@@ -329,44 +324,11 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void PopulateRoadsToCombo()
         {
-            Query query = ConstructAllRoadsQuery();
-            Filter filter = ConstructAllRoadsFilter();
-            ExecuteAllRoadsLuceneQuery(query, filter);
-        }
-
-        public void ExecuteAllRoadsLuceneQuery(Query query, Filter filter)
-        {
-            // get the current index type directory
-            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            var d = Path.GetDirectoryName(db);
-            if (d == null) return;
-            // open up an index reader
-            var path = Path.Combine(d, "indexes", "RoadIndex");
-            if (!System.IO.Directory.Exists(path)) return;
-            // open the index directory up and read that shiz
-            Lucene.Net.Store.Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
-            IndexReader reader = IndexReader.Open(idxDir, true);
-            // create index searcher
-            var searcher = new IndexSearcher(reader);
-            // perform our search
-            TopDocs docs = searcher.Search(query, filter, reader.MaxDoc);
+            Query query = new MatchAllDocsQuery();  // query grabs all documents
+            Filter filter = new DuplicateFilter("Street Name");  // filter by streetname (remove any duplicates)
+            TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, filter, MapFunctionSearch.IndexReader.MaxDoc);
             ScoreDoc[] hits = docs.ScoreDocs;
-            idxDir.Dispose();  // wipe the directory ref out now
-            // prep results for population to combobox
-            FormatAllRoadsQueryResults(hits, searcher);
-            searcher.Dispose();
-        }
-
-        private Query ConstructAllRoadsQuery()
-        {
-            var query = new MatchAllDocsQuery();
-            return query;
-        }
-
-        private Filter ConstructAllRoadsFilter()
-        {
-            Filter filter = new DuplicateFilter("Street Name");
-            return filter;
+            FormatQueryResultsForComboBox(hits);
         }
 
         private void ClearSearchPanel()
@@ -378,7 +340,7 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-        private void FormatAllRoadsQueryResults(IEnumerable<ScoreDoc> hits, Searcher searcher)
+        private void FormatQueryResultsForComboBox(IEnumerable<ScoreDoc> hits)
         {
             // snag the combobox of the search mode
             var cmb = new ComboBox();
@@ -397,7 +359,7 @@ namespace DotSpatial.SDR.Plugins.Search
             foreach (var hit in hits)
             {
                 // snatch the ranked document
-                var doc = searcher.Doc(hit.Doc);
+                var doc = MapFunctionSearch.IndexSearcher.Doc(hit.Doc);
                 var val = string.Empty;
                 // create the full string and add to combobox
                 if (doc.Get("Pre Directional") != null)

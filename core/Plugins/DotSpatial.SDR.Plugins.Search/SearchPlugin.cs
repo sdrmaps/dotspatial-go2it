@@ -39,7 +39,6 @@ namespace DotSpatial.SDR.Plugins.Search
             App.DockManager.Add(_dockPanel);
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-
             base.Activate();
         }
 
@@ -114,7 +113,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             // update the user settings to reflect active functionmode
             var map = sender as Map;
-            if (map.FunctionMode != FunctionMode.None)
+            if (map != null && map.FunctionMode != FunctionMode.None)
             {
                 _mapFunction.Deactivate();
             }
