@@ -81,6 +81,7 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="EventedList.cs" />
     <Compile Include="EventMapFrame.cs" />
     <Compile Include="HotKeyManager.cs" />
     <Compile Include="MultiSelectMessageBox.cs">

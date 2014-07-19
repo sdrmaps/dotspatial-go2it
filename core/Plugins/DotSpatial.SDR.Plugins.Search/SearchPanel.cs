@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
-using Lucene.Net.Index;
+using DotSpatial.SDR.Controls;
 using Lucene.Net.Search;
-using Lucene.Net.Store;
-using SDR.Data.Database;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Search
@@ -18,6 +16,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private TableLayoutPanel _addressPanel;
         private TableLayoutPanel _roadPanel;
         private TableLayoutPanel _intersectionPanel;
+        private readonly EventedArrayList _intersectedFeatures;
 
         #endregion
 
@@ -28,8 +27,19 @@ namespace DotSpatial.SDR.Plugins.Search
             InitializeComponent();
             SearchQuery = string.Empty;
             CreateQueryPanels();
+            _intersectedFeatures = new EventedArrayList();
+            _intersectedFeatures.ListChanged += IntersectedFeaturesOnListChanged;
             _searchMode = SearchMode.Address;
             searchAdds_Click(null, null);
+        }
+
+        private void IntersectedFeaturesOnListChanged(object sender, EventArgs eventArgs)
+        {
+            // TODO: add all the events in here for auto population while typing etc.
+            if (_intersectedFeatures.Count <= 0) return;
+            var cmb = (ComboBox) _intersectionPanel.Controls["cmbIntSearch2"];
+            cmb.Items.Clear();
+            cmb.Items.AddRange(_intersectedFeatures.ToArray());
         }
 
         #endregion
@@ -57,6 +67,18 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         public string SearchQuery { get; set; }
 
+        /// <summary>
+        /// Sets the intersected features to display intersections search combobox
+        /// </summary>
+        public ArrayList IntersectedFeatures
+        {
+            set
+            {
+                _intersectedFeatures.Clear();
+                _intersectedFeatures.AddRange(value);
+            }
+        }
+
         #endregion
 
         #region Event Handlers
@@ -64,22 +86,18 @@ namespace DotSpatial.SDR.Plugins.Search
         /// Occurs when the search mode has been changed.
         /// </summary>
         public event EventHandler SearchModeChanged;
-
         /// <summary>
         /// Occurs when the clear button has been pressed.
         /// </summary>
         public event EventHandler SearchesCleared;
-
         /// <summary>
         /// Occurs when the hydrant button has been pressed.
         /// </summary>
         public event EventHandler HydrantLocate;
-
         /// <summary>
         /// Occurs when the search button has been pressed.
         /// </summary>
         public event EventHandler PerformSearch;
-
         /// <summary>
         /// Occurs when a row has been double clicked
         /// </summary>
@@ -342,6 +360,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void FormatQueryResultsForComboBox(IEnumerable<ScoreDoc> hits)
         {
+            // TODO remove duplicates etc....
             // snag the combobox of the search mode
             var cmb = new ComboBox();
             switch (_searchMode)

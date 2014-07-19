@@ -62,13 +62,6 @@ namespace DotSpatial.SDR.Plugins.Search
             SetupIndexReaderWriter();
         }
 
-        private void Configure()
-        {
-            YieldStyle = YieldStyles.AlwaysOn;
-            HandleSearchPanelEvents();
-            Name = "MapFunctionSearch";
-        }
-
         public static IndexSearcher IndexSearcher
         {
             get { return _indexSearcher; }
@@ -77,6 +70,13 @@ namespace DotSpatial.SDR.Plugins.Search
         public static IndexReader IndexReader
         {
             get { return _indexReader; }
+        }
+
+        private void Configure()
+        {
+            YieldStyle = YieldStyles.AlwaysOn;
+            HandleSearchPanelEvents();
+            Name = "MapFunctionSearch";
         }
 
         private void HandleSearchPanelEvents()
@@ -652,7 +652,6 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteGetIntersectionsQuery(string q)
         {
             ScoreDoc[] docs = new ScoreDoc[0];  // total array of docs to return
-
             // get exact match road features
             ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
             // setup a spatial query to find all features that intersect with our results
@@ -665,9 +664,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(strShp);  // read the wkt string into an actual shape object
                 // prepare the spatial query parameters
                 var args = new SpatialArgs(SpatialOperation.Intersects, shp);
-                strategy.MakeQuery(args);
+                Query query = strategy.MakeQuery(args);
+
                 // execute the query to find all features that intersect each passed in feature
-                TopDocs topDocs = _indexSearcher.Search(strategy.MakeQuery(args), _indexReader.NumDocs());
+                TopDocs topDocs = _indexSearcher.Search(query, _indexReader.NumDocs());
                 ScoreDoc[] hits = topDocs.ScoreDocs;
 
                 if (docs.Length == 0)
@@ -685,6 +685,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void FormatQueryResultsForDataGridView(IEnumerable<ScoreDoc> hits)
         {
+            if (hits == null) return;
             foreach (var hit in hits)
             {
                 // generate all the empty cells we need for a full row
@@ -718,17 +719,52 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void FormatQueryResults(IEnumerable<ScoreDoc> hits)
         {
-            FormatQueryResultsForDataGridView(hits);
-            /*switch (_searchPanel.SearchMode)
+            switch (_searchPanel.SearchMode)
             {
                 case SearchMode.Intersection:
-                    FormatIndexQueryResults(hits, searcher);
-                    // also filter and then append to combobox dropdown
+                    FormatQueryResultsForDataGridView(hits);
+                    UpdateIntersectedFeatures(hits);
                     break;
                 default:
                     FormatQueryResultsForDataGridView(hits);
                     break;
-            }*/
+            }
+        }
+
+        private void UpdateIntersectedFeatures(IEnumerable<ScoreDoc> hits)
+        {
+            var arrList = new ArrayList();
+            foreach (var hit in hits)
+            {
+                var doc = _indexSearcher.Doc(hit.Doc);
+                var val = string.Empty;
+                // create the full string for combobox population
+                if (doc.Get("Pre Directional") != null)
+                {
+                    val = val + doc.Get("Pre Directional").Trim() + " ";
+                }
+                if (doc.Get("Pre Type") != null)
+                {
+                    val = val + doc.Get("Pre Type").Trim() + " ";
+                }
+                if (doc.Get("Street Name") != null)
+                {
+                    val = val + doc.Get("Street Name").Trim() + " ";
+                }
+                if (doc.Get("Street Type") != null)
+                {
+                    val = val + doc.Get("Street Type").Trim() + " ";
+                }
+                if (doc.Get("Post Directional") != null)
+                {
+                    val = val + doc.Get("Post Directional").Trim() + " ";
+                }
+                if (val.Length > 0)
+                {
+                    arrList.Add(val.Trim());
+                }
+            }
+            _searchPanel.IntersectedFeatures = arrList;
         }
 
         private void LogStreetAddressParsedQuery(string q, StreetAddress sa)
