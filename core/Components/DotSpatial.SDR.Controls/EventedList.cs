@@ -8,7 +8,7 @@ namespace DotSpatial.SDR.Controls
 
     public class EventedArrayList : ArrayList
     {
-        // event that notofies clients whenever the elements of the list change.
+        // event that notifies clients whenever the elements of the list change.
         public event ChangedEventHandler ListChanged;
 
         // invoke the changed event; called whenever list changes
@@ -18,7 +18,7 @@ namespace DotSpatial.SDR.Controls
                 ListChanged(this, e);
         }
 
-        // override base methods taht make changes to the list (add event after each)
+        // override base methods that make changes to the list (fire event after each)
         public override int Add(object value)
         {
             int i = base.Add(value);

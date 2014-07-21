@@ -651,7 +651,11 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private ScoreDoc[] ExecuteGetIntersectionsQuery(string q)
         {
-            ScoreDoc[] docs = new ScoreDoc[0];  // total array of docs to return
+            // get the name of the street passed in so it is removed from results returned
+            var sa = StreetAddressParser.Parse(q, true);
+            var saTerm = new Term("Street Name", sa.StreetName.ToLower());
+            // total docs for return
+            var docs = new List<ScoreDoc>();
             // get exact match road features
             ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
             // setup a spatial query to find all features that intersect with our results
@@ -662,25 +666,22 @@ namespace DotSpatial.SDR.Plugins.Search
                 var doc = _indexSearcher.Doc(qHit.Doc);  // snag the current doc for additional spatial queries
                 var strShp = doc.Get(GEOSHAPE);  // get the string representation of the feature shape
                 Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(strShp);  // read the wkt string into an actual shape object
-                // prepare the spatial query parameters
+                // prepare spatial query
                 var args = new SpatialArgs(SpatialOperation.Intersects, shp);
-                Query query = strategy.MakeQuery(args);
-
-                // execute the query to find all features that intersect each passed in feature
+                Query sq = strategy.MakeQuery(args);
+                // term query to remove features with the same name, ie segments of the road
+                Query tq = new TermQuery(saTerm);
+                // create overall boolean query to pass to indexsearcher
+                var query = new BooleanQuery {{sq, Occur.MUST}, {tq, Occur.MUST_NOT}};
+                // execute a query to find all features that intersect each passed in feature
                 TopDocs topDocs = _indexSearcher.Search(query, _indexReader.NumDocs());
                 ScoreDoc[] hits = topDocs.ScoreDocs;
-
-                if (docs.Length == 0)
-                {
-                    docs = hits;
-                }
-                else  // combine our arrays into a new array
-                {
-                    ScoreDoc[] tDocs = docs;
-                    docs = hits.Union(tDocs).ToArray<ScoreDoc>();
-                }
+                // results for cleanup after loop completes
+                docs.AddRange(hits);
             }
-            return docs;
+            // remove any duplicates by street name
+            var cdocs = docs.GroupBy(x => x.Doc).Select(x => x.First()).ToList<ScoreDoc>();
+            return cdocs.ToArray();
         }
 
         private void FormatQueryResultsForDataGridView(IEnumerable<ScoreDoc> hits)
