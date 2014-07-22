@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
 using Lucene.Net.Search;
@@ -35,11 +36,14 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void IntersectedFeaturesOnListChanged(object sender, EventArgs eventArgs)
         {
-            // TODO: add all the events in here for auto population while typing etc.
             if (_intersectedFeatures.Count <= 0) return;
             var cmb = (ComboBox) _intersectionPanel.Controls["cmbIntSearch2"];
             cmb.Items.Clear();
-            cmb.Items.AddRange(_intersectedFeatures.ToArray());
+            // make sure to remove duplicates
+            cmb.Items.AddRange(_intersectedFeatures.ToArray().Distinct().ToArray());
+            cmb.Sorted = true;
+            cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmb.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
 
         #endregion
@@ -53,7 +57,6 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             get { return _searchMode; }
         }
-
         /// <summary>
         /// Gets or sets the datagrid view for query display
         /// </summary>
@@ -61,7 +64,6 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             get { return searchDGV; }
         }
-
         /// <summary>
         /// Gets or sets the search query
         /// </summary>
@@ -99,9 +101,9 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         public event EventHandler PerformSearch;
         /// <summary>
-        /// Occurs when a row has been double clicked
+        /// Occurs when a feature is to be zoomed to
         /// </summary>
-        public event EventHandler RowDoubleClicked;
+        public event EventHandler OnRowDoublelicked;
 
         #endregion
 
@@ -214,6 +216,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void OnSearchModeChanged()
         {
+            btnSearch.Text = _searchMode == SearchMode.Intersection ? @"Locate" : @"Search";
             if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
         }
 
@@ -224,7 +227,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void searchDGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (RowDoubleClicked != null) RowDoubleClicked(this, e);
+            if (OnRowDoublelicked != null) OnRowDoublelicked(this, e);
         }
 
         #endregion
@@ -276,7 +279,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 OnPerformSearch();
             };
             _roadPanel.Controls.Add(cmbRoadSearch, 0, 0);
-
+            
             /*--------------------------------------------------------*/
             // intersection search panel
             _intersectionPanel = new TableLayoutPanel
@@ -360,7 +363,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void FormatQueryResultsForComboBox(IEnumerable<ScoreDoc> hits)
         {
-            // TODO remove duplicates etc....
             // snag the combobox of the search mode
             var cmb = new ComboBox();
             switch (_searchMode)
@@ -403,7 +405,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 }
                 if (val.Length > 0)
                 {
-                    cmb.Items.Add(val.Trim());
+                    if (!cmb.Items.Contains(val.Trim()))
+                    {
+                        cmb.Items.Add(val.Trim());
+                    }
                 }
             }
             cmb.Sorted = true;

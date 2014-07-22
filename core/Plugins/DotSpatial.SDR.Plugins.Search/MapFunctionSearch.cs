@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -37,15 +38,15 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private SearchPanel _searchPanel;
         private readonly DataGridView _dataGridView; // dgv to populate our results of query to
-
         private static IndexSearcher _indexSearcher = null;
         private static IndexReader _indexReader = null;
 
         private string _indexType;
         private string[] _columnNames;
-        private const string FID = "FID";
-        private const string LYRNAME = "LYRNAME";
-        private const string GEOSHAPE = "GEOSHAPE";
+
+        internal const string FID = "FID";
+        internal const string LYRNAME = "LYRNAME";
+        internal const string GEOSHAPE = "GEOSHAPE";
 
         #region Constructors
 
@@ -85,7 +86,7 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.SearchesCleared += SearchPanelOnSearchesCleared;
             _searchPanel.HydrantLocate += SearchPanelOnHydrantLocate;
             _searchPanel.PerformSearch += SearchPanelOnPerformSearch;
-            _searchPanel.RowDoubleClicked += SearchPanelOnRowDoublelicked;
+            _searchPanel.OnRowDoublelicked += SearchPanelOnRowDoublelicked;
         }
 
         protected override void OnActivate()
@@ -113,7 +114,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var newOrder = new Dictionary<string, string>();
             foreach (DataGridViewColumn col in _dataGridView.Columns)
             {
-                var i = GetColumnDisplayIndex(col.Name);
+                var i = GetColumnDisplayIndex(col.Name, _dataGridView);
                 newOrder.Add(col.Name, i.ToString(CultureInfo.InvariantCulture));
             }
             switch (_searchPanel.SearchMode)
@@ -150,6 +151,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // now clear the datagridview
             _dataGridView.Rows.Clear();
             _dataGridView.Columns.Clear();
+
             // TODO: this is so fucking slow, have to find a better approach
             // clear any map selections as well
             // IEnvelope env;
@@ -159,62 +161,213 @@ namespace DotSpatial.SDR.Plugins.Search
         private void SearchPanelOnPerformSearch(object sender, EventArgs eventArgs)
         {
             if (_searchPanel.SearchQuery.Length <= 0) return;
+            var q = _searchPanel.SearchQuery;
+            // if its an intersection and there are two terms do a location zoom, otherwise find intersections
+            if (_searchPanel.SearchMode == SearchMode.Intersection)
+            {
+                var arr = q.Split('|');
+                if (arr[1].Length > 0) // zoom to intersection of the two features
+                {
+                    ZoomToIntersection(arr[0], arr[1]);
+                    return;
+                } // else look for intersections on this feature and populate combos and dgv
+                q = arr[0];
+            }
+            // all other queries require a lucene query and populate combos and datagridview
             _searchPanel.ClearSearches();  // clear any existing searches
             // setup columns, ordering, etc for results datagridview
             PrepareDataGridView();
             // execute our lucene query
-            var hits = ExecuteLuceneQuery(_searchPanel.SearchQuery);
+            var hits = ExecuteLuceneQuery(q);
             FormatQueryResults(hits);
+        }
+
+        private void ActivateMapPanelWithLayer(string layer)
+        {
+            if (layer.Length <= 0) return;
+
+            Dictionary<string, string> mapPanels = GetMapTabKeysContainingLayer(layer);
+            if (!mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
+            {
+                if (mapPanels.Count == 1)
+                {
+                    TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
+                }
+                else if (mapPanels.Count > 1)
+                {
+                    var v = mapPanels.Values;
+                    var msgBox = new MultiSelectMessageBox(
+                        "Multiple Map Tabs",
+                        "Multiple map tabs contain this feature, please select the tab to map the feature below.",
+                        v.ToArray());
+                    msgBox.ShowDialog();
+                    var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
+                    TabDockingControl.SelectPanel(key);
+                }
+            }
+        }
+
+        private string[] StripWktString(string wkt)
+        {
+            var strip = wkt.Replace("LINESTRING", "").Replace("POLYGON", "").Replace("POINT", "").Replace("(", "").Replace(")", "").Trim();
+            return strip.Split(',');
+        }
+
+        private IEnumerable<string> GetIntersectionCoordinate(IEnumerable<FeatureLookup> fl1s, FeatureLookup fl2)
+        {
+            var coordsList = new List<string>();
+            // strip all the wkt crap from coords and look for matches
+            var coords = StripWktString(fl2.Shape);
+            // now look for shared coordinates (the intersection point)
+            foreach (var fl1 in fl1s)
+            {
+                foreach (var c in coords)
+                {
+                    if (!fl1.Shape.Contains(c)) continue;
+                    if (!coordsList.Contains(c))
+                    {
+                        coordsList.Add(c);
+                    }
+                }
+            }
+            return coordsList.ToArray();
+        }
+
+        private void ZoomToIntersection(string ft1, FeatureLookup fl2)
+        {
+            var fts1Lookup = FetchIntersectingLookups(ft1, fl2);
+            var coords = GetIntersectionCoordinate(fts1Lookup, fl2);
+            if (coords.Count() != 1)
+            {
+                // TODO: finish this crap
+                Debug.WriteLine("major major fuckup here");
+            }
+            else
+            {
+                Debug.WriteLine(coords.First());
+            }
+        }
+
+        private void ZoomToIntersection(string ft1, string ft2)
+        {
+            if (ft1.Length <= 0 || ft2.Length <= 0) return;
+
+            var coordsList = new List<string>();
+            // search for all features that match feature2 exactly
+            ScoreDoc[] hits = ExecuteExactRoadQuery(ft2);
+            foreach (var hit in hits)
+            {
+                var doc = _indexSearcher.Doc(hit.Doc);
+                var fl2 = new FeatureLookup  // generate a new ftlookup for each hit
+                {
+                    Shape = doc.Get(GEOSHAPE),
+                    Fid = doc.Get(FID),
+                    Layer = doc.Get(LYRNAME)
+                };
+                var fts1Lookup = FetchIntersectingLookups(ft1, fl2);
+                var coords = GetIntersectionCoordinate(fts1Lookup, fl2);
+                foreach (var c in coords)
+                {
+                    if (!coordsList.Contains(c))
+                    {
+                        coordsList.Add(c);
+                    }   
+                }
+            }
+            if (coordsList.Count != 1)
+            {
+                // TODO: finish this crap
+                Debug.WriteLine("major major fuckup here");
+            }
+            else
+            {
+                Debug.WriteLine(coordsList[0]);
+            }
+        }
+
+        private IEnumerable<FeatureLookup> FetchIntersectingLookups(string ft1, FeatureLookup ft2)
+        {
+            if (ft1.Length <= 0 || ft2 == null) return null;
+            var ctx = NtsSpatialContext.GEO; // using NTS context (provides polygon/line/point models)
+            Spatial4n.Core.Shapes.Shape shp2 = ctx.ReadShape(ft2.Shape);  // load ft2 shape
+            // find all other possible features that match ft1 name
+            var fts1Lookup = new List<FeatureLookup>();
+            ScoreDoc[] hits = ExecuteExactRoadQuery(ft1);
+            foreach (var hit in hits)
+            {
+                var doc = _indexSearcher.Doc(hit.Doc);
+                // load a possible intersecting feature shape
+                Spatial4n.Core.Shapes.Shape shp1 = ctx.ReadShape(doc.Get(GEOSHAPE));
+                if (shp1.Relate(shp2).Equals(Spatial4n.Core.Shapes.SpatialRelation.INTERSECTS))  // validate relation
+                {
+                    var fl1 = new FeatureLookup
+                    {
+                        Shape = doc.Get(GEOSHAPE),
+                        Fid = doc.Get(FID),
+                        Layer = doc.Get(LYRNAME)
+                    };
+                    if (!fts1Lookup.Contains(fl1))
+                    {
+                        fts1Lookup.Add(fl1);
+                    }
+                }
+            }
+            return fts1Lookup.ToArray();
+        }
+
+        private void ZoomToFeature(FeatureLookup ftLookup)
+        {
+            if (ftLookup == null) return;
+
+            // make sure the active map panel has the layer available for display
+            ActivateMapPanelWithLayer(ftLookup.Layer);
+            // cycle through layers of the active map panel and find the one we need
+            var layers = Map.GetFeatureLayers();
+            foreach (IMapFeatureLayer mapLayer in layers)
+            {
+                if (mapLayer != null &&
+                    String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
+                if (mapLayer == null) continue;
+
+                IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
+                if (fs == null || fs.Name != ftLookup.Layer) continue;
+
+                // TODO: maybe check shape type and buffer around it or something?
+                mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
+                mapLayer.ZoomToSelectedFeatures();
+            }
         }
 
         private void SearchPanelOnRowDoublelicked(object sender, EventArgs eventArgs)
         {
             var evnt = eventArgs as DataGridViewCellEventArgs;
-            if (evnt != null)
+            if (evnt == null) return;
+
+            var dgvr = _dataGridView.Rows[evnt.RowIndex];
+            var fidIdx = GetColumnDisplayIndex(FID, _dataGridView);
+            var lyrIdx = GetColumnDisplayIndex(LYRNAME, _dataGridView);
+            var shpIdx = GetColumnDisplayIndex(GEOSHAPE, _dataGridView);
+
+            var lookup = new FeatureLookup
             {
-                DataGridViewRow dgvr = _dataGridView.Rows[evnt.RowIndex];
-                int fidIdx = GetColumnDisplayIndex(FID);
-                int lyrIdx = GetColumnDisplayIndex(LYRNAME);
-                string fid = dgvr.Cells[fidIdx].Value.ToString();
-                string lyr = dgvr.Cells[lyrIdx].Value.ToString();
+                Fid = dgvr.Cells[fidIdx].Value.ToString(),
+                Layer = dgvr.Cells[lyrIdx].Value.ToString(),
+                Shape = dgvr.Cells[shpIdx].Value.ToString()
+            };
 
-                Dictionary<string, string> mapPanels = GetMapTabKeysContainingLayer(lyr);
-                if (!mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
-                {
-                    if (mapPanels.Count == 1)
+            switch (_searchPanel.SearchMode)
+            {
+                case SearchMode.Intersection:
+                    if (_searchPanel.SearchQuery.Length <= 0) return;
+                    var arr = _searchPanel.SearchQuery.Split('|');
+                    if (arr.Length > 0 && arr[0].Length > 0)
                     {
-                        TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
+                        ZoomToIntersection(arr[0], lookup);
                     }
-                    else if (mapPanels.Count > 1)
-                    {
-                        var v = mapPanels.Values;
-                        var msgBox = new MultiSelectMessageBox(
-                            "Multiple Map Tabs",
-                            "Multiple map tabs contain this feature, please select the tab to map the feature below.",
-                            v.ToArray());
-                        msgBox.ShowDialog();
-                        var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
-                        TabDockingControl.SelectPanel(key);
-                    }
-                    else
-                    {
-                        return; // something bad happened here
-                    }
-                }
-                // now we cycle through layers of our active map and find the layer we want
-                var layers = Map.GetFeatureLayers();
-                foreach (IMapFeatureLayer mapLayer in layers)
-                {
-                    if (mapLayer != null &&
-                        String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
-                    if (mapLayer == null) continue;
-
-                    IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
-                    if (fs == null || fs.Name != lyr) continue;
-
-                    mapLayer.SelectByAttribute("[FID] =" + fid);
-                    mapLayer.ZoomToSelectedFeatures();
-                }
+                    break;
+                default:  // normal operation is to go to the chosen feature
+                    ZoomToFeature(lookup);
+                    break;
             }
         }
 
@@ -226,7 +379,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         #region Methods
 
-        public ScoreDoc[] ExecuteLuceneQuery(string sq)
+        private IEnumerable<ScoreDoc> ExecuteLuceneQuery(string sq)
         {
             ScoreDoc[] hits = null;
             switch (_searchPanel.SearchMode)
@@ -238,27 +391,19 @@ namespace DotSpatial.SDR.Plugins.Search
                     hits = ExecuteScoredRoadQuery(sq);
                     break;
                 case SearchMode.Intersection:
-                    var arr = sq.Split('|');
-                    if (arr[1].Length > 0)  // we have two features get lat long and zoom to feature
-                    {
-                        // return null;
-                    }
-                    else  // find all features that intersect with the queried features
-                    {
-                        hits = ExecuteGetIntersectionsQuery(arr[0]);
-                    }
+                    hits = ExecuteGetIntersectionsQuery(sq);
                     break;
             }
             return hits;
         }
 
-        private int GetColumnDisplayIndex(string name)
+        private static int GetColumnDisplayIndex(string name, DataGridView dgv)
         {
-            for (int i = 0; i <= _dataGridView.ColumnCount - 1; i++)
+            for (int i = 0; i <= dgv.ColumnCount - 1; i++)
             {
-                if (_dataGridView.Columns[i].Name == name)
+                if (dgv.Columns[i].Name == name)
                 {
-                    return _dataGridView.Columns[i].DisplayIndex;
+                    return dgv.Columns[i].DisplayIndex;
                 }
             }
             return -1;
@@ -270,7 +415,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var colArr = new DataGridViewColumn[_columnNames.Count()];
             // check for any sort order the user may have set
             var orderDict = GetIndexColumnsOrder();
-            List<DataGridViewColumn> tList = new List<DataGridViewColumn>();
+            var tList = new List<DataGridViewColumn>();
             // add our columns to the datagridview 
             for (var i = 0; i < _columnNames.Count(); i++)
             {
@@ -651,16 +796,20 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private ScoreDoc[] ExecuteGetIntersectionsQuery(string q)
         {
+            if (q.Length <= 0) return null;
             // get the name of the street passed in so it is removed from results returned
             var sa = StreetAddressParser.Parse(q, true);
-            var saTerm = new Term("Street Name", sa.StreetName.ToLower());
-            // total docs for return
-            var docs = new List<ScoreDoc>();
-            // get exact match road features
+            var docs = new List<ScoreDoc>();  // total docs for return
             ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
+
             // setup a spatial query to find all features that intersect with our results
             var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
+
+            // term query to remove features with the same name, ie segments of the road
+            var saTerm = new Term("Street Name", sa.StreetName.ToLower());
+            Query tq = new TermQuery(saTerm);
+
             foreach (var qHit in qHits)
             {
                 var doc = _indexSearcher.Doc(qHit.Doc);  // snag the current doc for additional spatial queries
@@ -669,8 +818,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 // prepare spatial query
                 var args = new SpatialArgs(SpatialOperation.Intersects, shp);
                 Query sq = strategy.MakeQuery(args);
-                // term query to remove features with the same name, ie segments of the road
-                Query tq = new TermQuery(saTerm);
                 // create overall boolean query to pass to indexsearcher
                 var query = new BooleanQuery {{sq, Occur.MUST}, {tq, Occur.MUST_NOT}};
                 // execute a query to find all features that intersect each passed in feature
@@ -703,7 +850,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 var doc = _indexSearcher.Doc(hit.Doc);
                 foreach (var field in _columnNames)
                 {
-                    var idx = GetColumnDisplayIndex(field);
+                    var idx = GetColumnDisplayIndex(field, _dataGridView);
                     var val = doc.Get(field);
                     dgvRow.Cells[idx].Value = val;
                 }
@@ -765,7 +912,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     arrList.Add(val.Trim());
                 }
             }
-            _searchPanel.IntersectedFeatures = arrList;
+            _searchPanel.IntersectedFeatures = arrList;  // fires an event on the panel to update the combobox
         }
 
         private void LogStreetAddressParsedQuery(string q, StreetAddress sa)
