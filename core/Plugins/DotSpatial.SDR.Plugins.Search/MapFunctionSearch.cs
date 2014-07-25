@@ -195,6 +195,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SearchPanelOnPerformSearch(object sender, EventArgs eventArgs)
         {
+            
             if (_searchPanel.SearchQuery.Length <= 0) return;
             var q = _searchPanel.SearchQuery;
             // if its an intersection and there are two terms do a location zoom, otherwise find intersections
@@ -759,7 +760,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // parse our input address into a valid streetaddress object
             // TODO: perform check to determine if user is using pretypes fields
             // TODO: Not sure how to best handle this, what if they mix types??
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, true);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, false);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -835,7 +836,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // parse our input road into a streetaddress object for analysis
             // TODO: perform check to determine if user is using pretypes fields
             // TODO: Not sure how to best handle this, what if they mix types??
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, true);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, false);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -893,7 +894,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // parse our input address into a valid streetaddress object
             // TODO: perform check to determine if user is using pretypes fields
             // TODO: Not sure how to best handle this, what if they mix types??
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, true);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, false);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -950,18 +951,15 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (q.Length <= 0) return null;
             // get the name of the street passed in so it is removed from results returned
-            var sa = StreetAddressParser.Parse(q, true);
+            var sa = StreetAddressParser.Parse(q, false);
             var docs = new List<ScoreDoc>();  // total docs for return
             ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
-
             // setup a spatial query to find all features that intersect with our results
             var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
-
             // term query to remove features with the same name, ie segments of the road
             var saTerm = new Term("Street Name", sa.StreetName.ToLower());
             Query tq = new TermQuery(saTerm);
-
             foreach (var qHit in qHits)
             {
                 var doc = _indexSearcher.Doc(qHit.Doc);  // snag the current doc for additional spatial queries

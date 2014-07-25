@@ -220,7 +220,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Star")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Triangle")]
         public string GraphicPointStyle {
             get {
                 return ((string)(this["GraphicPointStyle"]));
@@ -232,7 +232,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
         public int GraphicPointSize {
             get {
                 return ((int)(this["GraphicPointSize"]));
@@ -256,7 +256,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public int GraphicLineSize {
             get {
                 return ((int)(this["GraphicLineSize"]));
@@ -299,6 +299,18 @@ namespace SDR.Configuration.Properties {
             }
             set {
                 this["GraphicLineStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int HydrantSearchCount {
+            get {
+                return ((int)(this["HydrantSearchCount"]));
+            }
+            set {
+                this["HydrantSearchCount"] = value;
             }
         }
     }

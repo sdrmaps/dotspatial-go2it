@@ -49,8 +49,9 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GraphicLineSize = 5;
             Properties.ProjectSettings.Default.GraphicLineStyle = "Solid";
             Properties.ProjectSettings.Default.GraphicPointColor = Color.LimeGreen;
-            Properties.ProjectSettings.Default.GraphicPointSize = 15;
-            Properties.ProjectSettings.Default.GraphicPointStyle = "Star";
+            Properties.ProjectSettings.Default.GraphicPointSize = 18;
+            Properties.ProjectSettings.Default.GraphicPointStyle = "Triangle";
+            Properties.ProjectSettings.Default.HydrantSearchCount = 3;
         }
 
         /// <summary>
@@ -289,5 +290,12 @@ namespace SDR.Configuration.Project
             set { Properties.ProjectSettings.Default.GraphicLineStyle = value; }
             get { return Properties.ProjectSettings.Default.GraphicLineStyle; }
         }
+
+        public int HydrantSearchCount
+        {
+            set { Properties.ProjectSettings.Default.HydrantSearchCount = value; }
+            get { return Properties.ProjectSettings.Default.HydrantSearchCount; }
+        }
+
     }
 }

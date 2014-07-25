@@ -54,16 +54,16 @@
       <Value Profile="(Default)">LimeGreen</Value>
     </Setting>
     <Setting Name="GraphicPointStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Star</Value>
+      <Value Profile="(Default)">Triangle</Value>
     </Setting>
     <Setting Name="GraphicPointSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">18</Value>
     </Setting>
     <Setting Name="GraphicLineColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Orange</Value>
     </Setting>
     <Setting Name="GraphicLineSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="GraphicLineBorderColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Orange</Value>
@@ -73,6 +73,9 @@
     </Setting>
     <Setting Name="GraphicLineStyle" Type="System.String" Scope="User">
       <Value Profile="(Default)">Solid</Value>
+    </Setting>
+    <Setting Name="HydrantSearchCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

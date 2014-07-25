@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
@@ -359,7 +360,6 @@ namespace DotSpatial.SDR.Plugins.Search
         private void PopulateRoadsToCombo()
         {
             Query query = new MatchAllDocsQuery();  // query grabs all documents
-            Filter filter = new DuplicateFilter("Street Name");  // filter by streetname (remove any duplicates)
             var log = AppContext.Instance.Get<ILog>();
             if (MapFunctionSearch.IndexSearcher == null)
             {
@@ -367,7 +367,7 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             else
             {
-                TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, filter, MapFunctionSearch.IndexReader.MaxDoc);
+                TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, MapFunctionSearch.IndexReader.MaxDoc);
                 ScoreDoc[] hits = docs.ScoreDocs;
                 FormatQueryResultsForComboBox(hits);
             }
@@ -400,6 +400,8 @@ namespace DotSpatial.SDR.Plugins.Search
             if (cmb == null) return;
 
             cmb.Items.Clear();
+
+            int count = 0;
             foreach (var hit in scoreDocs)
             {
                 // snatch the ranked document
@@ -426,11 +428,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     val = val + doc.Get("Post Directional").Trim() + " ";
                 }
-                if (val.Length > 0)
+                if (val.Trim().Length > 0)
                 {
                     if (!cmb.Items.Contains(val.Trim()))
                     {
                         cmb.Items.Add(val.Trim());
+                        count++;
                     }
                 }
             }
