@@ -10,6 +10,7 @@
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\CityLimitIndex</anyType>
     <anyType xsi:type="xsd:string">H:\Data\Go2It_Test\indexes\AddressIndex</anyType>
     <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\EsnIndex</anyType>
+    <anyType xsi:type="xsd:string">H:\Data\Go2It_McCurtain\indexes\HydrantIndex</anyType>
   </MruList>
   <UseCompound>false</UseCompound>
 </PrefsData>

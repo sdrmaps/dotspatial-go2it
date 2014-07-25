@@ -153,7 +153,6 @@ namespace DotSpatial.SDR.Plugins.Search
                     {
                         _mapFunction.Deactivate();
                     }
-                    
                 }
             }
         }

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
 using Lucene.Net.Search;
+using SDR.Common;
+using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Search
@@ -130,6 +132,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchName_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Name;
+            OnSearchModeChanged();
             // toggle the button for this tool
             searchName.Checked = true;
             searchAdds.Checked = false;
@@ -137,14 +140,16 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = false;
             searchIntersection.Checked = false;
             // setup the search panel for this tool
-            ClearSearchPanel();
+            RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
-            OnSearchModeChanged();
+            _addressPanel.Controls["txtAddressSearch"].Text = string.Empty;
+            ClearSearches();  // clears dgv
         }
 
         private void searchPhone_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Phone;
+            OnSearchModeChanged();
             // toggle the button for this tool
             searchPhone.Checked = true;
             searchAdds.Checked = false;
@@ -152,14 +157,16 @@ namespace DotSpatial.SDR.Plugins.Search
             searchIntersection.Checked = false;
             searchRoad.Checked = false;
             // setup the search panel for this tool
-            ClearSearchPanel();
+            RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
-            OnSearchModeChanged();
+            _addressPanel.Controls["txtAddressSearch"].Text = string.Empty;
+            ClearSearches();
         }
 
         private void searchRoad_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Road;
+            OnSearchModeChanged();
             // toggle the button for this tool
             searchAdds.Checked = false;
             searchPhone.Checked = false;
@@ -167,15 +174,17 @@ namespace DotSpatial.SDR.Plugins.Search
             searchIntersection.Checked = false;
             searchRoad.Checked = true;
             // setup search panel for this tool
-            ClearSearchPanel();
+            RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_roadPanel, 0, 0);
+            _roadPanel.Controls["cmbRoadSearch"].Text = String.Empty;
+            ClearSearches();
             PopulateRoadsToCombo();
-            OnSearchModeChanged();
         }
 
         private void searchAdds_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Address;
+            OnSearchModeChanged();
             // toggle the button for this tool
             searchAdds.Checked = true;
             searchPhone.Checked = false;
@@ -183,14 +192,16 @@ namespace DotSpatial.SDR.Plugins.Search
             searchIntersection.Checked = false;
             searchRoad.Checked = false;
             // setup the search panel for this tool
-            ClearSearchPanel();
+            RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
-            OnSearchModeChanged();
+            _addressPanel.Controls["txtAddressSearch"].Text = string.Empty;
+            ClearSearches();
         }
 
         private void searchIntersection_Click(object sender, EventArgs e)
         {
             _searchMode = SearchMode.Intersection;
+            OnSearchModeChanged();
             // toggle the button for this tool
             searchAdds.Checked = false;
             searchPhone.Checked = false;
@@ -198,10 +209,12 @@ namespace DotSpatial.SDR.Plugins.Search
             searchIntersection.Checked = true;
             searchRoad.Checked = false;
             // setup the search panel for this tool
-            ClearSearchPanel();
+            RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_intersectionPanel, 0, 0);
+            _intersectionPanel.Controls["cmbIntSearch1"].Text = string.Empty;
+            _intersectionPanel.Controls["cmbIntSearch2"].Text = string.Empty;
+            ClearSearches();
             PopulateRoadsToCombo();
-            OnSearchModeChanged();
         }
 
         private void searchHydrant_Click(object sender, EventArgs e)
@@ -347,12 +360,20 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             Query query = new MatchAllDocsQuery();  // query grabs all documents
             Filter filter = new DuplicateFilter("Street Name");  // filter by streetname (remove any duplicates)
-            TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, filter, MapFunctionSearch.IndexReader.MaxDoc);
-            ScoreDoc[] hits = docs.ScoreDocs;
-            FormatQueryResultsForComboBox(hits);
+            var log = AppContext.Instance.Get<ILog>();
+            if (MapFunctionSearch.IndexSearcher == null)
+            {
+                log.Info("PopulateRoadsToCombo in SearchPanel failed to load, valid _indexSearcher not found");
+            }
+            else
+            {
+                TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, filter, MapFunctionSearch.IndexReader.MaxDoc);
+                ScoreDoc[] hits = docs.ScoreDocs;
+                FormatQueryResultsForComboBox(hits);
+            }
         }
 
-        private void ClearSearchPanel()
+        private void RemoveCurrentSearchPanel()
         {
             var c = searchLayoutPanel.GetControlFromPosition(0, 0);
             if (c != null)
@@ -363,6 +384,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void FormatQueryResultsForComboBox(IEnumerable<ScoreDoc> hits)
         {
+            var scoreDocs = hits as ScoreDoc[] ?? hits.ToArray();
+            if (!scoreDocs.Any()) return;
             // snag the combobox of the search mode
             var cmb = new ComboBox();
             switch (_searchMode)
@@ -377,7 +400,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (cmb == null) return;
 
             cmb.Items.Clear();
-            foreach (var hit in hits)
+            foreach (var hit in scoreDocs)
             {
                 // snatch the ranked document
                 var doc = MapFunctionSearch.IndexSearcher.Doc(hit.Doc);

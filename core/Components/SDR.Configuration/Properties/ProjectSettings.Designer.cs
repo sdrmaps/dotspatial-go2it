@@ -205,5 +205,101 @@ namespace SDR.Configuration.Properties {
                 this["ActiveMapViewCaption"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LimeGreen")]
+        public global::System.Drawing.Color GraphicPointColor {
+            get {
+                return ((global::System.Drawing.Color)(this["GraphicPointColor"]));
+            }
+            set {
+                this["GraphicPointColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Star")]
+        public string GraphicPointStyle {
+            get {
+                return ((string)(this["GraphicPointStyle"]));
+            }
+            set {
+                this["GraphicPointStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int GraphicPointSize {
+            get {
+                return ((int)(this["GraphicPointSize"]));
+            }
+            set {
+                this["GraphicPointSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Orange")]
+        public global::System.Drawing.Color GraphicLineColor {
+            get {
+                return ((global::System.Drawing.Color)(this["GraphicLineColor"]));
+            }
+            set {
+                this["GraphicLineColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int GraphicLineSize {
+            get {
+                return ((int)(this["GraphicLineSize"]));
+            }
+            set {
+                this["GraphicLineSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Orange")]
+        public global::System.Drawing.Color GraphicLineBorderColor {
+            get {
+                return ((global::System.Drawing.Color)(this["GraphicLineBorderColor"]));
+            }
+            set {
+                this["GraphicLineBorderColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Flat")]
+        public string GraphicLineCap {
+            get {
+                return ((string)(this["GraphicLineCap"]));
+            }
+            set {
+                this["GraphicLineCap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Solid")]
+        public string GraphicLineStyle {
+            get {
+                return ((string)(this["GraphicLineStyle"]));
+            }
+            set {
+                this["GraphicLineStyle"] = value;
+            }
+        }
     }
 }

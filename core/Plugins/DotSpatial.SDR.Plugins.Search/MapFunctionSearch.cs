@@ -1,21 +1,32 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Collections;
 using DotSpatial.Data;
+using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
+using DotSpatial.Symbology;
+using DotSpatial.Topology;
+using DotSpatial.Topology.Utilities;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
+using Lucene.Net.Search.Function;
 using Lucene.Net.Spatial;
 using Lucene.Net.Spatial.Prefix;
 using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Spatial.Queries;
+using Lucene.Net.Spatial.Vector;
 using Lucene.Net.Store;
+using NetTopologySuite.IO;
 using Spatial4n.Core.Context.Nts;
+using Spatial4n.Core.Distance;
+using Spatial4n.Core.Shapes.Impl;
 using SdrConfig = SDR.Configuration;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -24,6 +35,8 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
+using PointShape = DotSpatial.Symbology.PointShape;
+using Shape = Spatial4n.Core.Shapes.Shape;
 
 namespace DotSpatial.SDR.Plugins.Search
 {
@@ -41,8 +54,15 @@ namespace DotSpatial.SDR.Plugins.Search
         private static IndexSearcher _indexSearcher = null;
         private static IndexReader _indexReader = null;
 
+        // drawing layers used by this tool
+        private FeatureSet _pointGraphics;
+        private MapPointLayer _pointGraphicsLayer;
+        private FeatureSet _polylineGraphics;
+        private MapLineLayer _polylineGraphicsLayer;
+
         private string _indexType;
         private string[] _columnNames;
+        private FeatureLookup _activeLookup;
 
         internal const string FID = "FID";
         internal const string LYRNAME = "LYRNAME";
@@ -146,11 +166,26 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SearchPanelOnSearchesCleared(object sender, EventArgs eventArgs)
         {
+            _activeLookup = null;
             // unbind the column order index stuff
             _dataGridView.ColumnDisplayIndexChanged -= DataGridViewOnColumnDisplayIndexChanged;
             // now clear the datagridview
             _dataGridView.Rows.Clear();
             _dataGridView.Columns.Clear();
+
+            if (Map != null && Map.MapFrame.DrawingLayers.Contains(_pointGraphicsLayer))
+            {
+                Map.MapFrame.DrawingLayers.Remove(_pointGraphicsLayer);
+                _pointGraphicsLayer = null;
+                _pointGraphics = null;
+            }
+            if (Map != null && Map.MapFrame.DrawingLayers.Contains(_polylineGraphicsLayer))
+            {
+                Map.MapFrame.DrawingLayers.Remove(_polylineGraphicsLayer);
+                _polylineGraphicsLayer = null;
+                _polylineGraphics = null;
+            }
+            Map.MapFrame.Invalidate();
 
             // TODO: this is so fucking slow, have to find a better approach
             // clear any map selections as well
@@ -165,6 +200,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // if its an intersection and there are two terms do a location zoom, otherwise find intersections
             if (_searchPanel.SearchMode == SearchMode.Intersection)
             {
+                if (_searchPanel.SearchQuery.Length <= 1) return;  // only the | is present (blank search)
                 var arr = q.Split('|');
                 if (arr[1].Length > 0) // zoom to intersection of the two features
                 {
@@ -223,28 +259,69 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 foreach (var c in coords)
                 {
-                    if (!fl1.Shape.Contains(c)) continue;
-                    if (!coordsList.Contains(c))
+                    if (!fl1.Shape.Contains(c.Trim())) continue;
+                    if (!coordsList.Contains(c.Trim()))
                     {
-                        coordsList.Add(c);
+                        coordsList.Add(c.Trim());
                     }
                 }
             }
             return coordsList.ToArray();
         }
 
+        private void CreatePointGraphic(Coordinate c)
+        {
+            if (_pointGraphicsLayer == null)
+            {
+                _pointGraphics = new FeatureSet(FeatureType.Point);
+                _pointGraphicsLayer = new MapPointLayer(_pointGraphics);
+                PointShape pointShape = new PointShape();
+                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out pointShape);
+                _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
+                    pointShape,
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
+                Map.MapFrame.DrawingLayers.Add(_pointGraphicsLayer);
+            }
+            var point = new Topology.Point(c);
+            _pointGraphics.AddFeature(point);
+        }
+
+        private void CreateIntersectionGraphic(string coords)
+        {
+            var coord = coords.Split(' ');
+            double x, y;
+            double.TryParse(coord[0], out x);
+            double.TryParse(coord[1], out y);
+            double[] xy = new double[2];
+            xy[0] = x;
+            xy[1] = y;
+            // reproject the point if need be
+            if (Map.Projection.ToProj4String() != KnownCoordinateSystems.Geographic.World.WGS1984.ToProj4String())
+            {
+                Reproject.ReprojectPoints(
+                    xy, new double[1], KnownCoordinateSystems.Geographic.World.WGS1984, Map.Projection, 0, 1);
+            }
+            CreatePointGraphic(new Coordinate(xy[0], xy[1]));
+            var envelope = CreateBufferGraphic(new DotSpatial.Topology.Point(new Coordinate(xy[0], xy[1])));
+            // TODO: we should make this user configable, add to admin panel and config
+            const double zoomInFactor = 0.10; // fixed zoom-in by 10% - 5% on each side
+            var newExtentWidth = envelope.Width * zoomInFactor;
+            var newExtentHeight = envelope.Height * zoomInFactor;
+            envelope.ExpandBy(newExtentWidth, newExtentHeight);
+            Map.ViewExtents = envelope.ToExtent();
+        }
+
         private void ZoomToIntersection(string ft1, FeatureLookup fl2)
         {
+            // snag all featurelookups that intersect with featurelookup fl2
             var fts1Lookup = FetchIntersectingLookups(ft1, fl2);
+            // find the coordinate that is the intersection
             var coords = GetIntersectionCoordinate(fts1Lookup, fl2);
-            if (coords.Count() != 1)
+            var enumerable = coords as string[] ?? coords.ToArray();
+            if (enumerable.Count() == 1)
             {
-                // TODO: finish this crap
-                Debug.WriteLine("major major fuckup here");
-            }
-            else
-            {
-                Debug.WriteLine(coords.First());
+                CreateIntersectionGraphic(enumerable.First().Trim());
             }
         }
 
@@ -266,7 +343,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 };
                 var fts1Lookup = FetchIntersectingLookups(ft1, fl2);
                 var coords = GetIntersectionCoordinate(fts1Lookup, fl2);
-                foreach (var c in coords)
+                foreach (var c in coords) // add to our overall list for final checking
                 {
                     if (!coordsList.Contains(c))
                     {
@@ -274,14 +351,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     }   
                 }
             }
-            if (coordsList.Count != 1)
+            if (coordsList.Count == 1)
             {
-                // TODO: finish this crap
-                Debug.WriteLine("major major fuckup here");
-            }
-            else
-            {
-                Debug.WriteLine(coordsList[0]);
+                CreateIntersectionGraphic(coordsList.First().Trim());
             }
         }
 
@@ -298,7 +370,8 @@ namespace DotSpatial.SDR.Plugins.Search
                 var doc = _indexSearcher.Doc(hit.Doc);
                 // load a possible intersecting feature shape
                 Spatial4n.Core.Shapes.Shape shp1 = ctx.ReadShape(doc.Get(GEOSHAPE));
-                if (shp1.Relate(shp2).Equals(Spatial4n.Core.Shapes.SpatialRelation.INTERSECTS))  // validate relation
+                // validate relation
+                if (shp1.Relate(shp2).Equals(Spatial4n.Core.Shapes.SpatialRelation.INTERSECTS))  
                 {
                     var fl1 = new FeatureLookup
                     {
@@ -313,6 +386,30 @@ namespace DotSpatial.SDR.Plugins.Search
                 }
             }
             return fts1Lookup.ToArray();
+        }
+
+        private IEnvelope CreateBufferGraphic(IGeometry ft)
+        {
+            if (_polylineGraphicsLayer == null)
+            {
+                _polylineGraphics = new FeatureSet(FeatureType.Line);
+                _polylineGraphicsLayer = new MapLineLayer(_polylineGraphics);
+
+                LineCap lineCap = new LineCap();
+                LineCap.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out lineCap);
+                DashStyle lineStyle = new DashStyle();
+                DashStyle.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap, true, out lineStyle);
+                _polylineGraphicsLayer.Symbolizer = new LineSymbolizer(
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor,
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor,
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize,
+                    lineStyle,
+                    lineCap);
+                Map.MapFrame.DrawingLayers.Add(_polylineGraphicsLayer);
+            }
+            var buffer = ft.Buffer(10);  // TODO: make the buffer distance configable
+            _polylineGraphics.AddFeature(buffer);
+            return buffer.Envelope;
         }
 
         private void ZoomToFeature(FeatureLookup ftLookup)
@@ -331,9 +428,13 @@ namespace DotSpatial.SDR.Plugins.Search
 
                 IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
                 if (fs == null || fs.Name != ftLookup.Layer) continue;
-
-                // TODO: maybe check shape type and buffer around it or something?
+                // select the feature so it is highlighted
+                // TODO: this appears to force a bunch of redraws need to investigate
+                // TODO: could just remove this and use a graphic instead??
                 mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
+                // grab the feature and use the shape to generate a buffer around it
+                var ft = fs.GetFeature(Convert.ToInt32(ftLookup.Fid));
+                CreateBufferGraphic(ft.BasicGeometry as Geometry);
                 mapLayer.ZoomToSelectedFeatures();
             }
         }
@@ -348,7 +449,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var lyrIdx = GetColumnDisplayIndex(LYRNAME, _dataGridView);
             var shpIdx = GetColumnDisplayIndex(GEOSHAPE, _dataGridView);
 
-            var lookup = new FeatureLookup
+            _activeLookup = new FeatureLookup
             {
                 Fid = dgvr.Cells[fidIdx].Value.ToString(),
                 Layer = dgvr.Cells[lyrIdx].Value.ToString(),
@@ -362,22 +463,61 @@ namespace DotSpatial.SDR.Plugins.Search
                     var arr = _searchPanel.SearchQuery.Split('|');
                     if (arr.Length > 0 && arr[0].Length > 0)
                     {
-                        ZoomToIntersection(arr[0], lookup);
+                        ZoomToIntersection(arr[0], _activeLookup);
                     }
                     break;
                 default:  // normal operation is to go to the chosen feature
-                    ZoomToFeature(lookup);
+                    ZoomToFeature(_activeLookup);
                     break;
             }
         }
 
         private void SearchPanelOnHydrantLocate(object sender, EventArgs eventArgs)
         {
-            MessageBox.Show("locate hydrant");
+            if (_activeLookup == null)
+            {
+                MessageBox.Show(@"No feature or location is active");
+                return;
+            }
+            var idxType = _indexType;  // store the current index type | reset when operation is complete
+            SetupIndexReaderWriter("HydrantIndex");
+
+            var hits = ExecuteScoredHydrantQuery(_activeLookup);
+            foreach (var hit in hits)
+            {
+                var doc = _indexSearcher.Doc(hit.Doc);
+                // TODO: what do we do here?
+                Debug.WriteLine(doc.Get(FID));
+                // SELECT the top 3-5 hydrants and zoom out to view them
+
+
+
+            }
+            SetupIndexReaderWriter(idxType);  // set the index searcher back
         }
         #endregion
 
         #region Methods
+
+        private ScoreDoc[] ExecuteScoredHydrantQuery(FeatureLookup activeLookup)
+        {
+            var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
+            Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(activeLookup.Shape);
+            Spatial4n.Core.Shapes.Point centerPt = shp.GetCenter();
+
+            SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
+            var args = new SpatialArgs(SpatialOperation.Intersects,
+                ctx.MakeCircle(centerPt.GetX(), centerPt.GetY(),
+                    DistanceUtils.Dist2Degrees(10, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
+
+            Filter filter = strategy.MakeFilter(args);
+            ValueSource valueSource = strategy.MakeDistanceValueSource(centerPt);
+            ValueSourceQuery query = new ValueSourceQuery(valueSource);
+            Sort sort = new Sort(new SortField("DISTANCE", SortField.SCORE, true));
+
+            TopDocs docs = _indexSearcher.Search(query, filter, 10, sort);
+            return docs.ScoreDocs;
+        }
 
         private IEnumerable<ScoreDoc> ExecuteLuceneQuery(string sq)
         {
@@ -495,7 +635,6 @@ namespace DotSpatial.SDR.Plugins.Search
             const string sql = "SELECT layers, lookup, caption FROM MapTabs";
             DataTable mapTabsTable = SQLiteHelper.GetDataTable(conn, sql);
             var mapPanelsLookup = new Dictionary<string, string>();
-
             foreach (DataRow row in mapTabsTable.Rows)
             {
                 // parse the layers string into layer names
@@ -548,7 +687,7 @@ namespace DotSpatial.SDR.Plugins.Search
             return sql.Length == 0 ? new string[0] : SQLiteHelper.GetResultsAsArray(conn, sql);
         }
 
-        private void SetupIndexReaderWriter()
+        private void SetupIndexReaderWriter(string idxType)
         {
             if (_indexSearcher != null)
             {
@@ -557,9 +696,35 @@ namespace DotSpatial.SDR.Plugins.Search
                 _indexReader.Dispose();
             }
             // get the index directory for this mode
-            Directory idxDir = GetLuceneIndexDirectory();  
-            _indexReader = IndexReader.Open(idxDir, true);  // readonly for performance
-            _indexSearcher = new IndexSearcher(_indexReader);
+            Directory idxDir = GetLuceneIndexDirectory(idxType);
+            if (idxDir != null)
+            {
+                _indexReader = IndexReader.Open(idxDir, true);  // readonly for performance
+                _indexSearcher = new IndexSearcher(_indexReader);
+            }
+        }
+
+        private void SetupIndexReaderWriter()
+        {
+            SetupIndexReaderWriter(_indexType);
+        }
+
+        public Directory GetLuceneIndexDirectory()
+        {
+            return GetLuceneIndexDirectory(_indexType);
+        }
+
+        public Directory GetLuceneIndexDirectory(string indexType)
+        {
+            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var d = Path.GetDirectoryName(db);
+            if (d == null) return null;
+
+            var path = Path.Combine(d, "indexes", indexType);
+            if (!System.IO.Directory.Exists(path)) return null;
+
+            Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
+            return idxDir;
         }
 
         private void SetSearchVariables()
@@ -781,19 +946,6 @@ namespace DotSpatial.SDR.Plugins.Search
             return docs.ScoreDocs;
         }
 
-        public Directory GetLuceneIndexDirectory()
-        {
-            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            var d = Path.GetDirectoryName(db);
-            if (d == null) return null;
-
-            var path = Path.Combine(d, "indexes", _indexType);
-            if (!System.IO.Directory.Exists(path)) return null;
-
-            Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
-            return idxDir;
-        }
-
         private ScoreDoc[] ExecuteGetIntersectionsQuery(string q)
         {
             if (q.Length <= 0) return null;
@@ -814,7 +966,7 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 var doc = _indexSearcher.Doc(qHit.Doc);  // snag the current doc for additional spatial queries
                 var strShp = doc.Get(GEOSHAPE);  // get the string representation of the feature shape
-                Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(strShp);  // read the wkt string into an actual shape object
+                Shape shp = ctx.ReadShape(strShp);  // read the wkt string into an actual shape object
                 // prepare spatial query
                 var args = new SpatialArgs(SpatialOperation.Intersects, shp);
                 Query sq = strategy.MakeQuery(args);
@@ -823,10 +975,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 // execute a query to find all features that intersect each passed in feature
                 TopDocs topDocs = _indexSearcher.Search(query, _indexReader.NumDocs());
                 ScoreDoc[] hits = topDocs.ScoreDocs;
-                // results for cleanup after loop completes
+                // add to results for cleanup after loop completes
                 docs.AddRange(hits);
             }
-            // remove any duplicates by street name
+            // remove any duplicates by street name, ignoring scoring
             var cdocs = docs.GroupBy(x => x.Doc).Select(x => x.First()).ToList<ScoreDoc>();
             return cdocs.ToArray();
         }
@@ -881,6 +1033,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void UpdateIntersectedFeatures(IEnumerable<ScoreDoc> hits)
         {
+            if (!hits.Any() || hits == null) return;
             var arrList = new ArrayList();
             foreach (var hit in hits)
             {

@@ -69,6 +69,16 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
+            this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
+            this.lineSymbolCap = new System.Windows.Forms.ComboBox();
+            this.lineSymbolSize = new System.Windows.Forms.NumericUpDown();
+            this.lineSymbolStyle = new System.Windows.Forms.ComboBox();
+            this.lineSymbolColor = new System.Windows.Forms.Panel();
+            this.ptSymbolSize = new System.Windows.Forms.NumericUpDown();
+            this.ptSymbolColor = new System.Windows.Forms.Panel();
+            this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
+            this.lineSymbolGraphic = new System.Windows.Forms.Panel();
+            this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.btnSaveHotKeys = new System.Windows.Forms.Button();
             this.dgvHotKeys = new System.Windows.Forms.DataGridView();
             this.btnUsersDelete = new System.Windows.Forms.Button();
@@ -92,6 +102,7 @@
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.hydrantZoom = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -106,9 +117,12 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.hydrantZoom)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -571,6 +585,17 @@
             // 
             // adminTab_ProgramManagement
             // 
+            this.adminTab_ProgramManagement.Controls.Add(this.hydrantZoom);
+            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolBorderColor);
+            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolCap);
+            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolSize);
+            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolStyle);
+            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolColor);
+            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolSize);
+            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolColor);
+            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolStyle);
+            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolGraphic);
+            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolGraphic);
             this.adminTab_ProgramManagement.Controls.Add(this.btnSaveHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.dgvHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.btnUsersDelete);
@@ -590,9 +615,96 @@
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
             // 
+            // lineSymbolBorderColor
+            // 
+            this.lineSymbolBorderColor.Location = new System.Drawing.Point(91, 602);
+            this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
+            this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
+            this.lineSymbolBorderColor.TabIndex = 20;
+            this.lineSymbolBorderColor.Click += new System.EventHandler(this.lineSymbolBorderColor_Click);
+            // 
+            // lineSymbolCap
+            // 
+            this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lineSymbolCap.FormattingEnabled = true;
+            this.lineSymbolCap.Location = new System.Drawing.Point(159, 605);
+            this.lineSymbolCap.Name = "lineSymbolCap";
+            this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
+            this.lineSymbolCap.TabIndex = 19;
+            this.lineSymbolCap.SelectedIndexChanged += new System.EventHandler(this.lineSymbolCap_SelectedIndexChanged);
+            // 
+            // lineSymbolSize
+            // 
+            this.lineSymbolSize.Location = new System.Drawing.Point(405, 572);
+            this.lineSymbolSize.Name = "lineSymbolSize";
+            this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
+            this.lineSymbolSize.TabIndex = 18;
+            this.lineSymbolSize.ValueChanged += new System.EventHandler(this.lineSymbolSize_ValueChanged);
+            // 
+            // lineSymbolStyle
+            // 
+            this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lineSymbolStyle.FormattingEnabled = true;
+            this.lineSymbolStyle.Location = new System.Drawing.Point(155, 571);
+            this.lineSymbolStyle.Name = "lineSymbolStyle";
+            this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
+            this.lineSymbolStyle.TabIndex = 17;
+            this.lineSymbolStyle.SelectedIndexChanged += new System.EventHandler(this.lineSymbolStyle_SelectedIndexChanged);
+            // 
+            // lineSymbolColor
+            // 
+            this.lineSymbolColor.Location = new System.Drawing.Point(91, 556);
+            this.lineSymbolColor.Name = "lineSymbolColor";
+            this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
+            this.lineSymbolColor.TabIndex = 16;
+            this.lineSymbolColor.Click += new System.EventHandler(this.lineSymbolColor_Click);
+            // 
+            // ptSymbolSize
+            // 
+            this.ptSymbolSize.Location = new System.Drawing.Point(370, 501);
+            this.ptSymbolSize.Name = "ptSymbolSize";
+            this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
+            this.ptSymbolSize.TabIndex = 15;
+            this.ptSymbolSize.ValueChanged += new System.EventHandler(this.ptSymbolSize_ValueChanged);
+            // 
+            // ptSymbolColor
+            // 
+            this.ptSymbolColor.Location = new System.Drawing.Point(118, 497);
+            this.ptSymbolColor.Name = "ptSymbolColor";
+            this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
+            this.ptSymbolColor.TabIndex = 14;
+            this.ptSymbolColor.Click += new System.EventHandler(this.ptSymbolColor_Click);
+            // 
+            // ptSymbolStyle
+            // 
+            this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ptSymbolStyle.FormattingEnabled = true;
+            this.ptSymbolStyle.Location = new System.Drawing.Point(146, 500);
+            this.ptSymbolStyle.Name = "ptSymbolStyle";
+            this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
+            this.ptSymbolStyle.TabIndex = 13;
+            this.ptSymbolStyle.SelectedIndexChanged += new System.EventHandler(this.ptSymbolStyle_SelectedIndexChanged);
+            // 
+            // lineSymbolGraphic
+            // 
+            this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lineSymbolGraphic.Location = new System.Drawing.Point(33, 547);
+            this.lineSymbolGraphic.Name = "lineSymbolGraphic";
+            this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
+            this.lineSymbolGraphic.TabIndex = 12;
+            // 
+            // ptSymbolGraphic
+            // 
+            this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptSymbolGraphic.Location = new System.Drawing.Point(33, 477);
+            this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
+            this.ptSymbolGraphic.Name = "ptSymbolGraphic";
+            this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
+            this.ptSymbolGraphic.TabIndex = 11;
+            // 
             // btnSaveHotKeys
             // 
-            this.btnSaveHotKeys.Location = new System.Drawing.Point(435, 651);
+            this.btnSaveHotKeys.Location = new System.Drawing.Point(432, 437);
             this.btnSaveHotKeys.Name = "btnSaveHotKeys";
             this.btnSaveHotKeys.Size = new System.Drawing.Size(75, 23);
             this.btnSaveHotKeys.TabIndex = 10;
@@ -607,16 +719,16 @@
             this.dgvHotKeys.AllowUserToResizeRows = false;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvHotKeys.Location = new System.Drawing.Point(27, 334);
+            this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvHotKeys.Size = new System.Drawing.Size(483, 311);
+            this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
             // 
             // btnUsersDelete
             // 
-            this.btnUsersDelete.Location = new System.Drawing.Point(302, 247);
+            this.btnUsersDelete.Location = new System.Drawing.Point(324, 166);
             this.btnUsersDelete.Name = "btnUsersDelete";
             this.btnUsersDelete.Size = new System.Drawing.Size(75, 23);
             this.btnUsersDelete.TabIndex = 8;
@@ -626,7 +738,7 @@
             // 
             // btnUsersAddUpdate
             // 
-            this.btnUsersAddUpdate.Location = new System.Drawing.Point(215, 247);
+            this.btnUsersAddUpdate.Location = new System.Drawing.Point(237, 166);
             this.btnUsersAddUpdate.Name = "btnUsersAddUpdate";
             this.btnUsersAddUpdate.Size = new System.Drawing.Size(81, 23);
             this.btnUsersAddUpdate.TabIndex = 7;
@@ -637,7 +749,7 @@
             // lstUsers
             // 
             this.lstUsers.FormattingEnabled = true;
-            this.lstUsers.Location = new System.Drawing.Point(27, 97);
+            this.lstUsers.Location = new System.Drawing.Point(24, 29);
             this.lstUsers.Name = "lstUsers";
             this.lstUsers.Size = new System.Drawing.Size(134, 173);
             this.lstUsers.TabIndex = 6;
@@ -646,7 +758,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(167, 123);
+            this.label3.Location = new System.Drawing.Point(189, 42);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 5;
@@ -655,7 +767,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(164, 202);
+            this.label2.Location = new System.Drawing.Point(186, 121);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 13);
             this.label2.TabIndex = 4;
@@ -664,7 +776,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(178, 172);
+            this.label1.Location = new System.Drawing.Point(200, 91);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 3;
@@ -672,14 +784,14 @@
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(228, 123);
+            this.txtUsername.Location = new System.Drawing.Point(250, 42);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(178, 20);
             this.txtUsername.TabIndex = 2;
             // 
             // txtVerifyPassword
             // 
-            this.txtVerifyPassword.Location = new System.Drawing.Point(252, 199);
+            this.txtVerifyPassword.Location = new System.Drawing.Point(274, 118);
             this.txtVerifyPassword.Name = "txtVerifyPassword";
             this.txtVerifyPassword.PasswordChar = '*';
             this.txtVerifyPassword.Size = new System.Drawing.Size(168, 20);
@@ -687,7 +799,7 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(252, 165);
+            this.txtPassword.Location = new System.Drawing.Point(274, 84);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(168, 20);
@@ -828,6 +940,13 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // hydrantZoom
+            // 
+            this.hydrantZoom.Location = new System.Drawing.Point(178, 658);
+            this.hydrantZoom.Name = "hydrantZoom";
+            this.hydrantZoom.Size = new System.Drawing.Size(66, 20);
+            this.hydrantZoom.TabIndex = 21;
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -856,9 +975,12 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
             this.adminTab_SearchProperties.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.hydrantZoom)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -928,6 +1050,17 @@
         private System.Windows.Forms.TextBox txtVerifyPassword;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnSaveHotKeys;
+        private System.Windows.Forms.Panel lineSymbolGraphic;
+        private System.Windows.Forms.Panel ptSymbolGraphic;
+        private System.Windows.Forms.Panel ptSymbolColor;
+        private System.Windows.Forms.ComboBox ptSymbolStyle;
+        private System.Windows.Forms.NumericUpDown lineSymbolSize;
+        private System.Windows.Forms.ComboBox lineSymbolStyle;
+        private System.Windows.Forms.Panel lineSymbolColor;
+        private System.Windows.Forms.NumericUpDown ptSymbolSize;
+        private System.Windows.Forms.ComboBox lineSymbolCap;
+        private System.Windows.Forms.Panel lineSymbolBorderColor;
+        private System.Windows.Forms.NumericUpDown hydrantZoom;
 
     }
 }

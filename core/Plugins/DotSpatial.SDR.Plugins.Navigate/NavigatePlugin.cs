@@ -132,7 +132,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
-            var map = App.Map as Map;
+            Map map = App.Map as Map;
             var mapFrame = App.Map.MapFrame as EventMapFrame;
 
             if (mapFrame == null || map == null) return;

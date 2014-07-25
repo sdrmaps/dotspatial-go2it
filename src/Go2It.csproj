@@ -240,6 +240,10 @@
       <Link>Config\esn_indexes.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\config\hydrant_indexes.txt">
+      <Link>Config\hydrant_indexes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\config\keyLocation_indexes.txt">
       <Link>Config\keyLocation_indexes.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -43,6 +43,14 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AddressesProjectType = "POINT";
             Properties.ProjectSettings.Default.KeyLocationsProjectType = "POINT";
             Properties.ProjectSettings.Default.MapBgColor = Color.Black;
+            Properties.ProjectSettings.Default.GraphicLineBorderColor = Color.Orange;
+            Properties.ProjectSettings.Default.GraphicLineCap = "Flat";
+            Properties.ProjectSettings.Default.GraphicLineColor = Color.Orange;
+            Properties.ProjectSettings.Default.GraphicLineSize = 5;
+            Properties.ProjectSettings.Default.GraphicLineStyle = "Solid";
+            Properties.ProjectSettings.Default.GraphicPointColor = Color.LimeGreen;
+            Properties.ProjectSettings.Default.GraphicPointSize = 15;
+            Properties.ProjectSettings.Default.GraphicPointStyle = "Star";
         }
 
         /// <summary>
@@ -232,6 +240,54 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.KeyLocationsProjectType = value; }
             get { return Properties.ProjectSettings.Default.KeyLocationsProjectType; }
+        }
+
+        public Color GraphicPointColor
+        {
+            set { Properties.ProjectSettings.Default.GraphicPointColor = value; }
+            get { return Properties.ProjectSettings.Default.GraphicPointColor; }
+        }
+
+        public string GraphicPointStyle
+        {
+            set { Properties.ProjectSettings.Default.GraphicPointStyle = value; }
+            get { return Properties.ProjectSettings.Default.GraphicPointStyle; }
+        }
+
+        public int GraphicPointSize
+        {
+            set { Properties.ProjectSettings.Default.GraphicPointSize = value; }
+            get { return Properties.ProjectSettings.Default.GraphicPointSize; }
+        }
+
+        public Color GraphicLineColor
+        {
+            set { Properties.ProjectSettings.Default.GraphicLineColor = value; }
+            get { return Properties.ProjectSettings.Default.GraphicLineColor; }
+        }
+
+        public Color GraphicLineBorderColor
+        {
+            set { Properties.ProjectSettings.Default.GraphicLineBorderColor = value; }
+            get { return Properties.ProjectSettings.Default.GraphicLineBorderColor; }
+        }
+
+        public int GraphicLineSize
+        {
+            set { Properties.ProjectSettings.Default.GraphicLineSize = value; }
+            get { return Properties.ProjectSettings.Default.GraphicLineSize; }
+        }
+
+        public string GraphicLineCap
+        {
+            set { Properties.ProjectSettings.Default.GraphicLineCap = value; }
+            get { return Properties.ProjectSettings.Default.GraphicLineCap; }
+        }
+
+        public string GraphicLineStyle
+        {
+            set { Properties.ProjectSettings.Default.GraphicLineStyle = value; }
+            get { return Properties.ProjectSettings.Default.GraphicLineStyle; }
         }
     }
 }

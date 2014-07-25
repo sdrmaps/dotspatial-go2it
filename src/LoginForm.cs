@@ -39,13 +39,13 @@ namespace Go2It
             if (CheckLogin(txtUserName.Text, txtPassword.Text))
             {
                 OnFormLogin();
+                Close();
             }
             else
             {
                 MessageBox.Show(@"Invalid username or password, please check credentials and try again.", @"Failed Login");
                 OnFormLogout();
             }
-            Close();
         }
 
         private static bool CheckLogin(string username, string password)

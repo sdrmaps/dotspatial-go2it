@@ -147,13 +147,26 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = Color.FromArgb(Convert.ToInt32(psR["map_bgcolor"].ToString()));
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = psR["active_map_key"].ToString();
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption= psR["active_map_caption"].ToString();
+            // setup all project level graphics settings
+            const string gsQuery = "SELECT point_color, point_style, point_size, line_color, line_size, line_border_color, line_cap, line_style FROM GraphicSettings";
+            DataTable gsTable = SQLiteHelper.GetDataTable(repoConnStr, gsQuery);
+            var gsR = gsTable.Rows[0];  // there is only one row for graphics settings
+            // setup all project level type lookups and keys
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor = Color.FromArgb(Convert.ToInt32(gsR["point_color"].ToString()));
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle = gsR["point_style"].ToString();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(gsR["point_size"]);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor = Color.FromArgb(Convert.ToInt32(gsR["line_border_color"].ToString()));
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor = Color.FromArgb(Convert.ToInt32(gsR["line_color"].ToString()));
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(gsR["line_size"]);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = gsR["line_style"].ToString();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = gsR["line_cap"].ToString();
             // now lets setup all the layers to proper types
             const string lyrQuery = "SELECT name, layerType, projectType FROM Layers";
             DataTable lyrTable = SQLiteHelper.GetDataTable(repoConnStr, lyrQuery);
             foreach (DataRow row in lyrTable.Rows)
             {
                 var name = row["name"].ToString();
-                // var lyrType = row["layerType"].ToString(); // unused
+                var lyrType = row["layerType"].ToString(); // unused
                 var projType = row["projectType"].ToString();
                 switch (projType)
                 {
@@ -198,7 +211,7 @@ namespace Go2It
                 var txtViewExtent = row["viewextent"].ToString();
                 var zorder = row["zorder"].ToString();
                 var txtExtent = row["extent"].ToString();
-                // var txtBounds = row["bounds"].ToString(); // unused
+                var txtBounds = row["bounds"].ToString(); // unused
 
                 var nMap = new Map
                 {
@@ -348,6 +361,19 @@ namespace Go2It
             };
             // there can only be a single project settings row in the table
             SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
+            var g = new Dictionary<string, string>
+            {
+                { "point_color", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
+                { "point_style", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle},
+                { "point_size", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture) },
+                { "line_color", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
+                { "line_border_color", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
+                { "line_size", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture) },
+                { "line_cap", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap },
+                { "line_style", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle }
+            };
+            // there can only be a single grphics settings row in the table
+            SQLiteHelper.Update(conn, "GraphicSettings", g, "key = 1");
             // clear any (base map) layers currently set in the table and reset them now
             SQLiteHelper.ClearTable(conn, "Layers");
             // cycle and save all layer types to settings
@@ -386,7 +412,10 @@ namespace Go2It
                     }
                     txtLayers = txtLayers + layName + "|";
                 }
-                txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
+                if (txtLayers.Length != 0)
+                {
+                    txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
+                }
                 // send this all to a dict to save to dbase as a maptab
                 if (mapFrame == null) continue;
                 var dd = new Dictionary<string, string>

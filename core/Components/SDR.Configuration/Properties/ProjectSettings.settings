@@ -50,5 +50,29 @@
     <Setting Name="ActiveMapViewCaption" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="GraphicPointColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">LimeGreen</Value>
+    </Setting>
+    <Setting Name="GraphicPointStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Star</Value>
+    </Setting>
+    <Setting Name="GraphicPointSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="GraphicLineColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Orange</Value>
+    </Setting>
+    <Setting Name="GraphicLineSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="GraphicLineBorderColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Orange</Value>
+    </Setting>
+    <Setting Name="GraphicLineCap" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Flat</Value>
+    </Setting>
+    <Setting Name="GraphicLineStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Solid</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

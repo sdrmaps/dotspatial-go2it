@@ -4,7 +4,9 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +41,7 @@ using SDR.Data.Database;
 using Go2It.Properties;
 using IGeometry = DotSpatial.Topology.IGeometry;
 using Point = System.Drawing.Point;
+using PointShape = DotSpatial.Symbology.PointShape;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -129,6 +132,7 @@ namespace Go2It
             PopulateUsersToForm();
             PopulateHotKeysToForm();
             PopulateIndexesToForm();
+            PopulateGraphicsToForm();
 
             // check if we have any available map tab views
             if (_dockingControl.DockPanelLookup.Count == 0)
@@ -375,6 +379,101 @@ namespace Go2It
                 var username = r["username"].ToString();
                 lstUsers.Items.Add(username);
             }
+        }
+
+        private void DrawPointGraphics()
+        {
+            if (ptSymbolStyle.Items.Count == 0) return;
+            ptSymbolGraphic.Controls.Clear();  // clear any controls (maps)
+            var ptMap = new Map
+            {
+                ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
+                BackColor = mapBGColorPanel.BackColor,
+                FunctionMode = FunctionMode.None
+            };
+            ptSymbolGraphic.Controls.Add(ptMap);
+            var ftSet = new FeatureSet(FeatureType.Point);
+            var ftLyr = new MapPointLayer(ftSet);
+            // parse out the point shape style
+            PointShape ptShape = new PointShape();
+            PointShape.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
+            // assign the symbolizer
+            ftLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor, ptShape, Convert.ToInt32(ptSymbolSize.Text));
+            ptMap.MapFrame.DrawingLayers.Add(ftLyr);
+            // get the center of the control (render in center)
+            var y = ((ptSymbolGraphic.Bottom - ptSymbolGraphic.Top) / 2) - 1;
+            var x = ((ptSymbolGraphic.Right - ptSymbolGraphic.Left) / 2) - 1;
+            Coordinate c = ptMap.PixelToProj(new Point(x,y));
+            ftSet.AddFeature(new DotSpatial.Topology.Point(c));
+            ptMap.MapFrame.Invalidate();
+        }
+
+        private void DrawLineGraphics()
+        {
+            if (lineSymbolStyle.Items.Count == 0) return;
+            lineSymbolGraphic.Controls.Clear();  // clear any controls (maps)
+            var lineMap = new Map
+            {
+                ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
+                BackColor = mapBGColorPanel.BackColor,
+                FunctionMode = FunctionMode.None
+            };
+            lineSymbolGraphic.Controls.Add(lineMap);
+            var ftSet = new FeatureSet(FeatureType.Line);
+            var ftLyr = new MapLineLayer(ftSet);
+            // parse out line shape styles
+            LineCap lineCap = new LineCap();
+            LineCap.TryParse(lineSymbolCap.SelectedItem.ToString(), true, out lineCap);
+            DashStyle lineStyle = new DashStyle();
+            DashStyle.TryParse(lineSymbolStyle.SelectedItem.ToString(), true, out lineStyle);
+            // assign the symbolizer
+            ftLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor, lineSymbolBorderColor.BackColor,
+                Convert.ToInt32(lineSymbolSize.Text), lineStyle, lineCap);
+            lineMap.MapFrame.DrawingLayers.Add(ftLyr);
+            // create a new line geometry for the feature
+            var coords = new List<Coordinate>();
+            var geo = new LineString(coords);
+            var lineFt = ftSet.AddFeature(geo);
+            var sx = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
+            var sy = lineSymbolGraphic.Bottom - lineSymbolGraphic.Top;
+            Coordinate sc = lineMap.PixelToProj(new Point(sx, sy));
+            var ex = lineSymbolGraphic.Right - lineSymbolGraphic.Left;
+            var ey = ((Convert.ToInt32(lineSymbolSize.Text) -1) / 2 + 1) * -1;
+            Coordinate ec = lineMap.PixelToProj(new Point(ex, ey));
+            lineFt.Coordinates.Add(sc);
+            lineFt.Coordinates.Add(ec);
+            lineMap.MapFrame.Invalidate();
+        }
+
+        private void PopulateGraphicsToForm()
+        {
+            // point symbology for graphics rendering
+            ptSymbolColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor;
+            ptSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize;
+            foreach (PointShape ptShape in Enum.GetValues(typeof(PointShape)))
+            {
+                ptSymbolStyle.Items.Add(ptShape.ToString());
+            }
+            var idx = ptSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle);
+            ptSymbolStyle.SelectedIndex = idx;
+            DrawPointGraphics();
+            // line symbology for graphics rendering
+            lineSymbolBorderColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor;
+            lineSymbolColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor;
+            lineSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize;
+            foreach (LineCap lineCap in Enum.GetValues(typeof(LineCap)))
+            {
+                lineSymbolCap.Items.Add(lineCap.ToString());
+            }
+            idx = lineSymbolCap.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap);
+            lineSymbolCap.SelectedIndex = idx;
+            foreach (DashStyle lineStyle in Enum.GetValues(typeof(DashStyle)))
+            {
+                lineSymbolStyle.Items.Add(lineStyle.ToString());
+            }
+            idx = lineSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle);
+            lineSymbolStyle.SelectedIndex = idx;
+            DrawLineGraphics();
         }
 
         private void PopulateHotKeysToForm()
@@ -873,6 +972,15 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer = ApplyComboBoxSetting(cmbHydrantsLayer);
             // set the map background color
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = mapBGColorPanel.BackColor;
+            // set the various graphic symbolization
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor = ptSymbolColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle = ApplyComboBoxSetting(ptSymbolStyle);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(ptSymbolSize.Text);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor = lineSymbolBorderColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor = lineSymbolColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(lineSymbolSize.Text);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = ApplyComboBoxSetting(lineSymbolStyle);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = ApplyComboBoxSetting(lineSymbolCap);
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -1106,6 +1214,9 @@ namespace Go2It
                 dpi.Value.DotSpatialDockPanel.InnerControl.Refresh();
             }
             _appManager.Map.Refresh();
+            // update the graphic render display to show new map bg color
+            DrawLineGraphics();
+            DrawPointGraphics();
         }
 
         private void btnUsersAddUpdate_Click(object sender, EventArgs e)
@@ -1267,6 +1378,15 @@ namespace Go2It
                 }
                 return table;
             }
+            if (layName == ApplyComboBoxSetting(cmbHydrantsLayer))
+            {
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\hydrant_indexes.txt");
+                foreach (string key in file)
+                {
+                    table.Rows.Add(key, "");
+                }
+                return table;
+            }
             return null;
         }
 
@@ -1301,6 +1421,9 @@ namespace Go2It
                             break;
                         case "EsnIndex":
                             lstExistingIndexes.Items.Add(tblName.Substring(9));
+                            break;
+                        case "HydrantIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(13));
                             break;
                     }
                 }
@@ -1339,6 +1462,10 @@ namespace Go2It
             if (layName == ApplyComboBoxSetting(cmbParcelsLayer))
             {
                 return "ParcelIndex";
+            }
+            if (layName == ApplyComboBoxSetting(cmbHydrantsLayer))
+            {
+                return "HydrantIndex";
             }
             return null;
         }
@@ -1666,6 +1793,7 @@ namespace Go2It
                         // snatch the shape affiliated with the shape-range
                         Shape shp = fs.GetShape(shapeRange.RecordNumber - 1, false);
                         IGeometry geom = shp.ToGeometry(); // cast shape to geometry for wkt serialization
+
                         // serialize the geometry into wkt (which will be read by spatial4n for lucene indexing)
                         var wktWriter = new WktWriter();
                         var wkt = wktWriter.Write((Geometry) geom);
@@ -1952,10 +2080,10 @@ namespace Go2It
             return l;
         }
 
-        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl)
+        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl, List<string> hy)
         {
             cmbLayerIndex.Items.Clear();
-            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count);
+            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count + hy.Count);
             sels.AddRange(ad);
             sels.AddRange(rd);
             sels.AddRange(kl);
@@ -1963,6 +2091,7 @@ namespace Go2It
             sels.AddRange(cl);
             sels.AddRange(es);
             sels.AddRange(pl);
+            sels.AddRange(hy);
             cmbLayerIndex.Items.AddRange(sels.ToArray());
         }
 
@@ -1980,7 +2109,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -1998,7 +2128,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -2016,7 +2147,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -2064,7 +2196,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -2087,7 +2220,8 @@ namespace Go2It
             var cs = AddLayersToIndex(cmbCellSectorLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -2105,7 +2239,8 @@ namespace Go2It
             var cs = AddLayersToIndex(cmbCellSectorLayer);
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -2123,12 +2258,27 @@ namespace Go2It
             var cs = AddLayersToIndex(cmbCellSectorLayer);
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
         private void cmbHydrantsLayer_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var cmb = (ComboBox)sender;
+            var hy = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                hy.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _dirtyProject = true;
         }
 
@@ -2155,6 +2305,73 @@ namespace Go2It
                 HotKeyManager.AddHotKey(new HotKey(keys, cellCmd.Value.ToString()), cellCmd.Tag.ToString());
             }
             HotKeyManager.SaveHotKeys();
+        }
+
+        private void ptSymbolColor_Click(object sender, EventArgs e)
+        {
+            var oColor = ptSymbolColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            ptSymbolColor.BackColor = dlg.Color;
+            if (oColor != ptSymbolColor.BackColor)
+            {
+                _dirtyProject = true;
+            }
+            DrawPointGraphics();
+        }
+
+        private void lineSymbolColor_Click(object sender, EventArgs e)
+        {
+            var oColor = lineSymbolColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            lineSymbolColor.BackColor = dlg.Color;
+            if (oColor != lineSymbolColor.BackColor)
+            {
+                _dirtyProject = true;
+            }
+            DrawLineGraphics();
+        }
+
+        private void lineSymbolBorderColor_Click(object sender, EventArgs e)
+        {
+            var oColor = lineSymbolBorderColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            lineSymbolBorderColor.BackColor = dlg.Color;
+            if (oColor != lineSymbolBorderColor.BackColor)
+            {
+                _dirtyProject = true;
+            }
+            DrawLineGraphics();
+        }
+
+        private void ptSymbolSize_ValueChanged(object sender, EventArgs e)
+        {
+            DrawPointGraphics();
+        }
+
+        private void lineSymbolSize_ValueChanged(object sender, EventArgs e)
+        {
+            DrawLineGraphics();
+        }
+
+        private void ptSymbolStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DrawPointGraphics();
+        }
+
+        private void lineSymbolStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DrawLineGraphics();
+        }
+
+        private void lineSymbolCap_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DrawLineGraphics();
         }
     }
 }
