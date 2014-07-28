@@ -110,5 +110,5 @@ UpgradeLog*.XML
 !/core/DotSpatial/Trunk
 /core/DotSpatial/Trunk/*
 !/core/DotSpatial/Trunk/bin
-!/core/DotSpatial/Trunk/bin/Debug
+# !/core/DotSpatial/Trunk/bin/Debug
 !/core/DotSpatial/Trunk/bin/Release
