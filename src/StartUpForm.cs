@@ -112,7 +112,8 @@ namespace Go2It
         /// </summary>
         private void CreateEmptyProject()
         {
-            _app.SerializationManager.New();
+            // _app.SerializationManager.New();
+
             // set the default cursor
             Cursor = Cursors.Default;
             DialogResult = DialogResult.OK;

@@ -166,7 +166,7 @@
             this.adminTab_LayerManagement.Name = "adminTab_LayerManagement";
             this.adminTab_LayerManagement.Size = new System.Drawing.Size(531, 703);
             this.adminTab_LayerManagement.TabIndex = 0;
-            this.adminTab_LayerManagement.Text = "Layer Management";
+            this.adminTab_LayerManagement.Text = "Map Management";
             // 
             // adminLayerSplitter
             // 
@@ -628,7 +628,6 @@
             this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
             this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
             this.lineSymbolBorderColor.TabIndex = 20;
-            this.lineSymbolBorderColor.Click += new System.EventHandler(this.lineSymbolBorderColor_Click);
             // 
             // lineSymbolCap
             // 
@@ -638,7 +637,6 @@
             this.lineSymbolCap.Name = "lineSymbolCap";
             this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
             this.lineSymbolCap.TabIndex = 19;
-            this.lineSymbolCap.SelectedIndexChanged += new System.EventHandler(this.lineSymbolCap_SelectedIndexChanged);
             // 
             // lineSymbolSize
             // 
@@ -646,7 +644,6 @@
             this.lineSymbolSize.Name = "lineSymbolSize";
             this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
             this.lineSymbolSize.TabIndex = 18;
-            this.lineSymbolSize.ValueChanged += new System.EventHandler(this.lineSymbolSize_ValueChanged);
             // 
             // lineSymbolStyle
             // 
@@ -656,7 +653,6 @@
             this.lineSymbolStyle.Name = "lineSymbolStyle";
             this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
             this.lineSymbolStyle.TabIndex = 17;
-            this.lineSymbolStyle.SelectedIndexChanged += new System.EventHandler(this.lineSymbolStyle_SelectedIndexChanged);
             // 
             // lineSymbolColor
             // 
@@ -664,7 +660,6 @@
             this.lineSymbolColor.Name = "lineSymbolColor";
             this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
             this.lineSymbolColor.TabIndex = 16;
-            this.lineSymbolColor.Click += new System.EventHandler(this.lineSymbolColor_Click);
             // 
             // ptSymbolSize
             // 
@@ -672,7 +667,6 @@
             this.ptSymbolSize.Name = "ptSymbolSize";
             this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
             this.ptSymbolSize.TabIndex = 15;
-            this.ptSymbolSize.ValueChanged += new System.EventHandler(this.ptSymbolSize_ValueChanged);
             // 
             // ptSymbolColor
             // 
@@ -680,7 +674,6 @@
             this.ptSymbolColor.Name = "ptSymbolColor";
             this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
             this.ptSymbolColor.TabIndex = 14;
-            this.ptSymbolColor.Click += new System.EventHandler(this.ptSymbolColor_Click);
             // 
             // ptSymbolStyle
             // 
@@ -690,7 +683,6 @@
             this.ptSymbolStyle.Name = "ptSymbolStyle";
             this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
             this.ptSymbolStyle.TabIndex = 13;
-            this.ptSymbolStyle.SelectedIndexChanged += new System.EventHandler(this.ptSymbolStyle_SelectedIndexChanged);
             // 
             // lineSymbolGraphic
             // 

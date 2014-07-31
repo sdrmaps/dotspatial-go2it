@@ -88,9 +88,9 @@ namespace DotSpatial.SDR.Plugins.Navigate
             };
             App.HeaderControl.Add(_zoomToLayer);
 
+            // dockmanager events for display of various maps on tab panels
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-
             // watch for hotkeys activated via the mainform plugin
             HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
@@ -164,6 +164,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         private void LayersOnLayerSelected(object sender, LayerSelectedEventArgs layerSelectedEventArgs)
         {
+            if (App.Map == null) return;
             _zoomToLayer.Enabled = App.Map.Layers.SelectedLayer != null;
         }
 
@@ -180,6 +181,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void PanTool_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             App.Map.FunctionMode = FunctionMode.Pan;
         }
 
@@ -188,6 +190,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomIn_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             App.Map.FunctionMode = FunctionMode.ZoomIn;
         }
 
@@ -196,6 +199,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomNext_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             App.Map.MapFrame.ZoomToNext();
         }
 
@@ -204,6 +208,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomOut_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             App.Map.FunctionMode = FunctionMode.ZoomOut;
         }
 
@@ -212,6 +217,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomPrevious_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             App.Map.MapFrame.ZoomToPrevious();
         }
 
@@ -220,6 +226,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// </summary>
         private void ZoomToLayer_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             var layer = App.Map.Layers.SelectedLayer;
             if (layer != null)
             {
@@ -234,6 +241,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void ZoomToMaxExtents_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             App.Map.ZoomToMaxExtent();
         }
 

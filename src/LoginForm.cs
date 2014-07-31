@@ -61,6 +61,7 @@ namespace Go2It
             DataRow r = table.Rows[0];
             string salt = r["salt"].ToString();
             string hash = r["hash"].ToString();
+
             // now verify the password against the dbase salt/hash
             SaltedHash sh = SaltedHash.Create(salt, hash);
             return sh.Verify(password);

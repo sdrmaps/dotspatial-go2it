@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.SDR.Controls;
+using SDR.Common;
+using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -30,13 +32,25 @@ namespace Go2It
             // create the application level app manager and assign base map and mapframe
             AppManager = new AppManager
             {
-                // map placeholder on app manager, used to swap out active map views using tab interface
-                Map = new Map
-                {
-                    Dock = DockStyle.Fill,
-                    Visible = false,
-                }
+
             };
+                            // map placeholder on app manager, used to swap out active map views using tab interface
+            //Map map = new Map
+            //{
+            //    Dock = DockStyle.Fill,
+            //    Visible = false,
+            //};
+
+            // AppManager.Map = map;
+
+            // TODO: remove this
+            AppManager.MapChanged += delegate(object sender, MapChangedEventArgs args)
+            {
+                var log = AppContext.Instance.Get<ILog>();
+                log.Info("AppManager.MapChanged -- MainForm");
+            };
+
+
             _shell = this;
             AppManager.LoadExtensions();
         }

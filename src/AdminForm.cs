@@ -40,6 +40,7 @@ using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
 using IGeometry = DotSpatial.Topology.IGeometry;
+using ILog = SDR.Common.logging.ILog;
 using Point = System.Drawing.Point;
 using PointShape = DotSpatial.Symbology.PointShape;
 using SdrConfig = SDR.Configuration;
@@ -67,6 +68,8 @@ namespace Go2It
 
         // change tracking flags for project changes as well as mapview changes
         private bool _dirtyProject;
+        // if the form is currently loading then halt events
+        private bool _loading;
 
         // admin form level controls
         private Legend _adminLegend;
@@ -87,6 +90,7 @@ namespace Go2It
         // temp dict holds all base map layers for selection/removal on map tabs
         // on save this is passed to the dockingcontrol baselayerlookup dict (basically this thing holds all the layers available)
         private readonly Dictionary<string, IMapLayer> _localBaseMapLayerLookup = new Dictionary<string, IMapLayer>();
+        
         // temp storage of layers to index until the "create" button is activated (queued indexes)
         // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
@@ -94,6 +98,8 @@ namespace Go2It
         public AdminForm(AppManager app)
         {
             InitializeComponent();
+            _loading = true;
+
             // setup the default indexing field names
             _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
             _indexLookupFields.Add("lookup", "TEXT");
@@ -101,16 +107,8 @@ namespace Go2It
 
             _appManager = app;
             _dockingControl = (DockingControl) app.DockManager;
+            _baseMap = CreateBaseMap(app);
 
-            // a basemap to hold all layers for the adminlegend
-            _baseMap = new Map
-            {
-                Dock = DockStyle.Fill,
-                Visible = false,
-                Projection = app.Map.Projection,
-                ViewExtents = app.Map.ViewExtents
-            };
-            _baseMap.Extent.SetValues(app.Map.Extent.MinX, app.Map.Extent.MinY, app.Map.Extent.MaxX, app.Map.Extent.MaxY);
             // set options on our indexing bgworker
             _idxWorker.WorkerReportsProgress = false;
             _idxWorker.WorkerSupportsCancellation = false;
@@ -127,6 +125,7 @@ namespace Go2It
             // populate all the settings, layers, and maps to the form and attach a legend
             AttachLegend();
             _adminLegend.OrderChanged += AdminLegendOnOrderChanged;
+
             PopulateMapViews();
             PopulateSettingsToForm();
             PopulateUsersToForm();
@@ -148,8 +147,8 @@ namespace Go2It
                     BackColor = mapBGColorPanel.BackColor,
                     Dock = DockStyle.Fill,
                     Visible = true,
-                    Projection = _baseMap.Projection,
-                    ViewExtents = _baseMap.ViewExtents
+                    // Projection = _baseMap.Projection,
+                    // ViewExtents = _baseMap.ViewExtents
                 };
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
@@ -185,6 +184,149 @@ namespace Go2It
                 selKey.Value = keyData.ToString();
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private Map CreateBaseMap(AppManager app)
+        {
+            Map map = null;
+            EventMapFrame mapframe = null;
+            
+            if (app.Map != null)
+            {
+                map = new Map();
+                map.SuspendLayout();
+
+                mapframe = new EventMapFrame();
+                mapframe.SuspendChangeEvent();
+                mapframe.SuspendEvents();
+                mapframe.SuspendViewExtentChanged();
+
+                map.MapFrame = mapframe;
+
+                LogBaseMapEvents(map, "AdminPanel--BaseMap");
+
+                map.Visible = false;
+                map.Projection = app.Map.Projection;
+                map.ViewExtents = app.Map.ViewExtents;
+                map.Dock = DockStyle.Fill;
+                // do we actually want to do this?
+                // map.Extent.SetValues(app.Map.Extent.MinX, app.Map.Extent.MinY, app.Map.Extent.MaxX, app.Map.Extent.MaxY);
+
+                map.ResumeLayout();
+            }
+            else
+            {
+                map = new Map();
+                // map.SuspendLayout();
+
+                mapframe = new EventMapFrame();
+                // mapframe.SuspendChangeEvent();
+                // mapframe.SuspendEvents();
+                // mapframe.SuspendViewExtentChanged();
+
+                map.MapFrame = mapframe;
+
+                LogBaseMapEvents(map, "AdminPanel--BaseMap");
+
+                map.Visible = false;
+                map.Dock = DockStyle.Fill;
+
+                map.ResumeLayout();
+            }
+            return map;
+        }
+
+        private void LogBaseMapEvents(Map map, string name)
+        {
+            var log = AppContext.Instance.Get<ILog>();
+            map.FinishedRefresh += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " FinishedRefresh");
+            };
+            map.FunctionModeChanged += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " FunctionModeChanged");
+            };
+            map.LayerAdded += delegate(object sender, LayerEventArgs args)
+            {
+                log.Info(name + " LayerAdded");
+            };
+            map.SelectionChanged += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " SelectionChanged");
+            };
+            map.Resized += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " Resized");
+            };
+            map.MapFrame.BufferChanged += delegate(object sender, ClipArgs args)
+            {
+                log.Info(name + " MapFrame.BufferChanged");
+            };
+            map.MapFrame.EnvelopeChanged += delegate(object sender, EnvelopeArgs args)
+            {
+                log.Info(name + " MapFrame.EnvelopeChanged");
+            };
+            map.MapFrame.FinishedLoading += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.FinishedLoading");
+            };
+            map.MapFrame.FinishedRefresh += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.FinishedRefresh");
+            };
+            map.MapFrame.Invalidated += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.Invalidated");
+            };
+            map.MapFrame.ItemChanged += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.ItemChanged");
+            };
+            map.MapFrame.LayerAdded += delegate(object sender, LayerEventArgs args)
+            {
+                log.Info(name + " MapFrame.LayerAdded");
+            };
+            map.MapFrame.LayerRemoved += delegate(object sender, LayerEventArgs args)
+            {
+                log.Info(name + " MapFrame.LayerRemoved");
+            };
+            map.MapFrame.LayerSelected += delegate(object sender, LayerSelectedEventArgs args)
+            {
+                log.Info(name + " MapFrame.LayerSelected");
+            };
+            map.MapFrame.RemoveItem += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.RemoveItem");
+            };
+            map.MapFrame.ScreenUpdated += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.ScreenUpdated");
+            };
+            map.MapFrame.SelectionChanged += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.SelectionChanged");
+            };
+            map.MapFrame.ShowProperties += delegate(object sender, HandledEventArgs args)
+            {
+                log.Info(name + " MapFrame.ShowProperties");
+            };
+            map.MapFrame.UpdateMap += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.UpdateMap");
+            };
+            map.MapFrame.ViewChanged += delegate(object sender, ViewChangedEventArgs args)
+            {
+                log.Info(name + " MapFrame.ViewChanged");
+            };
+            map.MapFrame.ViewExtentsChanged += delegate(object sender, ExtentArgs args)
+            {
+                log.Info(name + " MapFrame.ViewExtentsChanged");
+            };
+            map.MapFrame.VisibleChanged += delegate(object sender, EventArgs args)
+            {
+                log.Info(name + " MapFrame.VisibleChanged");
+            };    
         }
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
@@ -381,99 +523,212 @@ namespace Go2It
             }
         }
 
+        private void UpdateGraphics(Map map)
+        {
+            switch (map.MapFrame.DrawingLayers[0].GetType().Name)
+            {
+                case "MapPointLayer":
+                    PointShape ptShape;
+                    Enum.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
+                    var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
+                    if (pLyr != null)
+                        pLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor, ptShape, Convert.ToInt32(ptSymbolSize.Text));
+                    break;
+                case "MapLineLayer":
+                    // parse out line shape styles
+                    LineCap lineCap;
+                    Enum.TryParse(lineSymbolCap.SelectedItem.ToString(), true, out lineCap);
+                    DashStyle lineStyle;
+                    Enum.TryParse(lineSymbolStyle.SelectedItem.ToString(), true, out lineStyle);
+                    var lLyr = map.MapFrame.DrawingLayers[0] as MapLineLayer;
+                    if (lLyr != null)
+                        lLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor, lineSymbolBorderColor.BackColor, Convert.ToInt32(lineSymbolSize.Text), lineStyle, lineCap);
+                    break;
+            }
+            map.BackColor = mapBGColorPanel.BackColor;
+            map.MapFrame.Invalidate();
+        }
+
         private void DrawPointGraphics()
         {
-            if (ptSymbolStyle.Items.Count == 0) return;
-            ptSymbolGraphic.Controls.Clear();  // clear any controls (maps)
-            var ptMap = new Map
+            Map ptMap;
+            // check for a "map" on the control
+            if (ptSymbolGraphic.Controls.Count != 0)
             {
-                ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
-                BackColor = mapBGColorPanel.BackColor,
-                FunctionMode = FunctionMode.None
-            };
-            ptSymbolGraphic.Controls.Add(ptMap);
-            var ftSet = new FeatureSet(FeatureType.Point);
-            var ftLyr = new MapPointLayer(ftSet);
-            // parse out the point shape style
-            PointShape ptShape = new PointShape();
-            PointShape.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
-            // assign the symbolizer
-            ftLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor, ptShape, Convert.ToInt32(ptSymbolSize.Text));
-            ptMap.MapFrame.DrawingLayers.Add(ftLyr);
-            // get the center of the control (render in center)
-            var y = ((ptSymbolGraphic.Bottom - ptSymbolGraphic.Top) / 2) - 1;
-            var x = ((ptSymbolGraphic.Right - ptSymbolGraphic.Left) / 2) - 1;
-            Coordinate c = ptMap.PixelToProj(new Point(x,y));
-            ftSet.AddFeature(new DotSpatial.Topology.Point(c));
-            ptMap.MapFrame.Invalidate();
+                ptMap = ptSymbolGraphic.Controls[0] as Map;
+                UpdateGraphics(ptMap);
+            }
+            else
+            {
+                ptMap = new Map
+                {
+                    ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
+                    FunctionMode = FunctionMode.None,
+                };
+                ptMap.MapFunctions.Clear(); // clear all built in map functions (nav/zoom/etc)
+                ptSymbolGraphic.Controls.Add(ptMap);
+
+                var ftSet = new FeatureSet(FeatureType.Point);
+                var ftLyr = new MapPointLayer(ftSet);
+                ptMap.MapFrame.DrawingLayers.Add(ftLyr);
+
+                // get the center of the control panel (location to render point)
+                var y = ((ptSymbolGraphic.Bottom - ptSymbolGraphic.Top) / 2) - 1;
+                var x = ((ptSymbolGraphic.Right - ptSymbolGraphic.Left) / 2) - 1;
+                var c = ptMap.PixelToProj(new Point(x, y));
+                ftSet.AddFeature(new DotSpatial.Topology.Point(c));
+            }
+            UpdateGraphics(ptMap);
         }
 
         private void DrawLineGraphics()
         {
-            if (lineSymbolStyle.Items.Count == 0) return;
-            lineSymbolGraphic.Controls.Clear();  // clear any controls (maps)
-            var lineMap = new Map
+            Map lineMap;
+            // check for a "map" on the control
+            if (lineSymbolGraphic.Controls.Count != 0)
             {
-                ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
-                BackColor = mapBGColorPanel.BackColor,
-                FunctionMode = FunctionMode.None
-            };
-            lineSymbolGraphic.Controls.Add(lineMap);
-            var ftSet = new FeatureSet(FeatureType.Line);
-            var ftLyr = new MapLineLayer(ftSet);
-            // parse out line shape styles
-            LineCap lineCap = new LineCap();
-            LineCap.TryParse(lineSymbolCap.SelectedItem.ToString(), true, out lineCap);
-            DashStyle lineStyle = new DashStyle();
-            DashStyle.TryParse(lineSymbolStyle.SelectedItem.ToString(), true, out lineStyle);
-            // assign the symbolizer
-            ftLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor, lineSymbolBorderColor.BackColor,
-                Convert.ToInt32(lineSymbolSize.Text), lineStyle, lineCap);
-            lineMap.MapFrame.DrawingLayers.Add(ftLyr);
-            // create a new line geometry for the feature
-            var coords = new List<Coordinate>();
-            var geo = new LineString(coords);
-            var lineFt = ftSet.AddFeature(geo);
-            var sx = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
-            var sy = lineSymbolGraphic.Bottom - lineSymbolGraphic.Top;
-            Coordinate sc = lineMap.PixelToProj(new Point(sx, sy));
-            var ex = lineSymbolGraphic.Right - lineSymbolGraphic.Left;
-            var ey = ((Convert.ToInt32(lineSymbolSize.Text) -1) / 2 + 1) * -1;
-            Coordinate ec = lineMap.PixelToProj(new Point(ex, ey));
-            lineFt.Coordinates.Add(sc);
-            lineFt.Coordinates.Add(ec);
-            lineMap.MapFrame.Invalidate();
+                lineMap = lineSymbolGraphic.Controls[0] as Map;
+            }
+            else
+            {
+                lineMap = new Map
+                {
+                    ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
+                    FunctionMode = FunctionMode.None
+                };
+                lineMap.MapFunctions.Clear(); // clear all built in map functions (nav/zoom/etc)
+                lineSymbolGraphic.Controls.Add(lineMap);
+
+                var ftSet = new FeatureSet(FeatureType.Line);
+                var ftLyr = new MapLineLayer(ftSet);
+                lineMap.MapFrame.DrawingLayers.Add(ftLyr);
+
+                // create a new line geometry for the feature
+                var coords = new List<Coordinate>();
+                var geo = new LineString(coords);
+                var lineFt = ftSet.AddFeature(geo);
+                var sx = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
+                var sy = lineSymbolGraphic.Bottom - lineSymbolGraphic.Top;
+                var sc = lineMap.PixelToProj(new Point(sx, sy));
+                var ex = lineSymbolGraphic.Right - lineSymbolGraphic.Left;
+                var ey = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
+                var ec = lineMap.PixelToProj(new Point(ex, ey));
+                lineFt.Coordinates.Add(sc);
+                lineFt.Coordinates.Add(ec);
+            }
+            UpdateGraphics(lineMap);
         }
 
         private void PopulateGraphicsToForm()
         {
             // point symbology for graphics rendering
             ptSymbolColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor;
+            ptSymbolColor.Click += PtSymbolColorOnClick;
             ptSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize;
+            ptSymbolSize.ValueChanged += PtSymbolSizeOnValueChanged;
             foreach (PointShape ptShape in Enum.GetValues(typeof(PointShape)))
             {
                 ptSymbolStyle.Items.Add(ptShape.ToString());
             }
             var idx = ptSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle);
             ptSymbolStyle.SelectedIndex = idx;
+            ptSymbolStyle.SelectedIndexChanged += PtSymbolStyleOnSelectedIndexChanged;
             DrawPointGraphics();
+
             // line symbology for graphics rendering
             lineSymbolBorderColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor;
+            lineSymbolBorderColor.Click += LineSymbolBorderColorOnClick;
             lineSymbolColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor;
+            lineSymbolColor.Click += LineSymbolColorOnClick;
             lineSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize;
+            lineSymbolSize.ValueChanged += LineSymbolSizeOnValueChanged;
             foreach (LineCap lineCap in Enum.GetValues(typeof(LineCap)))
             {
                 lineSymbolCap.Items.Add(lineCap.ToString());
             }
             idx = lineSymbolCap.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap);
             lineSymbolCap.SelectedIndex = idx;
+            lineSymbolCap.SelectedIndexChanged += LineSymbolCapOnSelectedIndexChanged;
             foreach (DashStyle lineStyle in Enum.GetValues(typeof(DashStyle)))
             {
                 lineSymbolStyle.Items.Add(lineStyle.ToString());
             }
             idx = lineSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle);
             lineSymbolStyle.SelectedIndex = idx;
+            lineSymbolStyle.SelectedIndexChanged += LineSymbolStyleOnSelectedIndexChanged;
             DrawLineGraphics();
+        }
+
+        private void LineSymbolCapOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            DrawLineGraphics();
+            _dirtyProject = true;
+        }
+
+        private void LineSymbolStyleOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            DrawLineGraphics();
+            _dirtyProject = true;
+        }
+
+        private void LineSymbolSizeOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            DrawLineGraphics();
+            _dirtyProject = true;
+        }
+
+        private void LineSymbolColorOnClick(object sender, EventArgs eventArgs)
+        {
+            var oColor = lineSymbolColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            lineSymbolColor.BackColor = dlg.Color;
+            if (oColor != lineSymbolColor.BackColor)
+            {
+                _dirtyProject = true;
+            }
+            DrawLineGraphics();
+        }
+
+        private void LineSymbolBorderColorOnClick(object sender, EventArgs eventArgs)
+        {
+            var oColor = lineSymbolBorderColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            lineSymbolBorderColor.BackColor = dlg.Color;
+            if (oColor != lineSymbolBorderColor.BackColor)
+            {
+                _dirtyProject = true;
+            }
+            DrawLineGraphics();
+        }
+
+        private void PtSymbolStyleOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            DrawPointGraphics();
+            _dirtyProject = true;
+        }
+
+        private void PtSymbolSizeOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            DrawPointGraphics();
+            _dirtyProject = true;
+        }
+
+        private void PtSymbolColorOnClick(object sender, EventArgs eventArgs)
+        {
+            var oColor = ptSymbolColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            ptSymbolColor.BackColor = dlg.Color;
+            if (oColor != ptSymbolColor.BackColor)
+            {
+                _dirtyProject = true;
+            }
+            DrawPointGraphics();
         }
 
         private void PopulateHotKeysToForm()
@@ -888,6 +1143,8 @@ namespace Go2It
 
         private void AdminLegendOnOrderChanged(object sender, EventArgs eventArgs)
         {
+            var log = AppContext.Instance.Get<ILog>();
+            log.Info("AdminLegendOnOrderChanged");
             // todo: some event here to update all map tabs
         }
 
@@ -1191,6 +1448,8 @@ namespace Go2It
 
         private void adminLayerSplitter_SplitterMoved(object sender, SplitterEventArgs e)
         {
+            var log = AppContext.Instance.Get<ILog>();
+            log.Info("adminLayerSplitter_SplitterMoved");
             // TODO: investigate redraws here, look for more efficient methods
         }
 
@@ -1393,6 +1652,7 @@ namespace Go2It
         private void PopulateIndexesToForm()
         {
             string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            if (conn == null) return;
             string[] tblNames = SQLiteHelper.GetAllTableNames(conn);
             foreach (string tblName in tblNames)
             {
@@ -2305,73 +2565,6 @@ namespace Go2It
                 HotKeyManager.AddHotKey(new HotKey(keys, cellCmd.Value.ToString()), cellCmd.Tag.ToString());
             }
             HotKeyManager.SaveHotKeys();
-        }
-
-        private void ptSymbolColor_Click(object sender, EventArgs e)
-        {
-            var oColor = ptSymbolColor.BackColor;
-            var dlg = new ColorDialog();
-            if (dlg.ShowDialog() != DialogResult.OK) return;
-
-            ptSymbolColor.BackColor = dlg.Color;
-            if (oColor != ptSymbolColor.BackColor)
-            {
-                _dirtyProject = true;
-            }
-            DrawPointGraphics();
-        }
-
-        private void lineSymbolColor_Click(object sender, EventArgs e)
-        {
-            var oColor = lineSymbolColor.BackColor;
-            var dlg = new ColorDialog();
-            if (dlg.ShowDialog() != DialogResult.OK) return;
-
-            lineSymbolColor.BackColor = dlg.Color;
-            if (oColor != lineSymbolColor.BackColor)
-            {
-                _dirtyProject = true;
-            }
-            DrawLineGraphics();
-        }
-
-        private void lineSymbolBorderColor_Click(object sender, EventArgs e)
-        {
-            var oColor = lineSymbolBorderColor.BackColor;
-            var dlg = new ColorDialog();
-            if (dlg.ShowDialog() != DialogResult.OK) return;
-
-            lineSymbolBorderColor.BackColor = dlg.Color;
-            if (oColor != lineSymbolBorderColor.BackColor)
-            {
-                _dirtyProject = true;
-            }
-            DrawLineGraphics();
-        }
-
-        private void ptSymbolSize_ValueChanged(object sender, EventArgs e)
-        {
-            DrawPointGraphics();
-        }
-
-        private void lineSymbolSize_ValueChanged(object sender, EventArgs e)
-        {
-            DrawLineGraphics();
-        }
-
-        private void ptSymbolStyle_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DrawPointGraphics();
-        }
-
-        private void lineSymbolStyle_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DrawLineGraphics();
-        }
-
-        private void lineSymbolCap_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DrawLineGraphics();
         }
     }
 }

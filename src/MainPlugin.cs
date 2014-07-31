@@ -1,12 +1,17 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
+using DotSpatial.Data;
 using DotSpatial.SDR.Controls;
+using DotSpatial.Symbology;
 using Go2It.Properties;
+using SDR.Common;
+using ILog = SDR.Common.logging.ILog;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -250,7 +255,15 @@ namespace Go2It
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
                 // set the active function mode from previous map tab
-                map.FunctionMode = App.Map.FunctionMode;
+                if (App.Map != null)
+                {
+                    map.FunctionMode = App.Map.FunctionMode;
+                }
+                else
+                {
+                    map.FunctionMode = FunctionMode.None;
+                }
+                
                 // watch for functionmode changes to notify custom tools
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
 
