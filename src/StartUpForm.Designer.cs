@@ -94,7 +94,7 @@
             this.rbEmptyProject.Size = new System.Drawing.Size(149, 19);
             this.rbEmptyProject.TabIndex = 3;
             this.rbEmptyProject.TabStop = true;
-            this.rbEmptyProject.Text = "Create Empty Project";
+            this.rbEmptyProject.Text = "Create New Project";
             this.rbEmptyProject.UseVisualStyleBackColor = true;
             // 
             // btnOK

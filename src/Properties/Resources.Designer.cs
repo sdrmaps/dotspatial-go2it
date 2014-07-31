@@ -244,14 +244,5 @@ namespace Go2It.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to GEOGCS[&quot;GCS_WGS_1984&quot;,DATUM[&quot;D_WGS_1984&quot;,SPHEROID[&quot;WGS_1984&quot;,6378137,298.257223563]],PRIMEM[&quot;Greenwich&quot;,0],UNIT[&quot;Degree&quot;,0.017453292519943295]].
-        /// </summary>
-        internal static string wgs_84_esri_string {
-            get {
-                return ResourceManager.GetString("wgs_84_esri_string", resourceCulture);
-            }
-        }
     }
 }

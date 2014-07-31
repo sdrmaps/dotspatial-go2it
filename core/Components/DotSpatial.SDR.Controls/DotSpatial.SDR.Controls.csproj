@@ -98,6 +98,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SelectionsHandler.cs" />
     <Compile Include="TabDockingControl.cs" />
     <Compile Include="DockPanelInfo.cs" />
     <Compile Include="GridHeaderControl.cs" />

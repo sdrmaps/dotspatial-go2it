@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Windows.Forms;
 using SDR.Authentication;
 using SDR.Data.Database;
@@ -43,7 +42,7 @@ namespace Go2It
             }
             else
             {
-                MessageBox.Show(@"Invalid username or password, please check credentials and try again.", @"Failed Login");
+                MessageBox.Show(@"Invalid username or password, please check credentials and try again.", @"Login Failed");
                 OnFormLogout();
             }
         }
@@ -53,17 +52,17 @@ namespace Go2It
             if (String.IsNullOrEmpty(username)) return false;
             if (String.IsNullOrEmpty(password)) return false;
 
-            string conn = SdrConfig.Settings.Instance.ApplicationRepoConnectionString;
-            string query = "SELECT username, salt, hash FROM logins WHERE username='" + username + "'";
-            DataTable table = SQLiteHelper.GetDataTable(conn, query);
+            var conn = SdrConfig.Settings.Instance.ApplicationRepoConnectionString;
+            var query = "SELECT username, salt, hash FROM logins WHERE username='" + username + "'";
+            var table = SQLiteHelper.GetDataTable(conn, query);
 
             if (table.Rows.Count <= 0) return false;
-            DataRow r = table.Rows[0];
-            string salt = r["salt"].ToString();
-            string hash = r["hash"].ToString();
+            var r = table.Rows[0];
+            var salt = r["salt"].ToString();
+            var hash = r["hash"].ToString();
 
             // now verify the password against the dbase salt/hash
-            SaltedHash sh = SaltedHash.Create(salt, hash);
+            var sh = SaltedHash.Create(salt, hash);
             return sh.Verify(password);
         }
     }

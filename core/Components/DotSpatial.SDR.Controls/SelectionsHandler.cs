@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Go2It
+namespace DotSpatial.SDR.Controls
 {
-    public class LayerSelectionSwitcher
+    public class SelectionsHandler
     {
         readonly List<ComboBox> _boxlist = new List<ComboBox>();
         readonly List<CheckedListBox> _checkedlist = new List<CheckedListBox>();
@@ -21,7 +21,7 @@ namespace Go2It
         public void Add(params CheckedListBox[] checkedboxes)
         {
             _checkedlist.AddRange(checkedboxes);
-            checkedboxes.ToList().ForEach(checkedbox => checkedbox.ItemCheck+= CheckHandler);
+            checkedboxes.ToList().ForEach(checkedbox => checkedbox.ItemCheck += CheckHandler);
         }
 
         public void Remove(ComboBox box)
@@ -55,7 +55,7 @@ namespace Go2It
             _checkedlist.ForEach(checkedbox =>
             {
                 if (olditem != null && olditem.ToString().Length > 0) checkedbox.Items.Add(olditem);
-                checkedbox.Items.Remove(item);               
+                checkedbox.Items.Remove(item);
             });
 
             _olditems[trigger] = item;

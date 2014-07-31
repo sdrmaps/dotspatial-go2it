@@ -9,14 +9,14 @@ namespace Go2It
     /// <summary>
     /// This class displays info about active layer and number of selected features
     /// </summary>
-    public class SelectionStatusDisplay
+    public class SelectionsDisplay
     {
         private Map _map;
         private readonly AppManager _appManager;
         private readonly StatusPanel _selectionStatusPanel;
         private bool _showSelectionStatus;
 
-        public SelectionStatusDisplay(AppManager app)
+        public SelectionsDisplay(AppManager app)
         {
             _selectionStatusPanel = new StatusPanel
             {

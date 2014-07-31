@@ -85,7 +85,6 @@ namespace SDR.Configuration.User
             }
         }
 
-
         private static string DictionarySettingsString(Dictionary<string, string> settings)
         {
             var newDict = settings;

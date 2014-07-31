@@ -67,6 +67,8 @@ namespace Go2It
             if (_userLegendForm == null)
                 _userLegendForm = new UserLegendForm();
 
+            // App.CompositionContainer.ComposeParts(_adminForm);
+
             if (_userLegend == null)
                 AttachLegend();
 

@@ -138,6 +138,8 @@ namespace Go2It
             int y = Shell.Location.Y + Shell.Height / 2 - _adminForm.Height / 2;
             _adminForm.Location = new System.Drawing.Point(x, y);
 
+            App.CompositionContainer.ComposeParts(_adminForm);
+
             _adminForm.Show(Shell);
             _adminForm.Focus();
         }
@@ -212,7 +214,7 @@ namespace Go2It
 
         private void NewLayout_Click(object sender, EventArgs e)
         {
-            // App.SerializationManager.New();
+            App.SerializationManager.New();
         }
         #endregion
     }

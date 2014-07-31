@@ -24,7 +24,7 @@ namespace Go2It
         private StartUpForm _startUpForm;
         private ProjectManager _projManager;
         private CoordinateDisplay _latLongDisplay;
-        private SelectionStatusDisplay _selectionStatusDisplay;
+        private SelectionsDisplay _selectionsDisplay;
 
         public override void Activate()
         {
@@ -43,7 +43,7 @@ namespace Go2It
             App.ExtensionsActivated += App_ExtensionsActivated;
            
             // create a selection status display panel
-            _selectionStatusDisplay = new SelectionStatusDisplay(App);
+            _selectionsDisplay = new SelectionsDisplay(App);
 
             // create a new lat/long display panel
             _latLongDisplay = new CoordinateDisplay(App);
@@ -196,7 +196,7 @@ namespace Go2It
             // display the lat/long status panel
             _latLongDisplay.ShowCoordinates = true;
             // display the selection status panel
-            _selectionStatusDisplay.ShowSelectionStatus = false;  // sort of pointless
+            _selectionsDisplay.ShowSelectionStatus = false;  // sort of pointless
             // set focus to the main application window
             Shell.Focus();
         }

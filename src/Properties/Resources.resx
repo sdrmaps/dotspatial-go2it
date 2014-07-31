@@ -154,10 +154,6 @@
   <data name="printer_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\printer_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="wgs_84_esri_string" xml:space="preserve">
-    <value>GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]</value>
-    <comment>WGS 84 ESRI Projection String</comment>
-  </data>
   <data name="filenew_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\filenew_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

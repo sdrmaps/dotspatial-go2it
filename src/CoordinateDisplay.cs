@@ -18,7 +18,7 @@ namespace Go2It
     {
         private Map _map;
         private readonly AppManager _appManager;
-        private readonly ProjectionInfo _wgs84Projection = ProjectionInfo.FromEsriString(Properties.Resources.wgs_84_esri_string);
+        private readonly ProjectionInfo _wgs84Projection = KnownCoordinateSystems.Geographic.World.WGS1984;
         private ProjectionInfo _currentMapProjection;
         private readonly StatusPanel _latLonStatusPanel;
         private bool _isWgs84 = true;
@@ -60,7 +60,7 @@ namespace Go2It
             if (_map == null) return;
 
             var mapProjEsriString = _map.Projection.ToEsriString();
-            _isWgs84 = (mapProjEsriString == Properties.Resources.wgs_84_esri_string);
+            _isWgs84 = (mapProjEsriString == KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString());
             _currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
 
             // setup all the events for this coordinate display on the map
@@ -71,7 +71,7 @@ namespace Go2It
         void map_ProjectionChanged(object sender, EventArgs e)
         {
             var mapProjEsriString = _map.Projection.ToEsriString();
-            _isWgs84 = (mapProjEsriString == Properties.Resources.wgs_84_esri_string);
+            _isWgs84 = (mapProjEsriString == KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString());
             _currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
         }
 
@@ -102,7 +102,7 @@ namespace Go2It
             set
             {
                 _currentMapProjection = ProjectionInfo.FromEsriString(value);
-                _isWgs84 = (_currentMapProjection.ToEsriString() == Properties.Resources.wgs_84_esri_string);
+                _isWgs84 = (_currentMapProjection.ToEsriString() == KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString());
             }
         }
 

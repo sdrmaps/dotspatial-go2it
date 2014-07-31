@@ -83,9 +83,9 @@ namespace Go2It
         private readonly List<IFeatureSet> _lineLayers = new List<IFeatureSet>();
 
         // switch routines to handle options of check/uncheck on admin form
-        private readonly LayerSelectionSwitcher _pointLayerSwitcher = new LayerSelectionSwitcher();
-        private readonly LayerSelectionSwitcher _lineLayerSwitcher = new LayerSelectionSwitcher();
-        private readonly LayerSelectionSwitcher _polygonLayerSwitcher = new LayerSelectionSwitcher();
+        private readonly SelectionsHandler _pointLayerSwitcher = new SelectionsHandler();
+        private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
+        private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
 
         // temp dict holds all base map layers for selection/removal on map tabs
         // on save this is passed to the dockingcontrol baselayerlookup dict (basically this thing holds all the layers available)
@@ -193,6 +193,7 @@ namespace Go2It
             
             if (app.Map != null)
             {
+                // wtf am i doing here we need to use the actual map that exists
                 map = new Map();
                 map.SuspendLayout();
 
@@ -236,97 +237,31 @@ namespace Go2It
             return map;
         }
 
-        private void LogBaseMapEvents(Map map, string name)
+        private void LogBaseMapEvents(IMap map, string name)
         {
             var log = AppContext.Instance.Get<ILog>();
-            map.FinishedRefresh += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " FinishedRefresh");
-            };
-            map.FunctionModeChanged += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " FunctionModeChanged");
-            };
-            map.LayerAdded += delegate(object sender, LayerEventArgs args)
-            {
-                log.Info(name + " LayerAdded");
-            };
-            map.SelectionChanged += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " SelectionChanged");
-            };
-            map.Resized += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " Resized");
-            };
-            map.MapFrame.BufferChanged += delegate(object sender, ClipArgs args)
-            {
-                log.Info(name + " MapFrame.BufferChanged");
-            };
-            map.MapFrame.EnvelopeChanged += delegate(object sender, EnvelopeArgs args)
-            {
-                log.Info(name + " MapFrame.EnvelopeChanged");
-            };
-            map.MapFrame.FinishedLoading += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.FinishedLoading");
-            };
-            map.MapFrame.FinishedRefresh += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.FinishedRefresh");
-            };
-            map.MapFrame.Invalidated += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.Invalidated");
-            };
-            map.MapFrame.ItemChanged += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.ItemChanged");
-            };
-            map.MapFrame.LayerAdded += delegate(object sender, LayerEventArgs args)
-            {
-                log.Info(name + " MapFrame.LayerAdded");
-            };
-            map.MapFrame.LayerRemoved += delegate(object sender, LayerEventArgs args)
-            {
-                log.Info(name + " MapFrame.LayerRemoved");
-            };
-            map.MapFrame.LayerSelected += delegate(object sender, LayerSelectedEventArgs args)
-            {
-                log.Info(name + " MapFrame.LayerSelected");
-            };
-            map.MapFrame.RemoveItem += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.RemoveItem");
-            };
-            map.MapFrame.ScreenUpdated += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.ScreenUpdated");
-            };
-            map.MapFrame.SelectionChanged += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.SelectionChanged");
-            };
-            map.MapFrame.ShowProperties += delegate(object sender, HandledEventArgs args)
-            {
-                log.Info(name + " MapFrame.ShowProperties");
-            };
-            map.MapFrame.UpdateMap += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.UpdateMap");
-            };
-            map.MapFrame.ViewChanged += delegate(object sender, ViewChangedEventArgs args)
-            {
-                log.Info(name + " MapFrame.ViewChanged");
-            };
-            map.MapFrame.ViewExtentsChanged += delegate(object sender, ExtentArgs args)
-            {
-                log.Info(name + " MapFrame.ViewExtentsChanged");
-            };
-            map.MapFrame.VisibleChanged += delegate(object sender, EventArgs args)
-            {
-                log.Info(name + " MapFrame.VisibleChanged");
-            };    
+            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
+            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
+            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
+            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
+            map.Resized += (sender, args) => log.Info(name + " Resized");
+            map.MapFrame.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+            map.MapFrame.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+            map.MapFrame.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+            map.MapFrame.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+            map.MapFrame.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+            map.MapFrame.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+            map.MapFrame.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+            map.MapFrame.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+            map.MapFrame.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+            map.MapFrame.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+            map.MapFrame.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+            map.MapFrame.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+            map.MapFrame.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+            map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+            map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+            map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");    
         }
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
@@ -528,7 +463,7 @@ namespace Go2It
             switch (map.MapFrame.DrawingLayers[0].GetType().Name)
             {
                 case "MapPointLayer":
-                    PointShape ptShape;
+                    PointShape ptShape;  // parse out point shape style
                     Enum.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
                     var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
                     if (pLyr != null)
@@ -551,8 +486,7 @@ namespace Go2It
 
         private void DrawPointGraphics()
         {
-            Map ptMap;
-            // check for a "map" on the control
+            Map ptMap;  // check for a map first
             if (ptSymbolGraphic.Controls.Count != 0)
             {
                 ptMap = ptSymbolGraphic.Controls[0] as Map;
@@ -583,8 +517,7 @@ namespace Go2It
 
         private void DrawLineGraphics()
         {
-            Map lineMap;
-            // check for a "map" on the control
+            Map lineMap;  // check for a map first
             if (lineSymbolGraphic.Controls.Count != 0)
             {
                 lineMap = lineSymbolGraphic.Controls[0] as Map;
@@ -1060,6 +993,7 @@ namespace Go2It
                         e.Cancel = false;  // allow this dialog to continue closing
                         // the project was not saved, reset the active app.map
                         _appManager.SerializationManager.New();
+                        var xxxx = _appManager.SerializationManager.CurrentProjectFile;
                         break;
                     case DialogResult.Yes:
                         e.Cancel = false;  // continue to allow the form to close
@@ -1473,6 +1407,7 @@ namespace Go2It
                 dpi.Value.DotSpatialDockPanel.InnerControl.Refresh();
             }
             _appManager.Map.Refresh();
+            // TODO: pefresh vs invalidate??
             // update the graphic render display to show new map bg color
             DrawLineGraphics();
             DrawPointGraphics();

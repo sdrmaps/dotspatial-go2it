@@ -55,7 +55,7 @@ namespace Go2It
             }
             else
             {
-                CreateEmptyProject();
+                NoProjectLoaded();
             }
             Close();
         }
@@ -100,7 +100,7 @@ namespace Go2It
             if (DialogResult == DialogResult.OK) return;
             if (!String.IsNullOrEmpty(_app.SerializationManager.CurrentProjectFile)) return;
             e.Cancel = true;
-            CreateEmptyProject();
+            NoProjectLoaded();
         }
 
         #endregion
@@ -110,12 +110,9 @@ namespace Go2It
         /// <summary>
         /// Creates a new empty project
         /// </summary>
-        private void CreateEmptyProject()
+        private void NoProjectLoaded()
         {
-            // _app.SerializationManager.New();
-
-            // set the default cursor
-            Cursor = Cursors.Default;
+            Cursor = Cursors.Default;  // set the default cursor
             DialogResult = DialogResult.OK;
             Close();
         }

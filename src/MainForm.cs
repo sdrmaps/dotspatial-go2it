@@ -9,7 +9,7 @@ using SdrConfig = SDR.Configuration;
 namespace Go2It
 {
     /// <summary>
-    /// A Form to add all the main mapping controls to
+    /// Main form to which all mapping controls are assigned
     /// </summary>
     public partial class MainForm : Form
     {
@@ -27,21 +27,10 @@ namespace Go2It
         public MainForm()
         {
             InitializeComponent();
-            // load any custom set hotkeys from the app db / else hotkeys load on extension assembly load
+            // load any custom set hotkeys from the app db | else hotkeys load from assemblies in extension load
             HotKeyManager.LoadHotKeys();
             // create the application level app manager and assign base map and mapframe
-            AppManager = new AppManager
-            {
-
-            };
-                            // map placeholder on app manager, used to swap out active map views using tab interface
-            //Map map = new Map
-            //{
-            //    Dock = DockStyle.Fill,
-            //    Visible = false,
-            //};
-
-            // AppManager.Map = map;
+            AppManager = new AppManager();
 
             // TODO: remove this
             AppManager.MapChanged += delegate(object sender, MapChangedEventArgs args)
@@ -50,14 +39,13 @@ namespace Go2It
                 log.Info("AppManager.MapChanged -- MainForm");
             };
 
-
             _shell = this;
             AppManager.LoadExtensions();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            // custom static hotkeymanager for communicating with tools in extensions
+            // static hotkeymanager for communicating with all tools and controls loaded via extensions
             // returns a bool to indicate if the hotkey event was handled or not
             return HotKeyManager.FireHotKeyEvent(ref msg, keyData) || base.ProcessCmdKey(ref msg, keyData);
         }

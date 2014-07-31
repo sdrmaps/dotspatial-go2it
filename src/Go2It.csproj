@@ -160,7 +160,6 @@
       <DependentUpon>AdminForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CoordinateDisplay.cs" />
-    <Compile Include="LayerSelectionSwitcher.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -185,7 +184,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="DockingControl.cs" />
-    <Compile Include="SelectionStatusDisplay.cs" />
+    <Compile Include="SelectionsDisplay.cs" />
     <Compile Include="StartUpForm.cs">
       <SubType>Form</SubType>
     </Compile>

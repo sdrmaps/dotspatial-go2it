@@ -318,7 +318,7 @@ namespace Go2It
             string tempDir = SdrConfig.ConfigurationHelper.FindOrCreateTempDirectory(
                 SdrConfig.Settings.Instance.ApplicationName + "\\" + unqTmpId);
 
-            // setup the basic datarepo path
+            // setup the basic data repo path
             string dataRepositoryPath = Path.Combine(tempDir, dataRepositoryTempFile);
             // validate we can write to temp access directory
             if (HasWriteAccessToFolder(tempDir))
