@@ -110,7 +110,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
         {
-            DockPanelInfo dockInfo;
+            /*DockPanelInfo dockInfo;
             var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
@@ -121,12 +121,12 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (mapFrame == null || map == null) return;
             map.Layers.LayerSelected -= LayersOnLayerSelected;
-            mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
+            mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;*/
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            DockPanelInfo dockInfo;
+            /*DockPanelInfo dockInfo;
             var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
@@ -141,7 +141,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
 
             _zoomNext.Enabled = mapFrame.CanZoomToNext();
-            _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
+            _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();*/
         }
 
         public override void Deactivate()

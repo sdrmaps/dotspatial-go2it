@@ -328,7 +328,6 @@
             this.cmbActiveMapTab.Name = "cmbActiveMapTab";
             this.cmbActiveMapTab.Size = new System.Drawing.Size(179, 21);
             this.cmbActiveMapTab.TabIndex = 40;
-            this.cmbActiveMapTab.SelectedIndexChanged += new System.EventHandler(this.cmbActiveMapTab_SelectedIndexChanged);
             // 
             // lblMapBGColor
             // 

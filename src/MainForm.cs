@@ -2,8 +2,6 @@
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.SDR.Controls;
-using SDR.Common;
-using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -29,17 +27,10 @@ namespace Go2It
             InitializeComponent();
             // load any custom set hotkeys from the app db | else hotkeys load from assemblies in extension load
             HotKeyManager.LoadHotKeys();
-            // create the application level app manager and assign base map and mapframe
+            // create our application manager
             AppManager = new AppManager();
-
-            // TODO: remove this
-            AppManager.MapChanged += delegate(object sender, MapChangedEventArgs args)
-            {
-                var log = AppContext.Instance.Get<ILog>();
-                log.Info("AppManager.MapChanged -- MainForm");
-            };
-
             _shell = this;
+            // load any extensions/plugins now
             AppManager.LoadExtensions();
         }
 

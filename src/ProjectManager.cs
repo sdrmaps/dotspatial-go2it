@@ -47,28 +47,6 @@ namespace Go2It
             Dock = (DockingControl) mainApp.DockManager;
         }
 
-        public static ProjectionInfo DefaultProjection { get { return KnownCoordinateSystems.Projected.World.WebMercator; } }
-
-        // sets the map extent to continental U.S
-        public void SetDefaultMapExtents()
-        {
-            App.Map.ViewExtents = DefaultMapExtents().ToExtent();
-        }
-
-        public Envelope DefaultMapExtents()
-        {
-            var defaultMapExtent = new Envelope(-130, -60, 10, 55);
-            var xy = new double[4];
-            xy[0] = defaultMapExtent.Minimum.X;
-            xy[1] = defaultMapExtent.Minimum.Y;
-            xy[2] = defaultMapExtent.Maximum.X;
-            xy[3] = defaultMapExtent.Maximum.Y;
-            var z = new double[] { 0, 0 };
-            ProjectionInfo wgs84 = KnownCoordinateSystems.Geographic.World.WGS1984;
-            Reproject.ReprojectPoints(xy, z, wgs84, DefaultProjection, 0, 2);
-            return new Envelope(xy[0], xy[2], xy[1], xy[3]);
-        }
-
         /// <summary>
         /// Check if the path is a valid SQLite database
         /// This function returns false, if the SQLite db
@@ -222,9 +200,9 @@ namespace Go2It
                     Projection = App.Map.Projection,
                 };
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
-                nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
-                nMapFrame.SuspendEvents();  // suspend all layer events
-                nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+                // nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
+                // nMapFrame.SuspendEvents();  // suspend all layer events
+                // nMapFrame.ExtentsInitialized = true;  // set the extents manually below
 
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
@@ -292,10 +270,6 @@ namespace Go2It
         /// </summary>
         public void CreateEmptyProject()
         {
-            // clear all active map layers
-            App.Map.Layers.Clear();
-            // reset extents to default
-            SetDefaultMapExtents();
             // reset all project settings to default
             SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();
             // reset all dock controller map tabs and layerlookup dict
@@ -323,7 +297,7 @@ namespace Go2It
             // validate we can write to temp access directory
             if (HasWriteAccessToFolder(tempDir))
             {
-                // create (copy) a new dataRepositoryDb
+                // create (copy) a new dataRepository Db
                 SQLiteHelper.CreateSQLiteDatabase(dataRepositoryPath, "Go2It.Resources.defaultDatabase.sqlite");
                 string conString1 = SQLiteHelper.GetSQLiteConnectionString(dataRepositoryPath);
                 SdrConfig.Settings.Instance.ProjectRepoConnectionString = conString1;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -23,13 +24,19 @@ namespace Go2It
 
         private StartUpForm _startUpForm;
         private ProjectManager _projManager;
-        private CoordinateDisplay _latLongDisplay;
-        private SelectionsDisplay _selectionsDisplay;
+        // private CoordinateDisplay _latLongDisplay;
+        // private SelectionsDisplay _selectionsDisplay;
 
         public override void Activate()
         {
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
+            App.MapChanged += delegate(object sender, MapChangedEventArgs args)
+            {
+                var log = AppContext.Instance.Get<ILog>();
+                log.Info("AppManager.MapChanged -- MainPluginEvent");
+            };
 
             // set the application wide project manager now
             _projManager = new ProjectManager(App);
@@ -42,11 +49,12 @@ namespace Go2It
             // activate all available extensions now
             App.ExtensionsActivated += App_ExtensionsActivated;
            
+            // TODO: add back in
             // create a selection status display panel
-            _selectionsDisplay = new SelectionsDisplay(App);
-
+            // _selectionsDisplay = new SelectionsDisplay(App);
+            
             // create a new lat/long display panel
-            _latLongDisplay = new CoordinateDisplay(App);
+            // _latLongDisplay = new CoordinateDisplay(App);
 
             base.Activate();
         }
@@ -57,21 +65,23 @@ namespace Go2It
             _projManager.SavingProject();
 
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
-            if (App.Map.Projection != null)
+            /*if (App.Map.Projection != null)
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
-            }
+            }*/
         }
 
         private void SerializationManagerOnNewProjectCreated(object sender, SerializingEventArgs serializingEventArgs)
         {
             _projManager.CreateEmptyProject();
-            // set the default active tool panel and active map function mode
+            // set the active tool panel and active map function mode
             SetActiveToolPanelAndMapFunction();
         }
 
         void App_ExtensionsActivated(object sender, EventArgs e)
         {
+            var log = AppContext.Instance.Get<ILog>();
+            log.Info("App_ExtensionsActivated -- MainPlugin");
             App.RefreshExtensions();
         }
 
@@ -165,10 +175,10 @@ namespace Go2It
             _projManager.OpeningProject();
             // set the basic shell window information
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
-            if (App.Map.Projection != null)
+            /*if (App.Map.Projection != null)
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
-            }
+            }*/
         }
 
         private void ShowStartupScreen()
@@ -193,10 +203,11 @@ namespace Go2It
 
         void startUpForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // TODO: add this all back in
             // display the lat/long status panel
-            _latLongDisplay.ShowCoordinates = true;
+            // _latLongDisplay.ShowCoordinates = true;
             // display the selection status panel
-            _selectionsDisplay.ShowSelectionStatus = false;  // sort of pointless
+            // _selectionsDisplay.ShowSelectionStatus = false;  // sort of pointless
             // set focus to the main application window
             Shell.Focus();
         }
@@ -277,6 +288,18 @@ namespace Go2It
                 }
                 // set the active map tab to the active application map now
                 App.Map = map;
+
+                Debug.WriteLine(App.Map.Extent.ToString());
+                Debug.WriteLine(App.Map.ViewExtents.ToString());
+                Debug.WriteLine(App.Map.Projection.ToEsriString());
+
+                Debug.WriteLine(App.Map.MapFrame.Extent.ToString());
+                Debug.WriteLine(App.Map.MapFrame.ViewExtents.ToString());
+                var t = (EventMapFrame) App.Map.MapFrame;
+                Debug.WriteLine(t.BufferExtents.ToString());
+                Debug.WriteLine(App.Map.MapFrame.Projection.ToEsriString());
+
+
                 App.Map.Invalidate(); // force a refresh of the map
             }
             else if (key.StartsWith("kPanel_"))

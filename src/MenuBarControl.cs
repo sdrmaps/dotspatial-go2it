@@ -155,7 +155,7 @@ namespace Go2It
 
         private void loginForm_Logout(object sender, EventArgs e)
         {
-            // in this case the user has chosen to hit cancel, as such do nothing
+            // the user has chosen to hit the cancel button, as such do nothing
         }
 
         private void Log_Out_Click(object sender, EventArgs e)
@@ -212,10 +212,6 @@ namespace Go2It
             }
         }
 
-        private void NewLayout_Click(object sender, EventArgs e)
-        {
-            App.SerializationManager.New();
-        }
         #endregion
     }
 }

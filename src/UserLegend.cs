@@ -36,7 +36,7 @@ namespace Go2It
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            DockPanelInfo dockInfo;
+            /*DockPanelInfo dockInfo;
             var dockControl = (DockingControl)sender;
             var key = e.ActivePanelKey;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
@@ -50,7 +50,7 @@ namespace Go2It
             
             // update the active _map for the legend now
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            _map.Legend = _userLegend;
+            _map.Legend = _userLegend;*/
 
         }
 

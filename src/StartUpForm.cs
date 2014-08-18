@@ -4,7 +4,10 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Controls;
+using DotSpatial.SDR.Controls;
 using Go2It.Properties;
+using SDR.Common;
+using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -117,6 +120,53 @@ namespace Go2It
             Close();
         }
 
+        private void LogMapEvents(IMap map, string name)
+        {
+            var log = AppContext.Instance.Get<ILog>();
+            var xxx = map.MapFrame.EventsSuspended;
+
+            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh-SForm");
+            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged-SForm");
+            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded-SForm");
+            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged-SForm");
+            map.Resized += (sender, args) => log.Info(name + " Resized-SForm");
+            map.MapFrame.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged-SForm");
+            map.MapFrame.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged-SForm");
+            map.MapFrame.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading-SForm");
+            map.MapFrame.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh-SForm");
+            map.MapFrame.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated-SForm");
+            map.MapFrame.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged-SForm");
+            map.MapFrame.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded-SForm");
+            map.MapFrame.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved-SForm");
+            map.MapFrame.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected-SForm");
+            map.MapFrame.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem-SForm");
+            map.MapFrame.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated-SForm");
+            map.MapFrame.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged-SForm");
+            map.MapFrame.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties-SForm");
+            map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap-SForm");
+            map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged-SForm");
+            map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged-SForm");
+            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged-SForm");
+        }
+
+        private Map CreateLoadMap(String mapName)
+        {
+            var map = new Map();
+            var mapframe = new EventMapFrame();
+
+            // mapframe.SuspendChangeEvent();
+            mapframe.SuspendEvents();
+            mapframe.SuspendViewExtentChanged();
+
+            map.MapFrame = mapframe;
+            LogMapEvents(map, mapName);
+
+            map.Visible = false;
+            map.Dock = DockStyle.Fill;
+            map.MapFunctions.Clear();
+            return map;
+        }
+
         private void OpenProject()
         {
             var selected = lstRecentProjects.SelectedValue as ProjectFileInfo;
@@ -133,6 +183,10 @@ namespace Go2It
             // open the project up using the default open routines
             try
             {
+                if (_app.Map == null)
+                {
+                    _app.Map = CreateLoadMap("_loadMap");
+                }
                 _app.SerializationManager.OpenProject(projectFileName);
             }
             catch (IOException)
