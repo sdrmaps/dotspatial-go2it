@@ -215,7 +215,7 @@ namespace DotSpatial.SDR.Controls
 
         public IMapFeatureLayer GetMapFeatureLayerByName(string lyrName)
         {
-            IMapLayer layer = null;
+            IMapLayer layer;
             BaseLayerLookup.TryGetValue(lyrName, out layer);
             return layer as IMapFeatureLayer;
         }

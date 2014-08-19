@@ -203,80 +203,50 @@ namespace Go2It
         private Map CreateNewMap(String mapName)
         {
             var map = new Map();  // new map 
-            LogMapEvents(map, mapName);  // log all map and mapframe events
+            // LogMapEvents(map, mapName);  // log all map and mapframe events
             var mapframe = new EventMapFrame();  // evented map frame so we can disable visualextent events
-            LogMapFrameEvents(mapframe, mapName);
-
-            Debug.WriteLine(map.MapFrame.Projection.ToEsriString());
-
+            // LogMapFrameEvents(mapframe, mapName);
             if (mapName == "_baseMap")
             {
                 mapframe.SuspendViewExtentChanged();  // view extent changes do not apply to the base map
             }
-            else
-            {
-                var log = AppContext.Instance.Get<ILog>();
-                log.Info("AdminForm -- CreateNewMap(): " + mapName);
-                // mapframe.SuspendChangeEvent();
-                // mapframe.SuspendEvents();
-                // mapframe.SuspendViewExtentChanged();
-            }
-
             map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
             map.BackColor = mapBGColorPanel.BackColor;
             map.Visible = mapName != "_baseMap";  // set visibility to false if it is the _basemap
             map.Dock = DockStyle.Fill;
-
             return map;
         }
 
         private void LogMapEvents(IMap map, string name)
         {
-            var log = AppContext.Instance.Get<ILog>();
-            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
-            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
-            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
-            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
-            map.Resized += (sender, args) => log.Info(name + " Resized");
-            map.MapFrame.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-            map.MapFrame.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-            map.MapFrame.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-            map.MapFrame.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-            map.MapFrame.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-            map.MapFrame.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-            map.MapFrame.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-            map.MapFrame.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-            map.MapFrame.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-            map.MapFrame.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-            map.MapFrame.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-            map.MapFrame.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-            map.MapFrame.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-            map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-            map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-            map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
+            //var log = AppContext.Instance.Get<ILog>();
+            //map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
+            //map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
+            //map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
+            //map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
+            //map.Resized += (sender, args) => log.Info(name + " Resized");
         }
 
         private void LogMapFrameEvents(IMapFrame mapframe, string name)
         {
-            var log = AppContext.Instance.Get<ILog>();
-            mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-            mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-            mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-            mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-            mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-            mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-            mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-            mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-            mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-            mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-            mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-            mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-            mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-            mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-            mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-            mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");    
+            // var log = AppContext.Instance.Get<ILog>();
+            // mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+            // mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+            // mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+            // mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+            // mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+            // mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+            // mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+            // mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+            // mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+            // mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+            // mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+            // mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+            // mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+            // mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+            // mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+            // mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+            // mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");    
         }
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
@@ -301,12 +271,6 @@ namespace Go2It
             var layer = (IMapLayer) layerEventArgs.Layer;
             if (layer == null) return;
 
-            Debug.WriteLine("Extent:                     " + _baseMap.MapFrame.Extent.ToString());
-            Debug.WriteLine("ViewExtent:                 " + _baseMap.MapFrame.ViewExtents.ToString());
-            var t = (EventMapFrame)_baseMap.MapFrame;
-            Debug.WriteLine("BufferExtent:               " + t.BufferExtents.ToString());
-            Debug.WriteLine("Projection:                 " + _baseMap.MapFrame.Projection.ToEsriString());
-
             string fileName;
             if (layer.GetType().Name == "MapImageLayer")
             {
@@ -329,6 +293,10 @@ namespace Go2It
             if (fileName == null) return;
             var mMapLayer = (IMapFeatureLayer) layer;
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
+
+            Debug.WriteLine("LayerAdded: " + fileName);
+            Debug.WriteLine("Extent:     " + mMapLayer.Extent);
+            Debug.WriteLine("Projection: " + mMapLayer.Projection.ToEsriString());
 
             AddLayer(fs); // perform all form specific add operations
         }

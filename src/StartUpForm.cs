@@ -14,14 +14,8 @@ namespace Go2It
 {
     public partial class StartUpForm : Form
     {
-        #region Private Variables
-
         private readonly List<ProjectFileInfo> _recentProjectFiles;
         private readonly AppManager _app;
-
-        #endregion
-
-        #region Constructor
 
         public StartUpForm(AppManager app)
         {
@@ -34,10 +28,6 @@ namespace Go2It
             FormClosing += Form_Closing;
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// The list of recent project files
         /// </summary>
@@ -46,10 +36,7 @@ namespace Go2It
             get { return _recentProjectFiles; }
         }
 
-        #endregion
-
         #region Events
-
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (rbOpenExistingProject.Checked)
@@ -105,10 +92,7 @@ namespace Go2It
             e.Cancel = true;
             NoProjectLoaded();
         }
-
         #endregion
-
-        #region Methods
 
         /// <summary>
         /// Creates a new empty project
@@ -120,65 +104,46 @@ namespace Go2It
             Close();
         }
 
-        private void LogMapEvents(IMap map, string name)
-        {
-            var log = AppContext.Instance.Get<ILog>();
-            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
-            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
-            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
-            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
-            map.Resized += (sender, args) => log.Info(name + " Resized");
-            map.MapFrame.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-            map.MapFrame.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-            map.MapFrame.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-            map.MapFrame.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-            map.MapFrame.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-            map.MapFrame.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-            map.MapFrame.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-            map.MapFrame.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-            map.MapFrame.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-            map.MapFrame.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-            map.MapFrame.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-            map.MapFrame.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-            map.MapFrame.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-            map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-            map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-            map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
-        }
+        //private void LogMapEvents(IMap map, string name)
+        //{
+        //    var log = AppContext.Instance.Get<ILog>();
+        //    map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
+        //    map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
+        //    map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
+        //    map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
+        //    map.Resized += (sender, args) => log.Info(name + " Resized");
+        //}
 
-        private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        {
-            var log = AppContext.Instance.Get<ILog>();
-            mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-            mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-            mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-            mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-            mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-            mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-            mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-            mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-            mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-            mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-            mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-            mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-            mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-            mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-            mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-            mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
-        }
+        //private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        //{
+        //    var log = AppContext.Instance.Get<ILog>();
+        //    mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+        //    mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+        //    mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+        //    mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+        //    mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+        //    mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+        //    mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+        //    mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+        //    mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+        //    mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+        //    mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+        //    mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+        //    mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+        //    mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+        //    mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+        //    mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+        //    mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
+        //}
 
-
-        // todo: is this just a temp map to satisfy load needs (i dont think we even use it)
         private Map CreateLoadMap(String mapName)
         {
             var map = new Map();
-            LogMapEvents(map, mapName);
+            // LogMapEvents(map, mapName);
             var mapframe = new EventMapFrame();
-            LogMapFrameEvents(mapframe, mapName);
+            // LogMapFrameEvents(mapframe, mapName);
 
-            // suspend all events associated with load map (do not fire tool events ever evar eva)
+            // suspend all events associated with load map (do not fire any events ever, evar, eva!!)
             mapframe.SuspendChangeEvent();
             mapframe.SuspendEvents();
             mapframe.SuspendViewExtentChanged();
@@ -256,7 +221,6 @@ namespace Go2It
             bsRecentFiles.ResetBindings(false);
             lstRecentProjects.SelectedIndex = -1;
         }
-        #endregion
     }
 
     public class ProjectFileInfo

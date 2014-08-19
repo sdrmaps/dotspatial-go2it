@@ -202,6 +202,7 @@ namespace Go2It
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
                 nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
                 nMapFrame.SuspendEvents();  // suspend all layer events
+
                 nMapFrame.ExtentsInitialized = true;  // set the extents manually below
 
                 // parse the layers string and cycle through all layers add as needed
@@ -263,6 +264,7 @@ namespace Go2It
                 App.DockManager.Add(dp);
             }
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
+
         }
 
         /// <summary>

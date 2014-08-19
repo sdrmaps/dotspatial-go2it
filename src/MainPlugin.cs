@@ -33,11 +33,11 @@ namespace Go2It
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
-            App.MapChanged += delegate(object sender, MapChangedEventArgs args)
+            /*App.MapChanged += delegate(object sender, MapChangedEventArgs args)
             {
                 var log = AppContext.Instance.Get<ILog>();
                 log.Info("AppManager.MapChanged -- MainPluginEvent");
-            };
+            };*/
 
             // set the application wide project manager now
             _projManager = new ProjectManager(App);
@@ -285,20 +285,17 @@ namespace Go2It
                 var mapFrame = map.MapFrame as EventMapFrame;
                 if (mapFrame != null)
                 {
-                    // activate view extent changes event for mapframe
-                    // TODO: check the results of what happens if this is removed
+                    // activate mapframe events
                     mapFrame.ResumeViewExtentChanged();
                     mapFrame.ResumeEvents();
                 }
                 // set the active map tab to the active application map now
-                App.Map = map;  // this will fire the map changed event on mainplugin
+                App.Map = map;
 
-                var x = map.Parent.Text;
-                Debug.WriteLine("Extent:                     " + App.Map.MapFrame.Extent);
-                Debug.WriteLine("ViewExtent:                 " + App.Map.MapFrame.ViewExtents);
-                var t = (EventMapFrame)App.Map.MapFrame;
-                Debug.WriteLine("BufferExtent:               " + t.BufferExtents);
-                Debug.WriteLine("Projection:                 " + App.Map.MapFrame.Projection.ToEsriString());
+                Debug.WriteLine("ActiveMapTab: " + map.Parent.Text);
+                Debug.WriteLine("Extent:       " + App.Map.MapFrame.Extent);
+                Debug.WriteLine("ViewExtent:   " + App.Map.MapFrame.ViewExtents);
+                Debug.WriteLine("Projection:   " + App.Map.MapFrame.Projection.ToEsriString());
 
                 App.Map.Invalidate(); // force a refresh of the map
             }
@@ -316,6 +313,5 @@ namespace Go2It
             var map = sender as Map;
             SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode = map.FunctionMode.ToString();
         }
-
     }
 }
