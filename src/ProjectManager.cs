@@ -200,9 +200,9 @@ namespace Go2It
                     Projection = App.Map.Projection,
                 };
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
-                // nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
-                // nMapFrame.SuspendEvents();  // suspend all layer events
-                // nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+                nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
+                nMapFrame.SuspendEvents();  // suspend all layer events
+                nMapFrame.ExtentsInitialized = true;  // set the extents manually below
 
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');

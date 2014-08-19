@@ -9,7 +9,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -69,6 +68,8 @@ namespace Go2It
 
         // change tracking flags for project changes as well as mapview changes
         private bool _dirtyProject;
+        // prevent circular tab selection when adding a new map view tab
+        private bool _isCreatingNewView;
 
         // admin form level controls
         private Legend _adminLegend;
@@ -130,10 +131,10 @@ namespace Go2It
 
             PopulateMapViews();
             PopulateSettingsToForm();
-            // PopulateUsersToForm();
-            // PopulateHotKeysToForm();
-            // PopulateIndexesToForm();
-            // PopulateGraphicsToForm();
+            PopulateUsersToForm();
+            PopulateHotKeysToForm();
+            PopulateIndexesToForm();
+            PopulateGraphicsToForm();
 
             // check if there is a valid map loaded to the application
             if (_appManager.Map == null)
@@ -144,7 +145,6 @@ namespace Go2It
                 kname = kname.Replace(" ", "");
                 var key = "kMap_" + kname;
                 var nMap = CreateNewMap(key);
-
                 app.Map = nMap;  // assign this as the active map to the application
 
                 // create new dockable panel to hold the map
@@ -156,14 +156,12 @@ namespace Go2It
                 {
                     _appManager.SerializationManager.New();
                 }
-                // add the new tab view to the main form and select it to activate
+                // add the new tab view to the main form
                 _appManager.DockManager.Add(dp);
             }
 
-            // TODO:  does it matter if this is above or below? (check for on loads)
-            cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
-
             // setup all interface events now
+            cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
             FormClosing += AdminForm_Closing; // check for isdirty changes to project file
             FormClosed += AdminFormClosed;
             chkViewLayers.ItemCheck += chkViewLayers_ItemCheck; // add or remove item to specific map tab view
@@ -173,12 +171,12 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
-            // TODO: readd this here
-            // _baseMap.MapFrame.ResumeEvents();
         }
 
         private void CmbActiveMapTabOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
+            if (_isCreatingNewView) return;  // if creating a new tab view, no need to select again
+
             var txt = cmbActiveMapTab.SelectedItem.ToString();
             // clean the filename for a key value
             var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
@@ -207,26 +205,29 @@ namespace Go2It
             var map = new Map();  // new map 
             LogMapEvents(map, mapName);  // log all map and mapframe events
             var mapframe = new EventMapFrame();  // evented map frame so we can disable visualextent events
+            LogMapFrameEvents(mapframe, mapName);
 
-            // TODO: determine what the hell we are doing here
-            // mapframe.SuspendChangeEvent();
-            // mapframe.SuspendEvents();
-            // mapframe.SuspendViewExtentChanged();
+            Debug.WriteLine(map.MapFrame.Projection.ToEsriString());
+
+            if (mapName == "_baseMap")
+            {
+                mapframe.SuspendViewExtentChanged();  // view extent changes do not apply to the base map
+            }
+            else
+            {
+                var log = AppContext.Instance.Get<ILog>();
+                log.Info("AdminForm -- CreateNewMap(): " + mapName);
+                // mapframe.SuspendChangeEvent();
+                // mapframe.SuspendEvents();
+                // mapframe.SuspendViewExtentChanged();
+            }
 
             map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
- 
-            // basic map info logged to trace.log
-            Debug.WriteLine("CreateNewMap():             " + mapName);
-            Debug.WriteLine("Extent:                     " + mapframe.Extent);
-            Debug.WriteLine("ViewExtent:                 " + mapframe.ViewExtents);
-            Debug.WriteLine("BufferExtent:               " + mapframe.BufferExtents);
-            Debug.WriteLine("Projection:                 " + mapframe.Projection.ToEsriString());
-
             map.BackColor = mapBGColorPanel.BackColor;
             map.Visible = mapName != "_baseMap";  // set visibility to false if it is the _basemap
             map.Dock = DockStyle.Fill;
 
-            return map;  // olly olly oxen free
+            return map;
         }
 
         private void LogMapEvents(IMap map, string name)
@@ -253,7 +254,29 @@ namespace Go2It
             map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
             map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
             map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");    
+            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
+        }
+
+        private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        {
+            var log = AppContext.Instance.Get<ILog>();
+            mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+            mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+            mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+            mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+            mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+            mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+            mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+            mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+            mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+            mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+            mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+            mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+            mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+            mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+            mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+            mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+            mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");    
         }
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
@@ -278,7 +301,6 @@ namespace Go2It
             var layer = (IMapLayer) layerEventArgs.Layer;
             if (layer == null) return;
 
-            Debug.WriteLine("LayersOnLayerAdded():       " + "_baseMap");
             Debug.WriteLine("Extent:                     " + _baseMap.MapFrame.Extent.ToString());
             Debug.WriteLine("ViewExtent:                 " + _baseMap.MapFrame.ViewExtents.ToString());
             var t = (EventMapFrame)_baseMap.MapFrame;
@@ -307,8 +329,6 @@ namespace Go2It
             if (fileName == null) return;
             var mMapLayer = (IMapFeatureLayer) layer;
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
-
-
 
             AddLayer(fs); // perform all form specific add operations
         }
@@ -403,6 +423,7 @@ namespace Go2It
                 {
                     cmbActiveMapTab.SelectedIndex = idx;
                 }
+
                 chkViewLayers.Items.Clear();
                 // populate all the layers available to the checkbox
                 foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
@@ -1009,8 +1030,7 @@ namespace Go2It
                         e.Cancel = false;  // continue to allow the form to close
                         if (!ShowSaveProjectDialog())
                         {
-                            // user decided not to save, reset main app map back to defaults
-                            SetNoProject();
+                            SetNoProject();  // user decided not to save, reset main app map back to defaults
                         } // else the user did a proper save and all things should be synced now
                         break;
                 }
@@ -1411,8 +1431,7 @@ namespace Go2It
                 dpi.Value.DotSpatialDockPanel.InnerControl.BackColor = mapBGColorPanel.BackColor;
                 dpi.Value.DotSpatialDockPanel.InnerControl.Refresh();
             }
-            _appManager.Map.Refresh();
-            // TODO: pefresh vs invalidate??
+            _appManager.Map.Invalidate();
             // update the graphic render display to show new map bg color
             DrawLineGraphics();
             DrawPointGraphics();
@@ -2195,20 +2214,11 @@ namespace Go2It
             var lyr = _localBaseMapLayerLookup[clb.SelectedItem.ToString()];
             if (e.NewValue.ToString() == "Checked")
             {
-                // add the checked layer to the active map tab
-                _appManager.Map.Layers.Add(lyr);
-
-                Debug.WriteLine("chkViewLayers_ItemCheck():  " + "_activeMap");
-                Debug.WriteLine("Extent:                     " + _appManager.Map.MapFrame.Extent.ToString());
-                Debug.WriteLine("ViewExtent:                 " + _appManager.Map.MapFrame.ViewExtents.ToString());
-                var t = (EventMapFrame)_appManager.Map.MapFrame;
-                Debug.WriteLine("BufferExtent:               " + t.BufferExtents.ToString());
-                Debug.WriteLine("Projection:                 " + _appManager.Map.MapFrame.Projection.ToEsriString());
+                _appManager.Map.Layers.Add(lyr);  // add the checked layer to the active map tab
             }
             else
             {
-                // remove the checked layer from the active map
-                _appManager.Map.Layers.Remove(lyr);
+                _appManager.Map.Layers.Remove(lyr);  // remove the checked layer from the active map
             }
             _appManager.Map.Invalidate();
             _dirtyProject = true;
@@ -2217,26 +2227,33 @@ namespace Go2It
         private void btnAddView_Click(object sender, EventArgs e)
         {
             if (txtViewName.Text.Length <= 0) return;
+
+            _isCreatingNewView = true;  // prevent the cmbBox pulldown from performing circular panel selection
+
             var txt = txtViewName.Text;
             txtViewName.Text = string.Empty;
             // clean the filename for a key value
             var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
             fname = fname.Replace(" ", "");
             var key = "kMap_" + fname;
+
             if (cmbActiveMapTab.Items.Contains(txt))
             {
-                // this map tab already exists
+                // this map tab already exists select it and move along
                 _appManager.DockManager.SelectPanel(key);
                 return;
             }
             cmbActiveMapTab.Items.Add(txt);
+
             // create a new map to stick to the tab
             var nMap = CreateNewMap(key);
             // create new dockable panel and stow that shit yo!
             var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
             _appManager.DockManager.Add(dp);
             _appManager.DockManager.SelectPanel(key);
+
             _dirtyProject = true;
+            _isCreatingNewView = false;  // reset the new view creation flag back to false
         }
 
         private void btnRemoveView_Click(object sender, EventArgs e)
@@ -2248,7 +2265,7 @@ namespace Go2It
             var fname = new string(txt.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
             fname = fname.Replace(" ", "");
             var key = "kMap_" + fname;
-            // remove the dockpanel now (which will also kill the map and tab)
+            // remove the dockpanel now (which will also destroy the map and tab)
             _appManager.DockManager.Remove(key);
             cmbActiveMapTab.Items.Remove(txt);
             if (_dockingControl.DockPanelLookup.Count == 0)

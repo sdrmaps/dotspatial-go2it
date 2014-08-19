@@ -8,6 +8,7 @@ using System.Xml;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Data;
+using DotSpatial.Data.Properties;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using Go2It.Properties;
@@ -147,6 +148,8 @@ namespace Go2It
         {
             var funcMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode;  // default built in function modes (zoomin, zoomout, pan, none, etc)
             var funcPanel = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel;  // active tool panel shown (measurement, search etc)
+            // TODO:
+            // var funcPanelMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanelMode;  // sub tool selection of the active panel
 
             // check for a valid panel and select it first if available (by default its search)
             if (funcPanel.Length > 0)
@@ -283,22 +286,19 @@ namespace Go2It
                 if (mapFrame != null)
                 {
                     // activate view extent changes event for mapframe
+                    // TODO: check the results of what happens if this is removed
                     mapFrame.ResumeViewExtentChanged();
                     mapFrame.ResumeEvents();
                 }
                 // set the active map tab to the active application map now
-                App.Map = map;
+                App.Map = map;  // this will fire the map changed event on mainplugin
 
-                Debug.WriteLine(App.Map.Extent.ToString());
-                Debug.WriteLine(App.Map.ViewExtents.ToString());
-                Debug.WriteLine(App.Map.Projection.ToEsriString());
-
-                Debug.WriteLine(App.Map.MapFrame.Extent.ToString());
-                Debug.WriteLine(App.Map.MapFrame.ViewExtents.ToString());
-                var t = (EventMapFrame) App.Map.MapFrame;
-                Debug.WriteLine(t.BufferExtents.ToString());
-                Debug.WriteLine(App.Map.MapFrame.Projection.ToEsriString());
-
+                var x = map.Parent.Text;
+                Debug.WriteLine("Extent:                     " + App.Map.MapFrame.Extent);
+                Debug.WriteLine("ViewExtent:                 " + App.Map.MapFrame.ViewExtents);
+                var t = (EventMapFrame)App.Map.MapFrame;
+                Debug.WriteLine("BufferExtent:               " + t.BufferExtents);
+                Debug.WriteLine("Projection:                 " + App.Map.MapFrame.Projection.ToEsriString());
 
                 App.Map.Invalidate(); // force a refresh of the map
             }

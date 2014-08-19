@@ -123,47 +123,70 @@ namespace Go2It
         private void LogMapEvents(IMap map, string name)
         {
             var log = AppContext.Instance.Get<ILog>();
-            var xxx = map.MapFrame.EventsSuspended;
-
-            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh-SForm");
-            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged-SForm");
-            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded-SForm");
-            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged-SForm");
-            map.Resized += (sender, args) => log.Info(name + " Resized-SForm");
-            map.MapFrame.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged-SForm");
-            map.MapFrame.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged-SForm");
-            map.MapFrame.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading-SForm");
-            map.MapFrame.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh-SForm");
-            map.MapFrame.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated-SForm");
-            map.MapFrame.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged-SForm");
-            map.MapFrame.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded-SForm");
-            map.MapFrame.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved-SForm");
-            map.MapFrame.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected-SForm");
-            map.MapFrame.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem-SForm");
-            map.MapFrame.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated-SForm");
-            map.MapFrame.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged-SForm");
-            map.MapFrame.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties-SForm");
-            map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap-SForm");
-            map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged-SForm");
-            map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged-SForm");
-            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged-SForm");
+            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
+            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
+            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
+            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
+            map.Resized += (sender, args) => log.Info(name + " Resized");
+            map.MapFrame.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+            map.MapFrame.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+            map.MapFrame.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+            map.MapFrame.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+            map.MapFrame.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+            map.MapFrame.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+            map.MapFrame.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+            map.MapFrame.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+            map.MapFrame.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+            map.MapFrame.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+            map.MapFrame.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+            map.MapFrame.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+            map.MapFrame.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+            map.MapFrame.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+            map.MapFrame.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+            map.MapFrame.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+            map.MapFrame.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
         }
 
+        private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        {
+            var log = AppContext.Instance.Get<ILog>();
+            mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+            mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+            mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+            mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+            mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+            mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+            mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+            mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+            mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+            mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+            mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+            mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+            mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+            mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+            mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+            mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+            mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
+        }
+
+
+        // todo: is this just a temp map to satisfy load needs (i dont think we even use it)
         private Map CreateLoadMap(String mapName)
         {
             var map = new Map();
+            LogMapEvents(map, mapName);
             var mapframe = new EventMapFrame();
+            LogMapFrameEvents(mapframe, mapName);
 
-            // mapframe.SuspendChangeEvent();
+            // suspend all events associated with load map (do not fire tool events ever evar eva)
+            mapframe.SuspendChangeEvent();
             mapframe.SuspendEvents();
             mapframe.SuspendViewExtentChanged();
 
             map.MapFrame = mapframe;
-            LogMapEvents(map, mapName);
-
             map.Visible = false;
             map.Dock = DockStyle.Fill;
-            map.MapFunctions.Clear();
+            map.MapFunctions.Clear();  // remove all map functions from load map
             return map;
         }
 
@@ -185,7 +208,7 @@ namespace Go2It
             {
                 if (_app.Map == null)
                 {
-                    _app.Map = CreateLoadMap("_loadMap");
+                    _app.Map = CreateLoadMap("_loadMap");  // a base map used to load all layers
                 }
                 _app.SerializationManager.OpenProject(projectFileName);
             }
@@ -242,7 +265,9 @@ namespace Go2It
         {
             FullPath = fullPath;
         }
+
         public string FullPath { get; private set; }
+
         public string Name
         {
             get
@@ -250,19 +275,23 @@ namespace Go2It
                 return Path.GetFileNameWithoutExtension(FullPath);
             }
         }
+
         public override string ToString()
         {
             return Name;
         }
+
         public override bool Equals(object obj)
         {
             return Equals(obj as ProjectFileInfo);
         }
+
         public bool Equals(ProjectFileInfo other)
         {
             if (ReferenceEquals(null, other)) return false;
             return ReferenceEquals(this, other) || string.Equals(Name, other.Name);
         }
+
         public override int GetHashCode()
         {
             return (Name != null ? Name.GetHashCode() : 0);
