@@ -1095,20 +1095,26 @@ namespace Go2It
             if (_idxWorker.IsBusy != true)
                 if (btnSplitSave.Text == @"Save")
                 {
+                    bool result;
                     if (String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
                     {
-                        SaveProjectAs();
+                        result = SaveProjectAs();
                     }
                     else
                     {
-                        SaveProject(_appManager.SerializationManager.CurrentProjectFile);
+                        result = SaveProject(_appManager.SerializationManager.CurrentProjectFile);
                     }
-                    Close();
+                    if (result)
+                    {
+                        Close();
+                    }
                 }
                 else
                 {
-                    SaveProjectAs();
-                    Close();
+                    if (SaveProjectAs())
+                    {
+                        Close();
+                    }
                 }
             else
             {
@@ -1228,7 +1234,7 @@ namespace Go2It
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void SaveProjectAs()
+        private bool SaveProjectAs()
         {
             using (
                 var dlg = new SaveFileDialog
@@ -1239,8 +1245,9 @@ namespace Go2It
             {
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    SaveProject(dlg.FileName);
+                    return SaveProject(dlg.FileName);
                 }
+                return false;
             }
         }
 
