@@ -98,6 +98,7 @@ namespace Go2It
         public AdminForm(AppManager app)
         {
             InitializeComponent();
+            InitializeSaveSplitButton();
 
             // setup the default indexing field names
             _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
@@ -171,6 +172,19 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
+        }
+
+        private void InitializeSaveSplitButton()
+        {
+            // set the button up as splitter button for both "Save" and "Save As"
+            btnSplitSave.ContextMenuStrip = new ContextMenuStrip();
+            btnSplitSave.ContextMenuStrip.Items.Add("Save");
+            btnSplitSave.ContextMenuStrip.Items.Add("Save As");
+            btnSplitSave.AutoSize = true;
+            btnSplitSave.ContextMenuStrip.ItemClicked += delegate(object sender, ToolStripItemClickedEventArgs args)
+            {
+                btnSplitSave.Text = args.ClickedItem.Text;
+            };
         }
 
         private void CmbActiveMapTabOnSelectedIndexChanged(object sender, EventArgs eventArgs)
