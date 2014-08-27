@@ -45,10 +45,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ActiveMapViewKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">kMap_MyMap</Value>
     </Setting>
     <Setting Name="ActiveMapViewCaption" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">My Map</Value>
     </Setting>
     <Setting Name="GraphicPointColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">LimeGreen</Value>

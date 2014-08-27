@@ -16,11 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Controls", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Serialization", "core\DotSpatial\Trunk\DotSpatial.Serialization\DotSpatial.Serialization.csproj", "{9B692E11-0273-4331-9B15-1670093EDDBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.Navigate", "core\Plugins\DotSpatial.SDR.Plugins.Navigate\DotSpatial.SDR.Plugins.Navigate.csproj", "{7487EA28-0BE6-4632-A150-6AA981F88F02}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDR.Configuration", "core\Components\SDR.Configuration\SDR.Configuration.csproj", "{A93178A1-BA71-450F-8EA9-F5844A64478C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Symbology", "core\DotSpatial\Trunk\DotSpatial.Symbology\DotSpatial.Symbology.csproj", "{21C1D7A7-E8E5-4590-A921-2287AD43CB98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.Navigate", "core\Plugins\DotSpatial.SDR.Plugins.Navigate\DotSpatial.SDR.Plugins.Navigate.csproj", "{7487EA28-0BE6-4632-A150-6AA981F88F02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,16 +72,6 @@ Global
 		{9B692E11-0273-4331-9B15-1670093EDDBF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9B692E11-0273-4331-9B15-1670093EDDBF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9B692E11-0273-4331-9B15-1670093EDDBF}.Release|x86.ActiveCfg = Release|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|x86.ActiveCfg = Release|Any CPU
 		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -102,6 +92,16 @@ Global
 		{21C1D7A7-E8E5-4590-A921-2287AD43CB98}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{21C1D7A7-E8E5-4590-A921-2287AD43CB98}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{21C1D7A7-E8E5-4590-A921-2287AD43CB98}.Release|x86.ActiveCfg = Release|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7487EA28-0BE6-4632-A150-6AA981F88F02}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

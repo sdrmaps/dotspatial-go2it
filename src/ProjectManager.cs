@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -13,8 +14,10 @@ using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
+using SDR.Common;
 using SdrConfig = SDR.Configuration;
 using SDR.Data.Database;
+using ILog = SDR.Common.logging.ILog;
 
 namespace Go2It
 {
@@ -199,11 +202,16 @@ namespace Go2It
                     MapFrame = new EventMapFrame(),
                     Projection = App.Map.Projection,
                 };
-                var nMapFrame = nMap.MapFrame as EventMapFrame;
-                nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
-                nMapFrame.SuspendEvents();  // suspend all layer events
 
-                nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+                LogMapEvents(nMap, txtCaption);  // log all map events
+                var nMapFrame = nMap.MapFrame as EventMapFrame;
+                LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
+
+                // nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
+                // nMapFrame.SuspendEvents();  // suspend all layer events
+                // nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+
+                nMap.MapFrame = nMapFrame;
 
                 // parse the layers string and cycle through all layers add as needed
                 string[] lyrs = txtLayers.Split('|');
@@ -241,21 +249,30 @@ namespace Go2It
                         }
                     }
                 }
-                // manually set all the extents from our settings database
+
+                /*string er;
+                Extent eExt;
+                Extent.TryParse(txtExtent, out eExt, out er);
+                if (er == "Y")
+                {
+                    nMap.MapFrame.Extent.SetValues(eExt.MinX, eExt.MinY, eExt.MaxX, eExt.MaxY);
+
+                }
                 string vr;
                 Extent vExt;
                 Extent.TryParse(txtViewExtent, out vExt, out vr);
                 if (vr == "Y")
                 {
-                    nMapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
-                }
-                string er;
-                Extent eExt;
-                Extent.TryParse(txtExtent, out eExt, out er);
-                if (er == "Y")
-                {
-                    nMapFrame.Extent.SetValues(eExt.MinX, eExt.MinY, eExt.MaxX, eExt.MaxY);
-                }
+                    nMap.MapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
+                }*/
+
+                Debug.WriteLine("-----------------------------------------------------");
+                Debug.WriteLine("OpeningProject");
+                Debug.WriteLine("ActiveMapTab: " + txtCaption);
+                Debug.WriteLine("Extent:       " + nMap.MapFrame.Extent);
+                Debug.WriteLine("ViewExtent:   " + nMap.MapFrame.ViewExtents);
+                Debug.WriteLine("Projection:   " + nMap.MapFrame.Projection.ToEsriString());
+
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
                 {
@@ -265,6 +282,36 @@ namespace Go2It
             }
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
 
+        }
+
+        private void LogMapEvents(IMap map, string name)
+        {
+            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh");
+            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged");
+            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded");
+            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged");
+            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized");
+        }
+
+        private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        {
+            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged");
+            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged");
+            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading");
+            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh");
+            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated");
+            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged");
+            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded");
+            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved");
+            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected");
+            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem");
+            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated");
+            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged");
+            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties");
+            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap");
+            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged");
+            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged");
+            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged");
         }
 
         /// <summary>
@@ -504,7 +551,6 @@ namespace Go2It
             if (d != null)
             {
                 var currentDirPath = Path.Combine(d, "indexes");
-
                 if (newDbPath != currentDbPath)
                 {
                     // copy db to new path. If no db exists, create new db in the new location

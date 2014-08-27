@@ -31,7 +31,3 @@ SET DROPBOX="D:\Dropbox\Public\_Installs\SDR\%PRODUCT%\%JOB_NAME%-%MAJ%.%MIN%\Bu
 IF NOT EXIST %DROPBOX% ( MD %DROPBOX% )
 
 COPY /Y "archive\%PRODUCT%\*" %DROPBOX%\ 
-
-
-
-

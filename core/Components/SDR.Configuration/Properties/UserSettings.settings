@@ -15,10 +15,10 @@
       <Value Profile="(Default)">None</Value>
     </Setting>
     <Setting Name="ActiveFunctionPanelMode" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Address</Value>
     </Setting>
     <Setting Name="ActiveFunctionPanel" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)">kPanel_Measure</Value>
+      <Value Profile="(Default)">kPanel_Search</Value>
     </Setting>
   </Settings>
 </SettingsFile>

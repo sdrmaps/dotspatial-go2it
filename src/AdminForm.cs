@@ -217,9 +217,7 @@ namespace Go2It
         private Map CreateNewMap(String mapName)
         {
             var map = new Map();  // new map 
-            // LogMapEvents(map, mapName);  // log all map and mapframe events
             var mapframe = new EventMapFrame();  // evented map frame so we can disable visualextent events
-            // LogMapFrameEvents(mapframe, mapName);
             if (mapName == "_baseMap")
             {
                 mapframe.SuspendViewExtentChanged();  // view extent changes do not apply to the base map
@@ -229,38 +227,6 @@ namespace Go2It
             map.Visible = mapName != "_baseMap";  // set visibility to false if it is the _basemap
             map.Dock = DockStyle.Fill;
             return map;
-        }
-
-        private void LogMapEvents(IMap map, string name)
-        {
-            //var log = AppContext.Instance.Get<ILog>();
-            //map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
-            //map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
-            //map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
-            //map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
-            //map.Resized += (sender, args) => log.Info(name + " Resized");
-        }
-
-        private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        {
-            // var log = AppContext.Instance.Get<ILog>();
-            // mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-            // mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-            // mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-            // mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-            // mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-            // mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-            // mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-            // mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-            // mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-            // mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-            // mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-            // mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-            // mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-            // mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-            // mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-            // mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            // mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");    
         }
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
@@ -307,11 +273,6 @@ namespace Go2It
             if (fileName == null) return;
             var mMapLayer = (IMapFeatureLayer) layer;
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
-
-            Debug.WriteLine("LayerAdded: " + fileName);
-            Debug.WriteLine("Extent:     " + mMapLayer.Extent);
-            Debug.WriteLine("Projection: " + mMapLayer.Projection.ToEsriString());
-
             AddLayer(fs); // perform all form specific add operations
         }
 
@@ -405,7 +366,6 @@ namespace Go2It
                 {
                     cmbActiveMapTab.SelectedIndex = idx;
                 }
-
                 chkViewLayers.Items.Clear();
                 // populate all the layers available to the checkbox
                 foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
@@ -711,9 +671,8 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
-            // set the map background color (default is black)
             mapBGColorPanel.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor;
-            // set default base settings on admin load
+            // set default settings on admin load
             if (SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType == "POINT")
             {
                 radAddressPoints.Checked = true;
@@ -1013,7 +972,7 @@ namespace Go2It
                         if (!ShowSaveProjectDialog())
                         {
                             SetNoProject();  // user decided not to save, reset main app map back to defaults
-                        } // else the user did a proper save and all things should be synced now
+                        } // else the user did a proper save and all things should be synced at this point
                         break;
                 }
             } 
@@ -1039,7 +998,7 @@ namespace Go2It
                             _appManager.SerializationManager.OpenProject(_appManager.SerializationManager.CurrentProjectFile);
                             break;
                         case DialogResult.Yes:
-                            e.Cancel = false; // finish form closing
+                            e.Cancel = false; // allow form to finish closing
                             if (!SaveProject(_appManager.SerializationManager.CurrentProjectFile))
                             {
                                 // user canceled the save, so reload the original project file now
@@ -1048,7 +1007,7 @@ namespace Go2It
                             break;
                     }
                 }
-                else // no changes have been made, allow the form to finish closing
+                else // no changes have been made, finish closing the form
                 {
                     e.Cancel = false;
                 }
@@ -1086,7 +1045,7 @@ namespace Go2It
         {
             var log = AppContext.Instance.Get<ILog>();
             log.Info("AdminLegendOnOrderChanged");
-            // todo: some event here to update all map tabs
+            // todo: some event here to update all map tabs/rinvalidations/etc.
         }
 
         private void btnAddLayer_Click(object sender, EventArgs e)
@@ -1152,6 +1111,7 @@ namespace Go2It
 
         private void ApplyProjectSettings()
         {
+            // set all the settings variables, these are then serialized into the database via the project manager [SaveProjectSettings()]
             // set the baselayer lookup to the localized one used by the admin form
             _dockingControl.BaseLayerLookup.Clear();
             foreach (KeyValuePair<string, IMapLayer> keyValuePair in _localBaseMapLayerLookup)
@@ -1207,16 +1167,17 @@ namespace Go2It
         {
             try
             {
+                // TODO: add validation back in
                 // validate all required fields are set
-                var msg = VerifyRequiredSettings();
+                /*var msg = VerifyRequiredSettings();
                 if (msg.Length > 0)
                 {
                     ShowSaveSettingsError(msg);
                     return false;
-                }
-                // this is saved to dbase by project manager on serialization event fired just below
+                }*/
+                // this is saved to dbase by project manager on serialization event, which is fired just below
                 ApplyProjectSettings();
-                // swap the active map out with our base map now -> all layers will be serialized (not just active ones)
+                // swap the active map out with our base map now -> all layers will be serialized (not just layers in current active tab)
                 var tMap = _appManager.Map;
                 _appManager.Map = _baseMap;
                 _appManager.SerializationManager.SaveProject(fileName);
@@ -1267,13 +1228,10 @@ namespace Go2It
 
         private bool VerifyPolygonLayerNotSelected(string fileName, CheckedListBox checkBox)
         {
-            if (cmbCityLimitLayer.SelectedItem != null && cmbCityLimitLayer.SelectedItem.ToString() == fileName)
-                return false;
-            if (cmbCellSectorLayer.SelectedItem != null && cmbCellSectorLayer.SelectedItem.ToString() == fileName)
-                return false;
+            if (cmbCityLimitLayer.SelectedItem != null && cmbCityLimitLayer.SelectedItem.ToString() == fileName) return false;
+            if (cmbCellSectorLayer.SelectedItem != null && cmbCellSectorLayer.SelectedItem.ToString() == fileName) return false;
             if (cmbESNLayer.SelectedItem != null && cmbESNLayer.SelectedItem.ToString() == fileName) return false;
-            if (cmbParcelsLayer.SelectedItem != null && cmbParcelsLayer.SelectedItem.ToString() == fileName)
-                return false;
+            if (cmbParcelsLayer.SelectedItem != null && cmbParcelsLayer.SelectedItem.ToString() == fileName) return false;
             if (radAddressPolygons.Checked)
             {
                 if (checkBox != chkAddressLayers)
@@ -1301,8 +1259,7 @@ namespace Go2It
         private bool VerifyPointLayerNotSelected(string fileName, CheckedListBox checkBox)
         {
             if (cmbNotesLayer.SelectedItem != null && cmbNotesLayer.SelectedItem.ToString() == fileName) return false;
-            if (cmbHydrantsLayer.SelectedItem != null && cmbHydrantsLayer.SelectedItem.ToString() == fileName)
-                return false;
+            if (cmbHydrantsLayer.SelectedItem != null && cmbHydrantsLayer.SelectedItem.ToString() == fileName) return false;
             if (radAddressPoints.Checked)
             {
                 if (checkBox != chkAddressLayers)
@@ -1396,9 +1353,7 @@ namespace Go2It
 
         private void adminLayerSplitter_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            var log = AppContext.Instance.Get<ILog>();
-            log.Info("adminLayerSplitter_SplitterMoved");
-            // TODO: investigate redraws here, look for more efficient methods
+            // TODO: investigate the effect this has on map rendering/invalidations
         }
 
         private void mapBGColorPanel_Click(object sender, EventArgs e)
@@ -1485,7 +1440,7 @@ namespace Go2It
             }
             if (!lstUsers.Items.Contains(txtUsername.Text))
             {
-                MessageBox.Show(@"This user does not exist. No delete available");
+                MessageBox.Show(@"User has already been deleted");
                 return;
             }
             lstUsers.Items.Remove(txtUsername.Text); // remove the user from the list 
@@ -1876,6 +1831,7 @@ namespace Go2It
         {
             if (_idxWorker.IsBusy != true)
             {
+                // TODO: investigate a better progress panel, that parents properly to the form
                 _progressPanel = new ProgressPanel();
                 _progressPanel.StartProgress("Creating Indexes...");
 
@@ -1887,7 +1843,7 @@ namespace Go2It
                 {
                     string lyrName = keyValuePair.Key;
                     string idxType = GetLayerIndexTableType(lyrName);
-                    // check if the table exists clear and clean or create
+                    // check if the table exists - then clear and clean it or create a new one
                     if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
                     {
                         SQLiteHelper.ClearTable(conn, idxType + "_" + lyrName);
@@ -1896,7 +1852,7 @@ namespace Go2It
                     {
                         SQLiteHelper.CreateTable(conn, idxType + "_" + lyrName, _indexLookupFields);
                     }
-                    // setup everything else we need to generate ouselves a lucene index      
+                    // setup everything else we need to generate our lucene index      
                     IMapLayer mapLyr;
                     _localBaseMapLayerLookup.TryGetValue(lyrName, out mapLyr);
                     var mfl = mapLyr as IMapFeatureLayer;
@@ -2125,7 +2081,7 @@ namespace Go2It
                     var item = chkLayersToIndex.Items[i].ToString();
                     // remove this from our overall queue
                     _indexQueue.Remove(item);
-                    // check if its already on completed indexes add if not
+                    // check if its already on completed indexes, if not then add it to the list
                     if (!lstExistingIndexes.Items.Contains(item))
                     {
                         lstExistingIndexes.Items.Add(item);

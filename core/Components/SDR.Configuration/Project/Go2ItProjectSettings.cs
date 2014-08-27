@@ -38,8 +38,8 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.ParcelsLayer = string.Empty;
             Properties.ProjectSettings.Default.HydrantsLayer = string.Empty;
             Properties.ProjectSettings.Default.DrivewaysLayer = string.Empty;
-            Properties.ProjectSettings.Default.ActiveMapViewKey = string.Empty;
-            Properties.ProjectSettings.Default.ActiveMapViewCaption = string.Empty;
+            Properties.ProjectSettings.Default.ActiveMapViewKey = "kMap_MyMap";
+            Properties.ProjectSettings.Default.ActiveMapViewCaption = "My Map";
             Properties.ProjectSettings.Default.AddressesProjectType = "POINT";
             Properties.ProjectSettings.Default.KeyLocationsProjectType = "POINT";
             Properties.ProjectSettings.Default.MapBgColor = Color.Black;

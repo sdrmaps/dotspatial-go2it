@@ -184,7 +184,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("kMap_MyMap")]
         public string ActiveMapViewKey {
             get {
                 return ((string)(this["ActiveMapViewKey"]));
@@ -196,7 +196,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("My Map")]
         public string ActiveMapViewCaption {
             get {
                 return ((string)(this["ActiveMapViewCaption"]));
