@@ -207,9 +207,9 @@ namespace Go2It
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
                 LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
 
-                // nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
-                // nMapFrame.SuspendEvents();  // suspend all layer events
-                // nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+                nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
+                nMapFrame.SuspendEvents();  // suspend all layer events
+                nMapFrame.ExtentsInitialized = true;  // set the extents manually below
 
                 nMap.MapFrame = nMapFrame;
 
@@ -250,7 +250,7 @@ namespace Go2It
                     }
                 }
 
-                /*string er;
+                string er;
                 Extent eExt;
                 Extent.TryParse(txtExtent, out eExt, out er);
                 if (er == "Y")
@@ -263,7 +263,7 @@ namespace Go2It
                 if (vr == "Y")
                 {
                     nMap.MapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
-                }*/
+                }
 
                 Debug.WriteLine("##> ProjectManager -- OpeningProject::ActiveTabInfo");
                 Debug.WriteLine("|-----------------------------------------------------");

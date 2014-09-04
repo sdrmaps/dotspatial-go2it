@@ -254,6 +254,7 @@ namespace Go2It
                         // suspend any view changes while not the active tab
                         Debug.WriteLine("ViewExtentChangedSuspended: False [SuspendViewExtentChanged --> True]");
                         mapFrame.SuspendViewExtentChanged();
+                        mapFrame.SuspendEvents();
                     }
                     else
                     {
@@ -312,6 +313,7 @@ namespace Go2It
                     {
                         Debug.WriteLine("ViewExtentChangedSuspended: True [ResumeViewExtentChanged --> True]");
                         mapFrame.ResumeViewExtentChanged();
+                        mapFrame.ResumeEvents();
                     }
                     else
                     {
