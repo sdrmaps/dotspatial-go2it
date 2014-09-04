@@ -32,15 +32,24 @@ namespace Go2It
         {
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-
-            App.MapChanged += delegate(object sender, MapChangedEventArgs args)
+            // lets check for panel events below (debugging purposes)
+            App.DockManager.PanelAdded += delegate(object sender, DockablePanelEventArgs args)
             {
-                var map = args.NewValue as Map;
-                Debug.WriteLine("-----------------------------------------------------");
-                Debug.WriteLine("AppManager.MapChanged -- MainPluginEvent");
-                Debug.WriteLine("Extent:       " + map.MapFrame.Extent);
-                Debug.WriteLine("ViewExtent:   " + map.MapFrame.ViewExtents);
-                Debug.WriteLine("Projection:   " + map.MapFrame.Projection.ToEsriString());
+                Debug.WriteLine("******************************************");
+                Debug.WriteLine("DockManager.PanelAdded -- MainPluginEvent");
+                Debug.WriteLine("******************************************");
+            };
+            App.DockManager.PanelClosed += delegate(object sender, DockablePanelEventArgs args)
+            {
+                Debug.WriteLine("******************************************");
+                Debug.WriteLine("DockManager.PanelClosed -- MainPluginEvent");
+                Debug.WriteLine("******************************************");
+            };
+            App.DockManager.PanelRemoved += delegate(object sender, DockablePanelEventArgs args)
+            {
+                Debug.WriteLine("******************************************");
+                Debug.WriteLine("DockManager.PanelRemoved -- MainPluginEvent");
+                Debug.WriteLine("******************************************");
             };
 
             // set the application wide project manager now
@@ -58,7 +67,7 @@ namespace Go2It
             // create a selection status display panel
             // _selectionsDisplay = new SelectionsDisplay(App);
             
-            // create a new lat/long display panel
+            // create a new lat/long display panel`
             // _latLongDisplay = new CoordinateDisplay(App);
 
             base.Activate();
@@ -66,6 +75,7 @@ namespace Go2It
 
         void SerializationManager_Serializing(object sender, SerializingEventArgs e)
         {
+            Debug.WriteLine("MainPlugin.SerializationManager_Serializing: START");
             // save the project 
             _projManager.SavingProject();
 
@@ -74,6 +84,7 @@ namespace Go2It
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }*/
+            Debug.WriteLine("MainPlugin.SerializationManager_Serializing: END");
         }
 
         private void SerializationManagerOnNewProjectCreated(object sender, SerializingEventArgs serializingEventArgs)
@@ -152,7 +163,7 @@ namespace Go2It
             var funcPanel = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel;  // active tool panel shown (measurement, search etc)
             var funcPanelMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanelMode;  // sub tool selection of the active panel
 
-            // check for a valid panel and select it first if available (by default its search)
+            // check for a valid panel and select it (if available)
             if (funcPanel.Length > 0)
             {
                 App.DockManager.SelectPanel(funcPanel);  // sets the visible tool panel (measurement, search etc.)
@@ -174,6 +185,7 @@ namespace Go2It
 
         void SerializationManager_Deserializing(object sender, SerializingEventArgs e)
         {
+            Debug.WriteLine("MainPlugin.SerializationManager_Deserializing: START");
             // open up the project and assign all attributes and properties
             _projManager.OpeningProject();
             // set the default or user saved active panel and active functionmode
@@ -184,6 +196,7 @@ namespace Go2It
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }*/
+            Debug.WriteLine("MainPlugin.SerializationManager_Deserializing: END");
         }
 
         private void ShowStartupScreen()
@@ -221,7 +234,6 @@ namespace Go2It
         {
             var dockControl = (DockingControl)sender;
             var key = e.ActivePanelKey;
-
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
@@ -239,21 +251,23 @@ namespace Go2It
                 if (mapFrame != null)
                 {
                     Debug.WriteLine("-----------------------------------------------------");
-                    Debug.WriteLine("OnPanelHidden");
+                    Debug.WriteLine("DockManager.OnPanelHidden -- MainPluginEvent");
                     Debug.WriteLine("ActiveMapTab: " + map.Parent.Text);
                     Debug.WriteLine("Extent:       " + map.MapFrame.Extent);
                     Debug.WriteLine("ViewExtent:   " + map.MapFrame.ViewExtents);
                     Debug.WriteLine("Projection:   " + map.MapFrame.Projection.ToEsriString());
-
+                    // check if viewextentchanges are active, suspend if so
                     if (!mapFrame.ViewExtentChangedSuspended)
                     {
-                        // suspend any view changes while not active tab
-                        // Debug.WriteLine("------------- SuspendViewExtentChanged --------------");
-                        // mapFrame.SuspendViewExtentChanged();
-                        // Debug.WriteLine("------------------- SuspendEvents -------------------");
-                        // mapFrame.SuspendEvents();
+                        // suspend any view changes while not the active tab
+                        Debug.WriteLine("ViewExtentChangedSuspended: False [SuspendViewExtentChanged --> True]");
+                        mapFrame.SuspendViewExtentChanged();
                     }
-
+                    else
+                    {
+                        Debug.WriteLine("ViewExtentChangedSuspended: True [No Suspend Required]");
+                    }
+                    Debug.WriteLine("-----------------------------------------------------");
                 }
             }
             else if (key.StartsWith("kPanel_"))
@@ -296,20 +310,26 @@ namespace Go2It
                 if (mapFrame != null)
                 {
                     Debug.WriteLine("-----------------------------------------------------");
-                    Debug.WriteLine("OnPanelChanged");
+                    Debug.WriteLine("DockManager.OnPanelChanged -- MainPluginEvent");
                     Debug.WriteLine("ActiveMapTab: " + map.Parent.Text);
                     Debug.WriteLine("Extent:       " + map.MapFrame.Extent);
                     Debug.WriteLine("ViewExtent:   " + map.MapFrame.ViewExtents);
                     Debug.WriteLine("Projection:   " + map.MapFrame.Projection.ToEsriString());
-                    // activate mapframe events
-                    Debug.WriteLine("------------- ResumeViewExtentsChanged --------------");
-                    mapFrame.ResumeViewExtentChanged();
-                    Debug.WriteLine("-------------------- ResumeEvents -------------------");
-                    mapFrame.ResumeEvents();
+                    // make sure that the viewextentchange event is set to active
+                    if (mapFrame.ViewExtentChangedSuspended)
+                    {
+                        Debug.WriteLine("ViewExtentChangedSuspended: True [ResumeViewExtentChanged --> True]");
+                        mapFrame.ResumeViewExtentChanged();
+                    }
+                    else
+                    {
+                        Debug.WriteLine("ViewExtentChangedSuspended: False [No Resume Required]");
+                    }
+                    Debug.WriteLine("-----------------------------------------------------");
                 }
                 // set the active map tab to the active application map now
                 App.Map = map;
-                App.Map.Invalidate(); // force a refresh of the map
+                App.Map.Invalidate();  // refresh the new active map
             }
             else if (key.StartsWith("kPanel_"))
             {

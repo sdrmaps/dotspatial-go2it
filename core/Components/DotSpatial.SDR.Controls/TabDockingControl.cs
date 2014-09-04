@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -58,6 +59,7 @@ namespace DotSpatial.SDR.Controls
             {
                 throw new ArgumentOutOfRangeException("panel", string.Format("Unable to add panel with Key: {0}, because it already added.", key));
             }
+
             var caption = panel.Caption;
             var innerControl = panel.InnerControl; // the map or tool panel
             var dockStyle = panel.Dock;
@@ -86,7 +88,7 @@ namespace DotSpatial.SDR.Controls
                 tabPage.ImageIndex = _tabImages.Images.IndexOfKey(key);
             }
 
-            // add the tab panel to the dictionary for easy lookup later
+            // add the tab panel to the dictionary for easy lookup as needed
             DockPanelLookup.Add(key, new DockPanelInfo(panel, tabPage, zorder));
 
             if (key.Trim().StartsWith("kMap_"))
@@ -109,7 +111,9 @@ namespace DotSpatial.SDR.Controls
                     _toolTabs.TabIndex = sortIndex;
                 }
             }
+
             // trigger the panel added event
+            Debug.WriteLine("TabDockingControl -- Add::OnPanelAddedEventFired: " + key);
             OnPanelAdded(key);
         }
 
@@ -127,6 +131,9 @@ namespace DotSpatial.SDR.Controls
             DockPanelInfo dockInfo;
             if (!DockPanelLookup.TryGetValue(key, out dockInfo)) return;
             DockPanelLookup.Remove(key);
+
+            // trigger the panel removed event
+            Debug.WriteLine("TabDockingControl -- Remove::OnPanelRemovedEventFired: " + key);
             OnPanelRemoved(key);
         }
 
@@ -144,6 +151,7 @@ namespace DotSpatial.SDR.Controls
         {
             if (tabControlEventArgs.TabPage != null)
             {
+                Debug.WriteLine("TabDockingControl -- MapTabsOnDeselected (HidePanel)");
                 HidePanel(tabControlEventArgs.TabPage.Name);
             }       
         }
@@ -152,6 +160,7 @@ namespace DotSpatial.SDR.Controls
         {
             if (tabControlEventArgs.TabPage != null)
             {
+                Debug.WriteLine("TabDockingControl -- MapTabsOnSelected (SelectPanel)");
                 SelectPanel(tabControlEventArgs.TabPage.Name);
             }
         }
@@ -174,6 +183,9 @@ namespace DotSpatial.SDR.Controls
 
         public void SelectPanel(string key)
         {
+            Debug.WriteLine("===============================================");
+            Debug.WriteLine("TabDockingControl -- SelectPanel: " + key);
+
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
 
@@ -181,10 +193,12 @@ namespace DotSpatial.SDR.Controls
             {
                 if (_mapTabs.SelectedTab == info.DockPanelTab)
                 {
+                    Debug.WriteLine("TabDockingControl -- SelectPanel: Tabs Match (Fire OnActivePanelChangeEvent)");
                     OnActivePanelChanged(key);
                 }
                 else
                 {
+                    Debug.WriteLine("TabDockingControl -- SelectPanel: Tabs Do Not Match (Select the TabPanel)");
                     _mapTabs.SelectTab(info.DockPanelTab);
                 }
             }
@@ -199,10 +213,12 @@ namespace DotSpatial.SDR.Controls
                     _toolTabs.SelectTab(info.DockPanelTab);
                 }
             }
+            Debug.WriteLine("===============================================");
         }
 
         public void HidePanel(string key)
         {
+            Debug.WriteLine("TabDockingControl -- HidePanel " + key + " (Fire OnPanelDeativatedEvent)");
             DockPanelInfo info;
             if (!DockPanelLookup.TryGetValue(key, out info)) return;
             OnPanelDeactivated(key);

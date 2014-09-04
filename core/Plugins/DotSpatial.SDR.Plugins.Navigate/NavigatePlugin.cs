@@ -115,12 +115,16 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
+
             var map = App.Map as Map;
             var mapFrame = App.Map.MapFrame as EventMapFrame;
 
             if (mapFrame == null || map == null) return;
-            // TODO: again add it back
+
+            // TODO: again add it back (remove any event binding)
             // map.Layers.LayerSelected -= LayersOnLayerSelected;
+
+            Debug.WriteLine("NavigatePlugin -- DockManagerOnPanelHidden " + key + " (Remove-ViewExtentChanged-Binding)");
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
         }
 
@@ -132,6 +136,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
+
             Map map = App.Map as Map;
             var mapFrame = App.Map.MapFrame as EventMapFrame;
 
@@ -139,6 +144,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             // TODO: again add it back
             // map.Layers.LayerSelected += LayersOnLayerSelected;
+
+            Debug.WriteLine("NavigatePlugin -- DockManagerOnActivePanelChanged " + key + " (Add-ViewExtentChanged-Binding)");
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
 
             // TODO: add this back after we get this extents shit worked out
@@ -175,10 +182,27 @@ namespace DotSpatial.SDR.Plugins.Navigate
         {
             var mapFrame = sender as EventMapFrame;
             if (mapFrame == null) return;
+
+            Debug.WriteLine("-----------------------------------------------------");
+            Debug.WriteLine("MapFrameOnViewExtentsChanged -- Navigation Plugin");
+
+            if (mapFrame.Parent != null)
+            {
+                var m = mapFrame.Parent;
+                if (m.Parent != null)
+                {
+                    Debug.WriteLine("ActiveMapTab: " + m.Parent.Text);
+                }
+            }
+
+            Debug.WriteLine("BufferExtents: " + mapFrame.BufferExtents.ToString());
+            Debug.WriteLine("GeographicExtents:       " + mapFrame.GeographicExtents.ToString());
+            Debug.WriteLine("ViewExtents:   " + mapFrame.ViewExtents.ToString());
+            Debug.WriteLine("-----------------------------------------------------");
+
             // TODO: add this shit back in
             // _zoomNext.Enabled = mapFrame.CanZoomToNext();
             // _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
-            Debug.WriteLine("MapFrameOnViewExtentsChanged -- Navigation Plugin");
         }
 
         /// <summary>

@@ -202,7 +202,6 @@ namespace Go2It
                     MapFrame = new EventMapFrame(),
                     Projection = App.Map.Projection,
                 };
-
                 LogMapEvents(nMap, txtCaption);  // log all map events
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
                 LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
@@ -243,6 +242,7 @@ namespace Go2It
                                 // layers match add them to the new map tab
                                 if (lyr == fs.Name)
                                 {
+                                    Debug.WriteLine("ProjectManager -- OpeningProject: nMap.Layers.Add(mFeatureLyr)");
                                     nMap.Layers.Add(mFeatureLyr);
                                 }
                             }
@@ -278,10 +278,12 @@ namespace Go2It
                 {
                     DefaultSortOrder = Convert.ToInt16(zorder)
                 };
+
+                Debug.WriteLine("ProjectManager -- OpeningProject: App.DockManager.Add(dp)");
                 App.DockManager.Add(dp);
             }
+            Debug.WriteLine("ProjectManager -- OpeningProject: App.DockManager.SelectPanel: " + SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
-
         }
 
         private void LogMapEvents(IMap map, string name)

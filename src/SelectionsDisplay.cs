@@ -76,7 +76,6 @@ namespace Go2It
                     _selectionStatusPanel.Caption = String.Format("layer: {0} Selected: {1}", layName, mfl.Selection.Count);
                 }
             }
-                
         }
 
         public bool ShowSelectionStatus

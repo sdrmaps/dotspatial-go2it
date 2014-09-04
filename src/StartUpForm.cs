@@ -104,46 +104,48 @@ namespace Go2It
             Close();
         }
 
-        //private void LogMapEvents(IMap map, string name)
-        //{
-        //    var log = AppContext.Instance.Get<ILog>();
-        //    map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
-        //    map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
-        //    map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
-        //    map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
-        //    map.Resized += (sender, args) => log.Info(name + " Resized");
-        //}
+        private void LogMapEvents(IMap map, string name)
+        {
+            var log = AppContext.Instance.Get<ILog>();
+            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
+            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
+            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
+            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
+            map.Resized += (sender, args) => log.Info(name + " Resized");
+        }
 
-        //private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        //{
-        //    var log = AppContext.Instance.Get<ILog>();
-        //    mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-        //    mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-        //    mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-        //    mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-        //    mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-        //    mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-        //    mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-        //    mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-        //    mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-        //    mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-        //    mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-        //    mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-        //    mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-        //    mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-        //    mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-        //    mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-        //    mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
-        //}
+        private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        {
+            var log = AppContext.Instance.Get<ILog>();
+            mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
+            mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
+            mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
+            mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
+            mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
+            mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
+            mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
+            mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
+            mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
+            mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
+            mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
+            mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
+            mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
+            mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
+            mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
+            mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
+            mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
+        }
 
         private Map CreateLoadMap(String mapName)
         {
+            // basically this map loads all the layers that exists on all tabs using default dotspatial
+            // load routines, we then create our map tabs seperately and populate as needed from this map
             var map = new Map();
-            // LogMapEvents(map, mapName);
+            LogMapEvents(map, mapName);
             var mapframe = new EventMapFrame();
-            // LogMapFrameEvents(mapframe, mapName);
+            LogMapFrameEvents(mapframe, mapName);
 
-            // suspend all events associated with load map (do not fire any events ever, evar, eva!!)
+            // suspend all events associated with load map (do not fire ANY events EVER, EVAR, EVA!!)
             mapframe.SuspendChangeEvent();
             mapframe.SuspendEvents();
             mapframe.SuspendViewExtentChanged();
@@ -206,7 +208,7 @@ namespace Go2It
             {
                 if (File.Exists(recentFile))
                 {
-                    if (!existingRecentFiles.Contains(recentFile)) //add to list only if not exists
+                    if (!existingRecentFiles.Contains(recentFile)) // add to list only if it does not exist
                     {
                         existingRecentFiles.Add(recentFile);
                     }

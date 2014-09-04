@@ -52,26 +52,24 @@ namespace Go2It
         [Import("Shell")]
         internal ContainerControl Shell { get; set; }
 
-        // name of the initial map tab (default)
-        private const string MapTabDefaultCaption = "My Map";
-        // internal lookup names used in lucene to get the actual feature from the layer also holds (normalized) shape
+        private const string MapTabDefaultCaption = "My Map";  // name of the initial map tab (default)
+        // internal lookup names used by lucene to get feature from the dataset also stores ft shape (normalized)
         private const string FID = "FID";
         private const string LYRNAME = "LYRNAME";
         private const string GEOSHAPE = "GEOSHAPE";
 
-        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+        private bool _dirtyProject;  // change tracking flag for project changes
+        private bool _isCreatingNewView;  // prevent circular tab selection when adding a new map view tab
+
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
         private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
-        // background worker to handle the indexing process
+        // background worker handles the indexing process
         private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
-        private ProgressPanel _progressPanel;
+        private ProgressPanel _progressPanel;  // indicate progress of index worker
+        // invalid file name chars array for validation
+        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 
-        // change tracking flags for project changes as well as mapview changes
-        private bool _dirtyProject;
-        // prevent circular tab selection when adding a new map view tab
-        private bool _isCreatingNewView;
-
-        // admin form level controls
+        // admin form controls
         private Legend _adminLegend;
         private readonly AppManager _appManager;
         private readonly DockingControl _dockingControl;
@@ -82,17 +80,19 @@ namespace Go2It
         private readonly List<IFeatureSet> _polygonLayers = new List<IFeatureSet>();
         private readonly List<IFeatureSet> _lineLayers = new List<IFeatureSet>();
 
-        // switch routines to handle options of check/uncheck on admin form
+        // switch handlers to control state of check/uncheck controls on admin form
         private readonly SelectionsHandler _pointLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
 
         // temp dict holds all base map layers for selection/removal on map tabs
-        // on save this is passed to the dockingcontrol baselayerlookup dict (basically this thing holds all the layers available)
+        // on save this is passed to the dockingcontrol baselayerlookup dict (basically a lookup for all available layers)
         private readonly Dictionary<string, IMapLayer> _localBaseMapLayerLookup = new Dictionary<string, IMapLayer>();
         
-        // temp storage of layers to index until the "create" button is activated (queued indexes)
-        // inner dict hold type/lookups per row, list holds all rows, outer dict holds layer name and list with all dicts
+        // temp storage of layers to index until the "create" button is activated (all queued indexes)
+        // inner dict hold type/lookups per row
+        // the list stores all rows
+        // thwe outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
 
         public AdminForm(AppManager app)
@@ -122,7 +122,7 @@ namespace Go2It
             // overall events tied to main application
             _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
 
-            // map tracking events on removal and addition of a layer
+            // mabe map tracking events for removal and addition of layers
             _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
             _baseMap.Layers.LayerAdded += LayersOnLayerAdded;
 
@@ -159,6 +159,8 @@ namespace Go2It
                 }
                 // add the new tab view to the main form
                 _appManager.DockManager.Add(dp);
+                // select the map now to activate plugin bindings
+                _appManager.DockManager.SelectPanel(key);
             }
 
             // setup all interface events now
@@ -202,6 +204,36 @@ namespace Go2It
             }
         }
 
+        private void LogMapEvents(IMap map, string name)
+        {
+            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh");
+            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged");
+            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded");
+            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged");
+            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized");
+        }
+
+        private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        {
+            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged");
+            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged");
+            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading");
+            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh");
+            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated");
+            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged");
+            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded");
+            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved");
+            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected");
+            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem");
+            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated");
+            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged");
+            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties");
+            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap");
+            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged");
+            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged");
+            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged");
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // update the hotkey datagridview as needed
@@ -216,16 +248,20 @@ namespace Go2It
 
         private Map CreateNewMap(String mapName)
         {
-            var map = new Map();  // new map 
-            var mapframe = new EventMapFrame();  // evented map frame so we can disable visualextent events
-            if (mapName == "_baseMap")
-            {
-                mapframe.SuspendViewExtentChanged();  // view extent changes do not apply to the base map
-            }
+            var map = new Map(); // new map 
+            var mapframe = new EventMapFrame(); // evented map frame so we can disable visualextent events
+            mapframe.SuspendViewExtentChanged();  // suspend view-extents while map is not active
+
             map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
             map.BackColor = mapBGColorPanel.BackColor;
             map.Visible = mapName != "_baseMap";  // set visibility to false if it is the _basemap
             map.Dock = DockStyle.Fill;
+
+            if (mapName != "_baseMap")
+            {
+                LogMapEvents(map, mapName);
+                LogMapFrameEvents(map.MapFrame, mapName);
+            }
             return map;
         }
 
@@ -271,8 +307,14 @@ namespace Go2It
             if (layer.GetType().Name != "MapPointLayer" && layer.GetType().Name != "MapPolygonLayer" &&
                 layer.GetType().Name != "MapLineLayer") return;
             if (fileName == null) return;
+
             var mMapLayer = (IMapFeatureLayer) layer;
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
+
+            Debug.WriteLine("-----------------------------------------------------");
+            Debug.WriteLine("AdminForm[LayersOnLayerAdded] -- AddLayer: " + fileName);
+            Debug.WriteLine("-----------------------------------------------------");
+
             AddLayer(fs); // perform all form specific add operations
         }
 
@@ -300,10 +342,15 @@ namespace Go2It
                 if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
                      mLayer.DataSet.FeatureType.ToString() != "Line" &&
                      mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
-                IFeatureSet fs = FeatureSet.Open(mLayer.DataSet.Filename);
+                var fs = FeatureSet.Open(mLayer.DataSet.Filename);
+
+                Debug.WriteLine("-----------------------------------------------------");
+                Debug.WriteLine("AdminForm[LayersOnLayerRemoved] -- RemoveLayer: " + fileName);
+                Debug.WriteLine("-----------------------------------------------------");
+
                 RemoveLayer(fs); // perform all form specific remove operations
             }
-            // we need to cycle through all the available dockpanels check if the layer has been set on that map
+            // we need to cycle through all the available dockpanels and check if the layer has been set on that map
             foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
             {
                 if (!dockPanelInfo.Key.Trim().StartsWith("kMap")) continue;
@@ -1045,7 +1092,7 @@ namespace Go2It
         {
             var log = AppContext.Instance.Get<ILog>();
             log.Info("AdminLegendOnOrderChanged");
-            // todo: some event here to update all map tabs/rinvalidations/etc.
+            // todo: some event here to update all map tabs/invalidations/etc.
         }
 
         private void btnAddLayer_Click(object sender, EventArgs e)
@@ -1112,7 +1159,7 @@ namespace Go2It
         private void ApplyProjectSettings()
         {
             // set all the settings variables, these are then serialized into the database via the project manager [SaveProjectSettings()]
-            // set the baselayer lookup to the localized one used by the admin form
+            // set the baselayer lookup to the localized lookup used by the admin form
             _dockingControl.BaseLayerLookup.Clear();
             foreach (KeyValuePair<string, IMapLayer> keyValuePair in _localBaseMapLayerLookup)
             {
@@ -1718,7 +1765,6 @@ namespace Go2It
                     table = defaults;
                 }
             }
-
             // go ahead and populate our data grid view with our table data
             for (int i = 0; i < defaults.Rows.Count; i++)
             {
@@ -1831,7 +1877,7 @@ namespace Go2It
         {
             if (_idxWorker.IsBusy != true)
             {
-                // TODO: investigate a better progress panel, that parents properly to the form
+                // TODO: investigate a better progress panel, so that it parents properly to the form
                 _progressPanel = new ProgressPanel();
                 _progressPanel.StartProgress("Creating Indexes...");
 
@@ -2212,6 +2258,7 @@ namespace Go2It
             var key = "kMap_" + fname;
             // remove the dockpanel now (which will also destroy the map and tab)
             _appManager.DockManager.Remove(key);
+            // also remove it from the combo box selections
             cmbActiveMapTab.Items.Remove(txt);
             if (_dockingControl.DockPanelLookup.Count == 0)
             {
