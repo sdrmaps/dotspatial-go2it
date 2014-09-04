@@ -125,6 +125,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             // map.Layers.LayerSelected -= LayersOnLayerSelected;
 
             Debug.WriteLine("NavigatePlugin -- DockManagerOnPanelHidden " + key + " (Remove-ViewExtentChanged-Binding)");
+
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
         }
 
@@ -146,6 +147,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             // map.Layers.LayerSelected += LayersOnLayerSelected;
 
             Debug.WriteLine("NavigatePlugin -- DockManagerOnActivePanelChanged " + key + " (Add-ViewExtentChanged-Binding)");
+
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
 
             // TODO: add this back after we get this extents shit worked out
@@ -183,9 +185,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
             var mapFrame = sender as EventMapFrame;
             if (mapFrame == null) return;
 
-            Debug.WriteLine("-----------------------------------------------------");
+            Debug.WriteLine("!!-----------------------------------------------------");
             Debug.WriteLine("MapFrameOnViewExtentsChanged -- Navigation Plugin");
-
             if (mapFrame.Parent != null)
             {
                 var m = mapFrame.Parent;
@@ -194,11 +195,14 @@ namespace DotSpatial.SDR.Plugins.Navigate
                     Debug.WriteLine("ActiveMapTab: " + m.Parent.Text);
                 }
             }
-
+            else
+            {
+                Debug.WriteLine("ActiveMapTab: Parent Not Available?");
+            }
             Debug.WriteLine("BufferExtents: " + mapFrame.BufferExtents.ToString());
             Debug.WriteLine("GeographicExtents:       " + mapFrame.GeographicExtents.ToString());
             Debug.WriteLine("ViewExtents:   " + mapFrame.ViewExtents.ToString());
-            Debug.WriteLine("-----------------------------------------------------");
+            Debug.WriteLine("-----------------------------------------------------!!");
 
             // TODO: add this shit back in
             // _zoomNext.Enabled = mapFrame.CanZoomToNext();

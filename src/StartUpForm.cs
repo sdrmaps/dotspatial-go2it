@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -104,46 +105,12 @@ namespace Go2It
             Close();
         }
 
-        private void LogMapEvents(IMap map, string name)
-        {
-            var log = AppContext.Instance.Get<ILog>();
-            map.FinishedRefresh += (sender, args) => log.Info(name + " FinishedRefresh");
-            map.FunctionModeChanged += (sender, args) => log.Info(name + " FunctionModeChanged");
-            map.LayerAdded += (sender, args) => log.Info(name + " LayerAdded");
-            map.SelectionChanged += (sender, args) => log.Info(name + " SelectionChanged");
-            map.Resized += (sender, args) => log.Info(name + " Resized");
-        }
-
-        private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        {
-            var log = AppContext.Instance.Get<ILog>();
-            mapframe.BufferChanged += (sender, args) => log.Info(name + " MapFrame.BufferChanged");
-            mapframe.EnvelopeChanged += (sender, args) => log.Info(name + " MapFrame.EnvelopeChanged");
-            mapframe.FinishedLoading += (sender, args) => log.Info(name + " MapFrame.FinishedLoading");
-            mapframe.FinishedRefresh += (sender, args) => log.Info(name + " MapFrame.FinishedRefresh");
-            mapframe.Invalidated += (sender, args) => log.Info(name + " MapFrame.Invalidated");
-            mapframe.ItemChanged += (sender, args) => log.Info(name + " MapFrame.ItemChanged");
-            mapframe.LayerAdded += (sender, args) => log.Info(name + " MapFrame.LayerAdded");
-            mapframe.LayerRemoved += (sender, args) => log.Info(name + " MapFrame.LayerRemoved");
-            mapframe.LayerSelected += (sender, args) => log.Info(name + " MapFrame.LayerSelected");
-            mapframe.RemoveItem += (sender, args) => log.Info(name + " MapFrame.RemoveItem");
-            mapframe.ScreenUpdated += (sender, args) => log.Info(name + " MapFrame.ScreenUpdated");
-            mapframe.SelectionChanged += (sender, args) => log.Info(name + " MapFrame.SelectionChanged");
-            mapframe.ShowProperties += (sender, args) => log.Info(name + " MapFrame.ShowProperties");
-            mapframe.UpdateMap += (sender, args) => log.Info(name + " MapFrame.UpdateMap");
-            mapframe.ViewChanged += (sender, args) => log.Info(name + " MapFrame.ViewChanged");
-            mapframe.ViewExtentsChanged += (sender, args) => log.Info(name + " MapFrame.ViewExtentsChanged");
-            mapframe.VisibleChanged += (sender, args) => log.Info(name + " MapFrame.VisibleChanged");
-        }
-
-        private Map CreateLoadMap(String mapName)
+        private Map CreateLoadMap()
         {
             // basically this map loads all the layers that exists on all tabs using default dotspatial
             // load routines, we then create our map tabs seperately and populate as needed from this map
             var map = new Map();
-            LogMapEvents(map, mapName);
             var mapframe = new EventMapFrame();
-            LogMapFrameEvents(mapframe, mapName);
 
             // suspend all events associated with load map (do not fire ANY events EVER, EVAR, EVA!!)
             mapframe.SuspendChangeEvent();
@@ -175,7 +142,7 @@ namespace Go2It
             {
                 if (_app.Map == null)
                 {
-                    _app.Map = CreateLoadMap("_loadMap");  // a base map used to load all layers
+                    _app.Map = CreateLoadMap();  // a base level map used to load all layers
                 }
                 _app.SerializationManager.OpenProject(projectFileName);
             }

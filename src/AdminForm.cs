@@ -206,32 +206,32 @@ namespace Go2It
 
         private void LogMapEvents(IMap map, string name)
         {
-            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh");
-            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged");
-            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded");
-            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged");
-            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized");
+            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::AdminForm");
+            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::AdminForm");
+            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::AdminForm");
+            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::AdminForm");
+            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::AdminForm");
         }
 
         private void LogMapFrameEvents(IMapFrame mapframe, string name)
         {
-            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged");
-            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged");
-            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading");
-            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh");
-            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated");
-            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged");
-            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded");
-            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved");
-            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected");
-            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem");
-            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated");
-            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged");
-            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties");
-            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap");
-            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged");
-            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged");
-            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged");
+            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::AdminForm");
+            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::AdminForm");
+            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::AdminForm");
+            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::AdminForm");
+            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::AdminForm");
+            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::AdminForm");
+            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::AdminForm");
+            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::AdminForm");
+            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::AdminForm");
+            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::AdminForm");
+            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::AdminForm");
+            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::AdminForm");
+            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::AdminForm");
+            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::AdminForm");
+            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::AdminForm");
+            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::AdminForm");
+            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::AdminForm");
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -310,11 +310,6 @@ namespace Go2It
 
             var mMapLayer = (IMapFeatureLayer) layer;
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
-
-            Debug.WriteLine("-----------------------------------------------------");
-            Debug.WriteLine("AdminForm[LayersOnLayerAdded] -- AddLayer: " + fileName);
-            Debug.WriteLine("-----------------------------------------------------");
-
             AddLayer(fs); // perform all form specific add operations
         }
 
@@ -343,11 +338,6 @@ namespace Go2It
                      mLayer.DataSet.FeatureType.ToString() != "Line" &&
                      mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
                 var fs = FeatureSet.Open(mLayer.DataSet.Filename);
-
-                Debug.WriteLine("-----------------------------------------------------");
-                Debug.WriteLine("AdminForm[LayersOnLayerRemoved] -- RemoveLayer: " + fileName);
-                Debug.WriteLine("-----------------------------------------------------");
-
                 RemoveLayer(fs); // perform all form specific remove operations
             }
             // we need to cycle through all the available dockpanels and check if the layer has been set on that map

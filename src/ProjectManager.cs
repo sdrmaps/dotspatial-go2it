@@ -100,7 +100,7 @@ namespace Go2It
             // check if it exists, create a default db if not (this really shouldnt be happening -> user lost the db)
             if (!DatabaseExists(dbFileName))
             {
-                MessageBox.Show(@"Database is missing, a new default DB has been created");
+                MessageBox.Show(@"Database is missing, a new default database was created");
                 CreateNewDatabase(dbFileName);
             }
             // cycle through all the map layers that were added and assign to our baselayerlookup dict
@@ -200,6 +200,7 @@ namespace Go2It
                     Visible = true,
                     Dock = DockStyle.Fill,
                     MapFrame = new EventMapFrame(),
+                    // TODO: investigate best way to handle projections per maptab?
                     Projection = App.Map.Projection,
                 };
                 LogMapEvents(nMap, txtCaption);  // log all map events
@@ -242,7 +243,6 @@ namespace Go2It
                                 // layers match add them to the new map tab
                                 if (lyr == fs.Name)
                                 {
-                                    Debug.WriteLine("ProjectManager -- OpeningProject: nMap.Layers.Add(mFeatureLyr)");
                                     nMap.Layers.Add(mFeatureLyr);
                                 }
                             }
@@ -256,7 +256,6 @@ namespace Go2It
                 if (er == "Y")
                 {
                     nMap.MapFrame.Extent.SetValues(eExt.MinX, eExt.MinY, eExt.MaxX, eExt.MaxY);
-
                 }
                 string vr;
                 Extent vExt;
@@ -266,12 +265,13 @@ namespace Go2It
                     nMap.MapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
                 }*/
 
-                Debug.WriteLine("-----------------------------------------------------");
-                Debug.WriteLine("OpeningProject");
+                Debug.WriteLine("##> ProjectManager -- OpeningProject::ActiveTabInfo");
+                Debug.WriteLine("|-----------------------------------------------------");
                 Debug.WriteLine("ActiveMapTab: " + txtCaption);
                 Debug.WriteLine("Extent:       " + nMap.MapFrame.Extent);
                 Debug.WriteLine("ViewExtent:   " + nMap.MapFrame.ViewExtents);
                 Debug.WriteLine("Projection:   " + nMap.MapFrame.Projection.ToEsriString());
+                Debug.WriteLine("-----------------------------------------------------|");
 
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
@@ -279,41 +279,42 @@ namespace Go2It
                     DefaultSortOrder = Convert.ToInt16(zorder)
                 };
 
-                Debug.WriteLine("ProjectManager -- OpeningProject: App.DockManager.Add(dp)");
+                Debug.WriteLine("##> ProjectManager -- OpeningProject::DockManager.AddPanel: " + txtCaption);
                 App.DockManager.Add(dp);
             }
-            Debug.WriteLine("ProjectManager -- OpeningProject: App.DockManager.SelectPanel: " + SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
+
+            Debug.WriteLine("##> ProjectManager -- OpeningProject::DockManager.SelectPanel: " + SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
         }
 
         private void LogMapEvents(IMap map, string name)
         {
-            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh");
-            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged");
-            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded");
-            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged");
-            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized");
+            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::ProjectManager");
+            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::ProjectManager");
+            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::ProjectManager");
+            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::ProjectManager");
+            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::ProjectManager");
         }
 
         private void LogMapFrameEvents(IMapFrame mapframe, string name)
         {
-            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged");
-            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged");
-            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading");
-            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh");
-            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated");
-            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged");
-            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded");
-            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved");
-            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected");
-            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem");
-            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated");
-            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged");
-            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties");
-            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap");
-            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged");
-            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged");
-            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged");
+            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::ProjectManager");
+            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::ProjectManager");
+            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::ProjectManager");
+            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::ProjectManager");
+            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::ProjectManager");
+            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::ProjectManager");
+            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::ProjectManager");
+            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::ProjectManager");
+            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::ProjectManager");
+            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::ProjectManager");
+            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::ProjectManager");
+            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::ProjectManager");
+            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::ProjectManager");
+            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::ProjectManager");
+            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::ProjectManager");
+            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::ProjectManager");
+            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::ProjectManager");
         }
 
         /// <summary>
@@ -454,6 +455,14 @@ namespace Go2It
                     {"layers", txtLayers}
                 };
                 SQLiteHelper.Insert(conn, "MapTabs", dd);
+
+                Debug.WriteLine("##> ProjectManager -- SaveProjectSettings::ActiveTabInfo");
+                Debug.WriteLine("(-----------------------------------------------------");
+                Debug.WriteLine("ActiveMapTab: " + dpi.Value.DotSpatialDockPanel.Caption);
+                Debug.WriteLine("Extent:       " + mapFrame.Extent);
+                Debug.WriteLine("ViewExtent:   " + mapFrame.ViewExtents);
+                Debug.WriteLine("Projection:   " + mapFrame.Projection.ToEsriString());
+                Debug.WriteLine("-----------------------------------------------------)");
             }
         }
 
@@ -512,7 +521,7 @@ namespace Go2It
             if (!dir.Exists)
             {
                 throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
+                    "Source directory could not be located: "
                     + sourceDirName);
             }
             // If the destination directory doesn't exist, create it. 
