@@ -92,7 +92,7 @@ namespace Go2It
         // temp storage of layers to index until the "create" button is activated (all queued indexes)
         // inner dict hold type/lookups per row
         // the list stores all rows
-        // thwe outer dict holds layer name and list with all dicts
+        // the outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
 
         public AdminForm(AppManager app)
@@ -161,6 +161,8 @@ namespace Go2It
                 _appManager.DockManager.Add(dp);
                 // select the map now to activate plugin bindings
                 _appManager.DockManager.SelectPanel(key);
+                // select the active panel for display
+                _appManager.DockManager.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
             }
 
             // setup all interface events now
@@ -204,6 +206,7 @@ namespace Go2It
             }
         }
 
+        // TODO: can safely remove our map loggers
         private void LogMapEvents(IMap map, string name)
         {
             map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::AdminForm");
@@ -470,7 +473,10 @@ namespace Go2It
                     Enum.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
                     var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
                     if (pLyr != null)
-                        pLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor, ptShape, Convert.ToInt32(ptSymbolSize.Text));
+                    {
+                        pLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor,
+                            ptShape, Convert.ToInt32(ptSymbolSize.Text));
+                    }
                     break;
                 case "MapLineLayer":
                     // parse out line shape styles
@@ -480,7 +486,11 @@ namespace Go2It
                     Enum.TryParse(lineSymbolStyle.SelectedItem.ToString(), true, out lineStyle);
                     var lLyr = map.MapFrame.DrawingLayers[0] as MapLineLayer;
                     if (lLyr != null)
-                        lLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor, lineSymbolBorderColor.BackColor, Convert.ToInt32(lineSymbolSize.Text), lineStyle, lineCap);
+                    {
+                        lLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor,
+                            lineSymbolBorderColor.BackColor, Convert.ToInt32(lineSymbolSize.Text),
+                            lineStyle, lineCap);
+                    }
                     break;
             }
             map.BackColor = mapBGColorPanel.BackColor;
@@ -1204,7 +1214,7 @@ namespace Go2It
         {
             try
             {
-                // TODO: add validation back in
+                // TODO: add validation back in, perhaps improve them as well
                 // validate all required fields are set
                 /*var msg = VerifyRequiredSettings();
                 if (msg.Length > 0)
@@ -2021,7 +2031,7 @@ namespace Go2It
                     var list = o.FieldLookup;
                     foreach (KeyValuePair<string, string> kv in list)
                     {
-                        // TODO: include the field type with the lookup? (more dynamic)
+                        // TODO: include the field type with the lookup? (more dynamic) explore this idea
                         if (kv.Key == "Phone" || kv.Key == "Aux. Phone" || kv.Key == "Structure Number")
                         {
                             doc.Add(new Field(kv.Key, dr[kv.Value].ToString(), Field.Store.YES,

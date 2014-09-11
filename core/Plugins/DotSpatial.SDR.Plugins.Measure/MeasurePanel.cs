@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
+using DotSpatial.SDR.Plugins.Measure.Properties;
 
 namespace DotSpatial.SDR.Plugins.Measure
 {
     public partial class MeasurePanel : UserControl
     {
         private double _areaIntoSquareMeters;
-        private int _areaUnitIndex;
         private double _distIntoMeters;
         private double _distance;
-        private int _distanceUnitIndex;
-        private MeasureMode _measureMode;
+        private readonly MeasureMode _measureMode;
         private double _totalArea;
         private double _totalDistance;
 
@@ -45,16 +44,24 @@ namespace DotSpatial.SDR.Plugins.Measure
         public MeasurePanel()
         {
             InitializeComponent();
-            _measureMode = MeasureMode.Distance;
-            cmbUnits.Items.AddRange(_distanceUnitNames);
-            cmbUnits.SelectedIndex = 1;
-            _distanceUnitIndex = 1;
-            _areaUnitIndex = 2;
-            _distIntoMeters = 1;
-            _areaIntoSquareMeters = 1;
+            // get the measure mode set in user settings or default
+            _measureMode = MeasureMode;
+            if (_measureMode == MeasureMode.Distance)
+            {
+                cmbUnits.Items.AddRange(_distanceUnitNames);
+                cmbUnits.SelectedIndex = DistanceUnitIndex;
+                Text = @"Measure Distance";
+                lblMeasure.Text = @"Distance";
+            }
+            else if (_measureMode == MeasureMode.Area)
+            {
+                cmbUnits.Items.AddRange(_areaUnitNames);
+                cmbUnits.SelectedIndex = AreaUnitIndex;
+                Text = @"Measure Area";
+                lblMeasure.Text = @"Area";
+            }
         }
         #endregion
-
 
         #region Properties
 
@@ -107,6 +114,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         {
             if (MeasurementsCleared != null) MeasurementsCleared(this, EventArgs.Empty);
         }
+
         #endregion
 
         /// <summary>
@@ -114,10 +122,53 @@ namespace DotSpatial.SDR.Plugins.Measure
         /// </summary>
         public MeasureMode MeasureMode
         {
-            get { return _measureMode; }
+            get
+            {
+                var funcMode = UserSettings.Default.MeasureMode;
+                if (funcMode.Length <= 0) return MeasureMode.Distance;
+                MeasureMode mm;
+                Enum.TryParse(funcMode, true, out mm);
+                return mm;
+            }
             set
             {
-                _measureMode = value;
+                UserSettings.Default.MeasureMode = value.ToString();
+                UserSettings.Default.Save();
+            }
+        }
+
+        public int AreaUnitIndex
+        {
+            get { return UserSettings.Default.AreaUnitIndex; }
+            set
+            {
+                UserSettings.Default.AreaUnitIndex = value;
+                UserSettings.Default.Save();
+            }
+        }
+
+        public int DistanceUnitIndex
+        {
+            get { return UserSettings.Default.DistanceUnitIndex; }
+            set
+            {
+                UserSettings.Default.DistanceUnitIndex = value;
+                UserSettings.Default.Save();
+            }
+        }
+
+        // simple function for activating or deactivation the measurement mode button
+        public void ToggleMeasurementModeButton(bool toggle)
+        {
+            if (_measureMode == MeasureMode.Distance)
+            {
+                tsbDistance.Checked = toggle;
+                tsbArea.Checked = false;
+            }
+            else if (_measureMode == MeasureMode.Area)
+            {
+                tsbDistance.Checked = false;
+                tsbArea.Checked = toggle;
             }
         }
 
@@ -149,16 +200,17 @@ namespace DotSpatial.SDR.Plugins.Measure
             if (_measureMode != MeasureMode.Area)
             {
                 MeasureMode = MeasureMode.Area;
-                _distanceUnitIndex = cmbUnits.SelectedIndex;
+                DistanceUnitIndex = cmbUnits.SelectedIndex;
                 cmbUnits.SuspendLayout();
                 cmbUnits.Items.Clear();
                 cmbUnits.Items.AddRange(_areaUnitNames);
-                cmbUnits.SelectedIndex = _areaUnitIndex;
+                cmbUnits.SelectedIndex = AreaUnitIndex;
                 OnMeasureModeChanged();
                 cmbUnits.ResumeLayout();
                 Text = @"Measure Area";
                 lblMeasure.Text = @"Area";
                 tsbDistance.Checked = false;
+                tsbArea.Checked = true;
             }
         }
 
@@ -172,22 +224,23 @@ namespace DotSpatial.SDR.Plugins.Measure
             if (_measureMode != MeasureMode.Distance)
             {
                 MeasureMode = MeasureMode.Distance;
-                _areaUnitIndex = cmbUnits.SelectedIndex;
+                AreaUnitIndex = cmbUnits.SelectedIndex;
                 cmbUnits.SuspendLayout();
                 cmbUnits.Items.Clear();
                 cmbUnits.Items.AddRange(_distanceUnitNames);
-                cmbUnits.SelectedIndex = _distanceUnitIndex;
+                cmbUnits.SelectedIndex = DistanceUnitIndex;
                 cmbUnits.ResumeLayout();
                 OnMeasureModeChanged();
                 Text = @"Measure Distance";
                 lblMeasure.Text = @"Distance";
                 tsbArea.Checked = false;
+                tsbDistance.Checked = true;
             }
         }
 
         private void cmbUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (MeasureMode == MeasureMode.Distance)
+            if (_measureMode == MeasureMode.Distance)
             {
                 _distIntoMeters = _distanceUnitFactors[cmbUnits.SelectedIndex];
             }

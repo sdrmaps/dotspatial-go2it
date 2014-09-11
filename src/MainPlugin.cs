@@ -25,26 +25,13 @@ namespace Go2It
 
         private StartUpForm _startUpForm;
         private ProjectManager _projManager;
-        // private CoordinateDisplay _latLongDisplay;
+        private CoordinateDisplay _latLongDisplay;
         // private SelectionsDisplay _selectionsDisplay;
 
         public override void Activate()
         {
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-            // lets check for panel events below (debugging purposes)
-            App.DockManager.PanelAdded += delegate(object sender, DockablePanelEventArgs args)
-            {
-                Debug.WriteLine("==> MainPlugin -- DockManager.PanelAdded");
-            };
-            App.DockManager.PanelClosed += delegate(object sender, DockablePanelEventArgs args)
-            {
-                Debug.WriteLine("==> MainPlugin -- DockManager.PanelClosed");
-            };
-            App.DockManager.PanelRemoved += delegate(object sender, DockablePanelEventArgs args)
-            {
-                Debug.WriteLine("==> MainPlugin -- DockManager.PanelRemoved");
-            };
 
             // set the application wide project manager now
             _projManager = new ProjectManager(App);
@@ -62,7 +49,7 @@ namespace Go2It
             // _selectionsDisplay = new SelectionsDisplay(App);
             
             // create a new lat/long display panel`
-            // _latLongDisplay = new CoordinateDisplay(App);
+            _latLongDisplay = new CoordinateDisplay(App);
 
             base.Activate();
         }
@@ -74,17 +61,15 @@ namespace Go2It
             // set shell window title
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
 
-            /*if (App.Map.Projection != null)
+            if (App.Map.Projection != null)
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
-            }*/
+            }
         }
 
         private void SerializationManagerOnNewProjectCreated(object sender, SerializingEventArgs serializingEventArgs)
         {
             _projManager.CreateEmptyProject();
-            // set the active tool panel and active map function mode
-            SetActiveToolPanelAndMapFunction();
         }
 
         void App_ExtensionsActivated(object sender, EventArgs e)
@@ -150,27 +135,6 @@ namespace Go2It
 
         #endregion
 
-        private void SetActiveToolPanelAndMapFunction()
-        {
-            var funcMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode;  // default built in function modes (zoomin, zoomout, pan, none, etc)
-            var funcPanel = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel;  // active tool panel shown (measurement, search etc)
-            var funcPanelMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanelMode;  // sub tool selection of the active panel
-
-            // check for a valid panel and select it (if available)
-            if (funcPanel.Length > 0)
-            {
-                App.DockManager.SelectPanel(funcPanel);  // sets the visible tool panel (measurement, search etc.)
-                // TODO: peform the active panel mode selection
-            }
-            // set the active mapfunction mode now (None if there is an active tool panel)
-            if (funcMode.Length > 0)
-            {
-                FunctionMode fm;
-                Enum.TryParse(funcMode, true, out fm);
-                App.Map.FunctionMode = fm;  // either None, ZoomIn, ZoomOut, Pan
-            }
-        }
-
         private string GetProjectShortName()
         {
             return Path.GetFileName(App.SerializationManager.CurrentProjectFile);
@@ -180,15 +144,13 @@ namespace Go2It
         {
             // open up the project and assign all attributes and properties
             _projManager.OpeningProject();
-            // set the default or user saved active panel/mode and active functionmode
-            SetActiveToolPanelAndMapFunction();
             // set shell window title
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
 
-            /*if (App.Map.Projection != null)
+            if (App.Map.Projection != null)
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
-            }*/
+            }
         }
 
         private void ShowStartupScreen()
@@ -215,7 +177,7 @@ namespace Go2It
         {
             // TODO: add this all back in
             // display the lat/long status panel
-            // _latLongDisplay.ShowCoordinates = true;
+            _latLongDisplay.ShowCoordinates = true;
             // display the selection status panel
             // _selectionsDisplay.ShowSelectionStatus = false;  // sort of pointless
             // set focus to the main application window
@@ -263,12 +225,6 @@ namespace Go2It
                     Debug.WriteLine("-----------------------------------------------------]");
                 }
             }
-            else if (key.StartsWith("kPanel_"))
-            {
-                // at this point the active function panel is being hidden
-                // clear the active function for that panel ie (measurment.distance, search.first_name, etc
-                SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanelMode = string.Empty;
-            }
         }
 
         void DockManager_ActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -287,16 +243,19 @@ namespace Go2It
                 // set them as the active map key and caption
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
-                // set the active function mode from previous map tab
+                
+                // check if there was a previously set maptab
                 if (App.Map != null)
                 {
                     map.FunctionMode = App.Map.FunctionMode;
                 }
-                else
+                else // this is a new map, load the active functionmode from user settings or default
                 {
-                    map.FunctionMode = FunctionMode.None;
+                    var funcMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode;
+                    FunctionMode fm;
+                    Enum.TryParse(funcMode, true, out fm);
+                    map.FunctionMode = fm;
                 }
-                // watch for functionmode changes to notify custom tools
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
                 // update the events of the mapframe
                 var mapFrame = map.MapFrame as EventMapFrame;
@@ -329,8 +288,8 @@ namespace Go2It
             {
                 // update the active function panel being displayed and show the panel
                 SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel = key;
-                dockControl.ExtendToolPanel();
-                // TODO: handle the sub panel selection if it exists
+                // TODO: investigate here so that the panel opens fully
+                dockControl.ExtendToolPanel();  // make sure the tool panel is currently extended
             }
         }
 
@@ -338,7 +297,10 @@ namespace Go2It
         {
             // update the user settings to reflect active functionmode
             var map = sender as Map;
-            SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode = map.FunctionMode.ToString();
+            if (map != null)
+            {
+                SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode = map.FunctionMode.ToString();
+            }
         }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -30,6 +27,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         public override void Activate()
         {
+            // TODO: make sure all hotkeys have their defaults set
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Pan", PanTool_Click)
             {
                 GroupCaption = "Navigate_Pan",
@@ -61,7 +59,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             HotKeyManager.AddHotKey(new HotKey(Keys.F1, "Zoom to Max Extent"), "Navigate_Zoom_Max_Extent");
             _zoomPrevious = new SimpleActionItem(HomeMenuKey, "Previous", ZoomPrevious_Click)
             {
-                GroupCaption = "Navigate_Zoom_previous",
+                GroupCaption = "Navigate_Zoom_Previous",
                 ToolTipText = "Previous Zoom View",
                 SmallImage = Resources.zoom_prev_16,
                 LargeImage = Resources.zoom_prev_32,
@@ -90,6 +88,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             // dockmanager events for display of various maps on tab panels
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
             // watch for hotkeys activated via the mainform plugin
             HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
@@ -117,14 +116,12 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (!key.StartsWith("kMap_")) return;
 
             var map = App.Map as Map;
-            var mapFrame = App.Map.MapFrame as EventMapFrame;
+            if (map == null) return;
 
-            if (mapFrame == null || map == null) return;
+            map.Layers.LayerSelected -= LayersOnLayerSelected;
 
-            // TODO: again add it back (remove any event binding)
-            // map.Layers.LayerSelected -= LayersOnLayerSelected;
-
-            Debug.WriteLine("NavigatePlugin -- DockManagerOnPanelHidden " + key + " (Remove-ViewExtentChanged-Binding)");
+            var mapFrame = map.MapFrame as EventMapFrame;
+            if (mapFrame == null) return;
 
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
         }
@@ -138,21 +135,18 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (!key.StartsWith("kMap_")) return;
 
-            Map map = App.Map as Map;
-            var mapFrame = App.Map.MapFrame as EventMapFrame;
+            var map = App.Map as Map;
+            if (map == null) return;
 
-            if (mapFrame == null || map == null) return;
+            map.Layers.LayerSelected += LayersOnLayerSelected;
 
-            // TODO: again add it back
-            // map.Layers.LayerSelected += LayersOnLayerSelected;
-
-            Debug.WriteLine("NavigatePlugin -- DockManagerOnActivePanelChanged " + key + " (Add-ViewExtentChanged-Binding)");
+            var mapFrame = map.MapFrame as EventMapFrame;
+            if (mapFrame == null) return;
 
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
 
-            // TODO: add this back after we get this extents shit worked out
-            // _zoomNext.Enabled = mapFrame.CanZoomToNext();
-            // _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
+            _zoomNext.Enabled = mapFrame.CanZoomToNext();
+            _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
         }
 
         public override void Deactivate()
@@ -161,10 +155,10 @@ namespace DotSpatial.SDR.Plugins.Navigate
             var map = App.Map as Map;
             var mapFrame = App.Map.MapFrame as EventMapFrame;
 
+            // TODO: hrmm what, verify this is doing what we want
             if (mapFrame == null || map == null) return;
             {
-                // TODO: again add it back
-                // map.Layers.LayerSelected -= LayersOnLayerSelected;
+                map.Layers.LayerSelected -= LayersOnLayerSelected;
                 mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             }
             base.Deactivate();
@@ -184,29 +178,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
         {
             var mapFrame = sender as EventMapFrame;
             if (mapFrame == null) return;
-
-            Debug.WriteLine("!!-----------------------------------------------------");
-            Debug.WriteLine("MapFrameOnViewExtentsChanged -- Navigation Plugin");
-            if (mapFrame.Parent != null)
-            {
-                var m = mapFrame.Parent;
-                if (m.Parent != null)
-                {
-                    Debug.WriteLine("ActiveMapTab: " + m.Parent.Text);
-                }
-            }
-            else
-            {
-                Debug.WriteLine("ActiveMapTab: Parent Not Available?");
-            }
-            Debug.WriteLine("BufferExtents: " + mapFrame.BufferExtents.ToString());
-            Debug.WriteLine("GeographicExtents:       " + mapFrame.GeographicExtents.ToString());
-            Debug.WriteLine("ViewExtents:   " + mapFrame.ViewExtents.ToString());
-            Debug.WriteLine("-----------------------------------------------------!!");
-
-            // TODO: add this shit back in
-            // _zoomNext.Enabled = mapFrame.CanZoomToNext();
-            // _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
+            _zoomNext.Enabled = mapFrame.CanZoomToNext();
+            _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
         }
 
         /// <summary>

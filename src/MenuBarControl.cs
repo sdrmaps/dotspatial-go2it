@@ -169,6 +169,25 @@ namespace Go2It
             Application.Exit();
         }
 
+        private Map CreateLoadMap()
+        {
+            // basically this map loads all the layers that exists on all tabs using default dotspatial
+            // load routines, we then create our map tabs seperately and populate as needed from this map
+            var map = new Map();
+            var mapframe = new EventMapFrame();
+
+            // suspend all events associated with load map (do not fire ANY events EVER, EVAR, EVA!!)
+            mapframe.SuspendChangeEvent();
+            mapframe.SuspendEvents();
+            mapframe.SuspendViewExtentChanged();
+
+            map.MapFrame = mapframe;
+            map.Visible = false;
+            map.Dock = DockStyle.Fill;
+            map.MapFunctions.Clear();  // remove all map functions from load map
+            return map;
+        }
+
         private void OpenProject_Click(object sender, EventArgs e)
         {
             using (var dlg = new OpenFileDialog())
@@ -178,6 +197,10 @@ namespace Go2It
                     return;
                 try
                 {
+                    if (_appManager.Map == null)
+                    {
+                        _appManager.Map = CreateLoadMap();  // a base level map used to load all layers
+                    }
                     App.SerializationManager.OpenProject(dlg.FileName);
                 }
                 catch (IOException)

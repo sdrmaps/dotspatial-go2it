@@ -123,7 +123,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                 _previousParts = new List<List<Coordinate>>();
                 _coordinates = new List<Coordinate>();
             }
-
             _standBy = false;
             base.OnActivate();
         }
@@ -340,9 +339,7 @@ namespace DotSpatial.SDR.Plugins.Measure
                     return;
                 }
                 var pg = new Polygon(new LinearRing(tempPolygon));
-
                 double area = GetArea(tempPolygon);
-
                 _measurePanel.TotalArea = area;
                 Rectangle rr = Map.ProjToPixel(pg.Envelope.ToExtent());
                 rr.Inflate(20, 20);
@@ -392,7 +389,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                         _measurePanel.TotalDistance = _previousDistance;
                     }
                 }
-
                 _coordinates = new List<Coordinate>();
                 Map.Invalidate();
             }
@@ -439,15 +435,14 @@ namespace DotSpatial.SDR.Plugins.Measure
                 _previousParts = null;
                 _measurePanel.Hide();
             }
-
             Map.Invalidate();
         }
 
         private void MeasurePanel_MeasureModeChanged(object sender, EventArgs e)
         {
             _previousParts.Clear();
-
             _areaMode = (_measurePanel.MeasureMode == MeasureMode.Area);
+
             if (_coordinates != null)
             {
                 _coordinates = new List<Coordinate>();

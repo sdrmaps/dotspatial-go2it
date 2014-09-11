@@ -51,14 +51,13 @@ namespace Go2It
                 TextAlign = ContentAlignment.MiddleLeft
             };
             panel.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
-                {
-                    var item = sender as StatusPanel;
+            {
+                var item = sender as StatusPanel;
 
-                    if (item == null) return;
-                    statusLabel.Text = item.Caption;
-                    statusLabel.Width = item.Width;
-                };
-
+                if (item == null) return;
+                statusLabel.Text = item.Caption;
+                statusLabel.Width = item.Width;
+            };
             _statusStrip.Items.Add(statusLabel);
         }
 

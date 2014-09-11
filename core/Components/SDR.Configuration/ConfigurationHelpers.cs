@@ -1,5 +1,5 @@
 ﻿// code originally lifted from HydroDesktop Application
-// modified for use within sdr dot spatial framework
+// modified for use within sdr dotspatial framework
 
 using System;
 using System.IO;

@@ -45,16 +45,6 @@ namespace SDR.Configuration.User
             }
         }
 
-        public string ActiveFunctionPanelMode
-        {
-            get { return UserSettings.Default.ActiveFunctionPanelMode; }
-            set
-            {
-                UserSettings.Default.ActiveFunctionPanelMode = value;
-                UserSettings.Default.Save();
-            }
-        }
-
         public string ActiveFunctionMode
         {
             get { return UserSettings.Default.ActiveFunctionMode; }

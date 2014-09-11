@@ -36,7 +36,7 @@ namespace Go2It
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            /*DockPanelInfo dockInfo;
+            DockPanelInfo dockInfo;
             var dockControl = (DockingControl)sender;
             var key = e.ActivePanelKey;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
@@ -50,8 +50,9 @@ namespace Go2It
             
             // update the active _map for the legend now
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            _map.Legend = _userLegend;*/
 
+            if (_map == null) return;
+            _map.Legend = _userLegend;
         }
 
         public override void Deactivate()
@@ -66,8 +67,6 @@ namespace Go2It
         {
             if (_userLegendForm == null)
                 _userLegendForm = new UserLegendForm();
-
-            // App.CompositionContainer.ComposeParts(_adminForm);
 
             if (_userLegend == null)
                 AttachLegend();
@@ -113,7 +112,6 @@ namespace Go2It
                 VerticalScrollEnabled = true
             };
 
-            // _userLegendForm = new UserLegendForm();
             _userLegendForm.Controls.Add(_userLegend);
             _userLegendForm.FormClosing += UserLegend_Closed;
             // assign the legend to the active _map now

@@ -1,4 +1,5 @@
-﻿// used for serialization of dictionaries to xml, utf8 is specified to avoid encoding issues on the xml end of things
+﻿// used for serialization of dictionaries to xml, utf8 is specified 
+// to avoid encoding issues on the xml end of things
 
 using System.IO;
 using System.Text;

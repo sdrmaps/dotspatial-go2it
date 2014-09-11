@@ -203,6 +203,8 @@ namespace Go2It
                     // TODO: investigate best way to handle projections per maptab?
                     Projection = App.Map.Projection,
                 };
+
+                // TODO: remove out map logging event binding
                 LogMapEvents(nMap, txtCaption);  // log all map events
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
                 LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
@@ -265,26 +267,16 @@ namespace Go2It
                     nMap.MapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
                 }
 
-                Debug.WriteLine("##> ProjectManager -- OpeningProject::ActiveTabInfo");
-                Debug.WriteLine("|-----------------------------------------------------");
-                Debug.WriteLine("ActiveMapTab: " + txtCaption);
-                Debug.WriteLine("Extent:       " + nMap.MapFrame.Extent);
-                Debug.WriteLine("ViewExtent:   " + nMap.MapFrame.ViewExtents);
-                Debug.WriteLine("Projection:   " + nMap.MapFrame.Projection.ToEsriString());
-                Debug.WriteLine("-----------------------------------------------------|");
-
                 // create new dockable panel and stow that shit yo!
                 var dp = new DockablePanel(txtKey, txtCaption, nMap, DockStyle.Fill)
                 {
                     DefaultSortOrder = Convert.ToInt16(zorder)
                 };
-
-                Debug.WriteLine("##> ProjectManager -- OpeningProject::DockManager.AddPanel: " + txtCaption);
                 App.DockManager.Add(dp);
             }
-
-            Debug.WriteLine("##> ProjectManager -- OpeningProject::DockManager.SelectPanel: " + SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
+            App.Map = null;  // kill the load map
             App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
+            App.DockManager.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
         private void LogMapEvents(IMap map, string name)
@@ -455,14 +447,6 @@ namespace Go2It
                     {"layers", txtLayers}
                 };
                 SQLiteHelper.Insert(conn, "MapTabs", dd);
-
-                Debug.WriteLine("##> ProjectManager -- SaveProjectSettings::ActiveTabInfo");
-                Debug.WriteLine("(-----------------------------------------------------");
-                Debug.WriteLine("ActiveMapTab: " + dpi.Value.DotSpatialDockPanel.Caption);
-                Debug.WriteLine("Extent:       " + mapFrame.Extent);
-                Debug.WriteLine("ViewExtent:   " + mapFrame.ViewExtents);
-                Debug.WriteLine("Projection:   " + mapFrame.Projection.ToEsriString());
-                Debug.WriteLine("-----------------------------------------------------)");
             }
         }
 
