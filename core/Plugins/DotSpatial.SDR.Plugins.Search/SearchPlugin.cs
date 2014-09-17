@@ -39,6 +39,7 @@ namespace DotSpatial.SDR.Plugins.Search
             App.DockManager.Add(_dockPanel);
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
             base.Activate();
         }
 
@@ -129,6 +130,11 @@ namespace DotSpatial.SDR.Plugins.Search
 
             if (key.StartsWith("kMap_"))
             {
+
+                // TODO: catch all for map == null shit
+
+
+
                 // remove the event binding on this map (since its being hidden) on functionmodechanges
                 App.Map.FunctionModeChanged += MapOnFunctionModeChanged;
 
@@ -158,15 +164,15 @@ namespace DotSpatial.SDR.Plugins.Search
         }
 
         /// <summary>
-        /// Search Tool
+        /// Search Features and Attributes Tool
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SearchTool_Click(object sender, EventArgs e)
         {
             // update the prefs for tracking the active tools modes and panels
             App.Map.FunctionMode = FunctionMode.None;
-            App.DockManager.SelectPanel(PluginKey); // select the display panel
-            // SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanelMode = MeasureMode.Distance.ToString();
+            App.DockManager.SelectPanel(PluginKey);
         }
-
     }
 }

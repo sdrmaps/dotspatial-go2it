@@ -86,6 +86,12 @@ namespace DotSpatial.SDR.Plugins.Measure
         {
             _measurePanel.MeasureModeChanged += MeasurePanel_MeasureModeChanged;
             _measurePanel.MeasurementsCleared += MeasurePanel_MeasurementsCleared;
+            _measurePanel.MeasureModeActivated += MeasurePanelOnMeasureModeActivated;
+        }
+
+        private void MeasurePanelOnMeasureModeActivated(object sender, EventArgs eventArgs)
+        {
+            Map.FunctionMode = FunctionMode.None;
         }
 
         private void MeasurePanel_MeasurementsCleared(object sender, EventArgs e)

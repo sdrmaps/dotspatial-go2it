@@ -84,8 +84,8 @@
             this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
             this.searchAdds.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchAdds.Name = "searchAdds";
-            this.searchAdds.Size = new System.Drawing.Size(64, 42);
-            this.searchAdds.Text = "Addresses";
+            this.searchAdds.Size = new System.Drawing.Size(53, 42);
+            this.searchAdds.Text = "Address";
             this.searchAdds.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchAdds.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchAdds.Click += new System.EventHandler(this.searchAdds_Click);

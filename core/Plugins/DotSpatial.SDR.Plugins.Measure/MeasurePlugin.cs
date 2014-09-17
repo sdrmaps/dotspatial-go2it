@@ -22,7 +22,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         private MeasurePanel _measurePanel;
         private DockablePanel _dockPanel;
 
-        private bool _isFunctionActive;  // flag to reduce redundant calls
+        private bool _isFunctionActive;  // flag to eliminate redundant MapFunctionMeasure.OnActivate() calls
 
         #endregion
 
@@ -62,9 +62,8 @@ namespace DotSpatial.SDR.Plugins.Measure
             if (_mapFunction == null)
             {
                 _mapFunction = new MapFunctionMeasure(_measurePanel);
-                // handle the button checking to enable and disable them visually
+                // handle the functionactivated event, and fire button toggle for visual display
                 _mapFunction.FunctionActivated += OnMapFunctionOnFunctionActivated;
-                _mapFunction.FunctionDeactivated += OnMapFunctionOnFunctionDeactivated;
             }
             if (!App.Map.MapFunctions.Contains(_mapFunction))
             {
@@ -73,16 +72,10 @@ namespace DotSpatial.SDR.Plugins.Measure
             _mapFunction.Map = App.Map;
         }
 
-        private void OnMapFunctionOnFunctionDeactivated(object sender, EventArgs args)
-        {
-            // on activation of the function check the measurement mode button in use
-            _measurePanel.ToggleMeasurementModeButton(false);
-        }
-
         private void OnMapFunctionOnFunctionActivated(object sender, EventArgs args)
         {
             // on activation of the function check the measurement mode button in use
-            _measurePanel.ToggleMeasurementModeButton(true);
+            _measurePanel.ActivateMeasurementModeButton();
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -144,6 +137,13 @@ namespace DotSpatial.SDR.Plugins.Measure
             {
                 _isFunctionActive = false;
                 _mapFunction.Deactivate();
+                _measurePanel.DeactivateMeasurementModeButtons();
+            }
+            else
+            {
+                App.Map.Cursor = Cursors.Cross;
+                _isFunctionActive = true;
+                _mapFunction.Activate();
             }
         }
 

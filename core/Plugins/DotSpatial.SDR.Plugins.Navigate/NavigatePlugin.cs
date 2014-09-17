@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -119,6 +120,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (map == null) return;
 
             map.Layers.LayerSelected -= LayersOnLayerSelected;
+            // TODO: do we need this here
+            // map.FunctionModeChanged -= MapOnFunctionModeChanged;
 
             var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
@@ -128,9 +131,10 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            DockPanelInfo dockInfo;
             var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
+
+            DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
@@ -151,6 +155,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         public override void Deactivate()
         {
+            Debug.WriteLine("@@++++++++++++++++ Hrm validate this (start) ++++++++++++++++++++++++++");
             App.HeaderControl.RemoveAll();
             var map = App.Map as Map;
             var mapFrame = App.Map.MapFrame as EventMapFrame;
@@ -161,6 +166,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 map.Layers.LayerSelected -= LayersOnLayerSelected;
                 mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             }
+            Debug.WriteLine("+++++++++++++++++ Hrm validate this (end) +++++++++++++++++++++++++@@");
             base.Deactivate();
         }
 

@@ -9,7 +9,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         private double _areaIntoSquareMeters;
         private double _distIntoMeters;
         private double _distance;
-        private readonly MeasureMode _measureMode;
+        private MeasureMode _measureMode;
         private double _totalArea;
         private double _totalDistance;
 
@@ -132,6 +132,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
             set
             {
+                _measureMode = value;  // update the measuremode for local reference
                 UserSettings.Default.MeasureMode = value.ToString();
                 UserSettings.Default.Save();
             }
@@ -157,25 +158,36 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
         }
 
-        // simple function for activating or deactivation the measurement mode button
-        public void ToggleMeasurementModeButton(bool toggle)
+        // simple function for setting checked state of function mode buttons
+        public void ActivateMeasurementModeButton()
         {
             if (_measureMode == MeasureMode.Distance)
             {
-                tsbDistance.Checked = toggle;
+                tsbDistance.Checked = true;
                 tsbArea.Checked = false;
             }
             else if (_measureMode == MeasureMode.Area)
             {
                 tsbDistance.Checked = false;
-                tsbArea.Checked = toggle;
+                tsbArea.Checked = true;
             }
+        }
+
+        public void DeactivateMeasurementModeButtons()
+        {
+            tsbDistance.Checked = false;
+            tsbArea.Checked = false;
         }
 
         /// <summary>
         /// Occurs when the measuring mode has been changed.
         /// </summary>
         public event EventHandler MeasureModeChanged;
+
+        /// <summary>
+        /// Occurs when the measuring mode has been activated
+        /// </summary>
+        public event EventHandler MeasureModeActivated;
 
         /// <summary>
         /// Occurs when the clear button has been pressed.
@@ -197,6 +209,7 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void AreaButton_Click(object sender, EventArgs e)
         {
+            if (MeasureModeActivated != null) MeasureModeActivated(this, EventArgs.Empty);
             if (_measureMode != MeasureMode.Area)
             {
                 MeasureMode = MeasureMode.Area;
@@ -221,6 +234,7 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void DistanceButton_Click(object sender, EventArgs e)
         {
+            if (MeasureModeActivated != null) MeasureModeActivated(this, EventArgs.Empty);
             if (_measureMode != MeasureMode.Distance)
             {
                 MeasureMode = MeasureMode.Distance;
