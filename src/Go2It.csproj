@@ -60,7 +60,7 @@
   <ItemGroup>
     <Reference Include="DotSpatial.Controls, Version=1.7.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Debug\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Controls.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data, Version=1.7.0.0, Culture=neutral, PublicKeyToken=c29dbf30e059ca9d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
