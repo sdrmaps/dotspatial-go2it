@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
+using DotSpatial.SDR.Plugins.Search.Properties;
 using Lucene.Net.Search;
 using SDR.Common;
 using SDR.Common.logging;
@@ -33,8 +34,7 @@ namespace DotSpatial.SDR.Plugins.Search
             CreateQueryPanels();
             _intersectedFeatures = new EventedArrayList();
             _intersectedFeatures.ListChanged += IntersectedFeaturesOnListChanged;
-            _searchMode = SearchMode.Address;
-            searchAdds_Click(null, null);
+            _searchMode = SearchMode;
         }
 
         private void IntersectedFeaturesOnListChanged(object sender, EventArgs eventArgs)
@@ -56,10 +56,28 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <summary>
         /// Gets or sets which type of search to perfrom
         /// </summary>
+        /// <summary>
+        /// Gets or sets whether to display the distances or areas.
+        /// </summary>
         public SearchMode SearchMode
         {
-            get { return _searchMode; }
+            get
+            {
+                var funcMode = UserSettings.Default.SearchMode;
+                if (funcMode.Length <= 0) return SearchMode.Address;
+                SearchMode sm;
+                Enum.TryParse(funcMode, true, out sm);
+                return sm;
+            }
+            set
+            {
+                _searchMode = value;  // update the searchmode for local reference
+                UserSettings.Default.SearchMode = value.ToString();
+                UserSettings.Default.Save();
+            }
         }
+
+
         /// <summary>
         /// Gets or sets the datagrid view for query display
         /// </summary>
@@ -82,6 +100,37 @@ namespace DotSpatial.SDR.Plugins.Search
                 _intersectedFeatures.Clear();
                 _intersectedFeatures.AddRange(value);
             }
+        }
+
+        public void ActivateSearchModeButton()
+        {
+            switch (_searchMode)
+            {
+                case SearchMode.Address:
+                    ActivateAddressSearch();
+                    break;
+                case SearchMode.Road:
+                    ActivateRoadSearch();
+                    break;
+                case SearchMode.Intersection:
+                    ActivateIntersectionSearch();
+                    break;
+                case SearchMode.Name:
+                    ActivateNameSearch();
+                    break;
+                case SearchMode.Phone:
+                    ActivatePhoneSearch();
+                    break;
+            }
+        }
+
+        public void DeactivateSearchModeButtons()
+        {
+            searchName.Checked = false;
+            searchAdds.Checked = false;
+            searchPhone.Checked = false;
+            searchRoad.Checked = false;
+            searchIntersection.Checked = false;
         }
 
         #endregion
@@ -107,6 +156,10 @@ namespace DotSpatial.SDR.Plugins.Search
         /// Occurs when a feature is to be zoomed to
         /// </summary>
         public event EventHandler OnRowDoublelicked;
+        /// <summary>
+        /// Occurs when the search mode has been activated
+        /// </summary>
+        public event EventHandler SearchModeActivated;
 
         #endregion
 
@@ -130,10 +183,8 @@ namespace DotSpatial.SDR.Plugins.Search
             OnPerformSearch();
         }
 
-        private void searchName_Click(object sender, EventArgs e)
+        private void ActivateNameSearch()
         {
-            _searchMode = SearchMode.Name;
-            OnSearchModeChanged();
             // toggle the button for this tool
             searchName.Checked = true;
             searchAdds.Checked = false;
@@ -144,13 +195,22 @@ namespace DotSpatial.SDR.Plugins.Search
             RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
             _addressPanel.Controls["txtAddressSearch"].Text = string.Empty;
-            ClearSearches();  // clears dgv
+            ClearSearches(); // clears dgv
         }
 
-        private void searchPhone_Click(object sender, EventArgs e)
+        private void searchName_Click(object sender, EventArgs e)
         {
-            _searchMode = SearchMode.Phone;
-            OnSearchModeChanged();
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Name)
+            {
+                _searchMode = SearchMode.Name;
+                OnSearchModeChanged();
+                ActivateNameSearch();
+            }
+        }
+
+        private void ActivatePhoneSearch()
+        {
             // toggle the button for this tool
             searchPhone.Checked = true;
             searchAdds.Checked = false;
@@ -164,10 +224,19 @@ namespace DotSpatial.SDR.Plugins.Search
             ClearSearches();
         }
 
-        private void searchRoad_Click(object sender, EventArgs e)
+        private void searchPhone_Click(object sender, EventArgs e)
         {
-            _searchMode = SearchMode.Road;
-            OnSearchModeChanged();
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Phone)
+            {
+                _searchMode = SearchMode.Phone;
+                OnSearchModeChanged();
+                ActivatePhoneSearch();
+            }
+        }
+
+        private void ActivateRoadSearch()
+        {
             // toggle the button for this tool
             searchAdds.Checked = false;
             searchPhone.Checked = false;
@@ -182,10 +251,30 @@ namespace DotSpatial.SDR.Plugins.Search
             PopulateRoadsToCombo();
         }
 
+        private void searchRoad_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Road)
+            {
+                _searchMode = SearchMode.Road;
+                OnSearchModeChanged();
+                ActivateRoadSearch();
+            }
+        }
+
         private void searchAdds_Click(object sender, EventArgs e)
         {
-            _searchMode = SearchMode.Address;
-            OnSearchModeChanged();
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Address)
+            {
+                _searchMode = SearchMode.Address;
+                OnSearchModeChanged();
+                ActivateAddressSearch();
+            }
+        }
+
+        private void ActivateAddressSearch()
+        {
             // toggle the button for this tool
             searchAdds.Checked = true;
             searchPhone.Checked = false;
@@ -199,10 +288,8 @@ namespace DotSpatial.SDR.Plugins.Search
             ClearSearches();
         }
 
-        private void searchIntersection_Click(object sender, EventArgs e)
+        private void ActivateIntersectionSearch()
         {
-            _searchMode = SearchMode.Intersection;
-            OnSearchModeChanged();
             // toggle the button for this tool
             searchAdds.Checked = false;
             searchPhone.Checked = false;
@@ -216,6 +303,17 @@ namespace DotSpatial.SDR.Plugins.Search
             _intersectionPanel.Controls["cmbIntSearch2"].Text = string.Empty;
             ClearSearches();
             PopulateRoadsToCombo();
+        }
+
+        private void searchIntersection_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Intersection)
+            {
+                _searchMode = SearchMode.Intersection;
+                OnSearchModeChanged();
+                ActivateIntersectionSearch();
+            }
         }
 
         private void searchHydrant_Click(object sender, EventArgs e)

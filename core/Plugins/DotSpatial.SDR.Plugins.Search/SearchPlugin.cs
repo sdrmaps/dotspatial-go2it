@@ -22,6 +22,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private SearchPanel _searchPanel;
         private DockablePanel _dockPanel;
 
+        private bool _isFunctionActive;  // flag to eliminate redundant MapFunctionSearch.OnActivate() calls
         #endregion
 
         public override void Activate()
@@ -58,17 +59,23 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (_mapFunction == null)
             {
-               _mapFunction = new MapFunctionSearch(_searchPanel)
-               {
-                   // set the tab docking control so we can do panel selections from MapFunctionSearch.cs
-                   TabDockingControl = App.DockManager as TabDockingControl
-               };
+                _mapFunction = new MapFunctionSearch(_searchPanel)
+                {
+                    // set this to allow us to perform map panel selections from inside MapFunctionSearch.cs
+                    TabDockingControl = App.DockManager as TabDockingControl
+                };
+                _mapFunction.FunctionActivated += OnMapFunctionOnFunctionActivated;
             }
             if (!App.Map.MapFunctions.Contains(_mapFunction))
             {
                 App.Map.MapFunctions.Add(_mapFunction);
             }
             _mapFunction.Map = App.Map;
+        }
+
+        private void OnMapFunctionOnFunctionActivated(object sender, EventArgs eventArgs)
+        {
+            _searchPanel.ActivateSearchModeButton();
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
@@ -79,20 +86,26 @@ namespace DotSpatial.SDR.Plugins.Search
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
+            var map = App.Map as Map;
+            if (map == null) return;
+
+            // if the function is already active, then stop wasting time here
+            if (_isFunctionActive) return;  // not even sure if this is doing anythi9ng anymore investigate
+
             if (key.StartsWith("kMap_"))
             {
-                if (App.Map == null) return;
+                // check if the search function exists for this map
                 AddSearchMapFunction();
                 // setup an event binding to watch for any time the functionmode changes
                 App.Map.FunctionModeChanged += MapOnFunctionModeChanged;
-                // verify that a functionmode is not currently active
-                // and that the active tool panel is in fact this panel (check that this tool is active)
+                // check that this tool is the active tool of the map now
                 if (App.Map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
+                    // add local map event binding here if it exists
                     App.Map.Cursor = Cursors.Default;
+                    _isFunctionActive = true;
                     _mapFunction.Activate();
-                    // add local map event binding below if needed
                 }
             }
             else if (key == PluginKey)
@@ -101,9 +114,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 if (App.Map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
-                    if (_mapFunction != null)
+                    if (_mapFunction != null)  // validate we have a map function
                     {
                         App.Map.Cursor = Cursors.Default;
+                        _isFunctionActive = true;
                         _mapFunction.Activate();
                     }
                 }
@@ -112,11 +126,22 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
-            // update the user settings to reflect active functionmode
             var map = sender as Map;
-            if (map != null && map.FunctionMode != FunctionMode.None)
+            if (map == null) return;
+            if (_mapFunction == null) return;
+
+            if (map.FunctionMode != FunctionMode.None)
             {
-                _mapFunction.Deactivate();
+                _isFunctionActive = false;
+            }
+            else
+            {
+                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
+                {
+                    App.Map.Cursor = Cursors.Default;
+                    _isFunctionActive = true;
+                    _mapFunction.Activate();
+                }
             }
         }
 
@@ -128,35 +153,36 @@ namespace DotSpatial.SDR.Plugins.Search
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
+            var map = App.Map as Map;
+            if (map == null) return;
+
             if (key.StartsWith("kMap_"))
             {
+                // remove the event binding on this map (since its being hidden) on function mode changes
+                map.FunctionModeChanged -= MapOnFunctionModeChanged;
 
-                // TODO: catch all for map == null shit
-
-
-
-                // remove the event binding on this map (since its being hidden) on functionmodechanges
-                App.Map.FunctionModeChanged += MapOnFunctionModeChanged;
-
+                // lets look and see if this tool is currently the active tool and deactivate it if so
                 if (App.Map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
-                    // deactivate the local map function mode
+                    // remove local map event binding if it exists here
                     if (_mapFunction != null)
                     {
+                        _isFunctionActive = false;
                         _mapFunction.Deactivate();
                     }
                 }
             }
             else if (key == PluginKey)
             {
+                // check if this tool function panel is the active function or not
                 if (App.Map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
-                    // deactivate the local map function mode and remove any map binding if it exists
-                    App.Map.Cursor = Cursors.Default;
+                    // remove any local map binding if it exists
                     if (_mapFunction != null)
                     {
+                        _isFunctionActive = false;
                         _mapFunction.Deactivate();
                     }
                 }

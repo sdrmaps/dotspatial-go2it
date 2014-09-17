@@ -107,6 +107,12 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.HydrantLocate += SearchPanelOnHydrantLocate;
             _searchPanel.PerformSearch += SearchPanelOnPerformSearch;
             _searchPanel.OnRowDoublelicked += SearchPanelOnRowDoublelicked;
+            _searchPanel.SearchModeActivated += SearchPanelOnSearchModeActivated;
+        }
+
+        private void SearchPanelOnSearchModeActivated(object sender, EventArgs eventArgs)
+        {
+            Map.FunctionMode = FunctionMode.None;
         }
 
         protected override void OnActivate()

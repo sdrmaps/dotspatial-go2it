@@ -23,7 +23,6 @@ namespace DotSpatial.SDR.Plugins.Measure
         private DockablePanel _dockPanel;
 
         private bool _isFunctionActive;  // flag to eliminate redundant MapFunctionMeasure.OnActivate() calls
-
         #endregion
 
         public override void Activate()
@@ -141,9 +140,12 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
             else
             {
-                App.Map.Cursor = Cursors.Cross;
-                _isFunctionActive = true;
-                _mapFunction.Activate();
+                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
+                {
+                    App.Map.Cursor = Cursors.Cross;
+                    _isFunctionActive = true;
+                    _mapFunction.Activate();
+                }
             }
         }
 
