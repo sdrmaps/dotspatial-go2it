@@ -71,7 +71,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Configuration">
-      <HintPath>..\..\..\build\Debug\SDR.Configuration.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
