@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Controls;
 using DotSpatial.SDR.Controls;
 using Go2It.Properties;
-using SDR.Common;
-using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It

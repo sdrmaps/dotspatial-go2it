@@ -262,8 +262,8 @@ namespace Go2It
 
             if (mapName != "_baseMap")
             {
-                LogMapEvents(map, mapName);
-                LogMapFrameEvents(map.MapFrame, mapName);
+                // LogMapEvents(map, mapName);
+                // LogMapFrameEvents(map.MapFrame, mapName);
             }
             return map;
         }
@@ -718,6 +718,7 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
+            chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes;
             mapBGColorPanel.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor;
             // set default settings on admin load
             if (SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType == "POINT")
@@ -1183,6 +1184,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer = ApplyComboBoxSetting(cmbHydrantsLayer);
             // set the map background color
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = mapBGColorPanel.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes = chkPretypes.Checked;
             // set the various graphic symbolization
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor = ptSymbolColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle = ApplyComboBoxSetting(ptSymbolStyle);
@@ -1527,7 +1529,17 @@ namespace Go2It
                 var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\address_indexes.txt");
                 foreach (string key in file)
                 {
-                    table.Rows.Add(key, "");
+                    if (key == "Pre Type")
+                    {
+                        if (chkPretypes.Checked)
+                        {
+                            table.Rows.Add(key, "");
+                        }
+                    }
+                    else
+                    {
+                        table.Rows.Add(key, "");
+                    }
                 }
                 return table;
             }
@@ -1537,7 +1549,17 @@ namespace Go2It
                 var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\road_indexes.txt");
                 foreach (string key in file)
                 {
-                    table.Rows.Add(key, "");
+                    if (key == "Pre Type")
+                    {
+                        if (chkPretypes.Checked)
+                        {
+                            table.Rows.Add(key, "");
+                        }
+                    }
+                    else
+                    {
+                        table.Rows.Add(key, "");
+                    }
                 }
                 return table;
             }

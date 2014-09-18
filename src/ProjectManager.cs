@@ -119,7 +119,7 @@ namespace Go2It
             var repoConnStr = SQLiteHelper.GetSQLiteConnectionString(dbFileName);
             SdrConfig.Settings.Instance.ProjectRepoConnectionString = repoConnStr;
             // do basic project configuration query
-            const string psQuery = "SELECT keylocations_type, addresses_type, map_bgcolor, active_map_key, active_map_caption FROM ProjectSettings";
+            const string psQuery = "SELECT keylocations_type, addresses_type, map_bgcolor, active_map_key, active_map_caption, use_pretypes FROM ProjectSettings";
             DataTable psTable = SQLiteHelper.GetDataTable(repoConnStr, psQuery);
             var psR = psTable.Rows[0];  // there is only one row for project settings
             // setup all project level type lookups and keys
@@ -128,6 +128,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = Color.FromArgb(Convert.ToInt32(psR["map_bgcolor"].ToString()));
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = psR["active_map_key"].ToString();
             SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption= psR["active_map_caption"].ToString();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes = bool.Parse(psR["use_pretypes"].ToString());
             // setup all project level graphics settings
             const string gsQuery = "SELECT point_color, point_style, point_size, line_color, line_size, line_border_color, line_cap, line_style FROM GraphicSettings";
             DataTable gsTable = SQLiteHelper.GetDataTable(repoConnStr, gsQuery);
@@ -205,9 +206,9 @@ namespace Go2It
                 };
 
                 // TODO: remove out map logging event binding
-                LogMapEvents(nMap, txtCaption);  // log all map events
+                // LogMapEvents(nMap, txtCaption);  // log all map events
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
-                LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
+                // LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
 
                 nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
                 nMapFrame.SuspendEvents();  // suspend all layer events
@@ -375,7 +376,8 @@ namespace Go2It
                 { "keylocations_type", SdrConfig.Project.Go2ItProjectSettings.Instance.KeyLocationsProjectType },
                 { "map_bgcolor", SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
                 { "active_map_key", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey },
-                { "active_map_caption", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption }
+                { "active_map_caption", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption },
+                { "use_pretypes", SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture) }
             };
             // there can only be a single project settings row in the table
             SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");

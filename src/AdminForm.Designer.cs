@@ -103,6 +103,7 @@
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chkPretypes = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -805,6 +806,7 @@
             // 
             // adminTab_SearchProperties
             // 
+            this.adminTab_SearchProperties.Controls.Add(this.chkPretypes);
             this.adminTab_SearchProperties.Controls.Add(this.btnRemoveIndex);
             this.adminTab_SearchProperties.Controls.Add(this.lstExistingIndexes);
             this.adminTab_SearchProperties.Controls.Add(this.chkLayersToIndex);
@@ -938,6 +940,16 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // chkPretypes
+            // 
+            this.chkPretypes.AutoSize = true;
+            this.chkPretypes.Location = new System.Drawing.Point(126, 629);
+            this.chkPretypes.Name = "chkPretypes";
+            this.chkPretypes.Size = new System.Drawing.Size(89, 17);
+            this.chkPretypes.TabIndex = 11;
+            this.chkPretypes.Text = "Use Pretypes";
+            this.chkPretypes.UseVisualStyleBackColor = true;
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -971,6 +983,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
             this.adminTab_SearchProperties.ResumeLayout(false);
+            this.adminTab_SearchProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.ResumeLayout(false);
 
@@ -1052,6 +1065,7 @@
         private System.Windows.Forms.ComboBox lineSymbolCap;
         private System.Windows.Forms.Panel lineSymbolBorderColor;
         private System.Windows.Forms.NumericUpDown hydrantZoom;
+        private System.Windows.Forms.CheckBox chkPretypes;
 
     }
 }

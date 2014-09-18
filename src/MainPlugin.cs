@@ -204,25 +204,13 @@ namespace Go2It
                 var mapFrame = map.MapFrame as EventMapFrame;
                 if (mapFrame != null)
                 {
-                    Debug.WriteLine("==> MainPlugin -- DockManager.PanelHidden");
-                    Debug.WriteLine("[-----------------------------------------------------");
-                    Debug.WriteLine("ActiveMapTab: " + map.Parent.Text);
-                    Debug.WriteLine("Extent:       " + map.MapFrame.Extent);
-                    Debug.WriteLine("ViewExtent:   " + map.MapFrame.ViewExtents);
-                    Debug.WriteLine("Projection:   " + map.MapFrame.Projection.ToEsriString());
                     // check if viewextentchanges are active, suspend them if so
                     if (!mapFrame.ViewExtentChangedSuspended)
                     {
                         // suspend any view changes while not the active tab
-                        Debug.WriteLine("ViewExtentChangedSuspended: False [SuspendViewExtentChanged --> True]");
                         mapFrame.SuspendViewExtentChanged();
                         mapFrame.SuspendEvents();
                     }
-                    else
-                    {
-                        Debug.WriteLine("ViewExtentChangedSuspended: True [No Suspend Required]");
-                    }
-                    Debug.WriteLine("-----------------------------------------------------]");
                 }
             }
         }
@@ -261,24 +249,12 @@ namespace Go2It
                 var mapFrame = map.MapFrame as EventMapFrame;
                 if (mapFrame != null)
                 {
-                    Debug.WriteLine("==> MainPlugin -- DockManager.ActivePanelChanged");
-                    Debug.WriteLine("<-----------------------------------------------------");
-                    Debug.WriteLine("ActiveMapTab: " + map.Parent.Text);
-                    Debug.WriteLine("Extent:       " + map.MapFrame.Extent);
-                    Debug.WriteLine("ViewExtent:   " + map.MapFrame.ViewExtents);
-                    Debug.WriteLine("Projection:   " + map.MapFrame.Projection.ToEsriString());
                     // make sure that the viewextentchange event is set to active
                     if (mapFrame.ViewExtentChangedSuspended)
                     {
-                        Debug.WriteLine("ViewExtentChangedSuspended: True [ResumeViewExtentChanged --> True]");
                         mapFrame.ResumeViewExtentChanged();
                         mapFrame.ResumeEvents();
                     }
-                    else
-                    {
-                        Debug.WriteLine("ViewExtentChangedSuspended: False [No Resume Required]");
-                    }
-                    Debug.WriteLine("----------------------------------------------------->");
                 }
                 // set the active map tab to the active application map now
                 App.Map = map;

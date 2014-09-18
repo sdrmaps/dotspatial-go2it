@@ -167,6 +167,7 @@ namespace Go2It
         private void Exit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+            // Environment.Exit(Environment.ExitCode);
         }
 
         private Map CreateLoadMap()

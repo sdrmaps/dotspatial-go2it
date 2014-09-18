@@ -313,5 +313,17 @@ namespace SDR.Configuration.Properties {
                 this["HydrantSearchCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SearchUsePretypes {
+            get {
+                return ((bool)(this["SearchUsePretypes"]));
+            }
+            set {
+                this["SearchUsePretypes"] = value;
+            }
+        }
     }
 }

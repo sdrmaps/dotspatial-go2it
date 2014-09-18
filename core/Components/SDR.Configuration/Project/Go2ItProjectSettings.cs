@@ -52,6 +52,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GraphicPointSize = 18;
             Properties.ProjectSettings.Default.GraphicPointStyle = "Triangle";
             Properties.ProjectSettings.Default.HydrantSearchCount = 3;
+            Properties.ProjectSettings.Default.SearchUsePretypes = false;
         }
 
         /// <summary>
@@ -154,6 +155,15 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.ActiveMapViewKey = value; }
             get { return Properties.ProjectSettings.Default.ActiveMapViewKey; }
+        }
+
+        /// <summary>
+        /// Use Pretypes in search
+        /// </summary>
+        public bool UsePretypes
+        {
+            set { Properties.ProjectSettings.Default.SearchUsePretypes =  value; }
+            get { return Properties.ProjectSettings.Default.SearchUsePretypes; }
         }
 
         public Color MapBgColor

@@ -510,9 +510,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     val = val + doc.Get("Pre Directional").Trim() + " ";
                 }
-                if (doc.Get("Pre Type") != null)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
                 {
-                    val = val + doc.Get("Pre Type").Trim() + " ";
+                    if (doc.Get("Pre Type") != null)
+                    {
+                        val = val + doc.Get("Pre Type").Trim() + " ";
+                    }
                 }
                 if (doc.Get("Street Name") != null)
                 {

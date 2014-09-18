@@ -764,9 +764,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteScoredAddressQuery(string q)
         {
             // parse our input address into a valid streetaddress object
-            // TODO: perform check to determine if user is using pretypes fields
-            // TODO: Not sure how to best handle this, what if they mix types??
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, false);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -785,11 +783,14 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.SHOULD);
             }
-            if (streetAddress.PreType != null)
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
             {
-                values.Add(streetAddress.PreType);
-                fields.Add("Pre Type");
-                occurs.Add(Occur.SHOULD);
+                if (streetAddress.PreType != null)
+                {
+                    values.Add(streetAddress.PreType);
+                    fields.Add("Pre Type");
+                    occurs.Add(Occur.SHOULD);
+                }
             }
             if (streetAddress.StreetName != null)
             {
@@ -832,17 +833,25 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
-            // return our results
-            return docs.ScoreDocs;
+
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
+            else
+            {
+                TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+                // return our results
+                return docs.ScoreDocs;
+            }
+
         }
 
         private ScoreDoc[] ExecuteScoredRoadQuery(string q)
         {
             // parse our input road into a streetaddress object for analysis
-            // TODO: perform check to determine if user is using pretypes fields
-            // TODO: Not sure how to best handle this, what if they mix types??
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, false);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -855,11 +864,14 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.SHOULD);
             }
-            if (streetAddress.PreType != null)
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
             {
-                values.Add(streetAddress.PreType);
-                fields.Add("Pre Type");
-                occurs.Add(Occur.SHOULD);
+                if (streetAddress.PreType != null)
+                {
+                    values.Add(streetAddress.PreType);
+                    fields.Add("Pre Type");
+                    occurs.Add(Occur.SHOULD);
+                }
             }
             if (streetAddress.StreetName != null)
             {
@@ -898,9 +910,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteExactRoadQuery(string q)
         {
             // parse our input address into a valid streetaddress object
-            // TODO: perform check to determine if user is using pretypes fields
-            // TODO: Not sure how to best handle this, what if they mix types??
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, false);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -913,11 +923,14 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.MUST);
             }
-            if (streetAddress.PreType != null)
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
             {
-                values.Add(streetAddress.PreType);
-                fields.Add("Pre Type");
-                occurs.Add(Occur.MUST);
+                if (streetAddress.PreType != null)
+                {
+                    values.Add(streetAddress.PreType);
+                    fields.Add("Pre Type");
+                    occurs.Add(Occur.SHOULD);
+                }
             }
             if (streetAddress.StreetName != null)
             {
@@ -957,7 +970,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (q.Length <= 0) return null;
             // get the name of the street passed in so it is removed from results returned
-            var sa = StreetAddressParser.Parse(q, false);
+            var sa = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
             var docs = new List<ScoreDoc>();  // total docs for return
             ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
             // setup a spatial query to find all features that intersect with our results
@@ -1048,9 +1061,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     val = val + doc.Get("Pre Directional").Trim() + " ";
                 }
-                if (doc.Get("Pre Type") != null)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
                 {
-                    val = val + doc.Get("Pre Type").Trim() + " ";
+                    if (doc.Get("Pre Type") != null)
+                    {
+                        val = val + doc.Get("Pre Type").Trim() + " ";
+                    }
                 }
                 if (doc.Get("Street Name") != null)
                 {
@@ -1094,9 +1110,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     sw.WriteLine("PreDir       : " + sa.Predirectional);
                 }
-                if (sa.PreType != null)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
                 {
-                    sw.WriteLine("PreType      : " + sa.PreType);
+                    if (sa.PreType != null)
+                    {
+                        sw.WriteLine("PreType      : " + sa.PreType);
+                    }
                 }
                 if (sa.StreetName != null)
                 {
