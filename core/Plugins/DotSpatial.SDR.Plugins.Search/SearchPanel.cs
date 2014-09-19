@@ -203,7 +203,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
             if (_searchMode != SearchMode.Name)
             {
-                _searchMode = SearchMode.Name;
+                SearchMode = SearchMode.Name;
                 OnSearchModeChanged();
                 ActivateNameSearch();
             }
@@ -229,7 +229,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
             if (_searchMode != SearchMode.Phone)
             {
-                _searchMode = SearchMode.Phone;
+                SearchMode = SearchMode.Phone;
                 OnSearchModeChanged();
                 ActivatePhoneSearch();
             }
@@ -256,7 +256,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
             if (_searchMode != SearchMode.Road)
             {
-                _searchMode = SearchMode.Road;
+                SearchMode = SearchMode.Road;
                 OnSearchModeChanged();
                 ActivateRoadSearch();
             }
@@ -267,7 +267,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
             if (_searchMode != SearchMode.Address)
             {
-                _searchMode = SearchMode.Address;
+                SearchMode = SearchMode.Address;
                 OnSearchModeChanged();
                 ActivateAddressSearch();
             }
@@ -310,7 +310,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
             if (_searchMode != SearchMode.Intersection)
             {
-                _searchMode = SearchMode.Intersection;
+                SearchMode = SearchMode.Intersection;
                 OnSearchModeChanged();
                 ActivateIntersectionSearch();
             }

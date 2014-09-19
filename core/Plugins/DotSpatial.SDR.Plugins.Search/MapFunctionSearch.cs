@@ -112,7 +112,10 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SearchPanelOnSearchModeActivated(object sender, EventArgs eventArgs)
         {
-            Map.FunctionMode = FunctionMode.None;
+            if (Map.FunctionMode != FunctionMode.None)
+            {
+                Map.FunctionMode = FunctionMode.None;
+            }
         }
 
         protected override void OnActivate()
