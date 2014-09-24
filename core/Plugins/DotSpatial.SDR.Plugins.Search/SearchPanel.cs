@@ -179,6 +179,12 @@ namespace DotSpatial.SDR.Plugins.Search
                     SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
                         _intersectionPanel.Controls["cmbIntSearch2"].Text;
                     break;
+                case SearchMode.Name:
+                    SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
+                    break;
+                case SearchMode.Phone:
+                    SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
+                    break;
             }
             OnPerformSearch();
         }

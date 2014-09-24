@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Collections;
+using System.Text.RegularExpressions;
 using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
@@ -67,6 +68,8 @@ namespace DotSpatial.SDR.Plugins.Search
         internal const string FID = "FID";
         internal const string LYRNAME = "LYRNAME";
         internal const string GEOSHAPE = "GEOSHAPE";
+
+        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
 
         #region Constructors
 
@@ -543,6 +546,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Intersection:
                     hits = ExecuteGetIntersectionsQuery(sq);
                     break;
+                case SearchMode.Name:
+                    hits = ExecuteScoredNameQuery(sq);
+                    break;
+                case SearchMode.Phone:
+                    hits = ExecuteScoredPhoneQuery(sq);
+                    break;
             }
             return hits;
         }
@@ -764,6 +773,73 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
+        private ScoreDoc[] ExecuteScoredNameQuery(string q)
+        {
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            string[] namesArray = q.Split(' ');
+            foreach (var name in namesArray)
+            {
+                values.Add(name);
+                fields.Add("First Name");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Last Name");
+                occurs.Add(Occur.SHOULD);
+            }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
+        }
+
+        private ScoreDoc[] ExecuteScoredPhoneQuery(string q)
+        {
+            var num = DigitsOnly.Replace(q, "");
+
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            values.Add(num);
+            fields.Add("Phone");
+            occurs.Add(Occur.SHOULD);
+
+            values.Add(num);
+            fields.Add("Aux. Phone");
+            occurs.Add(Occur.SHOULD);
+
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
+        }
+
         private ScoreDoc[] ExecuteScoredAddressQuery(string q)
         {
             // parse our input address into a valid streetaddress object
@@ -842,13 +918,9 @@ namespace DotSpatial.SDR.Plugins.Search
                 MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
-            else
-            {
-                TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
-                // return our results
-                return docs.ScoreDocs;
-            }
-
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
         }
 
         private ScoreDoc[] ExecuteScoredRoadQuery(string q)
@@ -1003,6 +1075,21 @@ namespace DotSpatial.SDR.Plugins.Search
             return cdocs.ToArray();
         }
 
+        private string FormatPhoneNumber(string p)
+        {
+            switch (p.Length)
+            {
+                case 11:
+                    return p.Substring(0, 1) + "-" + p.Substring(1, 3) + "-" + p.Substring(4, 3) + "-" + p.Substring(7, 4);
+                case 10:
+                    return p.Substring(0, 3) + "-" + p.Substring(3, 3) + "-" + p.Substring(6, 4);
+                case 7:
+                    return p.Substring(0, 3) + "-" + p.Substring(3, 4);
+                default:
+                    return p;
+            }
+        }
+
         private void FormatQueryResultsForDataGridView(IEnumerable<ScoreDoc> hits)
         {
             if (hits == null) return;
@@ -1024,7 +1111,15 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     var idx = GetColumnDisplayIndex(field, _dataGridView);
                     var val = doc.Get(field);
-                    dgvRow.Cells[idx].Value = val;
+
+                    if (field == "Phone" || field == "Aux. Phone")
+                    {
+                        dgvRow.Cells[idx].Value = FormatPhoneNumber(val);
+                    }
+                    else
+                    {
+                        dgvRow.Cells[idx].Value = val;
+                    }
                 }
                 // add the fid and layrname textbox cells
                 var fidCell = new DataGridViewTextBoxCell {Value = doc.Get(FID)};

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -94,6 +95,8 @@ namespace Go2It
         // the list stores all rows
         // the outer dict holds layer name and list with all dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
+
+        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
 
         public AdminForm(AppManager app)
         {
@@ -2121,6 +2124,12 @@ namespace Go2It
                             var query = new BooleanQuery {{qfid, Occur.MUST}, {qlyr, Occur.MUST}};
 
                             writer.DeleteDocuments(query);
+
+                            // clean the numeric fields
+                            document.GetField("Phone").SetValue(DigitsOnly.Replace(document.GetField("Phone").StringValue, ""));
+                            document.GetField("Aux. Phone").SetValue(DigitsOnly.Replace(document.GetField("Aux. Phone").StringValue, ""));
+                            document.GetField("Structure Number").SetValue(DigitsOnly.Replace(document.GetField("Structure Number").StringValue, ""));
+
                             writer.AddDocument(document);
                         });
                         writer.Optimize();

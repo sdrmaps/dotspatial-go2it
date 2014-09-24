@@ -92,6 +92,7 @@
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
+            this.chkPretypes = new System.Windows.Forms.CheckBox();
             this.btnRemoveIndex = new System.Windows.Forms.Button();
             this.lstExistingIndexes = new System.Windows.Forms.ListBox();
             this.chkLayersToIndex = new System.Windows.Forms.CheckedListBox();
@@ -103,7 +104,6 @@
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.chkPretypes = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -824,6 +824,16 @@
             this.adminTab_SearchProperties.Text = "Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
+            // chkPretypes
+            // 
+            this.chkPretypes.AutoSize = true;
+            this.chkPretypes.Location = new System.Drawing.Point(126, 629);
+            this.chkPretypes.Name = "chkPretypes";
+            this.chkPretypes.Size = new System.Drawing.Size(89, 17);
+            this.chkPretypes.TabIndex = 11;
+            this.chkPretypes.Text = "Use Pretypes";
+            this.chkPretypes.UseVisualStyleBackColor = true;
+            // 
             // btnRemoveIndex
             // 
             this.btnRemoveIndex.Location = new System.Drawing.Point(90, 286);
@@ -939,16 +949,6 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // chkPretypes
-            // 
-            this.chkPretypes.AutoSize = true;
-            this.chkPretypes.Location = new System.Drawing.Point(126, 629);
-            this.chkPretypes.Name = "chkPretypes";
-            this.chkPretypes.Size = new System.Drawing.Size(89, 17);
-            this.chkPretypes.TabIndex = 11;
-            this.chkPretypes.Text = "Use Pretypes";
-            this.chkPretypes.UseVisualStyleBackColor = true;
             // 
             // AdminForm
             // 
