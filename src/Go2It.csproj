@@ -59,39 +59,39 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotSpatial.Controls">
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Controls.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data, Version=1.7.0.0, Culture=neutral, PublicKeyToken=c29dbf30e059ca9d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Data.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Data.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data.Forms, Version=1.7.0.0, Culture=neutral, PublicKeyToken=53ab5a198378d4c1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Data.Forms.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Data.Forms.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Extensions, Version=1.7.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Extensions.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections, Version=1.7.0.0, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Projections.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections.Forms, Version=1.7.0.0, Culture=neutral, PublicKeyToken=52099474f11b7ff0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Projections.Forms.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Projections.Forms.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
-      <HintPath>..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
+      <HintPath>..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology, Version=1.7.0.0, Culture=neutral, PublicKeyToken=6178c08da7998387, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Symbology.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Topology, Version=1.7.0.0, Culture=neutral, PublicKeyToken=a66b5e9434ca3671, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Trunk\bin\Release\DotSpatial.Topology.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Topology.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\references\GeoAPI.dll</HintPath>
@@ -114,19 +114,19 @@
       <HintPath>..\references\PowerCollections.dll</HintPath>
     </Reference>
     <Reference Include="SDR.Authentication">
-      <HintPath>..\build\Debug\SDR.Authentication.dll</HintPath>
+      <HintPath>..\build\$(Configuration)\SDR.Authentication.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Common">
-      <HintPath>..\build\Debug\SDR.Common.dll</HintPath>
+      <HintPath>..\build\$(Configuration)\SDR.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Configuration">
-      <HintPath>..\build\Debug\SDR.Configuration.dll</HintPath>
+      <HintPath>..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Data">
-      <HintPath>..\build\Debug\SDR.Data.dll</HintPath>
+      <HintPath>..\build\$(Configuration)\SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Spatial4n.Core.NTS, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">

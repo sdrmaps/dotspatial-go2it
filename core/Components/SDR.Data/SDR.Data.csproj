@@ -74,180 +74,180 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\compdcs.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\compdcs.csv">
       <Link>Plugins\gdal\data\compdcs.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\coordinate_axis.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\coordinate_axis.csv">
       <Link>Plugins\gdal\data\coordinate_axis.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\cubewerx_extra.wkt">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\cubewerx_extra.wkt">
       <Link>Plugins\gdal\data\cubewerx_extra.wkt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\datum_shift.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\datum_shift.csv">
       <Link>Plugins\gdal\data\datum_shift.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\ecw_cs.wkt">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\ecw_cs.wkt">
       <Link>Plugins\gdal\data\ecw_cs.wkt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\ellipsoid.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\ellipsoid.csv">
       <Link>Plugins\gdal\data\ellipsoid.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\epsg.wkt">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\epsg.wkt">
       <Link>Plugins\gdal\data\epsg.wkt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\esri_extra.wkt">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\esri_extra.wkt">
       <Link>Plugins\gdal\data\esri_extra.wkt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\esri_StatePlane_extra.wkt">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\esri_StatePlane_extra.wkt">
       <Link>Plugins\gdal\data\esri_StatePlane_extra.wkt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\esri_Wisconsin_extra.wkt">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\esri_Wisconsin_extra.wkt">
       <Link>Plugins\gdal\data\esri_Wisconsin_extra.wkt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gcs.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gcs.csv">
       <Link>Plugins\gdal\data\gcs.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gcs.override.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gcs.override.csv">
       <Link>Plugins\gdal\data\gcs.override.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gdal_datum.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gdal_datum.csv">
       <Link>Plugins\gdal\data\gdal_datum.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\geoccs.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\geoccs.csv">
       <Link>Plugins\gdal\data\geoccs.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gt_datum.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gt_datum.csv">
       <Link>Plugins\gdal\data\gt_datum.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gt_ellips.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gt_ellips.csv">
       <Link>Plugins\gdal\data\gt_ellips.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\header.dxf">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\header.dxf">
       <Link>Plugins\gdal\data\header.dxf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\nitf_spec.xsd">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\nitf_spec.xsd">
       <Link>Plugins\gdal\data\nitf_spec.xsd</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pcs.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pcs.csv">
       <Link>Plugins\gdal\data\pcs.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pcs.override.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pcs.override.csv">
       <Link>Plugins\gdal\data\pcs.override.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\prime_meridian.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\prime_meridian.csv">
       <Link>Plugins\gdal\data\prime_meridian.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\projop_wparm.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\projop_wparm.csv">
       <Link>Plugins\gdal\data\projop_wparm.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57agencies.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57agencies.csv">
       <Link>Plugins\gdal\data\s57agencies.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57attributes.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57attributes.csv">
       <Link>Plugins\gdal\data\s57attributes.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57attributes_aml.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57attributes_aml.csv">
       <Link>Plugins\gdal\data\s57attributes_aml.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57attributes_iw.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57attributes_iw.csv">
       <Link>Plugins\gdal\data\s57attributes_iw.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57expectedinput.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57expectedinput.csv">
       <Link>Plugins\gdal\data\s57expectedinput.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57objectclasses.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57objectclasses.csv">
       <Link>Plugins\gdal\data\s57objectclasses.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57objectclasses_aml.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57objectclasses_aml.csv">
       <Link>Plugins\gdal\data\s57objectclasses_aml.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57objectclasses_iw.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\s57objectclasses_iw.csv">
       <Link>Plugins\gdal\data\s57objectclasses_iw.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\seed_2d.dgn">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\seed_2d.dgn">
       <Link>Plugins\gdal\data\seed_2d.dgn</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\seed_3d.dgn">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\seed_3d.dgn">
       <Link>Plugins\gdal\data\seed_3d.dgn</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\stateplane.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\stateplane.csv">
       <Link>Plugins\gdal\data\stateplane.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\trailer.dxf">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\trailer.dxf">
       <Link>Plugins\gdal\data\trailer.dxf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\unit_of_measure.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\unit_of_measure.csv">
       <Link>Plugins\gdal\data\unit_of_measure.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\vertcs.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\vertcs.csv">
       <Link>Plugins\gdal\data\vertcs.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\vertcs.override.csv">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\vertcs.override.csv">
       <Link>Plugins\gdal\data\vertcs.override.csv</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\esri.extra">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\esri.extra">
       <Link>Plugins\gdal\share\esri.extra</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\nad.lst">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\nad.lst">
       <Link>Plugins\gdal\share\nad.lst</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\ntf_r93.gsb">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\ntf_r93.gsb">
       <Link>Plugins\gdal\share\ntf_r93.gsb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\ntv1_can.dat">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\ntv1_can.dat">
       <Link>Plugins\gdal\share\ntv1_can.dat</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\nzgd2kgrid0005.gsb">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\nzgd2kgrid0005.gsb">
       <Link>Plugins\gdal\share\nzgd2kgrid0005.gsb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\other.extra">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\other.extra">
       <Link>Plugins\gdal\share\other.extra</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\proj_def.dat">
+    <None Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\share\proj_def.dat">
       <Link>Plugins\gdal\share\proj_def.dat</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -256,331 +256,331 @@
     <None Include="sdrmaps.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Plugins\DotSpatial.Plugins.SpatiaLite\x64\SQLite.Interop.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Plugins\DotSpatial.Plugins.SpatiaLite\x64\SQLite.Interop.dll">
       <Link>x64\SQLite.Interop.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Plugins\DotSpatial.Plugins.SpatiaLite\x86\SQLite.Interop.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Plugins\DotSpatial.Plugins.SpatiaLite\x86\SQLite.Interop.dll">
       <Link>x86\SQLite.Interop.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\DotSpatial.Data.Rasters.GdalExtension.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\DotSpatial.Data.Rasters.GdalExtension.dll">
       <Link>Plugins\DotSpatial.Data.Rasters.GdalExtension.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdalconst_csharp.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdalconst_csharp.dll">
       <Link>Plugins\gdalconst_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gdalicon.png">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gdalicon.png">
       <Link>Plugins\gdal\data\gdalicon.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\GDALLogoBW.svg">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\GDALLogoBW.svg">
       <Link>Plugins\gdal\data\GDALLogoBW.svg</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\GDALLogoColor.svg">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\GDALLogoColor.svg">
       <Link>Plugins\gdal\data\GDALLogoColor.svg</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\GDALLogoGS.svg">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\GDALLogoGS.svg">
       <Link>Plugins\gdal\data\GDALLogoGS.svg</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\nitf_spec.xml">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\nitf_spec.xml">
       <Link>Plugins\gdal\data\nitf_spec.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pci_datum.txt">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pci_datum.txt">
       <Link>Plugins\gdal\data\pci_datum.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pci_ellips.txt">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\pci_ellips.txt">
       <Link>Plugins\gdal\data\pci_ellips.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\freexl.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\freexl.dll">
       <Link>Plugins\gdal\x64\freexl.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\gdal19.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\gdal19.dll">
       <Link>Plugins\gdal\x64\gdal19.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\gdalconst_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\gdalconst_wrap.dll">
       <Link>Plugins\gdal\x64\gdalconst_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\gdal_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\gdal_wrap.dll">
       <Link>Plugins\gdal\x64\gdal_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\geos_c.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\geos_c.dll">
       <Link>Plugins\gdal\x64\geos_c.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\iconv.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\iconv.dll">
       <Link>Plugins\gdal\x64\iconv.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libcurl.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libcurl.dll">
       <Link>Plugins\gdal\x64\libcurl.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libeay32.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libeay32.dll">
       <Link>Plugins\gdal\x64\libeay32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libexpat.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libexpat.dll">
       <Link>Plugins\gdal\x64\libexpat.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libmysql.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libmysql.dll">
       <Link>Plugins\gdal\x64\libmysql.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libpq.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\libpq.dll">
       <Link>Plugins\gdal\x64\libpq.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\msvcp100.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\msvcp100.dll">
       <Link>Plugins\gdal\x64\msvcp100.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\msvcr100.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\msvcr100.dll">
       <Link>Plugins\gdal\x64\msvcr100.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\ogr_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\ogr_wrap.dll">
       <Link>Plugins\gdal\x64\ogr_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\openjpeg.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\openjpeg.dll">
       <Link>Plugins\gdal\x64\openjpeg.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\osr_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\osr_wrap.dll">
       <Link>Plugins\gdal\x64\osr_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\cfitsio.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\cfitsio.dll">
       <Link>Plugins\gdal\x64\plugins\cfitsio.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_BAG.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_BAG.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_BAG.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_ECW_JP2ECW.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_ECW_JP2ECW.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_ECW_JP2ECW.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_FITS.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_FITS.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_FITS.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_GMT.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_GMT.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_GMT.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_HDF5.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_HDF5.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_HDF5.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_HDF5Image.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_HDF5Image.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_HDF5Image.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_MrSID.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_MrSID.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_MrSID.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_netCDF.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\gdal_netCDF.dll">
       <Link>Plugins\gdal\x64\plugins\gdal_netCDF.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\hdf5dll.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\hdf5dll.dll">
       <Link>Plugins\gdal\x64\plugins\hdf5dll.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\libecwj2.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\libecwj2.dll">
       <Link>Plugins\gdal\x64\plugins\libecwj2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\lti_dsdk.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\lti_dsdk.dll">
       <Link>Plugins\gdal\x64\plugins\lti_dsdk.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\netcdf.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\plugins\netcdf.dll">
       <Link>Plugins\gdal\x64\plugins\netcdf.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\proj.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\proj.dll">
       <Link>Plugins\gdal\x64\proj.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\spatialite.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\spatialite.dll">
       <Link>Plugins\gdal\x64\spatialite.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\ssleay32.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\ssleay32.dll">
       <Link>Plugins\gdal\x64\ssleay32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\xerces-c_2_8.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\xerces-c_2_8.dll">
       <Link>Plugins\gdal\x64\xerces-c_2_8.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\zlib1.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x64\zlib1.dll">
       <Link>Plugins\gdal\x64\zlib1.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\freexl.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\freexl.dll">
       <Link>Plugins\gdal\x86\freexl.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\gdal19.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\gdal19.dll">
       <Link>Plugins\gdal\x86\gdal19.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\gdalconst_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\gdalconst_wrap.dll">
       <Link>Plugins\gdal\x86\gdalconst_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\gdal_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\gdal_wrap.dll">
       <Link>Plugins\gdal\x86\gdal_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\geos_c.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\geos_c.dll">
       <Link>Plugins\gdal\x86\geos_c.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\iconv.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\iconv.dll">
       <Link>Plugins\gdal\x86\iconv.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libcurl.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libcurl.dll">
       <Link>Plugins\gdal\x86\libcurl.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libeay32.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libeay32.dll">
       <Link>Plugins\gdal\x86\libeay32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libexpat.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libexpat.dll">
       <Link>Plugins\gdal\x86\libexpat.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libmysql.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libmysql.dll">
       <Link>Plugins\gdal\x86\libmysql.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libpq.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\libpq.dll">
       <Link>Plugins\gdal\x86\libpq.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\msvcp100.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\msvcp100.dll">
       <Link>Plugins\gdal\x86\msvcp100.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\msvcr100.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\msvcr100.dll">
       <Link>Plugins\gdal\x86\msvcr100.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\ogr_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\ogr_wrap.dll">
       <Link>Plugins\gdal\x86\ogr_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\openjpeg.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\openjpeg.dll">
       <Link>Plugins\gdal\x86\openjpeg.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\osr_wrap.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\osr_wrap.dll">
       <Link>Plugins\gdal\x86\osr_wrap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\cfitsio.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\cfitsio.dll">
       <Link>Plugins\gdal\x86\plugins\cfitsio.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_BAG.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_BAG.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_BAG.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_ECW_JP2ECW.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_ECW_JP2ECW.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_ECW_JP2ECW.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_FITS.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_FITS.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_FITS.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_GMT.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_GMT.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_GMT.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_HDF5.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_HDF5.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_HDF5.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_HDF5Image.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_HDF5Image.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_HDF5Image.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_MrSID.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_MrSID.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_MrSID.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_netCDF.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\gdal_netCDF.dll">
       <Link>Plugins\gdal\x86\plugins\gdal_netCDF.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\hdf5dll.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\hdf5dll.dll">
       <Link>Plugins\gdal\x86\plugins\hdf5dll.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\libecwj2.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\libecwj2.dll">
       <Link>Plugins\gdal\x86\plugins\libecwj2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\lti_dsdk.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\lti_dsdk.dll">
       <Link>Plugins\gdal\x86\plugins\lti_dsdk.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\netcdf.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\plugins\netcdf.dll">
       <Link>Plugins\gdal\x86\plugins\netcdf.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\proj.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\proj.dll">
       <Link>Plugins\gdal\x86\proj.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\spatialite.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\spatialite.dll">
       <Link>Plugins\gdal\x86\spatialite.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\ssleay32.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\ssleay32.dll">
       <Link>Plugins\gdal\x86\ssleay32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\xerces-c_2_8.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\xerces-c_2_8.dll">
       <Link>Plugins\gdal\x86\xerces-c_2_8.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\zlib1.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\x86\zlib1.dll">
       <Link>Plugins\gdal\x86\zlib1.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal_csharp.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal_csharp.dll">
       <Link>Plugins\gdal_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\ogr_csharp.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\ogr_csharp.dll">
       <Link>Plugins\ogr_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\DotSpatial\Trunk\bin\Release\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\osr_csharp.dll">
+    <Content Include="..\..\DotSpatial\Trunk\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\osr_csharp.dll">
       <Link>Plugins\osr_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

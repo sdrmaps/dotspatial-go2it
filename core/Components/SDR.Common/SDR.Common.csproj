@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="DotSpatial.SDR.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\Debug\DotSpatial.SDR.Controls.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -61,7 +61,7 @@
     </Reference>
     <Reference Include="SDR.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\Debug\SDR.Configuration.dll</HintPath>
+      <HintPath>..\..\..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
