@@ -69,6 +69,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
+            this.zoomFactor = new System.Windows.Forms.NumericUpDown();
             this.hydrantZoom = new System.Windows.Forms.NumericUpDown();
             this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
             this.lineSymbolCap = new System.Windows.Forms.ComboBox();
@@ -118,6 +119,7 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.hydrantZoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
@@ -585,6 +587,7 @@
             // 
             // adminTab_ProgramManagement
             // 
+            this.adminTab_ProgramManagement.Controls.Add(this.zoomFactor);
             this.adminTab_ProgramManagement.Controls.Add(this.hydrantZoom);
             this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolBorderColor);
             this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolCap);
@@ -615,9 +618,16 @@
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
             // 
+            // zoomFactor
+            // 
+            this.zoomFactor.Location = new System.Drawing.Point(339, 652);
+            this.zoomFactor.Name = "zoomFactor";
+            this.zoomFactor.Size = new System.Drawing.Size(120, 20);
+            this.zoomFactor.TabIndex = 22;
+            // 
             // hydrantZoom
             // 
-            this.hydrantZoom.Location = new System.Drawing.Point(178, 658);
+            this.hydrantZoom.Location = new System.Drawing.Point(155, 658);
             this.hydrantZoom.Name = "hydrantZoom";
             this.hydrantZoom.Size = new System.Drawing.Size(66, 20);
             this.hydrantZoom.TabIndex = 21;
@@ -978,6 +988,7 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomFactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.hydrantZoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
@@ -1066,6 +1077,7 @@
         private System.Windows.Forms.Panel lineSymbolBorderColor;
         private System.Windows.Forms.NumericUpDown hydrantZoom;
         private System.Windows.Forms.CheckBox chkPretypes;
+        private System.Windows.Forms.NumericUpDown zoomFactor;
 
     }
 }

@@ -2126,10 +2126,19 @@ namespace Go2It
                             writer.DeleteDocuments(query);
 
                             // clean the numeric fields
-                            document.GetField("Phone").SetValue(DigitsOnly.Replace(document.GetField("Phone").StringValue, ""));
-                            document.GetField("Aux. Phone").SetValue(DigitsOnly.Replace(document.GetField("Aux. Phone").StringValue, ""));
-                            document.GetField("Structure Number").SetValue(DigitsOnly.Replace(document.GetField("Structure Number").StringValue, ""));
-
+                            if (document.GetField("Phone") != null)
+                            {
+                                document.GetField("Phone").SetValue(DigitsOnly.Replace(document.GetField("Phone").StringValue, ""));
+                            }
+                            if (document.GetField("Aux. Phone") != null)
+                            {
+                                document.GetField("Aux. Phone").SetValue(DigitsOnly.Replace(document.GetField("Aux. Phone").StringValue, ""));
+                            }
+                            if (document.GetField("Structure Number") != null)
+                            {
+                                document.GetField("Structure Number").SetValue(DigitsOnly.Replace(document.GetField("Structure Number").StringValue, ""));
+                            }
+                            
                             writer.AddDocument(document);
                         });
                         writer.Optimize();

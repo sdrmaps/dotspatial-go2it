@@ -51,7 +51,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GraphicPointColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.GraphicPointSize = 18;
             Properties.ProjectSettings.Default.GraphicPointStyle = "Triangle";
-            Properties.ProjectSettings.Default.HydrantSearchCount = 3;
+            Properties.ProjectSettings.Default.HydrantSearchCount = 1;
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
         }
 

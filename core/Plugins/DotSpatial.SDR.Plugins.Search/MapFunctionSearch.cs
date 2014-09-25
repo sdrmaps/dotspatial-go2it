@@ -151,7 +151,6 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             switch (_searchPanel.SearchMode)
             {
-                //  TODO: need to seperate all these?
                 case SearchMode.Address:
                     SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
@@ -492,21 +491,29 @@ namespace DotSpatial.SDR.Plugins.Search
                 MessageBox.Show(@"No feature or location is active");
                 return;
             }
+            IMapPointLayer hydrantLayer = null;
+            var layers = Map.GetPointLayers();
+            foreach (IMapPointLayer ptLayer in layers)
+            {
+                if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
+                IFeatureSet fs = FeatureSet.Open(ptLayer.DataSet.Filename);
+                if (fs != null && fs.Name != SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
+                {
+                    hydrantLayer = ptLayer;
+                    break;
+                }
+            }
             var idxType = _indexType;  // store the current index type | reset when operation is complete
             SetupIndexReaderWriter("HydrantIndex");
-
             var hits = ExecuteScoredHydrantQuery(_activeLookup);
-            foreach (var hit in hits)
+            for (int i = 0; i <= SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount -1; i++)
             {
+                var hit = hits[i];
                 var doc = _indexSearcher.Doc(hit.Doc);
-                // TODO: what do we do here?
-                Debug.WriteLine(doc.Get(FID));
-                // SELECT the top 3-5 hydrants and zoom out to view them
-
-
-
-            }
+                hydrantLayer.SelectByAttribute("[FID] =" + doc.Get(FID));
+	        }
             SetupIndexReaderWriter(idxType);  // set the index searcher back
+            hydrantLayer.ZoomToSelectedFeatures();
         }
         #endregion
 

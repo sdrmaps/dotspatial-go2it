@@ -206,9 +206,9 @@ namespace Go2It
                 };
 
                 // TODO: remove out map logging event binding
-                // LogMapEvents(nMap, txtCaption);  // log all map events
+                LogMapEvents(nMap, txtCaption);  // log all map events
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
-                // LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
+                LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
 
                 nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
                 nMapFrame.SuspendEvents();  // suspend all layer events
