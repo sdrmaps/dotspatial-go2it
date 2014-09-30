@@ -14,14 +14,12 @@ namespace DotSpatial.SDR.Controls
 
         public void SuspendViewExtentChanged()
         {
-            Debug.WriteLine("SuspendEventMapFrame");
             ViewExtentChangedSuspended = true;
             SuspendExtentChanged();
         }
 
         public void ResumeViewExtentChanged()
         {
-            Debug.WriteLine("ResumeEventMapFrame");
             ViewExtentChangedSuspended = false;
             ResumeExtentChanged();   
         }

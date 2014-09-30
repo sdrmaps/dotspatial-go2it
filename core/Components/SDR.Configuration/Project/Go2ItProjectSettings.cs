@@ -51,8 +51,10 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GraphicPointColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.GraphicPointSize = 18;
             Properties.ProjectSettings.Default.GraphicPointStyle = "Triangle";
-            Properties.ProjectSettings.Default.HydrantSearchCount = 1;
+            Properties.ProjectSettings.Default.HydrantSearchCount = 3;
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
+            Properties.ProjectSettings.Default.SearchZoomFactor = (decimal)0.05;
+            Properties.ProjectSettings.Default.SearchBufferDistance = 250;
         }
 
         /// <summary>
@@ -307,5 +309,16 @@ namespace SDR.Configuration.Project
             get { return Properties.ProjectSettings.Default.HydrantSearchCount; }
         }
 
+        public decimal SearchZoomFactor
+        {
+            set { Properties.ProjectSettings.Default.SearchZoomFactor = value; }
+            get { return Properties.ProjectSettings.Default.SearchZoomFactor; }
+        }
+
+        public int SearchBufferDistance
+        {
+            set { Properties.ProjectSettings.Default.SearchBufferDistance = value; }
+            get { return Properties.ProjectSettings.Default.SearchBufferDistance; }
+        }
     }
 }

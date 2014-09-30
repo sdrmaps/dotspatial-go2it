@@ -43,6 +43,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 SmallImage = Resources.zoom_in_16,
                 LargeImage = Resources.zoom_in_32
             });
+            HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom In"), "Navigate_Zoom_In");
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Out", ZoomOut_Click)
             {
                 GroupCaption = "Navigate_Zoom_Out",
@@ -50,6 +51,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 SmallImage = Resources.zoom_out_16,
                 LargeImage = Resources.zoom_out_32
             });
+            HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom Out"), "Navigate_Zoom_Out");
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Extent", ZoomToMaxExtents_Click)
             {
                 GroupCaption = "Navigate_Zoom_Max_Extent",
@@ -155,7 +157,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         public override void Deactivate()
         {
-            Debug.WriteLine("@@++++++++++++++++ Hrm validate this (start) ++++++++++++++++++++++++++");
             App.HeaderControl.RemoveAll();
             var map = App.Map as Map;
             var mapFrame = App.Map.MapFrame as EventMapFrame;
@@ -166,7 +167,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 map.Layers.LayerSelected -= LayersOnLayerSelected;
                 mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             }
-            Debug.WriteLine("+++++++++++++++++ Hrm validate this (end) +++++++++++++++++++++++++@@");
             base.Deactivate();
         }
 

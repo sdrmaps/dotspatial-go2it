@@ -722,6 +722,9 @@ namespace Go2It
         private void PopulateSettingsToForm()
         {
             chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes;
+            searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
+            searchHydrantCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount;
+            searchZoomFactor.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
             mapBGColorPanel.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor;
             // set default settings on admin load
             if (SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType == "POINT")
@@ -1188,6 +1191,9 @@ namespace Go2It
             // set the map background color
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = mapBGColorPanel.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes = chkPretypes.Checked;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount = (int)searchHydrantCount.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance = (int)searchBufferDistance.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor = searchZoomFactor.Value;
             // set the various graphic symbolization
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor = ptSymbolColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle = ApplyComboBoxSetting(ptSymbolStyle);

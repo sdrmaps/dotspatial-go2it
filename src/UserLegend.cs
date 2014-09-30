@@ -74,7 +74,7 @@ namespace Go2It
             if (_userLegendForm.Visible == false)
             {
                 _userLegendForm.Show(Shell);
-                _userLegendForm.Focus();
+                // _userLegendForm.Focus();
             }
             else
             {

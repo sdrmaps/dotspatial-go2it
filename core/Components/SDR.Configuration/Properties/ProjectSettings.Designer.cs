@@ -304,7 +304,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int HydrantSearchCount {
             get {
                 return ((int)(this["HydrantSearchCount"]));
@@ -323,6 +323,30 @@ namespace SDR.Configuration.Properties {
             }
             set {
                 this["SearchUsePretypes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
+        public decimal SearchZoomFactor {
+            get {
+                return ((decimal)(this["SearchZoomFactor"]));
+            }
+            set {
+                this["SearchZoomFactor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int SearchBufferDistance {
+            get {
+                return ((int)(this["SearchBufferDistance"]));
+            }
+            set {
+                this["SearchBufferDistance"] = value;
             }
         }
     }

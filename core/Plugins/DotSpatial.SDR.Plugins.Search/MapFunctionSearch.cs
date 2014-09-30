@@ -419,7 +419,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     lineCap);
                 Map.MapFrame.DrawingLayers.Add(_polylineGraphicsLayer);
             }
-            var buffer = ft.Buffer(10);  // TODO: make the buffer distance configable
+            var buffer = ft.Buffer(250);  // TODO: make the buffer distance configable
             _polylineGraphics.AddFeature(buffer);
             return buffer.Envelope;
         }
@@ -446,8 +446,16 @@ namespace DotSpatial.SDR.Plugins.Search
                 mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
                 // grab the feature and use the shape to generate a buffer around it
                 var ft = fs.GetFeature(Convert.ToInt32(ftLookup.Fid));
-                CreateBufferGraphic(ft.BasicGeometry as Geometry);
-                mapLayer.ZoomToSelectedFeatures();
+                IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
+
+                // IEnvelope ftEnv = ft.Envelope.Clone() as IEnvelope;
+
+                const double zoomInFactor = 0.05; // fixed zoom-in by 10% - 5% on each sid
+                var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
+                var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
+                buffEnv.ExpandBy(newExtentWidth, newExtentHeight);
+                // mapLayer.ZoomToSelectedFeatures();
+                Map.ViewExtents = buffEnv.ToExtent();
             }
         }
 

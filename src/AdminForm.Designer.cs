@@ -69,8 +69,8 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
-            this.zoomFactor = new System.Windows.Forms.NumericUpDown();
-            this.hydrantZoom = new System.Windows.Forms.NumericUpDown();
+            this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
+            this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
             this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
             this.lineSymbolCap = new System.Windows.Forms.ComboBox();
             this.lineSymbolSize = new System.Windows.Forms.NumericUpDown();
@@ -103,8 +103,9 @@
             this.btnCreateIndex = new System.Windows.Forms.Button();
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
-            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
+            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -119,13 +120,14 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomFactor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hydrantZoom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -587,8 +589,9 @@
             // 
             // adminTab_ProgramManagement
             // 
-            this.adminTab_ProgramManagement.Controls.Add(this.zoomFactor);
-            this.adminTab_ProgramManagement.Controls.Add(this.hydrantZoom);
+            this.adminTab_ProgramManagement.Controls.Add(this.searchBufferDistance);
+            this.adminTab_ProgramManagement.Controls.Add(this.searchZoomFactor);
+            this.adminTab_ProgramManagement.Controls.Add(this.searchHydrantCount);
             this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolBorderColor);
             this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolCap);
             this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolSize);
@@ -618,19 +621,25 @@
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
             // 
-            // zoomFactor
+            // searchZoomFactor
             // 
-            this.zoomFactor.Location = new System.Drawing.Point(339, 652);
-            this.zoomFactor.Name = "zoomFactor";
-            this.zoomFactor.Size = new System.Drawing.Size(120, 20);
-            this.zoomFactor.TabIndex = 22;
+            this.searchZoomFactor.DecimalPlaces = 2;
+            this.searchZoomFactor.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.searchZoomFactor.Location = new System.Drawing.Point(155, 652);
+            this.searchZoomFactor.Name = "searchZoomFactor";
+            this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
+            this.searchZoomFactor.TabIndex = 22;
             // 
-            // hydrantZoom
+            // searchHydrantCount
             // 
-            this.hydrantZoom.Location = new System.Drawing.Point(155, 658);
-            this.hydrantZoom.Name = "hydrantZoom";
-            this.hydrantZoom.Size = new System.Drawing.Size(66, 20);
-            this.hydrantZoom.TabIndex = 21;
+            this.searchHydrantCount.Location = new System.Drawing.Point(250, 651);
+            this.searchHydrantCount.Name = "searchHydrantCount";
+            this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
+            this.searchHydrantCount.TabIndex = 21;
             // 
             // lineSymbolBorderColor
             // 
@@ -933,6 +942,19 @@
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(369, 732);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -947,18 +969,17 @@
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
             // 
-            // btnCancel
+            // searchBufferDistance
             // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(369, 732);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.searchBufferDistance.Location = new System.Drawing.Point(365, 652);
+            this.searchBufferDistance.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.searchBufferDistance.Name = "searchBufferDistance";
+            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
+            this.searchBufferDistance.TabIndex = 23;
             // 
             // AdminForm
             // 
@@ -988,14 +1009,15 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.zoomFactor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.hydrantZoom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
             this.adminTab_SearchProperties.ResumeLayout(false);
             this.adminTab_SearchProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1075,9 +1097,10 @@
         private System.Windows.Forms.NumericUpDown ptSymbolSize;
         private System.Windows.Forms.ComboBox lineSymbolCap;
         private System.Windows.Forms.Panel lineSymbolBorderColor;
-        private System.Windows.Forms.NumericUpDown hydrantZoom;
+        private System.Windows.Forms.NumericUpDown searchHydrantCount;
         private System.Windows.Forms.CheckBox chkPretypes;
-        private System.Windows.Forms.NumericUpDown zoomFactor;
+        private System.Windows.Forms.NumericUpDown searchZoomFactor;
+        private System.Windows.Forms.NumericUpDown searchBufferDistance;
 
     }
 }
