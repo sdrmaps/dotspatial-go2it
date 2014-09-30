@@ -43,7 +43,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 SmallImage = Resources.zoom_in_16,
                 LargeImage = Resources.zoom_in_32
             });
-            HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom In"), "Navigate_Zoom_In");
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Out", ZoomOut_Click)
             {
                 GroupCaption = "Navigate_Zoom_Out",
@@ -51,7 +50,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 SmallImage = Resources.zoom_out_16,
                 LargeImage = Resources.zoom_out_32
             });
-            HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom Out"), "Navigate_Zoom_Out");
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Extent", ZoomToMaxExtents_Click)
             {
                 GroupCaption = "Navigate_Zoom_Max_Extent",
@@ -88,6 +86,10 @@ namespace DotSpatial.SDR.Plugins.Navigate
             };
             App.HeaderControl.Add(_zoomToLayer);
 
+            // hotkeys for single instance zoom in and out
+            HotKeyManager.AddHotKey(new HotKey(Keys.F11, "Zoom Out"), "Navigate_Set_Zoom_Out");
+            HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom In"), "Navigate_Set_Zoom_In");
+
             // dockmanager events for display of various maps on tab panels
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
@@ -103,6 +105,12 @@ namespace DotSpatial.SDR.Plugins.Navigate
             {
                 case "Navigate_Zoom_Max_Extent":
                     ZoomToMaxExtents_Click(null, null);
+                    break;
+                case "Navigate_Set_Zoom_In":
+                    App.Map.MapFrame.ZoomIn();
+                    break;
+                case "Navigate_Set_Zoom_Out":
+                    App.Map.MapFrame.ZoomOut();
                     break;
                 default:
                     break;
