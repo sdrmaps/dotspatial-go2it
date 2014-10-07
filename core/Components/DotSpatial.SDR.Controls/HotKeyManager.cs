@@ -61,7 +61,6 @@ namespace DotSpatial.SDR.Controls
     public static class HotKeyManager
     {
         public static event HotKeyEventHandler HotKeyEvent;
-
         // dict for storing all hotkeys and their lookup actions
         private static readonly Dictionary<HotKey, string> HotKeys = new Dictionary<HotKey, string>();
         // msg and keys data received from MainForm ProcessCmdKey method

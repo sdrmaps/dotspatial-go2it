@@ -86,7 +86,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             };
             App.HeaderControl.Add(_zoomToLayer);
 
-            // hotkeys for single instance zoom in and out
+            // hotkeys for single instance zoom in and out (command not a tool)
             HotKeyManager.AddHotKey(new HotKey(Keys.F11, "Zoom Out"), "Navigate_Set_Zoom_Out");
             HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom In"), "Navigate_Set_Zoom_In");
 

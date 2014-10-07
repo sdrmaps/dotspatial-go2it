@@ -15,12 +15,20 @@
         /// </summary>
         Phone,
         /// <summary>
-        /// Search Roads attributes
+        /// Search Roads Attributes
         /// </summary>
         Road,
         /// <summary>
         /// Search Spatial Intersections
         /// </summary>
         Intersection,
+        /// <summary>
+        /// Search Key Locations Attributes
+        /// </summary>
+        Key_Locations,
+        /// <summary>
+        /// Search All Attributes
+        /// </summary>
+        All,
     }
 }

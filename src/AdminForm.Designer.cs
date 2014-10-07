@@ -28,6 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
@@ -69,6 +75,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
+            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
             this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
             this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
             this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
@@ -103,9 +110,9 @@
             this.btnCreateIndex = new System.Windows.Forms.Button();
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
-            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -120,6 +127,7 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
@@ -127,7 +135,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -291,7 +299,7 @@
             // 
             // btnAddView
             // 
-            this.btnAddView.Location = new System.Drawing.Point(32, 25);
+            this.btnAddView.Location = new System.Drawing.Point(32, 9);
             this.btnAddView.Name = "btnAddView";
             this.btnAddView.Size = new System.Drawing.Size(75, 23);
             this.btnAddView.TabIndex = 44;
@@ -301,14 +309,14 @@
             // 
             // txtViewName
             // 
-            this.txtViewName.Location = new System.Drawing.Point(113, 25);
+            this.txtViewName.Location = new System.Drawing.Point(113, 9);
             this.txtViewName.Name = "txtViewName";
             this.txtViewName.Size = new System.Drawing.Size(199, 20);
             this.txtViewName.TabIndex = 43;
             // 
             // btnDeleteView
             // 
-            this.btnDeleteView.Location = new System.Drawing.Point(228, 51);
+            this.btnDeleteView.Location = new System.Drawing.Point(228, 35);
             this.btnDeleteView.Name = "btnDeleteView";
             this.btnDeleteView.Size = new System.Drawing.Size(75, 23);
             this.btnDeleteView.TabIndex = 42;
@@ -320,7 +328,7 @@
             // 
             this.chkViewLayers.CheckOnClick = true;
             this.chkViewLayers.FormattingEnabled = true;
-            this.chkViewLayers.Location = new System.Drawing.Point(43, 79);
+            this.chkViewLayers.Location = new System.Drawing.Point(43, 63);
             this.chkViewLayers.Name = "chkViewLayers";
             this.chkViewLayers.Size = new System.Drawing.Size(241, 94);
             this.chkViewLayers.TabIndex = 41;
@@ -329,7 +337,7 @@
             // 
             this.cmbActiveMapTab.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbActiveMapTab.FormattingEnabled = true;
-            this.cmbActiveMapTab.Location = new System.Drawing.Point(43, 52);
+            this.cmbActiveMapTab.Location = new System.Drawing.Point(43, 36);
             this.cmbActiveMapTab.Name = "cmbActiveMapTab";
             this.cmbActiveMapTab.Size = new System.Drawing.Size(179, 21);
             this.cmbActiveMapTab.TabIndex = 40;
@@ -337,7 +345,7 @@
             // lblMapBGColor
             // 
             this.lblMapBGColor.AutoSize = true;
-            this.lblMapBGColor.Location = new System.Drawing.Point(168, 667);
+            this.lblMapBGColor.Location = new System.Drawing.Point(168, 651);
             this.lblMapBGColor.Name = "lblMapBGColor";
             this.lblMapBGColor.Size = new System.Drawing.Size(116, 13);
             this.lblMapBGColor.TabIndex = 38;
@@ -348,7 +356,7 @@
             this.mapBGColorPanel.BackColor = System.Drawing.Color.Black;
             this.mapBGColorPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mapBGColorPanel.ForeColor = System.Drawing.Color.Black;
-            this.mapBGColorPanel.Location = new System.Drawing.Point(101, 659);
+            this.mapBGColorPanel.Location = new System.Drawing.Point(101, 643);
             this.mapBGColorPanel.Name = "mapBGColorPanel";
             this.mapBGColorPanel.Size = new System.Drawing.Size(48, 26);
             this.mapBGColorPanel.TabIndex = 37;
@@ -358,7 +366,7 @@
             // 
             this.panelRadKeyLocations.Controls.Add(this.radKeyLocationsPolygons);
             this.panelRadKeyLocations.Controls.Add(this.radKeyLocationsPoints);
-            this.panelRadKeyLocations.Location = new System.Drawing.Point(21, 576);
+            this.panelRadKeyLocations.Location = new System.Drawing.Point(21, 560);
             this.panelRadKeyLocations.Name = "panelRadKeyLocations";
             this.panelRadKeyLocations.Size = new System.Drawing.Size(77, 55);
             this.panelRadKeyLocations.TabIndex = 36;
@@ -392,7 +400,7 @@
             // 
             this.panelRadAddress.Controls.Add(this.radAddressPoints);
             this.panelRadAddress.Controls.Add(this.radAddressPolygons);
-            this.panelRadAddress.Location = new System.Drawing.Point(21, 214);
+            this.panelRadAddress.Location = new System.Drawing.Point(21, 198);
             this.panelRadAddress.Name = "panelRadAddress";
             this.panelRadAddress.Size = new System.Drawing.Size(77, 50);
             this.panelRadAddress.TabIndex = 35;
@@ -425,7 +433,7 @@
             // lblKeyLocations
             // 
             this.lblKeyLocations.AutoSize = true;
-            this.lblKeyLocations.Location = new System.Drawing.Point(18, 560);
+            this.lblKeyLocations.Location = new System.Drawing.Point(18, 544);
             this.lblKeyLocations.Name = "lblKeyLocations";
             this.lblKeyLocations.Size = new System.Drawing.Size(77, 13);
             this.lblKeyLocations.TabIndex = 32;
@@ -434,7 +442,7 @@
             // lblHydrants
             // 
             this.lblHydrants.AutoSize = true;
-            this.lblHydrants.Location = new System.Drawing.Point(43, 536);
+            this.lblHydrants.Location = new System.Drawing.Point(43, 520);
             this.lblHydrants.Name = "lblHydrants";
             this.lblHydrants.Size = new System.Drawing.Size(52, 13);
             this.lblHydrants.TabIndex = 31;
@@ -443,7 +451,7 @@
             // lblParcels
             // 
             this.lblParcels.AutoSize = true;
-            this.lblParcels.Location = new System.Drawing.Point(51, 509);
+            this.lblParcels.Location = new System.Drawing.Point(51, 493);
             this.lblParcels.Name = "lblParcels";
             this.lblParcels.Size = new System.Drawing.Size(45, 13);
             this.lblParcels.TabIndex = 30;
@@ -452,7 +460,7 @@
             // lblEsn
             // 
             this.lblEsn.AutoSize = true;
-            this.lblEsn.Location = new System.Drawing.Point(66, 482);
+            this.lblEsn.Location = new System.Drawing.Point(66, 466);
             this.lblEsn.Name = "lblEsn";
             this.lblEsn.Size = new System.Drawing.Size(32, 13);
             this.lblEsn.TabIndex = 29;
@@ -461,7 +469,7 @@
             // lblCellSector
             // 
             this.lblCellSector.AutoSize = true;
-            this.lblCellSector.Location = new System.Drawing.Point(29, 455);
+            this.lblCellSector.Location = new System.Drawing.Point(29, 439);
             this.lblCellSector.Name = "lblCellSector";
             this.lblCellSector.Size = new System.Drawing.Size(66, 13);
             this.lblCellSector.TabIndex = 27;
@@ -470,7 +478,7 @@
             // cmbHydrantsLayer
             // 
             this.cmbHydrantsLayer.FormattingEnabled = true;
-            this.cmbHydrantsLayer.Location = new System.Drawing.Point(101, 533);
+            this.cmbHydrantsLayer.Location = new System.Drawing.Point(101, 517);
             this.cmbHydrantsLayer.Name = "cmbHydrantsLayer";
             this.cmbHydrantsLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbHydrantsLayer.TabIndex = 26;
@@ -479,7 +487,7 @@
             // lblRoads
             // 
             this.lblRoads.AutoSize = true;
-            this.lblRoads.Location = new System.Drawing.Point(54, 298);
+            this.lblRoads.Location = new System.Drawing.Point(54, 282);
             this.lblRoads.Name = "lblRoads";
             this.lblRoads.Size = new System.Drawing.Size(41, 13);
             this.lblRoads.TabIndex = 24;
@@ -488,7 +496,7 @@
             // lblAddresses
             // 
             this.lblAddresses.AutoSize = true;
-            this.lblAddresses.Location = new System.Drawing.Point(39, 198);
+            this.lblAddresses.Location = new System.Drawing.Point(39, 182);
             this.lblAddresses.Name = "lblAddresses";
             this.lblAddresses.Size = new System.Drawing.Size(59, 13);
             this.lblAddresses.TabIndex = 23;
@@ -498,7 +506,7 @@
             // 
             this.chkKeyLocationsLayers.CheckOnClick = true;
             this.chkKeyLocationsLayers.FormattingEnabled = true;
-            this.chkKeyLocationsLayers.Location = new System.Drawing.Point(101, 560);
+            this.chkKeyLocationsLayers.Location = new System.Drawing.Point(101, 544);
             this.chkKeyLocationsLayers.Name = "chkKeyLocationsLayers";
             this.chkKeyLocationsLayers.Size = new System.Drawing.Size(199, 94);
             this.chkKeyLocationsLayers.TabIndex = 22;
@@ -507,7 +515,7 @@
             // cmbParcelsLayer
             // 
             this.cmbParcelsLayer.FormattingEnabled = true;
-            this.cmbParcelsLayer.Location = new System.Drawing.Point(101, 506);
+            this.cmbParcelsLayer.Location = new System.Drawing.Point(101, 490);
             this.cmbParcelsLayer.Name = "cmbParcelsLayer";
             this.cmbParcelsLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbParcelsLayer.TabIndex = 21;
@@ -516,7 +524,7 @@
             // cmbESNLayer
             // 
             this.cmbESNLayer.FormattingEnabled = true;
-            this.cmbESNLayer.Location = new System.Drawing.Point(101, 479);
+            this.cmbESNLayer.Location = new System.Drawing.Point(101, 463);
             this.cmbESNLayer.Name = "cmbESNLayer";
             this.cmbESNLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbESNLayer.TabIndex = 20;
@@ -525,7 +533,7 @@
             // cmbCellSectorLayer
             // 
             this.cmbCellSectorLayer.FormattingEnabled = true;
-            this.cmbCellSectorLayer.Location = new System.Drawing.Point(101, 452);
+            this.cmbCellSectorLayer.Location = new System.Drawing.Point(101, 436);
             this.cmbCellSectorLayer.Name = "cmbCellSectorLayer";
             this.cmbCellSectorLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbCellSectorLayer.TabIndex = 18;
@@ -534,7 +542,7 @@
             // lblCityLimits
             // 
             this.lblCityLimits.AutoSize = true;
-            this.lblCityLimits.Location = new System.Drawing.Point(39, 428);
+            this.lblCityLimits.Location = new System.Drawing.Point(39, 412);
             this.lblCityLimits.Name = "lblCityLimits";
             this.lblCityLimits.Size = new System.Drawing.Size(56, 13);
             this.lblCityLimits.TabIndex = 16;
@@ -543,7 +551,7 @@
             // lblNotes
             // 
             this.lblNotes.AutoSize = true;
-            this.lblNotes.Location = new System.Drawing.Point(57, 401);
+            this.lblNotes.Location = new System.Drawing.Point(57, 385);
             this.lblNotes.Name = "lblNotes";
             this.lblNotes.Size = new System.Drawing.Size(38, 13);
             this.lblNotes.TabIndex = 15;
@@ -552,7 +560,7 @@
             // cmbCityLimitLayer
             // 
             this.cmbCityLimitLayer.FormattingEnabled = true;
-            this.cmbCityLimitLayer.Location = new System.Drawing.Point(101, 425);
+            this.cmbCityLimitLayer.Location = new System.Drawing.Point(101, 409);
             this.cmbCityLimitLayer.Name = "cmbCityLimitLayer";
             this.cmbCityLimitLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbCityLimitLayer.TabIndex = 8;
@@ -562,7 +570,7 @@
             // 
             this.chkRoadLayers.CheckOnClick = true;
             this.chkRoadLayers.FormattingEnabled = true;
-            this.chkRoadLayers.Location = new System.Drawing.Point(101, 298);
+            this.chkRoadLayers.Location = new System.Drawing.Point(101, 282);
             this.chkRoadLayers.Name = "chkRoadLayers";
             this.chkRoadLayers.Size = new System.Drawing.Size(199, 94);
             this.chkRoadLayers.TabIndex = 7;
@@ -572,7 +580,7 @@
             // 
             this.chkAddressLayers.CheckOnClick = true;
             this.chkAddressLayers.FormattingEnabled = true;
-            this.chkAddressLayers.Location = new System.Drawing.Point(101, 198);
+            this.chkAddressLayers.Location = new System.Drawing.Point(101, 182);
             this.chkAddressLayers.Name = "chkAddressLayers";
             this.chkAddressLayers.Size = new System.Drawing.Size(199, 94);
             this.chkAddressLayers.TabIndex = 6;
@@ -581,7 +589,7 @@
             // cmbNotesLayer
             // 
             this.cmbNotesLayer.FormattingEnabled = true;
-            this.cmbNotesLayer.Location = new System.Drawing.Point(101, 398);
+            this.cmbNotesLayer.Location = new System.Drawing.Point(101, 382);
             this.cmbNotesLayer.Name = "cmbNotesLayer";
             this.cmbNotesLayer.Size = new System.Drawing.Size(199, 21);
             this.cmbNotesLayer.TabIndex = 5;
@@ -589,6 +597,7 @@
             // 
             // adminTab_ProgramManagement
             // 
+            this.adminTab_ProgramManagement.Controls.Add(this.searchHydrantDistance);
             this.adminTab_ProgramManagement.Controls.Add(this.searchBufferDistance);
             this.adminTab_ProgramManagement.Controls.Add(this.searchZoomFactor);
             this.adminTab_ProgramManagement.Controls.Add(this.searchHydrantCount);
@@ -621,6 +630,18 @@
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
             // 
+            // searchBufferDistance
+            // 
+            this.searchBufferDistance.Location = new System.Drawing.Point(362, 627);
+            this.searchBufferDistance.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.searchBufferDistance.Name = "searchBufferDistance";
+            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
+            this.searchBufferDistance.TabIndex = 23;
+            // 
             // searchZoomFactor
             // 
             this.searchZoomFactor.DecimalPlaces = 2;
@@ -629,21 +650,21 @@
             0,
             0,
             131072});
-            this.searchZoomFactor.Location = new System.Drawing.Point(155, 652);
+            this.searchZoomFactor.Location = new System.Drawing.Point(152, 627);
             this.searchZoomFactor.Name = "searchZoomFactor";
             this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
             this.searchZoomFactor.TabIndex = 22;
             // 
             // searchHydrantCount
             // 
-            this.searchHydrantCount.Location = new System.Drawing.Point(250, 651);
+            this.searchHydrantCount.Location = new System.Drawing.Point(247, 626);
             this.searchHydrantCount.Name = "searchHydrantCount";
             this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
             this.searchHydrantCount.TabIndex = 21;
             // 
             // lineSymbolBorderColor
             // 
-            this.lineSymbolBorderColor.Location = new System.Drawing.Point(91, 602);
+            this.lineSymbolBorderColor.Location = new System.Drawing.Point(88, 577);
             this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
             this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
             this.lineSymbolBorderColor.TabIndex = 20;
@@ -652,14 +673,14 @@
             // 
             this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lineSymbolCap.FormattingEnabled = true;
-            this.lineSymbolCap.Location = new System.Drawing.Point(159, 605);
+            this.lineSymbolCap.Location = new System.Drawing.Point(156, 580);
             this.lineSymbolCap.Name = "lineSymbolCap";
             this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
             this.lineSymbolCap.TabIndex = 19;
             // 
             // lineSymbolSize
             // 
-            this.lineSymbolSize.Location = new System.Drawing.Point(405, 572);
+            this.lineSymbolSize.Location = new System.Drawing.Point(402, 547);
             this.lineSymbolSize.Name = "lineSymbolSize";
             this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
             this.lineSymbolSize.TabIndex = 18;
@@ -668,28 +689,28 @@
             // 
             this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lineSymbolStyle.FormattingEnabled = true;
-            this.lineSymbolStyle.Location = new System.Drawing.Point(155, 571);
+            this.lineSymbolStyle.Location = new System.Drawing.Point(152, 546);
             this.lineSymbolStyle.Name = "lineSymbolStyle";
             this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
             this.lineSymbolStyle.TabIndex = 17;
             // 
             // lineSymbolColor
             // 
-            this.lineSymbolColor.Location = new System.Drawing.Point(91, 556);
+            this.lineSymbolColor.Location = new System.Drawing.Point(88, 531);
             this.lineSymbolColor.Name = "lineSymbolColor";
             this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
             this.lineSymbolColor.TabIndex = 16;
             // 
             // ptSymbolSize
             // 
-            this.ptSymbolSize.Location = new System.Drawing.Point(370, 501);
+            this.ptSymbolSize.Location = new System.Drawing.Point(367, 476);
             this.ptSymbolSize.Name = "ptSymbolSize";
             this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
             this.ptSymbolSize.TabIndex = 15;
             // 
             // ptSymbolColor
             // 
-            this.ptSymbolColor.Location = new System.Drawing.Point(118, 497);
+            this.ptSymbolColor.Location = new System.Drawing.Point(115, 472);
             this.ptSymbolColor.Name = "ptSymbolColor";
             this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
             this.ptSymbolColor.TabIndex = 14;
@@ -698,7 +719,7 @@
             // 
             this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ptSymbolStyle.FormattingEnabled = true;
-            this.ptSymbolStyle.Location = new System.Drawing.Point(146, 500);
+            this.ptSymbolStyle.Location = new System.Drawing.Point(143, 475);
             this.ptSymbolStyle.Name = "ptSymbolStyle";
             this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
             this.ptSymbolStyle.TabIndex = 13;
@@ -706,7 +727,7 @@
             // lineSymbolGraphic
             // 
             this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lineSymbolGraphic.Location = new System.Drawing.Point(33, 547);
+            this.lineSymbolGraphic.Location = new System.Drawing.Point(30, 522);
             this.lineSymbolGraphic.Name = "lineSymbolGraphic";
             this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
             this.lineSymbolGraphic.TabIndex = 12;
@@ -714,7 +735,7 @@
             // ptSymbolGraphic
             // 
             this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptSymbolGraphic.Location = new System.Drawing.Point(33, 477);
+            this.ptSymbolGraphic.Location = new System.Drawing.Point(30, 452);
             this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
             this.ptSymbolGraphic.Name = "ptSymbolGraphic";
             this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
@@ -735,11 +756,35 @@
             this.dgvHotKeys.AllowUserToAddRows = false;
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
@@ -894,11 +939,35 @@
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.AllowUserToDeleteRows = false;
             this.dgvLayerIndex.AllowUserToResizeRows = false;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
@@ -942,19 +1011,6 @@
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
-            // btnCancel
-            // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(369, 732);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -969,17 +1025,25 @@
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
             // 
-            // searchBufferDistance
+            // btnCancel
             // 
-            this.searchBufferDistance.Location = new System.Drawing.Point(365, 652);
-            this.searchBufferDistance.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.searchBufferDistance.Name = "searchBufferDistance";
-            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
-            this.searchBufferDistance.TabIndex = 23;
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(369, 732);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // searchHydrantDistance
+            // 
+            this.searchHydrantDistance.Location = new System.Drawing.Point(56, 627);
+            this.searchHydrantDistance.Name = "searchHydrantDistance";
+            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
+            this.searchHydrantDistance.TabIndex = 24;
             // 
             // AdminForm
             // 
@@ -1009,6 +1073,7 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
@@ -1017,7 +1082,7 @@
             this.adminTab_SearchProperties.ResumeLayout(false);
             this.adminTab_SearchProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1101,6 +1166,7 @@
         private System.Windows.Forms.CheckBox chkPretypes;
         private System.Windows.Forms.NumericUpDown searchZoomFactor;
         private System.Windows.Forms.NumericUpDown searchBufferDistance;
+        private System.Windows.Forms.NumericUpDown searchHydrantDistance;
 
     }
 }

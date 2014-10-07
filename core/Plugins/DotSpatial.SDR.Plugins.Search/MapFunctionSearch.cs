@@ -316,8 +316,8 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             CreatePointGraphic(new Coordinate(xy[0], xy[1]));
             var envelope = CreateBufferGraphic(new DotSpatial.Topology.Point(new Coordinate(xy[0], xy[1])));
-            // TODO: we should make this user configable, add to admin panel and config
-            const double zoomInFactor = 0.10; // fixed zoom-in by 10% - 5% on each side
+
+            double zoomInFactor = (double) SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor; // fixed zoom-in by 10% - 5% on each side
             var newExtentWidth = envelope.Width * zoomInFactor;
             var newExtentHeight = envelope.Height * zoomInFactor;
             envelope.ExpandBy(newExtentWidth, newExtentHeight);
@@ -419,7 +419,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     lineCap);
                 Map.MapFrame.DrawingLayers.Add(_polylineGraphicsLayer);
             }
-            var buffer = ft.Buffer(250);  // TODO: make the buffer distance configable
+            var buffer = ft.Buffer(SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance);
             _polylineGraphics.AddFeature(buffer);
             return buffer.Envelope;
         }
@@ -450,7 +450,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
                 // IEnvelope ftEnv = ft.Envelope.Clone() as IEnvelope;
 
-                const double zoomInFactor = 0.05; // fixed zoom-in by 10% - 5% on each sid
+                double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
                 var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
                 var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
                 buffEnv.ExpandBy(newExtentWidth, newExtentHeight);
@@ -521,7 +521,16 @@ namespace DotSpatial.SDR.Plugins.Search
                 hydrantLayer.SelectByAttribute("[FID] =" + doc.Get(FID));
 	        }
             SetupIndexReaderWriter(idxType);  // set the index searcher back
-            hydrantLayer.ZoomToSelectedFeatures();
+
+            IEnvelope hydrantEnv = hydrantLayer.Selection.Envelope;
+            double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
+            var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
+            var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
+            hydrantEnv.ExpandBy(newExtentWidth, newExtentHeight);
+
+            Map.ViewExtents = hydrantEnv.ToExtent();
+
+            // hydrantLayer.ZoomToSelectedFeatures();
         }
         #endregion
 
