@@ -27,6 +27,9 @@ namespace DotSpatial.SDR.Controls
         /// </summary>
         public int Number { get; private set; }
 
+        /// <summary>
+        /// Only applies to ToolPanels, informs the slider how far to display on panel extension
+        /// </summary>
         public int Height { get; private set; }
 
         /// <summary>

@@ -25,6 +25,8 @@ namespace Go2It
 
         public void ExtendToolPanel(int height)
         {
+            if (!_toolSplitContainer.Panel1Collapsed) return;
+
             _toolSplitContainer.Panel1Collapsed = false;
             if (height > 0)
             {
