@@ -60,7 +60,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                 Text = @"Measure Area";
                 lblMeasure.Text = @"Area";
             }
-            
         }
         #endregion
 
@@ -253,18 +252,36 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
         }
 
+        private static int ParseUnitAmount(string txt)
+        {
+            try
+            {
+                var v = int.Parse(txt);
+                return v;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
         private void cmbUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_measureMode == MeasureMode.Distance)
             {
                 _distIntoMeters = _distanceUnitFactors[cmbUnits.SelectedIndex];
+                var v = ParseUnitAmount(lblPartialValue.Text);
+                Distance = v;
+                v = ParseUnitAmount(lblTotalValue.Text);
+                TotalDistance = v;
             }
             else
             {
                 _areaIntoSquareMeters = _areaUnitFactors[cmbUnits.SelectedIndex];
+                var v = ParseUnitAmount(lblTotalValue.Text);
+                TotalArea = v;
             }
-            lblPartialValue.Text = String.Empty;
-            lblTotalValue.Text = String.Empty;
+            if (MeasureModeChanged != null) MeasureModeChanged(this, EventArgs.Empty);
         }
 
         private void tsbClear_Click(object sender, EventArgs e)
