@@ -27,18 +27,22 @@ namespace DotSpatial.SDR.Controls
         /// </summary>
         public int Number { get; private set; }
 
+        public int Height { get; private set; }
+
         /// <summary>
         /// Creates a new instance of DockPanelInfo
         /// </summary>
         /// <param name="dotSpatialDockPanel">the DotSpatial DockPanel virtual object</param>
         /// <param name="dockPanelTab">The physical instance of the dock panel (a tabpage)</param>
         /// <param name="sortOrder">the sort order</param>
-        public DockPanelInfo(DockablePanel dotSpatialDockPanel, TabPage dockPanelTab, int sortOrder)
-        {
+        /// <param name="height">height of tool panels for panel extension</param>
+        public DockPanelInfo(DockablePanel dotSpatialDockPanel, TabPage dockPanelTab, int sortOrder, int height)
+        {   
             DotSpatialDockPanel = dotSpatialDockPanel;
             DockPanelTab = dockPanelTab;
             SortOrder = sortOrder;
             Number = _dockPanelNumber++;
+            Height = height;
         }
     }
 }

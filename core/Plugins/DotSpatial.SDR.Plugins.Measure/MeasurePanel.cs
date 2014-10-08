@@ -60,6 +60,7 @@ namespace DotSpatial.SDR.Plugins.Measure
                 Text = @"Measure Area";
                 lblMeasure.Text = @"Area";
             }
+            
         }
         #endregion
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using System.ComponentModel.Composition;
+using DotSpatial.Controls.Docking;
 using DotSpatial.SDR.Controls;
 using SdrConfig = SDR.Configuration;
 
@@ -22,9 +23,13 @@ namespace Go2It
             _toolSplitContainer.Panel1Collapsed = true;
         }
 
-        public void ExtendToolPanel()
+        public void ExtendToolPanel(int height)
         {
             _toolSplitContainer.Panel1Collapsed = false;
+            if (height > 0)
+            {
+                _toolSplitContainer.SplitterDistance = height;
+            }
         }
 
         #region IPartImportsSatisfiedNotification

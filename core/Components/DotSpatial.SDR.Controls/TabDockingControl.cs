@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 
@@ -63,6 +64,8 @@ namespace DotSpatial.SDR.Controls
             var innerControl = panel.InnerControl; // the map or tool panel
             var dockStyle = panel.Dock;
             var zorder = panel.DefaultSortOrder;
+            var height = panel.InnerControl.Height;
+
             // set the dock style of inner control to fill (a map or a tool)
             innerControl.Dock = DockStyle.Fill;
 
@@ -71,7 +74,7 @@ namespace DotSpatial.SDR.Controls
 
             // create tabpage to hold the control
             var tabPage = new TabPage { Padding = new Padding(0), Margin = new Padding(0) };
- 
+
             // add the actual control panel to the tabpage
             tabPage.Controls.Add(innerControl);
             tabPage.Dock = dockStyle;
@@ -88,7 +91,7 @@ namespace DotSpatial.SDR.Controls
             }
 
             // add the tab panel to the dictionary for easy lookup as needed
-            DockPanelLookup.Add(key, new DockPanelInfo(panel, tabPage, zorder));
+            DockPanelLookup.Add(key, new DockPanelInfo(panel, tabPage, zorder, height));
 
             if (key.Trim().StartsWith("kMap_"))
             {

@@ -22,8 +22,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Controls", "core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Data", "core\DotSpatial\Trunk\DotSpatial.Data\DotSpatial.Data.csproj", "{C1018695-3401-47A9-B195-ABD3A20C2489}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Data.Rasters.GdalExtension", "core\DotSpatial\Trunk\DotSpatial.Data.Rasters.GdalExtension\DotSpatial.Data.Rasters.GdalExtension.csproj", "{51C6E16E-920E-4D36-B41E-D48ABEF837E7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Extensions", "core\DotSpatial\Trunk\DotSpatial.Extensions\DotSpatial.Extensions.csproj", "{9108B04D-A3DE-4981-B66F-496078D462FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.Modeling.Forms", "core\DotSpatial\Trunk\DotSpatial.Modeling.Forms\DotSpatial.Modeling.Forms.csproj", "{7ED7B00D-56EE-47CF-AAA5-34A09E40A566}"
@@ -126,16 +124,6 @@ Global
 		{C1018695-3401-47A9-B195-ABD3A20C2489}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C1018695-3401-47A9-B195-ABD3A20C2489}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C1018695-3401-47A9-B195-ABD3A20C2489}.Release|x86.ActiveCfg = Release|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{51C6E16E-920E-4D36-B41E-D48ABEF837E7}.Release|x86.ActiveCfg = Release|Any CPU
 		{9108B04D-A3DE-4981-B66F-496078D462FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9108B04D-A3DE-4981-B66F-496078D462FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9108B04D-A3DE-4981-B66F-496078D462FE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
