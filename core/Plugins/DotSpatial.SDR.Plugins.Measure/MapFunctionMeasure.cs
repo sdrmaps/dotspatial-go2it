@@ -78,6 +78,7 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void Configure()
         {
+            _areaMode = (_measurePanel.MeasureMode == MeasureMode.Area);
             _previousParts = new List<List<Coordinate>>();
             YieldStyle = YieldStyles.LeftButton | YieldStyles.RightButton;
             HandleMeasurePanelEvents();
@@ -105,7 +106,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             _currentDistance = 0;
             _currentArea = 0;
             Map.MapFrame.Invalidate();
-            Map.Invalidate();
+            // Map.Invalidate();
             _measurePanel.Distance = 0;
             _measurePanel.TotalDistance = 0;
             _measurePanel.TotalArea = 0;

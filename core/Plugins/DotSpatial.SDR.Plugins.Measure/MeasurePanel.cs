@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.SDR.Plugins.Measure.Properties;
 
@@ -252,36 +253,19 @@ namespace DotSpatial.SDR.Plugins.Measure
             }
         }
 
-        private static int ParseUnitAmount(string txt)
-        {
-            try
-            {
-                var v = int.Parse(txt);
-                return v;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-        }
-
         private void cmbUnits_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_measureMode == MeasureMode.Distance)
             {
                 _distIntoMeters = _distanceUnitFactors[cmbUnits.SelectedIndex];
-                var v = ParseUnitAmount(lblPartialValue.Text);
-                Distance = v;
-                v = ParseUnitAmount(lblTotalValue.Text);
-                TotalDistance = v;
+                Distance = _distance;
+                TotalDistance = _totalDistance;
             }
             else
             {
                 _areaIntoSquareMeters = _areaUnitFactors[cmbUnits.SelectedIndex];
-                var v = ParseUnitAmount(lblTotalValue.Text);
-                TotalArea = v;
+                TotalArea = _totalArea;
             }
-            if (MeasureModeChanged != null) MeasureModeChanged(this, EventArgs.Empty);
         }
 
         private void tsbClear_Click(object sender, EventArgs e)
