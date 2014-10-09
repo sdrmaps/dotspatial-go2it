@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnSearch = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.searchAdds = new System.Windows.Forms.ToolStripButton();
@@ -38,12 +38,14 @@
             this.searchClear = new System.Windows.Forms.ToolStripButton();
             this.searchRoad = new System.Windows.Forms.ToolStripButton();
             this.searchIntersection = new System.Windows.Forms.ToolStripButton();
+            this.searchCity = new System.Windows.Forms.ToolStripButton();
+            this.searchEsn = new System.Windows.Forms.ToolStripButton();
             this.searchKeyLocations = new System.Windows.Forms.ToolStripButton();
             this.searchAll = new System.Windows.Forms.ToolStripButton();
             this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.searchDGV = new System.Windows.Forms.DataGridView();
-            this.searchCity = new System.Windows.Forms.ToolStripButton();
-            this.searchEsn = new System.Windows.Forms.ToolStripButton();
+            this.searchParcels = new System.Windows.Forms.ToolStripButton();
+            this.searchCellSector = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.searchLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchDGV)).BeginInit();
@@ -76,7 +78,9 @@
             this.searchCity,
             this.searchEsn,
             this.searchKeyLocations,
-            this.searchAll});
+            this.searchAll,
+            this.searchParcels,
+            this.searchCellSector});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 45);
             this.toolStrip1.Name = "toolStrip1";
@@ -169,6 +173,26 @@
             this.searchIntersection.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchIntersection.Click += new System.EventHandler(this.searchIntersection_Click);
             // 
+            // searchCity
+            // 
+            this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchCity.Name = "searchCity";
+            this.searchCity.Size = new System.Drawing.Size(32, 42);
+            this.searchCity.Text = "City";
+            this.searchCity.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchCity.Click += new System.EventHandler(this.searchCity_Click);
+            // 
+            // searchEsn
+            // 
+            this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchEsn.Name = "searchEsn";
+            this.searchEsn.Size = new System.Drawing.Size(32, 42);
+            this.searchEsn.Text = "ESN";
+            this.searchEsn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchEsn.Click += new System.EventHandler(this.searchEsn_Click);
+            // 
             // searchKeyLocations
             // 
             this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
@@ -212,8 +236,8 @@
             this.searchDGV.AllowUserToAddRows = false;
             this.searchDGV.AllowUserToDeleteRows = false;
             this.searchDGV.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
-            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Gainsboro;
+            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.searchDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.searchDGV.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.searchDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -230,23 +254,25 @@
             this.searchDGV.TabIndex = 2;
             this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
             // 
-            // searchCity
+            // searchParcels
             // 
-            this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
-            this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchCity.Name = "searchCity";
-            this.searchCity.Size = new System.Drawing.Size(32, 42);
-            this.searchCity.Text = "City";
-            this.searchCity.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchParcels.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchParcels.Name = "searchParcels";
+            this.searchParcels.Size = new System.Drawing.Size(48, 42);
+            this.searchParcels.Text = "Parcels";
+            this.searchParcels.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchParcels.Click += new System.EventHandler(this.searchParcels_Click);
             // 
-            // searchEsn
+            // searchCellSector
             // 
-            this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
-            this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchEsn.Name = "searchEsn";
-            this.searchEsn.Size = new System.Drawing.Size(32, 42);
-            this.searchEsn.Text = "ESN";
-            this.searchEsn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchCellSector.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCellSector.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchCellSector.Name = "searchCellSector";
+            this.searchCellSector.Size = new System.Drawing.Size(72, 42);
+            this.searchCellSector.Text = "Cell Sectors";
+            this.searchCellSector.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchCellSector.Click += new System.EventHandler(this.searchCellSector_Click);
             // 
             // SearchPanel
             // 
@@ -284,6 +310,8 @@
         private System.Windows.Forms.ToolStripButton searchAll;
         private System.Windows.Forms.ToolStripButton searchCity;
         private System.Windows.Forms.ToolStripButton searchEsn;
+        private System.Windows.Forms.ToolStripButton searchParcels;
+        private System.Windows.Forms.ToolStripButton searchCellSector;
 
     }
 }

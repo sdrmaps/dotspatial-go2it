@@ -6,8 +6,6 @@ using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Search.Properties;
 using Lucene.Net.Search;
-using SDR.Common;
-using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Search
@@ -125,8 +123,16 @@ namespace DotSpatial.SDR.Plugins.Search
                     ActivateAllFieldsSearch();
                     break;
                 case SearchMode.City:
+                    ActivateCitySearch();
                     break;
                 case SearchMode.Esn:
+                    ActivateEsnSearch();
+                    break;
+                case SearchMode.Cell_Sector:
+                    ActivateCellSectorSearch();
+                    break;
+                case SearchMode.Parcel:
+                    ActivateParcelSearch();
                     break;
             }
         }
@@ -140,6 +146,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchIntersection.Checked = false;
             searchKeyLocations.Checked = false;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchCellSector.Checked = false;
+            searchParcels.Checked = false;
         }
 
         #endregion
@@ -200,8 +210,154 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.All:
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                     break;
+                case SearchMode.City:
+                    SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
+                    break;
+                case SearchMode.Esn:
+                    SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
+                    break;
+                case SearchMode.Cell_Sector:
+                    SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
+                    break;
+                case SearchMode.Parcel:
+                    SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
+                    break;
             }
             OnPerformSearch();
+        }
+
+        private void ActivateParcelSearch()
+        {
+            // toggle the button for this tool
+            searchName.Checked = false;
+            searchAdds.Checked = false;
+            searchPhone.Checked = false;
+            searchRoad.Checked = false;
+            searchIntersection.Checked = false;
+            searchKeyLocations.Checked = false;
+            searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = true;
+            searchCellSector.Checked = false;
+
+            // setup the search panel for this tool
+            RemoveCurrentSearchPanel();
+            searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
+            _addressPanel.Controls["txtAddressSearch"].Text = string.Empty;
+            ClearSearches(); // clears dgv
+        }
+
+        private void searchParcels_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Parcel)
+            {
+                SearchMode = SearchMode.Parcel;
+                OnSearchModeChanged();
+                ActivateParcelSearch();
+            }
+        }
+
+        private void ActivateCellSectorSearch()
+        {
+            // toggle the button for this tool
+            searchName.Checked = false;
+            searchAdds.Checked = false;
+            searchPhone.Checked = false;
+            searchRoad.Checked = false;
+            searchIntersection.Checked = false;
+            searchKeyLocations.Checked = false;
+            searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = true;
+
+            // setup the search panel for this tool
+            RemoveCurrentSearchPanel();
+            searchLayoutPanel.Controls.Add(_addressPanel, 0, 0);
+            _addressPanel.Controls["txtAddressSearch"].Text = string.Empty;
+            ClearSearches(); // clears dgv
+        }
+
+        private void searchCellSector_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Cell_Sector)
+            {
+                SearchMode = SearchMode.Cell_Sector;
+                OnSearchModeChanged();
+                ActivateCellSectorSearch();
+            }
+        }
+
+        private void ActivateCitySearch()
+        {
+            // toggle the button for this tool
+            searchAdds.Checked = false;
+            searchPhone.Checked = false;
+            searchName.Checked = false;
+            searchIntersection.Checked = false;
+            searchRoad.Checked = false;
+            searchKeyLocations.Checked = false;
+            searchAll.Checked = false;
+            searchCity.Checked = true;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
+
+            // setup search panel for this tool
+            RemoveCurrentSearchPanel();
+            searchLayoutPanel.Controls.Add(_roadPanel, 0, 0);
+            _roadPanel.Controls["cmbRoadSearch"].Text = String.Empty;
+            ClearSearches();
+            PopulateValuesToCombo();
+        }
+
+        private void searchCity_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.City)
+            {
+                SearchMode = SearchMode.City;
+                OnSearchModeChanged();
+                ActivateCitySearch();
+            }
+        }
+
+        private void ActivateEsnSearch()
+        {
+            // toggle the button for this tool
+            searchAdds.Checked = false;
+            searchPhone.Checked = false;
+            searchName.Checked = false;
+            searchIntersection.Checked = false;
+            searchRoad.Checked = false;
+            searchKeyLocations.Checked = false;
+            searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = true;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
+
+            // setup search panel for this tool
+            RemoveCurrentSearchPanel();
+            searchLayoutPanel.Controls.Add(_roadPanel, 0, 0);
+            _roadPanel.Controls["cmbRoadSearch"].Text = String.Empty;
+            ClearSearches();
+            PopulateValuesToCombo();
+        }
+
+        private void searchEsn_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (_searchMode != SearchMode.Esn)
+            {
+                SearchMode = SearchMode.Esn;
+                OnSearchModeChanged();
+                ActivateEsnSearch();
+            }
         }
 
         private void ActivateNameSearch()
@@ -214,6 +370,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchIntersection.Checked = false;
             searchKeyLocations.Checked = false;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -243,6 +403,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = false;
             searchKeyLocations.Checked = false;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -272,13 +436,17 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = true;
             searchKeyLocations.Checked = false;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup search panel for this tool
             RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_roadPanel, 0, 0);
             _roadPanel.Controls["cmbRoadSearch"].Text = String.Empty;
             ClearSearches();
-            PopulateRoadsToCombo();
+            PopulateValuesToCombo();
         }
 
         private void searchRoad_Click(object sender, EventArgs e)
@@ -302,6 +470,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = false;
             searchKeyLocations.Checked = false;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -331,6 +503,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = false;
             searchKeyLocations.Checked = true;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -360,6 +536,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = false;
             searchKeyLocations.Checked = false;
             searchAll.Checked = true;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -389,6 +569,10 @@ namespace DotSpatial.SDR.Plugins.Search
             searchRoad.Checked = false;
             searchKeyLocations.Checked = false;
             searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -396,7 +580,7 @@ namespace DotSpatial.SDR.Plugins.Search
             _intersectionPanel.Controls["cmbIntSearch1"].Text = string.Empty;
             _intersectionPanel.Controls["cmbIntSearch2"].Text = string.Empty;
             ClearSearches();
-            PopulateRoadsToCombo();
+            PopulateValuesToCombo();
         }
 
         private void searchIntersection_Click(object sender, EventArgs e)
@@ -550,13 +734,12 @@ namespace DotSpatial.SDR.Plugins.Search
             if (SearchesCleared != null) SearchesCleared(this, EventArgs.Empty);
         }
 
-        private void PopulateRoadsToCombo()
+        private void PopulateValuesToCombo()
         {
             Query query = new MatchAllDocsQuery();  // query grabs all documents
-            if (MapFunctionSearch.IndexSearcher == null)
+            if (MapFunctionSearch.IndexReader == null)
             {
-                var log = AppContext.Instance.Get<ILog>();
-                log.Info("PopulateRoadsToCombo in SearchPanel failed to load, valid _indexSearcher not found");
+                MessageBox.Show("Search index not found");
             }
             else
             {
@@ -575,25 +758,8 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-        private void FormatQueryResultsForComboBox(IEnumerable<ScoreDoc> hits)
+        private void PopulateRoadsToCombo(ref ComboBox cmb, IEnumerable<ScoreDoc> scoreDocs)
         {
-            var scoreDocs = hits as ScoreDoc[] ?? hits.ToArray();
-            if (!scoreDocs.Any()) return;
-            // snag the combobox of the search mode
-            var cmb = new ComboBox();
-            switch (_searchMode)
-            {
-                case SearchMode.Road:
-                    cmb = _roadPanel.Controls["cmbRoadSearch"] as ComboBox;
-                    break;
-                case SearchMode.Intersection:
-                    cmb = _intersectionPanel.Controls["cmbIntSearch1"] as ComboBox;
-                    break;
-            }
-            if (cmb == null) return;
-
-            cmb.Items.Clear();
-
             foreach (var hit in scoreDocs)
             {
                 // snatch the ranked document
@@ -630,6 +796,63 @@ namespace DotSpatial.SDR.Plugins.Search
                         cmb.Items.Add(val.Trim());
                     }
                 }
+            }
+        }
+
+        private void PopulateBoundariesToCombo(ref ComboBox cmb, IEnumerable<ScoreDoc> scoreDocs)
+        {
+            foreach (var hit in scoreDocs)
+            {
+                // snatch the ranked document
+                var doc = MapFunctionSearch.IndexSearcher.Doc(hit.Doc);
+                var val = string.Empty;
+
+                // populate each value to the combobox
+                if (doc.Get("Name") != null)
+                {
+                    val = doc.Get("Name").Trim();
+                }
+                if (val.Length > 0)
+                {
+                    if (!cmb.Items.Contains(val))
+                    {
+                        cmb.Items.Add(val);
+                    }
+                }
+            }
+        }
+
+        private void FormatQueryResultsForComboBox(IEnumerable<ScoreDoc> hits)
+        {
+            var scoreDocs = hits as ScoreDoc[] ?? hits.ToArray();
+            if (!scoreDocs.Any()) return;
+            // snag the combobox of the search mode
+            var cmb = new ComboBox();
+            switch (_searchMode)
+            {
+                case SearchMode.Road:
+                    cmb = _roadPanel.Controls["cmbRoadSearch"] as ComboBox;
+                    break;
+                case SearchMode.Intersection:
+                    cmb = _intersectionPanel.Controls["cmbIntSearch1"] as ComboBox;
+                    break;
+                case SearchMode.City:
+                    cmb = _roadPanel.Controls["cmbRoadSearch"] as ComboBox;
+                    break;
+                case SearchMode.Esn:
+                    cmb = _roadPanel.Controls["cmbRoadSearch"] as ComboBox;
+                    break;
+            }
+            if (cmb == null) return;
+            cmb.Items.Clear();
+            // populate the combo box based in the searchmode type
+            if (_searchMode == SearchMode.Road || _searchMode == SearchMode.Intersection)
+            {
+                PopulateRoadsToCombo(ref cmb, scoreDocs);
+            }
+            else if (_searchMode == SearchMode.City || _searchMode == SearchMode.Esn)
+            {
+                PopulateBoundariesToCombo(ref cmb, scoreDocs);
             }
             cmb.Sorted = true;
             cmb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;

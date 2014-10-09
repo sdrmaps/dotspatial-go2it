@@ -80,6 +80,63 @@ namespace DotSpatial.SDR.Plugins.Search
             SetupIndexReaderWriter(_indexType);
         }
 
+        private void Configure()
+        {
+            YieldStyle = YieldStyles.AlwaysOn;
+            HandleSearchPanelEvents();
+            Name = "MapFunctionSearch";
+        }
+
+        private void SetSearchVariables()
+        {
+            switch (_searchPanel.SearchMode)
+            {
+                case SearchMode.Address:
+                    _indexType = "AddressIndex";
+                    _columnNames = GetColumnNames(); // uses the _indexType variable
+                    break;
+                case SearchMode.Intersection:
+                    _indexType = "RoadIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Name:
+                    _indexType = "AddressIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Phone:
+                    _indexType = "AddressIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Road:
+                    _indexType = "RoadIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Key_Locations:
+                    _indexType = "KeyLocationsIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.City:
+                    _indexType = "CityLimitIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Esn:
+                    _indexType = "EsnIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Cell_Sector:
+                    _indexType = "CellSectorIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.Parcel:
+                    _indexType = "ParcelIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.All:
+                    // TODO: not sure what we want to do here yet.
+                    break;
+            }
+        }
+
         public static IndexSearcher IndexSearcher
         {
             get { return _indexSearcher; }
@@ -88,13 +145,6 @@ namespace DotSpatial.SDR.Plugins.Search
         public static IndexReader IndexReader
         {
             get { return _indexReader; }
-        }
-
-        private void Configure()
-        {
-            YieldStyle = YieldStyles.AlwaysOn;
-            HandleSearchPanelEvents();
-            Name = "MapFunctionSearch";
         }
 
         private void HandleSearchPanelEvents()
@@ -164,10 +214,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Key_Locations:
                     SdrConfig.User.Go2ItUserSettings.Instance.KeyLocationIndexColumnOrder = newOrder;
                     break;
-                case SearchMode.All:
-                    // TODO:
+                case SearchMode.Parcel:
+                    SdrConfig.User.Go2ItUserSettings.Instance.ParcelIndexColumnOrder = newOrder;
                     break;
-
+                case SearchMode.Cell_Sector:
+                    SdrConfig.User.Go2ItUserSettings.Instance.CellSectorIndexColumnOrder = newOrder;
+                    break;
             }
         }
 
@@ -203,7 +255,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SearchPanelOnPerformSearch(object sender, EventArgs eventArgs)
         {
-            
             if (_searchPanel.SearchQuery.Length <= 0) return;
             var q = _searchPanel.SearchQuery;
             // if its an intersection and there are two terms do a location zoom, otherwise find intersections
@@ -217,6 +268,25 @@ namespace DotSpatial.SDR.Plugins.Search
                     return;
                 } // else look for intersections on this feature and populate combos and dgv
                 q = arr[0];
+            } 
+            else if (_searchPanel.SearchMode == SearchMode.City || _searchPanel.SearchMode == SearchMode.Esn)
+            {
+                // all other queries require a lucene query and populate combos and datagridview
+                _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
+                var hitz = ExecuteLuceneQuery(q);
+                if (hitz.Count() != 0)
+                {
+                    var hit = hitz.First();
+                    var doc = _indexSearcher.Doc(hit.Doc);
+                    var lookup = new FeatureLookup
+                    {
+                        Fid = doc.Get(FID),
+                        Layer = doc.Get(LYRNAME),
+                        Shape = doc.Get(GEOSHAPE)
+                    };
+                    ZoomToFeature(lookup);
+                    return;
+                }
             }
             // all other queries require a lucene query and populate combos and datagridview
             _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
@@ -352,7 +422,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (ft1.Length <= 0 || ft2 == null) return null;
             var ctx = NtsSpatialContext.GEO; // using NTS context (provides polygon/line/point models)
-            Spatial4n.Core.Shapes.Shape shp2 = ctx.ReadShape(ft2.Shape);  // load ft2 shape
+            Shape shp2 = ctx.ReadShape(ft2.Shape);  // load ft2 shape
             // find all other possible features that match ft1 name
             var fts1Lookup = new List<FeatureLookup>();
             ScoreDoc[] hits = ExecuteExactRoadQuery(ft1);
@@ -438,14 +508,16 @@ namespace DotSpatial.SDR.Plugins.Search
                 IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
                 if (fs == null || fs.Name != ftLookup.Layer) continue;
 
-                // select the feature so it is highlighted
                 // TODO: actually selecting something on the map cause tons of redraws, lets use a graphic instead
                 // mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
 
                 // grab the feature and use the shape to generate a buffer around it
                 var ft = fs.GetFeature(Convert.ToInt32(ftLookup.Fid));
 
-                CreatePointGraphic(ft.Coordinates[0]);
+                if (ft.Coordinates.Count == 1)
+                {
+                    CreatePointGraphic(ft.Coordinates[0]);
+                }
                 IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
 
                 double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
@@ -572,6 +644,21 @@ namespace DotSpatial.SDR.Plugins.Search
                     break;
                 case SearchMode.Phone:
                     hits = ExecuteScoredPhoneQuery(sq);
+                    break;
+                case SearchMode.Key_Locations:
+                    hits = ExecuteScoredKeyLocationsQuery(sq);
+                    break;
+                case SearchMode.Parcel:
+                    hits = ExecuteScoredParcelsQuery(sq);
+                    break;
+                case SearchMode.Esn:
+                    hits = ExecuteScoredEsnQuery(sq);
+                    break;
+                case SearchMode.City:
+                    hits = ExecuteScoredCityQuery(sq);
+                    break;
+                case SearchMode.Cell_Sector:
+                    hits = ExecuteScoredCellSectorsQuery(sq);
                     break;
             }
             return hits;
@@ -704,6 +791,10 @@ namespace DotSpatial.SDR.Plugins.Search
                     return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
                 case SearchMode.Key_Locations:
                     return SdrConfig.User.Go2ItUserSettings.Instance.KeyLocationIndexColumnOrder;
+                case SearchMode.Parcel:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.ParcelIndexColumnOrder;
+                case SearchMode.Cell_Sector:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.CellSectorIndexColumnOrder;
                 case SearchMode.All:
                     // TODO:
                     return null;
@@ -761,39 +852,207 @@ namespace DotSpatial.SDR.Plugins.Search
             return idxDir;
         }
 
-        private void SetSearchVariables()
+        private ScoreDoc[] ExecuteScoredCellSectorsQuery(string q)
         {
-            switch (_searchPanel.SearchMode)
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            string[] namesArray = q.Split(' ');
+            foreach (var name in namesArray)
             {
-                case SearchMode.Address:
-                    _indexType = "AddressIndex";
-                    _columnNames = GetColumnNames(); // uses the _indexType variable
-                    break;
-                case SearchMode.Intersection:
-                    _indexType = "RoadIndex";
-                    _columnNames = GetColumnNames();
-                    break;
-                case SearchMode.Name:
-                    _indexType = "AddressIndex";
-                    _columnNames = GetColumnNames();
-                    break;
-                case SearchMode.Phone:
-                    _indexType = "AddressIndex";
-                    _columnNames = GetColumnNames();
-                    break;
-                case SearchMode.Road:
-                    _indexType = "RoadIndex";
-                    _columnNames = GetColumnNames();
-                    break;
-                case SearchMode.Key_Locations:
-                    _indexType = "KeyLocationsIndex";
-                    _columnNames = GetColumnNames();
-                    break;
-                case SearchMode.All:
-                    _indexType = "AllFieldsIndex";
-                    _columnNames = GetColumnNames();
-                    break;
+                values.Add(name);
+                fields.Add("Sector ID");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Tower ID");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Company ID");
+                occurs.Add(Occur.SHOULD);
             }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
+        }
+
+        private ScoreDoc[] ExecuteScoredKeyLocationsQuery(string q)
+        {
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            string[] namesArray = q.Split(' ');
+            foreach (var name in namesArray)
+            {
+                values.Add(name);
+                fields.Add("Name");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Type");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Description");
+                occurs.Add(Occur.SHOULD);
+            }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
+        }
+
+        private ScoreDoc[] ExecuteScoredEsnQuery(string q)
+        {
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            string[] namesArray = q.Split(' ');
+            foreach (var name in namesArray)
+            {
+                values.Add(name);
+                fields.Add("Name");
+                occurs.Add(Occur.SHOULD);
+            }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
+        }
+
+        private ScoreDoc[] ExecuteScoredCityQuery(string q)
+        {
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            string[] namesArray = q.Split(' ');
+            foreach (var name in namesArray)
+            {
+                values.Add(name);
+                fields.Add("Name");
+                occurs.Add(Occur.SHOULD);
+            }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
+        }
+
+        private ScoreDoc[] ExecuteScoredParcelsQuery(string q)
+        {
+            // arrays for storing all the values to pass into the index search
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
+
+            string[] namesArray = q.Split(' ');
+            foreach (var name in namesArray)
+            {
+                values.Add(name);
+                fields.Add("Parcel ID");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Owner Name");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Other 1");
+                occurs.Add(Occur.SHOULD);
+
+                values.Add(name);
+                fields.Add("Other 2");
+                occurs.Add(Occur.SHOULD);
+            }
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            // create lucene query from query string arrays
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                new StandardAnalyzer(Version.LUCENE_30)
+                );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            // return our results
+            return docs.ScoreDocs;
         }
 
         private ScoreDoc[] ExecuteScoredNameQuery(string q)

@@ -55,6 +55,26 @@ namespace SDR.Configuration.User
             }
         }
 
+        public Dictionary<string, string> CellSectorIndexColumnOrder
+        {
+            get { return FetchDictionarySetting(UserSettings.Default.CellSectorIndexColumnOrder); }
+            set
+            {
+                UserSettings.Default.CellSectorIndexColumnOrder = DictionarySettingsString(value);
+                UserSettings.Default.Save();
+            }
+        }
+
+        public Dictionary<string, string> ParcelIndexColumnOrder
+        {
+            get { return FetchDictionarySetting(UserSettings.Default.ParcelIndexColumnOrder); }
+            set
+            {
+                UserSettings.Default.ParcelIndexColumnOrder = DictionarySettingsString(value);
+                UserSettings.Default.Save();
+            }
+        }
+
         public Dictionary<string, string> RoadIndexColumnOrder
         {
             get { return FetchDictionarySetting(UserSettings.Default.RoadIndexColumnOrder); }

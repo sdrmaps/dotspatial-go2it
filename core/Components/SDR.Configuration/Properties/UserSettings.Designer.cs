@@ -100,5 +100,31 @@ namespace SDR.Configuration.Properties {
                 this["KeyLocationsIndexColumnOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string CellSectorIndexColumnOrder {
+            get {
+                return ((string)(this["CellSectorIndexColumnOrder"]));
+            }
+            set {
+                this["CellSectorIndexColumnOrder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string ParcelIndexColumnOrder {
+            get {
+                return ((string)(this["ParcelIndexColumnOrder"]));
+            }
+            set {
+                this["ParcelIndexColumnOrder"] = value;
+            }
+        }
     }
 }

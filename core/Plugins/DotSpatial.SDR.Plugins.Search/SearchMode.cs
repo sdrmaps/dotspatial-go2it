@@ -38,5 +38,13 @@
         /// Search ESN Names
         /// </summary>
         Esn,
+        /// <summary>
+        /// Search Cell Sector Coverages
+        /// </summary>
+        Cell_Sector,
+        /// <summary>
+        /// Search Parcel Attributes
+        /// </summary>
+        Parcel,
     }
 }
