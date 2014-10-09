@@ -84,6 +84,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var key = dockablePanelEventArgs.ActivePanelKey;
 
             DockPanelInfo dockInfo;
+            
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             var map = App.Map as Map;
@@ -133,6 +134,9 @@ namespace DotSpatial.SDR.Plugins.Search
             if (map.FunctionMode != FunctionMode.None)
             {
                 _isFunctionActive = false;
+                // TODO: not sure if we need to fully deactivate yet...
+                _mapFunction.Deactivate();
+                _searchPanel.DeactivateSearchModeButtons();
             }
             else
             {
@@ -147,6 +151,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs dockablePanelEventArgs)
         {
+            _searchPanel.ClearSearches();
+
             var dockControl = (TabDockingControl)sender;
             var key = dockablePanelEventArgs.ActivePanelKey;
 

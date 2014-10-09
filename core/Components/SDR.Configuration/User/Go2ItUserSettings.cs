@@ -75,6 +75,16 @@ namespace SDR.Configuration.User
             }
         }
 
+        public Dictionary<string, string> KeyLocationIndexColumnOrder
+        {
+            get { return FetchDictionarySetting(UserSettings.Default.KeyLocationsIndexColumnOrder); }
+            set
+            {
+                UserSettings.Default.KeyLocationsIndexColumnOrder = DictionarySettingsString(value);
+                UserSettings.Default.Save();
+            }
+        }
+
         private static string DictionarySettingsString(Dictionary<string, string> settings)
         {
             var newDict = settings;

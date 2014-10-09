@@ -55,6 +55,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal)0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
+            Properties.ProjectSettings.Default.EnableQueryParserLogging = true;
         }
 
         /// <summary>
@@ -166,6 +167,15 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.SearchUsePretypes =  value; }
             get { return Properties.ProjectSettings.Default.SearchUsePretypes; }
+        }
+
+        /// <summary>
+        /// Enable Logging of Search Querys and Parsed Results
+        /// </summary>
+        public bool EnableQueryParserLogging
+        {
+            set { Properties.ProjectSettings.Default.EnableQueryParserLogging = value; }
+            get { return Properties.ProjectSettings.Default.EnableQueryParserLogging; }
         }
 
         public Color MapBgColor

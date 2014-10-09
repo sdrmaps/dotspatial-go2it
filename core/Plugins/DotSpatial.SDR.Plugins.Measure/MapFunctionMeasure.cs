@@ -94,7 +94,11 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void MeasurePanelOnMeasureModeActivated(object sender, EventArgs eventArgs)
         {
-            Map.FunctionMode = FunctionMode.None;
+            // redundant check, but prevents multiple events from firing when not needed
+            if (Map.FunctionMode != FunctionMode.None)
+            {
+                Map.FunctionMode = FunctionMode.None;
+            }
         }
 
         private void MeasurePanel_MeasurementsCleared(object sender, EventArgs e)

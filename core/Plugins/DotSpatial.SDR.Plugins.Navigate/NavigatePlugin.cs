@@ -28,7 +28,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         public override void Activate()
         {
-            // TODO: make sure all hotkeys have their defaults set
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Pan", PanTool_Click)
             {
                 GroupCaption = "Navigate_Pan",
@@ -57,7 +56,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 SmallImage = Resources.zoom_extent_16,
                 LargeImage = Resources.zoom_extent_32
             });
-            HotKeyManager.AddHotKey(new HotKey(Keys.F1, "Zoom to Max Extent"), "Navigate_Zoom_Max_Extent");
             _zoomPrevious = new SimpleActionItem(HomeMenuKey, "Previous", ZoomPrevious_Click)
             {
                 GroupCaption = "Navigate_Zoom_Previous",
@@ -86,7 +84,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
             };
             App.HeaderControl.Add(_zoomToLayer);
 
-            // hotkeys for single instance zoom in and out (command not a tool)
+            // hotkeys for this plugin
+            HotKeyManager.AddHotKey(new HotKey(Keys.F1, "Zoom to Max Extent"), "Navigate_Zoom_Max_Extent");
             HotKeyManager.AddHotKey(new HotKey(Keys.F11, "Zoom Out"), "Navigate_Set_Zoom_Out");
             HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom In"), "Navigate_Set_Zoom_In");
 

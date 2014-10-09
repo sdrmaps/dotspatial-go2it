@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.SDR.Plugins.Measure.Properties;
 
@@ -7,10 +6,10 @@ namespace DotSpatial.SDR.Plugins.Measure
 {
     public partial class MeasurePanel : UserControl
     {
+        private MeasureMode _measureMode;
         private double _areaIntoSquareMeters;
         private double _distIntoMeters;
         private double _distance;
-        private MeasureMode _measureMode;
         private double _totalArea;
         private double _totalDistance;
 

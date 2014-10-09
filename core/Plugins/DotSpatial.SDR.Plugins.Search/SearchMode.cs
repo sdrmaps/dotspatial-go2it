@@ -30,5 +30,13 @@
         /// Search All Attributes
         /// </summary>
         All,
+        /// <summary>
+        /// Search City Names
+        /// </summary>
+        City,
+        /// <summary>
+        /// Search ESN Names
+        /// </summary>
+        Esn,
     }
 }

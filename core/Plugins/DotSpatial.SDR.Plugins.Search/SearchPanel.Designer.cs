@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnSearch = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.searchAdds = new System.Windows.Forms.ToolStripButton();
@@ -38,8 +38,12 @@
             this.searchClear = new System.Windows.Forms.ToolStripButton();
             this.searchRoad = new System.Windows.Forms.ToolStripButton();
             this.searchIntersection = new System.Windows.Forms.ToolStripButton();
+            this.searchKeyLocations = new System.Windows.Forms.ToolStripButton();
+            this.searchAll = new System.Windows.Forms.ToolStripButton();
             this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.searchDGV = new System.Windows.Forms.DataGridView();
+            this.searchCity = new System.Windows.Forms.ToolStripButton();
+            this.searchEsn = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.searchLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchDGV)).BeginInit();
@@ -68,7 +72,11 @@
             this.searchHydrant,
             this.searchClear,
             this.searchRoad,
-            this.searchIntersection});
+            this.searchIntersection,
+            this.searchCity,
+            this.searchEsn,
+            this.searchKeyLocations,
+            this.searchAll});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 45);
             this.toolStrip1.Name = "toolStrip1";
@@ -161,6 +169,28 @@
             this.searchIntersection.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchIntersection.Click += new System.EventHandler(this.searchIntersection_Click);
             // 
+            // searchKeyLocations
+            // 
+            this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchKeyLocations.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchKeyLocations.Name = "searchKeyLocations";
+            this.searchKeyLocations.Size = new System.Drawing.Size(84, 42);
+            this.searchKeyLocations.Text = "Key Locations";
+            this.searchKeyLocations.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchKeyLocations.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchKeyLocations.Click += new System.EventHandler(this.searchKeyLocations_Click);
+            // 
+            // searchAll
+            // 
+            this.searchAll.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchAll.Name = "searchAll";
+            this.searchAll.Size = new System.Drawing.Size(58, 42);
+            this.searchAll.Text = "All Fields";
+            this.searchAll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchAll.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchAll.Click += new System.EventHandler(this.searchAll_Click);
+            // 
             // searchLayoutPanel
             // 
             this.searchLayoutPanel.ColumnCount = 2;
@@ -182,8 +212,8 @@
             this.searchDGV.AllowUserToAddRows = false;
             this.searchDGV.AllowUserToDeleteRows = false;
             this.searchDGV.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Gainsboro;
-            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Gainsboro;
+            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.searchDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.searchDGV.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.searchDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -199,6 +229,24 @@
             this.searchDGV.Size = new System.Drawing.Size(711, 133);
             this.searchDGV.TabIndex = 2;
             this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
+            // 
+            // searchCity
+            // 
+            this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchCity.Name = "searchCity";
+            this.searchCity.Size = new System.Drawing.Size(32, 42);
+            this.searchCity.Text = "City";
+            this.searchCity.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // searchEsn
+            // 
+            this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchEsn.Name = "searchEsn";
+            this.searchEsn.Size = new System.Drawing.Size(32, 42);
+            this.searchEsn.Text = "ESN";
+            this.searchEsn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             // 
             // SearchPanel
             // 
@@ -232,6 +280,10 @@
         private System.Windows.Forms.ToolStripButton searchRoad;
         private System.Windows.Forms.ToolStripButton searchIntersection;
         private System.Windows.Forms.DataGridView searchDGV;
+        private System.Windows.Forms.ToolStripButton searchKeyLocations;
+        private System.Windows.Forms.ToolStripButton searchAll;
+        private System.Windows.Forms.ToolStripButton searchCity;
+        private System.Windows.Forms.ToolStripButton searchEsn;
 
     }
 }

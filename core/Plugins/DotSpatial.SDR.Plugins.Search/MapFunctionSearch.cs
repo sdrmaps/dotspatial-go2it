@@ -1,8 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
@@ -14,7 +12,6 @@ using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
-using DotSpatial.Topology.Utilities;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Search.Function;
@@ -22,12 +19,9 @@ using Lucene.Net.Spatial;
 using Lucene.Net.Spatial.Prefix;
 using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Spatial.Queries;
-using Lucene.Net.Spatial.Vector;
 using Lucene.Net.Store;
-using NetTopologySuite.IO;
 using Spatial4n.Core.Context.Nts;
 using Spatial4n.Core.Distance;
-using Spatial4n.Core.Shapes.Impl;
 using SdrConfig = SDR.Configuration;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -47,7 +41,7 @@ namespace DotSpatial.SDR.Plugins.Search
     public class MapFunctionSearch : MapFunction
     {
         // overall tab docking control for selecting map and tool tabs
-        // (used to swap active map panels on searches)
+        // (used to swap active map panels on searches) (this is set on init)
         internal TabDockingControl TabDockingControl;
 
         private SearchPanel _searchPanel;
@@ -83,7 +77,7 @@ namespace DotSpatial.SDR.Plugins.Search
             _dataGridView = sp.DataGridDisplay;
             Configure();
             SetSearchVariables();
-            SetupIndexReaderWriter();
+            SetupIndexReaderWriter(_indexType);
         }
 
         public static IndexSearcher IndexSearcher
@@ -115,6 +109,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SearchPanelOnSearchModeActivated(object sender, EventArgs eventArgs)
         {
+            // redundant check, but prevents multiple events from firing when not needed
             if (Map.FunctionMode != FunctionMode.None)
             {
                 Map.FunctionMode = FunctionMode.None;
@@ -166,13 +161,20 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Road:
                     SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
                     break;
+                case SearchMode.Key_Locations:
+                    SdrConfig.User.Go2ItUserSettings.Instance.KeyLocationIndexColumnOrder = newOrder;
+                    break;
+                case SearchMode.All:
+                    // TODO:
+                    break;
+
             }
         }
 
         private void SearchPanelOnSearchModeChanged(object sender, EventArgs eventArgs)
         {
             SetSearchVariables();
-            SetupIndexReaderWriter();
+            SetupIndexReaderWriter(_indexType);
         }
 
         private void SearchPanelOnSearchesCleared(object sender, EventArgs eventArgs)
@@ -196,12 +198,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 _polylineGraphicsLayer = null;
                 _polylineGraphics = null;
             }
-            Map.MapFrame.Invalidate();
-
-            // TODO: this is so fucking slow, have to find a better approach
-            // clear any map selections as well
-            // IEnvelope env;
-            // Map.MapFrame.ClearSelection(out env);
+            if (Map != null) Map.MapFrame.Invalidate();
         }
 
         private void SearchPanelOnPerformSearch(object sender, EventArgs eventArgs)
@@ -222,7 +219,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 q = arr[0];
             }
             // all other queries require a lucene query and populate combos and datagridview
-            _searchPanel.ClearSearches();  // clear any existing searches
+            _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
             // setup columns, ordering, etc for results datagridview
             PrepareDataGridView();
             // execute our lucene query
@@ -279,24 +276,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 }
             }
             return coordsList.ToArray();
-        }
-
-        private void CreatePointGraphic(Coordinate c)
-        {
-            if (_pointGraphicsLayer == null)
-            {
-                _pointGraphics = new FeatureSet(FeatureType.Point);
-                _pointGraphicsLayer = new MapPointLayer(_pointGraphics);
-                PointShape pointShape = new PointShape();
-                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out pointShape);
-                _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
-                    pointShape,
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
-                Map.MapFrame.DrawingLayers.Add(_pointGraphicsLayer);
-            }
-            var point = new Topology.Point(c);
-            _pointGraphics.AddFeature(point);
         }
 
         private void CreateIntersectionGraphic(string coords)
@@ -424,6 +403,24 @@ namespace DotSpatial.SDR.Plugins.Search
             return buffer.Envelope;
         }
 
+        private void CreatePointGraphic(Coordinate c)
+        {
+            if (_pointGraphicsLayer == null)
+            {
+                _pointGraphics = new FeatureSet(FeatureType.Point);
+                _pointGraphicsLayer = new MapPointLayer(_pointGraphics);
+                PointShape pointShape = new PointShape();
+                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out pointShape);
+                _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
+                    pointShape,
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
+                Map.MapFrame.DrawingLayers.Add(_pointGraphicsLayer);
+            }
+            var point = new Point(c);
+            _pointGraphics.AddFeature(point);
+        }
+
         private void ZoomToFeature(FeatureLookup ftLookup)
         {
             if (ftLookup == null) return;
@@ -440,21 +437,21 @@ namespace DotSpatial.SDR.Plugins.Search
 
                 IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
                 if (fs == null || fs.Name != ftLookup.Layer) continue;
+
                 // select the feature so it is highlighted
-                // TODO: this appears to force a bunch of redraws need to investigate
-                // TODO: could just remove this and use a graphic instead??
-                mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
+                // TODO: actually selecting something on the map cause tons of redraws, lets use a graphic instead
+                // mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
+
                 // grab the feature and use the shape to generate a buffer around it
                 var ft = fs.GetFeature(Convert.ToInt32(ftLookup.Fid));
-                IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
 
-                // IEnvelope ftEnv = ft.Envelope.Clone() as IEnvelope;
+                CreatePointGraphic(ft.Coordinates[0]);
+                IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
 
                 double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
                 var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
                 var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
                 buffEnv.ExpandBy(newExtentWidth, newExtentHeight);
-                // mapLayer.ZoomToSelectedFeatures();
                 Map.ViewExtents = buffEnv.ToExtent();
             }
         }
@@ -693,7 +690,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private Dictionary<string, string> GetIndexColumnsOrder()
         {
-            // TODO: update these so they are all seperate and not shared
             switch (_searchPanel.SearchMode)
             {
                 case SearchMode.Address:
@@ -706,6 +702,11 @@ namespace DotSpatial.SDR.Plugins.Search
                     return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Road:
                     return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+                case SearchMode.Key_Locations:
+                    return SdrConfig.User.Go2ItUserSettings.Instance.KeyLocationIndexColumnOrder;
+                case SearchMode.All:
+                    // TODO:
+                    return null;
             }
             return null;
         }
@@ -747,16 +748,6 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-        private void SetupIndexReaderWriter()
-        {
-            SetupIndexReaderWriter(_indexType);
-        }
-
-        public Directory GetLuceneIndexDirectory()
-        {
-            return GetLuceneIndexDirectory(_indexType);
-        }
-
         public Directory GetLuceneIndexDirectory(string indexType)
         {
             var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
@@ -794,6 +785,14 @@ namespace DotSpatial.SDR.Plugins.Search
                     _indexType = "RoadIndex";
                     _columnNames = GetColumnNames();
                     break;
+                case SearchMode.Key_Locations:
+                    _indexType = "KeyLocationsIndex";
+                    _columnNames = GetColumnNames();
+                    break;
+                case SearchMode.All:
+                    _indexType = "AllFieldsIndex";
+                    _columnNames = GetColumnNames();
+                    break;
             }
         }
 
@@ -826,6 +825,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
@@ -859,6 +863,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
+
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
@@ -1001,6 +1011,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
@@ -1060,6 +1075,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
+            if (_indexReader == null)
+            {
+                MessageBox.Show("Search index not found");
+                return new ScoreDoc[0];
+            }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
@@ -1089,6 +1109,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 // create overall boolean query to pass to indexsearcher
                 var query = new BooleanQuery {{sq, Occur.MUST}, {tq, Occur.MUST_NOT}};
                 // execute a query to find all features that intersect each passed in feature
+                if (_indexReader == null)
+                {
+                    MessageBox.Show("Search index not found");
+                    return new ScoreDoc[0];
+                }
                 TopDocs topDocs = _indexSearcher.Search(query, _indexReader.NumDocs());
                 ScoreDoc[] hits = topDocs.ScoreDocs;
                 // add to results for cleanup after loop completes
@@ -1145,7 +1170,7 @@ namespace DotSpatial.SDR.Plugins.Search
                         dgvRow.Cells[idx].Value = val;
                     }
                 }
-                // add the fid and layrname textbox cells
+                // add the fid and layername textbox cells
                 var fidCell = new DataGridViewTextBoxCell {Value = doc.Get(FID)};
                 dgvRow.Cells.Add(fidCell);
                 var lyrCell = new DataGridViewTextBoxCell {Value = doc.Get(LYRNAME)};
@@ -1158,6 +1183,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void FormatQueryResults(IEnumerable<ScoreDoc> hits)
         {
+            if (hits == null) return;
             switch (_searchPanel.SearchMode)
             {
                 case SearchMode.Intersection:
@@ -1212,6 +1238,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void LogStreetAddressParsedQuery(string q, StreetAddress sa)
         {
+            // only log if enabled
+            if (!SdrConfig.Project.Go2ItProjectSettings.Instance.EnableQueryParserLogging) return;
             var p = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\SDR\\" +
                     SdrConfig.Settings.Instance.ApplicationName;
             var d = new DirectoryInfo(p);

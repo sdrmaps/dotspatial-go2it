@@ -17,5 +17,8 @@
     <Setting Name="ActiveFunctionPanel" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">kPanel_Measure</Value>
     </Setting>
+    <Setting Name="KeyLocationsIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -75,6 +75,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
+            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
             this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
             this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
             this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
@@ -100,6 +101,7 @@
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
+            this.chkEnableQuesryParserLog = new System.Windows.Forms.CheckBox();
             this.chkPretypes = new System.Windows.Forms.CheckBox();
             this.btnRemoveIndex = new System.Windows.Forms.Button();
             this.lstExistingIndexes = new System.Windows.Forms.ListBox();
@@ -112,7 +114,6 @@
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -127,6 +128,7 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
@@ -135,7 +137,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -630,6 +631,13 @@
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
             // 
+            // searchHydrantDistance
+            // 
+            this.searchHydrantDistance.Location = new System.Drawing.Point(56, 627);
+            this.searchHydrantDistance.Name = "searchHydrantDistance";
+            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
+            this.searchHydrantDistance.TabIndex = 24;
+            // 
             // searchBufferDistance
             // 
             this.searchBufferDistance.Location = new System.Drawing.Point(362, 627);
@@ -870,6 +878,7 @@
             // 
             // adminTab_SearchProperties
             // 
+            this.adminTab_SearchProperties.Controls.Add(this.chkEnableQuesryParserLog);
             this.adminTab_SearchProperties.Controls.Add(this.chkPretypes);
             this.adminTab_SearchProperties.Controls.Add(this.btnRemoveIndex);
             this.adminTab_SearchProperties.Controls.Add(this.lstExistingIndexes);
@@ -888,10 +897,20 @@
             this.adminTab_SearchProperties.Text = "Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
+            // chkEnableQuesryParserLog
+            // 
+            this.chkEnableQuesryParserLog.AutoSize = true;
+            this.chkEnableQuesryParserLog.Location = new System.Drawing.Point(41, 604);
+            this.chkEnableQuesryParserLog.Name = "chkEnableQuesryParserLog";
+            this.chkEnableQuesryParserLog.Size = new System.Drawing.Size(164, 17);
+            this.chkEnableQuesryParserLog.TabIndex = 12;
+            this.chkEnableQuesryParserLog.Text = "Enable Query Parser Logging";
+            this.chkEnableQuesryParserLog.UseVisualStyleBackColor = true;
+            // 
             // chkPretypes
             // 
             this.chkPretypes.AutoSize = true;
-            this.chkPretypes.Location = new System.Drawing.Point(126, 629);
+            this.chkPretypes.Location = new System.Drawing.Point(41, 581);
             this.chkPretypes.Name = "chkPretypes";
             this.chkPretypes.Size = new System.Drawing.Size(89, 17);
             this.chkPretypes.TabIndex = 11;
@@ -1038,13 +1057,6 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // searchHydrantDistance
-            // 
-            this.searchHydrantDistance.Location = new System.Drawing.Point(56, 627);
-            this.searchHydrantDistance.Name = "searchHydrantDistance";
-            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
-            this.searchHydrantDistance.TabIndex = 24;
-            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1073,6 +1085,7 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
@@ -1082,7 +1095,6 @@
             this.adminTab_SearchProperties.ResumeLayout(false);
             this.adminTab_SearchProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1167,6 +1179,7 @@
         private System.Windows.Forms.NumericUpDown searchZoomFactor;
         private System.Windows.Forms.NumericUpDown searchBufferDistance;
         private System.Windows.Forms.NumericUpDown searchHydrantDistance;
+        private System.Windows.Forms.CheckBox chkEnableQuesryParserLog;
 
     }
 }
