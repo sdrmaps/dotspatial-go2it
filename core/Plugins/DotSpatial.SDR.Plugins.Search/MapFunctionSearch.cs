@@ -83,8 +83,21 @@ namespace DotSpatial.SDR.Plugins.Search
         private void Configure()
         {
             YieldStyle = YieldStyles.AlwaysOn;
+            // EnableSearchModes();
             HandleSearchPanelEvents();
             Name = "MapFunctionSearch";
+        }
+
+        private void EnableSearchModes()
+        {
+            _searchPanel.EnableSearchButton(SearchMode.Address, GetLuceneIndexDirectory("AddressIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.Road, GetLuceneIndexDirectory("RoadIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.Key_Locations, GetLuceneIndexDirectory("KeyLocationIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.City, GetLuceneIndexDirectory("CityLimitIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.Cell_Sector, GetLuceneIndexDirectory("CellSectorIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.Parcel, GetLuceneIndexDirectory("ParcelIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.Esn, GetLuceneIndexDirectory("EsnIndex") != null);
+            // _searchPanel.EnableSearchButton(SearchMode.Hydrant, GetLuceneIndexDirectory("HydrantIndex") != null);
         }
 
         private void SetSearchVariables()

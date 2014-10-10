@@ -46,5 +46,9 @@
         /// Search Parcel Attributes
         /// </summary>
         Parcel,
+        /// <summary>
+        /// Locate Hydrants near by active Selections
+        /// </summary>
+        // Hydrant,
     }
 }

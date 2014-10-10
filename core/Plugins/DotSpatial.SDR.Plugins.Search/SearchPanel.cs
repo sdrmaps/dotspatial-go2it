@@ -71,7 +71,6 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-
         /// <summary>
         /// Gets or sets the datagrid view for query display
         /// </summary>
@@ -152,6 +151,44 @@ namespace DotSpatial.SDR.Plugins.Search
             searchParcels.Checked = false;
         }
 
+        /// <summary>
+        /// Check that there are valid indexes for each search, disable the button if not present
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="enabled"></param>
+        public void EnableSearchButton(SearchMode mode, bool enabled)
+        {
+            switch (mode)
+            {
+                case SearchMode.Address:
+                    searchAdds.Enabled = enabled;
+                    searchName.Enabled = enabled;
+                    searchPhone.Enabled = enabled;
+                    break;
+                case SearchMode.Road:
+                    searchRoad.Enabled = enabled;
+                    searchIntersection.Enabled = enabled;
+                    break;
+                case SearchMode.Key_Locations:
+                    searchKeyLocations.Enabled = enabled;
+                    break;
+                case SearchMode.City:
+                    searchCity.Enabled = enabled;
+                    break;
+                case SearchMode.Esn:
+                    searchEsn.Enabled = enabled;
+                    break;
+                case SearchMode.Cell_Sector:
+                    searchCellSector.Enabled = enabled;
+                    break;
+                case SearchMode.Parcel:
+                    searchParcels.Enabled = enabled;
+                    break;
+                //case SearchMode.Hydrant:
+                //    searchHydrant.Enabled = enabled;
+                //    break;
+            }
+        }
         #endregion
 
         #region Event Handlers
