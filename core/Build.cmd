@@ -57,8 +57,9 @@ IF /I "%1"=="--Help" (
     goto SETBUILDPATH
 
 :SETBUILDPATH
-    IF "%TYPE%"=="Release" ( SET "BUILDPATH=..\build\%CONFIG%\%PRODUCT%" )
-    IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
+    REM IF "%TYPE%"=="Release" ( SET "BUILDPATH=..\build\%CONFIG%\%PRODUCT%" )
+    REM IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
+    SET "BUILDPATH=..\build\%CONFIG%"
     goto SETVERSION
 
 :RELEASE
