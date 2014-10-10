@@ -133,6 +133,8 @@
     <Content Include="Resources\area_16.png" />
     <Content Include="Resources\clear_16.png" />
     <Content Include="Resources\line_16.png" />
+    <None Include="Resources\measure2_16.png" />
+    <None Include="Resources\measure2_32.png" />
     <Content Include="Resources\measure_16.png" />
     <Content Include="Resources\measure_32.png" />
   </ItemGroup>

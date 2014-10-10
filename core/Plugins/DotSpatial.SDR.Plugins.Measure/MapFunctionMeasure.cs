@@ -49,6 +49,8 @@ namespace DotSpatial.SDR.Plugins.Measure
         private List<List<Coordinate>> _previousParts;
         private bool _standBy;
 
+        private bool _doubleClick;
+
         #region Constructors
 
         /// <summary>
@@ -76,6 +78,7 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void Configure()
         {
+            _areaMode = (_measurePanel.MeasureMode == MeasureMode.Area);
             _previousParts = new List<List<Coordinate>>();
             YieldStyle = YieldStyles.LeftButton | YieldStyles.RightButton;
             HandleMeasurePanelEvents();
@@ -91,7 +94,11 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void MeasurePanelOnMeasureModeActivated(object sender, EventArgs eventArgs)
         {
-            Map.FunctionMode = FunctionMode.None;
+            // redundant check, but prevents multiple events from firing when not needed
+            if (Map.FunctionMode != FunctionMode.None)
+            {
+                Map.FunctionMode = FunctionMode.None;
+            }
         }
 
         private void MeasurePanel_MeasurementsCleared(object sender, EventArgs e)
@@ -103,7 +110,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             _currentDistance = 0;
             _currentArea = 0;
             Map.MapFrame.Invalidate();
-            Map.Invalidate();
+            // Map.Invalidate();
             _measurePanel.Distance = 0;
             _measurePanel.TotalDistance = 0;
             _measurePanel.TotalArea = 0;
@@ -366,6 +373,12 @@ namespace DotSpatial.SDR.Plugins.Measure
             base.OnMouseMove(e);
         }
 
+        protected override void OnMouseDoubleClick(GeoMouseArgs e)
+        {
+            _doubleClick = true;
+            base.OnMouseDoubleClick(e);
+        }
+
         /// <summary>
         /// Handles the Mouse-Up situation
         /// </summary>
@@ -376,27 +389,16 @@ namespace DotSpatial.SDR.Plugins.Measure
             {
                 return;
             }
+            if (_doubleClick)
+            {
+                _doubleClick = false;
+                FinalizeCalculation();
+                return;
+            }
             // Add the current point to the featureset
             if (e.Button == MouseButtons.Right)
             {
-                if (_coordinates.Count > 1)
-                {
-                    _previousParts.Add(_coordinates);
-                    if (_areaMode)
-                    {
-                        _measurePanel.TotalArea = _currentArea;
-                    }
-                    else
-                    {
-                        _previousDistance += _currentDistance;
-                        _currentDistance = 0;
-                        _currentArea = 0;
-                        _measurePanel.Distance = 0;
-                        _measurePanel.TotalDistance = _previousDistance;
-                    }
-                }
-                _coordinates = new List<Coordinate>();
-                Map.Invalidate();
+                FinalizeCalculation();
             }
             else
             {
@@ -426,7 +428,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                 }
                 Map.Invalidate();
             }
-
             base.OnMouseUp(e);
         }
 
@@ -444,15 +445,32 @@ namespace DotSpatial.SDR.Plugins.Measure
             Map.Invalidate();
         }
 
+        private void FinalizeCalculation()
+        {
+            if (_coordinates.Count > 1)
+            {
+                _previousParts.Add(_coordinates);
+                if (_areaMode)
+                {
+                    _measurePanel.TotalArea = _currentArea;
+                }
+                else
+                {
+                    _previousDistance += _currentDistance;
+                    _currentDistance = 0;
+                    _currentArea = 0;
+                    _measurePanel.Distance = 0;
+                    _measurePanel.TotalDistance = _previousDistance;
+                }
+            }
+            _coordinates = new List<Coordinate>();
+            Map.Invalidate();
+        }
+
         private void MeasurePanel_MeasureModeChanged(object sender, EventArgs e)
         {
             _previousParts.Clear();
             _areaMode = (_measurePanel.MeasureMode == MeasureMode.Area);
-
-            if (_coordinates != null)
-            {
-                _coordinates = new List<Coordinate>();
-            }
             Map.Invalidate();
         }
         #endregion

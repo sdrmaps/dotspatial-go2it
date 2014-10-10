@@ -31,6 +31,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnSearch = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.searchDGV = new System.Windows.Forms.DataGridView();
             this.searchAdds = new System.Windows.Forms.ToolStripButton();
             this.searchName = new System.Windows.Forms.ToolStripButton();
             this.searchPhone = new System.Windows.Forms.ToolStripButton();
@@ -38,8 +40,12 @@
             this.searchClear = new System.Windows.Forms.ToolStripButton();
             this.searchRoad = new System.Windows.Forms.ToolStripButton();
             this.searchIntersection = new System.Windows.Forms.ToolStripButton();
-            this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.searchDGV = new System.Windows.Forms.DataGridView();
+            this.searchCity = new System.Windows.Forms.ToolStripButton();
+            this.searchEsn = new System.Windows.Forms.ToolStripButton();
+            this.searchKeyLocations = new System.Windows.Forms.ToolStripButton();
+            this.searchAll = new System.Windows.Forms.ToolStripButton();
+            this.searchParcels = new System.Windows.Forms.ToolStripButton();
+            this.searchCellSector = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.searchLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchDGV)).BeginInit();
@@ -68,98 +74,19 @@
             this.searchHydrant,
             this.searchClear,
             this.searchRoad,
-            this.searchIntersection});
+            this.searchIntersection,
+            this.searchCity,
+            this.searchEsn,
+            this.searchKeyLocations,
+            this.searchAll,
+            this.searchParcels,
+            this.searchCellSector});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 45);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(717, 45);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // searchAdds
-            // 
-            this.searchAdds.Checked = true;
-            this.searchAdds.CheckOnClick = true;
-            this.searchAdds.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchAdds.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchAdds.Name = "searchAdds";
-            this.searchAdds.Size = new System.Drawing.Size(53, 42);
-            this.searchAdds.Text = "Address";
-            this.searchAdds.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchAdds.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchAdds.Click += new System.EventHandler(this.searchAdds_Click);
-            // 
-            // searchName
-            // 
-            this.searchName.CheckOnClick = true;
-            this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchName.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchName.Name = "searchName";
-            this.searchName.Size = new System.Drawing.Size(43, 42);
-            this.searchName.Text = "Name";
-            this.searchName.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchName.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchName.Click += new System.EventHandler(this.searchName_Click);
-            // 
-            // searchPhone
-            // 
-            this.searchPhone.CheckOnClick = true;
-            this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchPhone.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchPhone.Name = "searchPhone";
-            this.searchPhone.Size = new System.Drawing.Size(45, 42);
-            this.searchPhone.Text = "Phone";
-            this.searchPhone.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchPhone.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchPhone.Click += new System.EventHandler(this.searchPhone_Click);
-            // 
-            // searchHydrant
-            // 
-            this.searchHydrant.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchHydrant.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchHydrant.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchHydrant.Name = "searchHydrant";
-            this.searchHydrant.Size = new System.Drawing.Size(54, 42);
-            this.searchHydrant.Text = "Hydrant";
-            this.searchHydrant.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchHydrant.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchHydrant.Click += new System.EventHandler(this.searchHydrant_Click);
-            // 
-            // searchClear
-            // 
-            this.searchClear.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.searchClear.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchClear.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchClear.Name = "searchClear";
-            this.searchClear.Size = new System.Drawing.Size(38, 42);
-            this.searchClear.Text = "Clear";
-            this.searchClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchClear.Click += new System.EventHandler(this.searchClear_Click);
-            // 
-            // searchRoad
-            // 
-            this.searchRoad.CheckOnClick = true;
-            this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchRoad.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchRoad.Name = "searchRoad";
-            this.searchRoad.Size = new System.Drawing.Size(38, 42);
-            this.searchRoad.Text = "Road";
-            this.searchRoad.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchRoad.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchRoad.Click += new System.EventHandler(this.searchRoad_Click);
-            // 
-            // searchIntersection
-            // 
-            this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_32;
-            this.searchIntersection.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchIntersection.Name = "searchIntersection";
-            this.searchIntersection.Size = new System.Drawing.Size(73, 42);
-            this.searchIntersection.Text = "Intersection";
-            this.searchIntersection.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchIntersection.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchIntersection.Click += new System.EventHandler(this.searchIntersection_Click);
             // 
             // searchLayoutPanel
             // 
@@ -200,6 +127,154 @@
             this.searchDGV.TabIndex = 2;
             this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
             // 
+            // searchAdds
+            // 
+            this.searchAdds.CheckOnClick = true;
+            this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.address_search_16;
+            this.searchAdds.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchAdds.Name = "searchAdds";
+            this.searchAdds.Size = new System.Drawing.Size(53, 42);
+            this.searchAdds.Text = "Address";
+            this.searchAdds.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchAdds.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchAdds.Click += new System.EventHandler(this.searchAdds_Click);
+            // 
+            // searchName
+            // 
+            this.searchName.CheckOnClick = true;
+            this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.name_search_16;
+            this.searchName.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchName.Name = "searchName";
+            this.searchName.Size = new System.Drawing.Size(43, 42);
+            this.searchName.Text = "Name";
+            this.searchName.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchName.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchName.Click += new System.EventHandler(this.searchName_Click);
+            // 
+            // searchPhone
+            // 
+            this.searchPhone.CheckOnClick = true;
+            this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.phone_search_16;
+            this.searchPhone.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchPhone.Name = "searchPhone";
+            this.searchPhone.Size = new System.Drawing.Size(45, 42);
+            this.searchPhone.Text = "Phone";
+            this.searchPhone.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchPhone.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchPhone.Click += new System.EventHandler(this.searchPhone_Click);
+            // 
+            // searchHydrant
+            // 
+            this.searchHydrant.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.searchHydrant.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.hydrant_16;
+            this.searchHydrant.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchHydrant.Name = "searchHydrant";
+            this.searchHydrant.Size = new System.Drawing.Size(54, 42);
+            this.searchHydrant.Text = "Hydrant";
+            this.searchHydrant.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchHydrant.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchHydrant.Click += new System.EventHandler(this.searchHydrant_Click);
+            // 
+            // searchClear
+            // 
+            this.searchClear.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.searchClear.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.clear_16;
+            this.searchClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchClear.Name = "searchClear";
+            this.searchClear.Size = new System.Drawing.Size(38, 42);
+            this.searchClear.Text = "Clear";
+            this.searchClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchClear.Click += new System.EventHandler(this.searchClear_Click);
+            // 
+            // searchRoad
+            // 
+            this.searchRoad.CheckOnClick = true;
+            this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.road_search_16;
+            this.searchRoad.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchRoad.Name = "searchRoad";
+            this.searchRoad.Size = new System.Drawing.Size(38, 42);
+            this.searchRoad.Text = "Road";
+            this.searchRoad.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchRoad.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchRoad.Click += new System.EventHandler(this.searchRoad_Click);
+            // 
+            // searchIntersection
+            // 
+            this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.intersection_search_16;
+            this.searchIntersection.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchIntersection.Name = "searchIntersection";
+            this.searchIntersection.Size = new System.Drawing.Size(73, 42);
+            this.searchIntersection.Text = "Intersection";
+            this.searchIntersection.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchIntersection.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchIntersection.Click += new System.EventHandler(this.searchIntersection_Click);
+            // 
+            // searchCity
+            // 
+            this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchCity.Name = "searchCity";
+            this.searchCity.Size = new System.Drawing.Size(32, 42);
+            this.searchCity.Text = "City";
+            this.searchCity.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchCity.Click += new System.EventHandler(this.searchCity_Click);
+            // 
+            // searchEsn
+            // 
+            this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchEsn.Name = "searchEsn";
+            this.searchEsn.Size = new System.Drawing.Size(32, 42);
+            this.searchEsn.Text = "ESN";
+            this.searchEsn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchEsn.Click += new System.EventHandler(this.searchEsn_Click);
+            // 
+            // searchKeyLocations
+            // 
+            this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.keylocations_search_16;
+            this.searchKeyLocations.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchKeyLocations.Name = "searchKeyLocations";
+            this.searchKeyLocations.Size = new System.Drawing.Size(84, 42);
+            this.searchKeyLocations.Text = "Key Locations";
+            this.searchKeyLocations.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchKeyLocations.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchKeyLocations.Click += new System.EventHandler(this.searchKeyLocations_Click);
+            // 
+            // searchAll
+            // 
+            this.searchAll.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchAll.Name = "searchAll";
+            this.searchAll.Size = new System.Drawing.Size(58, 42);
+            this.searchAll.Text = "All Fields";
+            this.searchAll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchAll.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchAll.Visible = false;
+            this.searchAll.Click += new System.EventHandler(this.searchAll_Click);
+            // 
+            // searchParcels
+            // 
+            this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchParcels.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchParcels.Name = "searchParcels";
+            this.searchParcels.Size = new System.Drawing.Size(48, 42);
+            this.searchParcels.Text = "Parcels";
+            this.searchParcels.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchParcels.Visible = false;
+            this.searchParcels.Click += new System.EventHandler(this.searchParcels_Click);
+            // 
+            // searchCellSector
+            // 
+            this.searchCellSector.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCellSector.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchCellSector.Name = "searchCellSector";
+            this.searchCellSector.Size = new System.Drawing.Size(72, 42);
+            this.searchCellSector.Text = "Cell Sectors";
+            this.searchCellSector.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchCellSector.Visible = false;
+            this.searchCellSector.Click += new System.EventHandler(this.searchCellSector_Click);
+            // 
             // SearchPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -232,6 +307,12 @@
         private System.Windows.Forms.ToolStripButton searchRoad;
         private System.Windows.Forms.ToolStripButton searchIntersection;
         private System.Windows.Forms.DataGridView searchDGV;
+        private System.Windows.Forms.ToolStripButton searchKeyLocations;
+        private System.Windows.Forms.ToolStripButton searchAll;
+        private System.Windows.Forms.ToolStripButton searchCity;
+        private System.Windows.Forms.ToolStripButton searchEsn;
+        private System.Windows.Forms.ToolStripButton searchParcels;
+        private System.Windows.Forms.ToolStripButton searchCellSector;
 
     }
 }

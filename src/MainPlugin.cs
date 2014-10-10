@@ -264,8 +264,8 @@ namespace Go2It
             {
                 // update the active function panel being displayed and show the panel
                 SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel = key;
-                // TODO: investigate here so that the panel opens fully
-                dockControl.ExtendToolPanel();  // make sure the tool panel is currently extended
+                // extend the panel the appropriate height for display
+                dockControl.ExtendToolPanel(dockInfo.Height);
             }
         }
 

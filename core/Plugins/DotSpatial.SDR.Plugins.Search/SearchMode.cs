@@ -30,5 +30,25 @@
         /// Search All Attributes
         /// </summary>
         All,
+        /// <summary>
+        /// Search City Names
+        /// </summary>
+        City,
+        /// <summary>
+        /// Search ESN Names
+        /// </summary>
+        Esn,
+        /// <summary>
+        /// Search Cell Sector Coverages
+        /// </summary>
+        Cell_Sector,
+        /// <summary>
+        /// Search Parcel Attributes
+        /// </summary>
+        Parcel,
+        /// <summary>
+        /// Locate Hydrants near by active Selections
+        /// </summary>
+        Hydrant,
     }
 }

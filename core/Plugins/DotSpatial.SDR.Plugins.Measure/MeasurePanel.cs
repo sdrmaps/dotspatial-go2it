@@ -6,10 +6,10 @@ namespace DotSpatial.SDR.Plugins.Measure
 {
     public partial class MeasurePanel : UserControl
     {
+        private MeasureMode _measureMode;
         private double _areaIntoSquareMeters;
         private double _distIntoMeters;
         private double _distance;
-        private MeasureMode _measureMode;
         private double _totalArea;
         private double _totalDistance;
 
@@ -257,13 +257,14 @@ namespace DotSpatial.SDR.Plugins.Measure
             if (_measureMode == MeasureMode.Distance)
             {
                 _distIntoMeters = _distanceUnitFactors[cmbUnits.SelectedIndex];
+                Distance = _distance;
+                TotalDistance = _totalDistance;
             }
             else
             {
                 _areaIntoSquareMeters = _areaUnitFactors[cmbUnits.SelectedIndex];
+                TotalArea = _totalArea;
             }
-            lblPartialValue.Text = String.Empty;
-            lblTotalValue.Text = String.Empty;
         }
 
         private void tsbClear_Click(object sender, EventArgs e)
