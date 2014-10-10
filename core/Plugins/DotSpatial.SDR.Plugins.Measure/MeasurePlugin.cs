@@ -32,8 +32,8 @@ namespace DotSpatial.SDR.Plugins.Measure
             {
                 GroupCaption = "Measure_Area_Distance",
                 ToolTipText = "Click to Measure Area and Distance",
-                SmallImage = Resources.measure_16,
-                LargeImage = Resources.measure_32
+                SmallImage = Resources.measure2_16,
+                LargeImage = Resources.measure2_32
             });
             // generate the measurement tool display panel and add it to the tool panel
             _measurePanel = new MeasurePanel();

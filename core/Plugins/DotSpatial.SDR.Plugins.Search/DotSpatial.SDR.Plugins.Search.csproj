@@ -152,6 +152,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\road_search_32.png" />
+    <None Include="Resources\road_search_16.png" />
+    <None Include="Resources\phone_search_32.png" />
+    <None Include="Resources\phone_search_16.png" />
+    <None Include="Resources\name_search_32.png" />
+    <None Include="Resources\name_search_16.png" />
+    <None Include="Resources\keylocations_search_32.png" />
+    <None Include="Resources\keylocations_search_16.png" />
+    <None Include="Resources\intersection_search_32.png" />
+    <None Include="Resources\intersection_search_16.png" />
+    <None Include="Resources\address_search_16.png" />
+    <None Include="Resources\address_search_32.png" />
+    <None Include="Resources\clear_16.png" />
+    <None Include="Resources\clear_32.png" />
+    <None Include="Resources\hydrant_16.png" />
+    <None Include="Resources\hydrant_32.png" />
     <Content Include="Resources\info_16.png" />
     <Content Include="Resources\info_32.png" />
   </ItemGroup>
