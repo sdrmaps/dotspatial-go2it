@@ -184,9 +184,9 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Parcel:
                     searchParcels.Enabled = enabled;
                     break;
-                //case SearchMode.Hydrant:
-                //    searchHydrant.Enabled = enabled;
-                //    break;
+                case SearchMode.Hydrant:
+                    searchHydrant.Enabled = enabled;
+                    break;
             }
         }
         #endregion

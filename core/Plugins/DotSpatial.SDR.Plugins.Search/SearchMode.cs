@@ -49,6 +49,6 @@
         /// <summary>
         /// Locate Hydrants near by active Selections
         /// </summary>
-        // Hydrant,
+        Hydrant,
     }
 }
