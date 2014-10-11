@@ -83,29 +83,29 @@ namespace DotSpatial.SDR.Plugins.Measure.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap clear2_16 {
+            get {
+                object obj = ResourceManager.GetObject("clear2_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap clear2_32 {
+            get {
+                object obj = ResourceManager.GetObject("clear2_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap line_16 {
             get {
                 object obj = ResourceManager.GetObject("line_16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap measure_16 {
-            get {
-                object obj = ResourceManager.GetObject("measure_16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap measure_32 {
-            get {
-                object obj = ResourceManager.GetObject("measure_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

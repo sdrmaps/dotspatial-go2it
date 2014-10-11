@@ -152,6 +152,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\search_32.png" />
+    <None Include="Resources\search_16.png" />
     <None Include="Resources\road_search_32.png" />
     <None Include="Resources\road_search_16.png" />
     <None Include="Resources\phone_search_32.png" />

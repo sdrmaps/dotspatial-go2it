@@ -31,8 +31,8 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 GroupCaption = "Search",
                 ToolTipText = "Search for Attributes and Features",
-                SmallImage = Resources.info_16,
-                LargeImage = Resources.info_32
+                SmallImage = Resources.search_16,
+                LargeImage = Resources.search_32
             });
             // generate the search tool display panel and add to tool panel
             _searchPanel = new SearchPanel();
