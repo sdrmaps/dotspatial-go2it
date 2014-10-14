@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
-using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Measure.Properties;
 using SdrConfig = SDR.Configuration;
 
@@ -81,11 +80,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         {
             if (_isFunctionActive) return;  // no need to do anything if this already the active tool
 
-            var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
-
-            DockPanelInfo dockInfo;
-            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             var map = App.Map as Map;
             if (map == null) return;
@@ -146,12 +141,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             // clear any measurements regardless of panel type
             _measurePanel.ClearMeasurements();
 
-            var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
-
-            DockPanelInfo dockInfo;
-            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
-
             var map = App.Map as Map;
             if (map == null) return;
 
