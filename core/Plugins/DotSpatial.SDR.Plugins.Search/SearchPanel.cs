@@ -27,11 +27,11 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchPanel()
         {
             InitializeComponent();
+            _searchMode = SearchMode;  // pull active search mode from user settings or default
             SearchQuery = string.Empty;
             CreateQueryPanels();
             _intersectedFeatures = new EventedArrayList();
             _intersectedFeatures.ListChanged += IntersectedFeaturesOnListChanged;
-            _searchMode = SearchMode;  // pull active search mode from user settings or default
         }
 
         private void IntersectedFeaturesOnListChanged(object sender, EventArgs eventArgs)
@@ -791,6 +791,8 @@ namespace DotSpatial.SDR.Plugins.Search
             var c = searchLayoutPanel.GetControlFromPosition(0, 0);
             if (c != null)
             {
+                // TODO: look into inproving this with show and hide.
+                // c.Hide();
                 searchLayoutPanel.Controls.Remove(c);
             }
         }

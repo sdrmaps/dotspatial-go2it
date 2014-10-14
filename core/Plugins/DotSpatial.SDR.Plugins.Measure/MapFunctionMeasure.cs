@@ -109,8 +109,7 @@ namespace DotSpatial.SDR.Plugins.Measure
             _previousDistance = 0;
             _currentDistance = 0;
             _currentArea = 0;
-            Map.MapFrame.Invalidate();
-            // Map.Invalidate();
+            if (Map != null) Map.MapFrame.Invalidate();
             _measurePanel.Distance = 0;
             _measurePanel.TotalDistance = 0;
             _measurePanel.TotalArea = 0;

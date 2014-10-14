@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -110,8 +109,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
                     break;
                 case "Navigate_Set_Zoom_Out":
                     App.Map.MapFrame.ZoomOut();
-                    break;
-                default:
                     break;
             }
         }

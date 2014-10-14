@@ -4,7 +4,7 @@ using DotSpatial.SDR.Plugins.Measure.Properties;
 
 namespace DotSpatial.SDR.Plugins.Measure
 {
-    public partial class MeasurePanel : UserControl
+    public sealed partial class MeasurePanel : UserControl
     {
         private MeasureMode _measureMode;
         private double _areaIntoSquareMeters;

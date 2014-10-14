@@ -1,6 +1,6 @@
 ﻿namespace DotSpatial.SDR.Plugins.Measure
 {
-    partial class MeasurePanel
+    sealed partial class MeasurePanel
     {
         /// <summary> 
         /// Required designer variable.

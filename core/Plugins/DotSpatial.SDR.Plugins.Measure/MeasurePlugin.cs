@@ -22,7 +22,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         private MeasurePanel _measurePanel;
         private DockablePanel _dockPanel;
 
-        private bool _isFunctionActive;  // flag to eliminate redundant MapFunctionMeasure.OnActivate() calls
+        private bool _isFunctionActive;  // eliminate redundant calls when active or not
         #endregion
 
         public override void Activate()
@@ -79,6 +79,8 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
+            if (_isFunctionActive) return;  // no need to do anything if this already the active tool
+
             var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
 
@@ -87,9 +89,6 @@ namespace DotSpatial.SDR.Plugins.Measure
 
             var map = App.Map as Map;
             if (map == null) return;
-
-            // if the function is already active, then stop wasting time here
-            if (_isFunctionActive) return;
 
             if (key.StartsWith("kMap_"))
             {
@@ -128,6 +127,8 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
+            if (!_isFunctionActive) return;  // dont waste time if this is not the active tool
+
             var map = sender as Map;
             if (map == null) return;
             if (_mapFunction == null) return;
@@ -137,15 +138,6 @@ namespace DotSpatial.SDR.Plugins.Measure
                 _isFunctionActive = false;
                 _mapFunction.Deactivate();
                 _measurePanel.DeactivateMeasurementModeButtons();
-            }
-            else
-            {
-                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
-                {
-                    App.Map.Cursor = Cursors.Cross;
-                    _isFunctionActive = true;
-                    _mapFunction.Activate();
-                }
             }
         }
 

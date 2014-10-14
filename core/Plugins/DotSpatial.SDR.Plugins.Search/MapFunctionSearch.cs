@@ -88,6 +88,16 @@ namespace DotSpatial.SDR.Plugins.Search
             Name = "MapFunctionSearch";
         }
 
+        private void HandleSearchPanelEvents()
+        {
+            _searchPanel.SearchModeChanged += SearchPanelOnSearchModeChanged;
+            _searchPanel.SearchesCleared += SearchPanelOnSearchesCleared;
+            _searchPanel.HydrantLocate += SearchPanelOnHydrantLocate;
+            _searchPanel.PerformSearch += SearchPanelOnPerformSearch;
+            _searchPanel.OnRowDoublelicked += SearchPanelOnRowDoublelicked;
+            _searchPanel.SearchModeActivated += SearchPanelOnSearchModeActivated;
+        }
+
         private void EnableSearchModes()
         {
             _searchPanel.EnableSearchButton(SearchMode.Address, GetLuceneIndexDirectory("AddressIndex") != null);
@@ -145,7 +155,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.All:
-                    // TODO: not sure what we want to do here yet.
+                    // TODO: Further thought is needed on this one
                     break;
             }
         }
@@ -158,16 +168,6 @@ namespace DotSpatial.SDR.Plugins.Search
         public static IndexReader IndexReader
         {
             get { return _indexReader; }
-        }
-
-        private void HandleSearchPanelEvents()
-        {
-            _searchPanel.SearchModeChanged += SearchPanelOnSearchModeChanged;
-            _searchPanel.SearchesCleared += SearchPanelOnSearchesCleared;
-            _searchPanel.HydrantLocate += SearchPanelOnHydrantLocate;
-            _searchPanel.PerformSearch += SearchPanelOnPerformSearch;
-            _searchPanel.OnRowDoublelicked += SearchPanelOnRowDoublelicked;
-            _searchPanel.SearchModeActivated += SearchPanelOnSearchModeActivated;
         }
 
         private void SearchPanelOnSearchModeActivated(object sender, EventArgs eventArgs)
@@ -188,6 +188,14 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             _searchPanel.Show();
             base.OnActivate();
+        }
+
+        /// <summary>
+        /// Allows for new behavior during deactivation.
+        /// </summary>
+        protected override void OnDeactivate()
+        {
+            base.OnDeactivate();
         }
 
         #endregion
@@ -297,7 +305,7 @@ namespace DotSpatial.SDR.Plugins.Search
                         Layer = doc.Get(LYRNAME),
                         Shape = doc.Get(GEOSHAPE)
                     };
-                    ZoomToFeature(lookup);
+                    ZoomToFeatureLookup(lookup);
                     return;
                 }
             }
@@ -443,7 +451,7 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 var doc = _indexSearcher.Doc(hit.Doc);
                 // load a possible intersecting feature shape
-                Spatial4n.Core.Shapes.Shape shp1 = ctx.ReadShape(doc.Get(GEOSHAPE));
+                Shape shp1 = ctx.ReadShape(doc.Get(GEOSHAPE));
                 // validate relation
                 if (shp1.Relate(shp2).Equals(Spatial4n.Core.Shapes.SpatialRelation.INTERSECTS))  
                 {
@@ -504,7 +512,7 @@ namespace DotSpatial.SDR.Plugins.Search
             _pointGraphics.AddFeature(point);
         }
 
-        private void ZoomToFeature(FeatureLookup ftLookup)
+        private void ZoomToFeatureLookup(FeatureLookup ftLookup)
         {
             if (ftLookup == null) return;
 
@@ -520,9 +528,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
                 IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
                 if (fs == null || fs.Name != ftLookup.Layer) continue;
-
-                // TODO: actually selecting something on the map cause tons of redraws, lets use a graphic instead
-                // mapLayer.SelectByAttribute("[FID] =" + ftLookup.Fid);
 
                 // grab the feature and use the shape to generate a buffer around it
                 var ft = fs.GetFeature(Convert.ToInt32(ftLookup.Fid));
@@ -569,7 +574,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     }
                     break;
                 default:  // normal operation is to go to the chosen feature
-                    ZoomToFeature(_activeLookup);
+                    ZoomToFeatureLookup(_activeLookup);
                     break;
             }
         }
@@ -581,18 +586,20 @@ namespace DotSpatial.SDR.Plugins.Search
                 MessageBox.Show(@"No feature or location is active");
                 return;
             }
-            IMapPointLayer hydrantLayer = null;
-            var layers = Map.GetPointLayers();
-            foreach (IMapPointLayer ptLayer in layers)
-            {
-                if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
-                IFeatureSet fs = FeatureSet.Open(ptLayer.DataSet.Filename);
-                if (fs != null && fs.Name != SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
-                {
-                    hydrantLayer = ptLayer;
-                    break;
-                }
-            }
+
+            //IMapPointLayer hydrantLayer = null;
+            //var layers = Map.GetPointLayers();
+            //foreach (IMapPointLayer ptLayer in layers)
+            //{
+            //    if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
+            //    IFeatureSet fs = FeatureSet.Open(ptLayer.DataSet.Filename);
+            //    if (fs != null && fs.Name != SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
+            //    {
+            //        hydrantLayer = ptLayer;
+            //        break;
+            //    }
+            //}
+
             var idxType = _indexType;  // store the current index type | reset when operation is complete
             SetupIndexReaderWriter("HydrantIndex");
             var hits = ExecuteScoredHydrantQuery(_activeLookup);
@@ -600,17 +607,31 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 var hit = hits[i];
                 var doc = _indexSearcher.Doc(hit.Doc);
-                hydrantLayer.SelectByAttribute("[FID] =" + doc.Get(FID));
-	        }
+                var coords = StripWktString(doc.Get(GEOSHAPE));
+
+                double x, y;
+                double.TryParse(coords[0], out x);
+                double.TryParse(coords[1], out y);
+                double[] xy = new double[2];
+                xy[0] = x;
+                xy[1] = y;
+                // reproject the point if need be
+                if (Map.Projection.ToProj4String() != KnownCoordinateSystems.Geographic.World.WGS1984.ToProj4String())
+                {
+                    Reproject.ReprojectPoints(
+                        xy, new double[1], KnownCoordinateSystems.Geographic.World.WGS1984, Map.Projection, 0, 1);
+                }
+                CreatePointGraphic(new Coordinate(xy[0], xy[1]));
+            }
             SetupIndexReaderWriter(idxType);  // set the index searcher back
 
-            IEnvelope hydrantEnv = hydrantLayer.Selection.Envelope;
+            /*IEnvelope hydrantEnv = hydrantLayer.Selection.Envelope;
             double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
             var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
             var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
             hydrantEnv.ExpandBy(newExtentWidth, newExtentHeight);
 
-            Map.ViewExtents = hydrantEnv.ToExtent();
+            Map.ViewExtents = hydrantEnv.ToExtent();*/
 
             // hydrantLayer.ZoomToSelectedFeatures();
         }
@@ -1552,7 +1573,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 sw.Close();
             }
         }
-
         #endregion
     }
 }
