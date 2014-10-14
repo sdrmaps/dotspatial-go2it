@@ -63,7 +63,7 @@ namespace Go2It
                     BackColor = Color.Transparent,
                     Dock = DockStyle.Fill,
                     SplitterWidth = 10,
-                    Panel1MinSize = 0,
+                    Panel1MinSize = 0
                 };
                 Shell.Controls.Add(container);
             }

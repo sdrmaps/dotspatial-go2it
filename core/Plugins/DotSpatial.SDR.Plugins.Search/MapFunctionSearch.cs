@@ -900,7 +900,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -943,7 +942,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -978,7 +976,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1013,7 +1010,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1060,7 +1056,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1099,7 +1094,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1138,7 +1132,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1221,7 +1214,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1285,7 +1277,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1349,7 +1340,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 );
             if (_indexReader == null)
             {
-                MessageBox.Show("Search index not found");
                 return new ScoreDoc[0];
             }
             TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
@@ -1383,7 +1373,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 // execute a query to find all features that intersect each passed in feature
                 if (_indexReader == null)
                 {
-                    MessageBox.Show("Search index not found");
                     return new ScoreDoc[0];
                 }
                 TopDocs topDocs = _indexSearcher.Search(query, _indexReader.NumDocs());

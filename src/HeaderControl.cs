@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Drawing;
 using System.Windows.Forms;
 using DotSpatial.Controls.Header;
 using DotSpatial.SDR.Controls;
@@ -45,9 +46,10 @@ namespace Go2It
                     BorderStyle = BorderStyle.FixedSingle,
                     Orientation = Orientation.Vertical,
                     Name = "outerContainer",
+                    BackColor = Color.Transparent,
                     Dock = DockStyle.Fill,
                     SplitterWidth = 10,
-                    Panel1MinSize = 0
+                    Panel1MinSize = 0,
                 };
                 Shell.Controls.Add(container);
             }

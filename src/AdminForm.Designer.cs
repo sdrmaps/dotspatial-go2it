@@ -245,6 +245,10 @@
             this.legendSplitter.Name = "legendSplitter";
             this.legendSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
+            // legendSplitter.Panel1
+            // 
+            this.legendSplitter.Panel1.AutoScroll = true;
+            // 
             // legendSplitter.Panel2
             // 
             this.legendSplitter.Panel2.BackColor = System.Drawing.Color.Transparent;

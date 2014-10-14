@@ -31,8 +31,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnSearch = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.searchDGV = new System.Windows.Forms.DataGridView();
             this.searchAdds = new System.Windows.Forms.ToolStripButton();
             this.searchName = new System.Windows.Forms.ToolStripButton();
             this.searchPhone = new System.Windows.Forms.ToolStripButton();
@@ -46,6 +44,8 @@
             this.searchAll = new System.Windows.Forms.ToolStripButton();
             this.searchParcels = new System.Windows.Forms.ToolStripButton();
             this.searchCellSector = new System.Windows.Forms.ToolStripButton();
+            this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.searchDGV = new System.Windows.Forms.DataGridView();
             this.toolStrip1.SuspendLayout();
             this.searchLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchDGV)).BeginInit();
@@ -87,45 +87,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(717, 45);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // searchLayoutPanel
-            // 
-            this.searchLayoutPanel.ColumnCount = 2;
-            this.searchLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.searchLayoutPanel.Controls.Add(this.btnSearch, 1, 0);
-            this.searchLayoutPanel.Controls.Add(this.searchDGV, 0, 1);
-            this.searchLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchLayoutPanel.Location = new System.Drawing.Point(0, 45);
-            this.searchLayoutPanel.Name = "searchLayoutPanel";
-            this.searchLayoutPanel.RowCount = 2;
-            this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
-            this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchLayoutPanel.Size = new System.Drawing.Size(717, 173);
-            this.searchLayoutPanel.TabIndex = 3;
-            // 
-            // searchDGV
-            // 
-            this.searchDGV.AllowUserToAddRows = false;
-            this.searchDGV.AllowUserToDeleteRows = false;
-            this.searchDGV.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Gainsboro;
-            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.searchDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
-            this.searchDGV.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.searchDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.searchLayoutPanel.SetColumnSpan(this.searchDGV, 2);
-            this.searchDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchDGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.searchDGV.Location = new System.Drawing.Point(3, 37);
-            this.searchDGV.MultiSelect = false;
-            this.searchDGV.Name = "searchDGV";
-            this.searchDGV.ReadOnly = true;
-            this.searchDGV.RowHeadersVisible = false;
-            this.searchDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.searchDGV.Size = new System.Drawing.Size(711, 133);
-            this.searchDGV.TabIndex = 2;
-            this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
             // 
             // searchAdds
             // 
@@ -261,7 +222,6 @@
             this.searchParcels.Size = new System.Drawing.Size(48, 42);
             this.searchParcels.Text = "Parcels";
             this.searchParcels.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchParcels.Visible = false;
             this.searchParcels.Click += new System.EventHandler(this.searchParcels_Click);
             // 
             // searchCellSector
@@ -272,8 +232,46 @@
             this.searchCellSector.Size = new System.Drawing.Size(72, 42);
             this.searchCellSector.Text = "Cell Sectors";
             this.searchCellSector.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchCellSector.Visible = false;
             this.searchCellSector.Click += new System.EventHandler(this.searchCellSector_Click);
+            // 
+            // searchLayoutPanel
+            // 
+            this.searchLayoutPanel.ColumnCount = 2;
+            this.searchLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.searchLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.searchLayoutPanel.Controls.Add(this.btnSearch, 1, 0);
+            this.searchLayoutPanel.Controls.Add(this.searchDGV, 0, 1);
+            this.searchLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchLayoutPanel.Location = new System.Drawing.Point(0, 45);
+            this.searchLayoutPanel.Name = "searchLayoutPanel";
+            this.searchLayoutPanel.RowCount = 2;
+            this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
+            this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.searchLayoutPanel.Size = new System.Drawing.Size(717, 173);
+            this.searchLayoutPanel.TabIndex = 3;
+            // 
+            // searchDGV
+            // 
+            this.searchDGV.AllowUserToAddRows = false;
+            this.searchDGV.AllowUserToDeleteRows = false;
+            this.searchDGV.AllowUserToOrderColumns = true;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Gainsboro;
+            this.searchDGV.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.searchDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            this.searchDGV.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.searchDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.searchLayoutPanel.SetColumnSpan(this.searchDGV, 2);
+            this.searchDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchDGV.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.searchDGV.Location = new System.Drawing.Point(3, 37);
+            this.searchDGV.MultiSelect = false;
+            this.searchDGV.Name = "searchDGV";
+            this.searchDGV.ReadOnly = true;
+            this.searchDGV.RowHeadersVisible = false;
+            this.searchDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.searchDGV.Size = new System.Drawing.Size(711, 133);
+            this.searchDGV.TabIndex = 2;
+            this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
             // 
             // SearchPanel
             // 

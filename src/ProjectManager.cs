@@ -381,7 +381,10 @@ namespace Go2It
                 { "map_bgcolor", SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
                 { "active_map_key", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey },
                 { "active_map_caption", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption },
-                { "use_pretypes", SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture) }
+                { "use_pretypes", SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture) },
+                { "search_zoom_factor", SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture) },
+                { "search_buffer_distance", SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture) },
+                { "search_hydrant_count", SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture) }
             };
             // there can only be a single project settings row in the table
             SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");

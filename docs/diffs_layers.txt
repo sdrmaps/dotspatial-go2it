@@ -1,0 +1,12 @@
+
+IMapLayer its a layer which linked with map, and can be FeatureLayer, RasterLayer etc.. 
+
+IFeatureLayer its a layer with point, line or polygon features, and may be not linked with any map.
+
+IMapFeatureLayer its IFeatureLayer linked with map, and have properties and methods from both.
+
+if layer linked with map, its have symbology, labels, legendtext etc..
+
+When use which interface depends from your task.
+
+P.S. Sorry from my English.. I from Ukraine..
