@@ -11,7 +11,7 @@ namespace DotSpatial.SDR.Plugins.Measure
     public class MeasurePlugin : Extension
     {
         #region Constants and Fields
-
+        
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
 
         private const string PluginKey = "kPanel_Measure";

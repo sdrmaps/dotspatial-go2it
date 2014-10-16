@@ -113,7 +113,7 @@ namespace Go2It
             _loginForm.Location = new System.Drawing.Point(x, y);
 
             App.CompositionContainer.ComposeParts(_loginForm);
-
+          
             _loginForm.Show(Shell);
             _loginForm.Focus();
         }
@@ -139,7 +139,6 @@ namespace Go2It
             _adminForm.Location = new System.Drawing.Point(x, y);
 
             App.CompositionContainer.ComposeParts(_adminForm);
-
             _adminForm.Show(Shell);
             _adminForm.Focus();
         }

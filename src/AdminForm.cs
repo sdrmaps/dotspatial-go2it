@@ -125,7 +125,7 @@ namespace Go2It
             // overall events tied to main application
             _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
 
-            // mabe map tracking events for removal and addition of layers
+            // map tracking events for removal and addition of layers
             _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
             _baseMap.Layers.LayerAdded += LayersOnLayerAdded;
 
@@ -158,14 +158,12 @@ namespace Go2It
 
                 if (string.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
                 {
-                    _appManager.SerializationManager.New();
+                    _appManager.SerializationManager.New();  // create the actual serialized map info now
                 }
                 // add the new tab view to the main form
                 _appManager.DockManager.Add(dp);
                 // select the map now to activate plugin bindings
                 _appManager.DockManager.SelectPanel(key);
-                // select the active panel for display
-                _appManager.DockManager.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
             }
 
             // setup all interface events now
@@ -179,6 +177,9 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _dirtyProject = false; // reset dirty flag after populating form on startup
+
+            SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
+            _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
         private void InitializeSaveSplitButton()
@@ -286,6 +287,9 @@ namespace Go2It
             _idxWorker.DoWork -= idx_DoWork;
             _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
             FormClosed -= AdminFormClosed;
+            
+            SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = false;
+            _appManager.DockManager.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)

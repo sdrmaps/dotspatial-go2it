@@ -213,6 +213,13 @@ namespace Go2It
                     }
                 }
             }
+            else if (key.StartsWith("kPanel_"))
+            {
+                if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive)
+                {
+                    dockControl.CollapseToolPanel();
+                }
+            }
         }
 
         void DockManager_ActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -262,10 +269,17 @@ namespace Go2It
             }
             else if (key.StartsWith("kPanel_"))
             {
-                // update the active function panel being displayed and show the panel
-                SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel = key;
-                // extend the panel the appropriate height for display
-                dockControl.ExtendToolPanel(dockInfo.Height);
+                if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive)
+                {
+                    dockControl.CollapseToolPanel();
+                }
+                else
+                {
+                    // update the active function panel being displayed and show the panel
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel = key;
+                    // extend the panel the appropriate height for display
+                    dockControl.ExtendToolPanel(dockInfo.Height);
+                }
             }
         }
 

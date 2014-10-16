@@ -45,6 +45,12 @@ namespace SDR.Configuration.User
             }
         }
 
+        public bool AdminModeActive
+        {
+            get { return UserSettings.Default.AdminModeActive; }
+            set { UserSettings.Default.AdminModeActive = value; }
+        }
+
         public string ActiveFunctionMode
         {
             get { return UserSettings.Default.ActiveFunctionMode; }

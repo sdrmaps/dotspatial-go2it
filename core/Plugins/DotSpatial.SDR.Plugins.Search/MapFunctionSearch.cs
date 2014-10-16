@@ -54,6 +54,8 @@ namespace DotSpatial.SDR.Plugins.Search
         private MapPointLayer _pointGraphicsLayer;
         private FeatureSet _polylineGraphics;
         private MapLineLayer _polylineGraphicsLayer;
+        private FeatureSet _hydrantGraphics;
+        private MapPointLayer _hydrantGraphicsLayer;
 
         private string _indexType;
         private string[] _columnNames;
@@ -83,7 +85,6 @@ namespace DotSpatial.SDR.Plugins.Search
         private void Configure()
         {
             YieldStyle = YieldStyles.AlwaysOn;
-            EnableSearchModes();
             HandleSearchPanelEvents();
             Name = "MapFunctionSearch";
         }
@@ -98,7 +99,7 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.SearchModeActivated += SearchPanelOnSearchModeActivated;
         }
 
-        private void EnableSearchModes()
+        public void EnableSearchModes()
         {
             _searchPanel.EnableSearchButton(SearchMode.Address, GetLuceneIndexDirectory("AddressIndex") != null);
             _searchPanel.EnableSearchButton(SearchMode.Road, GetLuceneIndexDirectory("RoadIndex") != null);
@@ -176,6 +177,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (Map.FunctionMode != FunctionMode.None)
             {
                 Map.FunctionMode = FunctionMode.None;
+                EnableSearchModes();
             }
         }
 
@@ -186,6 +188,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 _searchPanel = new SearchPanel();
                 HandleSearchPanelEvents();
             }
+            EnableSearchModes();
             _searchPanel.Show();
             base.OnActivate();
         }
@@ -270,6 +273,12 @@ namespace DotSpatial.SDR.Plugins.Search
                 Map.MapFrame.DrawingLayers.Remove(_polylineGraphicsLayer);
                 _polylineGraphicsLayer = null;
                 _polylineGraphics = null;
+            }
+            if (Map != null && Map.MapFrame.DrawingLayers.Contains(_hydrantGraphicsLayer))
+            {
+                Map.MapFrame.DrawingLayers.Remove(_hydrantGraphicsLayer);
+                _hydrantGraphicsLayer = null;
+                _hydrantGraphics = null;
             }
             if (Map != null) Map.MapFrame.Invalidate();
         }
@@ -494,6 +503,24 @@ namespace DotSpatial.SDR.Plugins.Search
             return buffer.Envelope;
         }
 
+        private void CreateHydrantGraphic(Coordinate c)
+        {
+            if (_hydrantGraphicsLayer == null)
+            {
+                _hydrantGraphics = new FeatureSet(FeatureType.Point);
+                _hydrantGraphicsLayer = new MapPointLayer(_hydrantGraphics);
+                PointShape hydrantShape = new PointShape();
+                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out hydrantShape);
+                _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
+                    hydrantShape,
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
+                Map.MapFrame.DrawingLayers.Add(_hydrantGraphicsLayer);
+            }
+            var point = new Point(c);
+            _hydrantGraphics.AddFeature(point);
+        }
+
         private void CreatePointGraphic(Coordinate c)
         {
             if (_pointGraphicsLayer == null)
@@ -583,57 +610,58 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (_activeLookup == null)
             {
-                MessageBox.Show(@"No feature or location is active");
+                MessageBox.Show(@"No feature or location is currently active");
                 return;
             }
-
-            //IMapPointLayer hydrantLayer = null;
-            //var layers = Map.GetPointLayers();
-            //foreach (IMapPointLayer ptLayer in layers)
-            //{
-            //    if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
-            //    IFeatureSet fs = FeatureSet.Open(ptLayer.DataSet.Filename);
-            //    if (fs != null && fs.Name != SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
-            //    {
-            //        hydrantLayer = ptLayer;
-            //        break;
-            //    }
-            //}
-
-            var idxType = _indexType;  // store the current index type | reset when operation is complete
+            var layers = Map.GetPointLayers();
+            IFeatureSet hydrantfs = null;
+            foreach (IMapPointLayer ptLayer in layers)
+            {
+                IFeatureSet fs = null;
+                if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
+                fs = FeatureSet.Open(ptLayer.DataSet.Filename);
+                if (fs != null && fs.Name == SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
+                {
+                    hydrantfs = fs;
+                    break;
+                }
+            }
+            if (hydrantfs == null) return;
+            // store the current index type | reset when operation is complete
+            var idxType = _indexType;  
             SetupIndexReaderWriter("HydrantIndex");
             var hits = ExecuteScoredHydrantQuery(_activeLookup);
+            if (hits.Length == 0)
+            {
+                SetupIndexReaderWriter(idxType);  // set the index searcher back
+                MessageBox.Show("No hydrants within the search area");
+            }
+            // create a graphic for each hydrant to be displayed
             for (int i = 0; i <= SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount -1; i++)
             {
-                var hit = hits[i];
-                var doc = _indexSearcher.Doc(hit.Doc);
-                var coords = StripWktString(doc.Get(GEOSHAPE));
-
-                double x, y;
-                double.TryParse(coords[0], out x);
-                double.TryParse(coords[1], out y);
-                double[] xy = new double[2];
-                xy[0] = x;
-                xy[1] = y;
-                // reproject the point if need be
-                if (Map.Projection.ToProj4String() != KnownCoordinateSystems.Geographic.World.WGS1984.ToProj4String())
+                if (hits.Length >= i + 1)
                 {
-                    Reproject.ReprojectPoints(
-                        xy, new double[1], KnownCoordinateSystems.Geographic.World.WGS1984, Map.Projection, 0, 1);
+                    var hit = hits[i];
+                    var doc = _indexSearcher.Doc(hit.Doc);
+                    var ft = hydrantfs.GetFeature(Convert.ToInt32(doc.Get(FID)));
+                    if (ft.Coordinates.Count == 1)
+                    {
+                        CreateHydrantGraphic(ft.Coordinates[0]);
+                    }
                 }
-                CreatePointGraphic(new Coordinate(xy[0], xy[1]));
             }
+
+            // _hydrantGraphics.Extent.ExpandToInclude();
+
+
             SetupIndexReaderWriter(idxType);  // set the index searcher back
+            double zoomFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
+            var newExtentWidth = _hydrantGraphics.Extent.Width * zoomFactor;
+            var newExtentHeight = _hydrantGraphics.Extent.Height * zoomFactor;
 
-            /*IEnvelope hydrantEnv = hydrantLayer.Selection.Envelope;
-            double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
-            var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
-            var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
-            hydrantEnv.ExpandBy(newExtentWidth, newExtentHeight);
-
-            Map.ViewExtents = hydrantEnv.ToExtent();*/
-
-            // hydrantLayer.ZoomToSelectedFeatures();
+            _hydrantGraphics.Extent.ExpandBy(newExtentWidth, newExtentHeight);
+            var env = _hydrantGraphics.Extent.ToEnvelope();
+            Map.ViewExtents = env.ToExtent();
         }
         #endregion
 
@@ -645,6 +673,7 @@ namespace DotSpatial.SDR.Plugins.Search
             Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(activeLookup.Shape);
             Spatial4n.Core.Shapes.Point centerPt = shp.GetCenter();
 
+            // TODO: make the distance it searches from a user set value
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
             var args = new SpatialArgs(SpatialOperation.Intersects,
                 ctx.MakeCircle(centerPt.GetX(), centerPt.GetY(),

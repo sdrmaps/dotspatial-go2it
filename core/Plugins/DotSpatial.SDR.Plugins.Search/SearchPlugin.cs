@@ -52,7 +52,7 @@ namespace DotSpatial.SDR.Plugins.Search
             App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
 
-            base.Activate();
+            base.Deactivate();
         }
 
         private void AddSearchMapFunction()
@@ -71,6 +71,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 App.Map.MapFunctions.Add(_mapFunction);
             }
             _mapFunction.Map = App.Map;
+            
         }
 
         private void OnMapFunctionOnFunctionActivated(object sender, EventArgs eventArgs)
