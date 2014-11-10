@@ -10,14 +10,12 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Data;
-using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
-using SDR.Common;
-using SdrConfig = SDR.Configuration;
+using SDR.Configuration.Project;
+using SDR.Configuration.User;
 using SDR.Data.Database;
-using ILog = SDR.Common.logging.ILog;
+using SdrConfig = SDR.Configuration;
 
 namespace Go2It
 {
@@ -35,13 +33,7 @@ namespace Go2It
         public const string LayerTypeKeyLocation = "t_keylocation";
 
         /// <summary>
-        /// The main app manager
-        /// </summary>
-        public AppManager App { get; private set; }
-        public DockingControl Dock { get; private set; }
-
-        /// <summary>
-        /// Creates a new instance of the project manager
+        ///     Creates a new instance of the project manager
         /// </summary>
         /// <param name="mainApp"></param>
         public ProjectManager(AppManager mainApp)
@@ -51,9 +43,16 @@ namespace Go2It
         }
 
         /// <summary>
-        /// Check if the path is a valid SQLite database
-        /// This function returns false, if the SQLite db
-        /// file doesn't exist or if the file size is 0 Bytes
+        ///     The main app manager
+        /// </summary>
+        public AppManager App { get; private set; }
+
+        public DockingControl Dock { get; private set; }
+
+        /// <summary>
+        ///     Check if the path is a valid SQLite database
+        ///     This function returns false, if the SQLite db
+        ///     file doesn't exist or if the file size is 0 Bytes
         /// </summary>
         public static bool DatabaseExists(string dbPath)
         {
@@ -61,7 +60,7 @@ namespace Go2It
         }
 
         /// <summary>
-        /// To get the SQLite database path given the SQLite connection string
+        ///     To get the SQLite database path given the SQLite connection string
         /// </summary>
         public static string GetSQLiteFileName(string sqliteConnString)
         {
@@ -69,7 +68,7 @@ namespace Go2It
         }
 
         /// <summary>
-        /// To get the full SQLite connection string given the SQLite database path
+        ///     To get the full SQLite connection string given the SQLite database path
         /// </summary>
         public static string GetSQLiteConnectionString(string dbFileName)
         {
@@ -77,7 +76,7 @@ namespace Go2It
         }
 
         /// <summary>
-        /// Create the default .SQLITE database in the user-specified path
+        ///     Create the default .SQLITE database in the user-specified path
         /// </summary>
         /// <returns>true if database was created, false otherwise</returns>
         public static Boolean CreateNewDatabase(string dbPath)
@@ -92,7 +91,7 @@ namespace Go2It
             // add the file to recent files list
             SdrConfig.Settings.Instance.AddFileToRecentFiles(App.SerializationManager.CurrentProjectFile);
             // reset the project settings back to default for repopulation
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();
+            Go2ItProjectSettings.Instance.ResetProjectSettings();
             // now clear any map panels that maybe present
             Dock.ResetLayout();
             // go ahead and set the database to proper location
@@ -116,71 +115,77 @@ namespace Go2It
                 }
             }
             // do a basic query to get a key and caption for the panel tab lookup and selection
-            var repoConnStr = SQLiteHelper.GetSQLiteConnectionString(dbFileName);
+            string repoConnStr = SQLiteHelper.GetSQLiteConnectionString(dbFileName);
             SdrConfig.Settings.Instance.ProjectRepoConnectionString = repoConnStr;
             // do basic project configuration query
-            const string psQuery = "SELECT keylocations_type, search_hydrant_count, search_zoom_factor, search_buffer_distance, addresses_type, map_bgcolor, active_map_key, active_map_caption, use_pretypes FROM ProjectSettings";
+            const string psQuery =
+                "SELECT keylocations_type, search_hydrant_count, search_zoom_factor, search_buffer_distance, addresses_type, map_bgcolor, active_map_key, active_map_caption, use_pretypes FROM ProjectSettings";
             DataTable psTable = SQLiteHelper.GetDataTable(repoConnStr, psQuery);
-            var psR = psTable.Rows[0];  // there is only one row for project settings
+            DataRow psR = psTable.Rows[0]; // there is only one row for project settings
             // setup all project level type lookups and keys
-            SdrConfig.Project.Go2ItProjectSettings.Instance.KeyLocationsProjectType = psR["keylocations_type"].ToString();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType = psR["addresses_type"].ToString();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = Color.FromArgb(Convert.ToInt32(psR["map_bgcolor"].ToString()));
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = psR["active_map_key"].ToString();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption= psR["active_map_caption"].ToString();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes = bool.Parse(psR["use_pretypes"].ToString());
-            SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount = int.Parse(psR["search_hydrant_count"].ToString());
-            SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance = int.Parse(psR["search_buffer_distance"].ToString());
-            SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor = decimal.Parse(psR["search_zoom_factor"].ToString());
+            Go2ItProjectSettings.Instance.KeyLocationsProjectType = psR["keylocations_type"].ToString();
+            Go2ItProjectSettings.Instance.AddressesProjectType = psR["addresses_type"].ToString();
+            Go2ItProjectSettings.Instance.MapBgColor = Color.FromArgb(Convert.ToInt32(psR["map_bgcolor"].ToString()));
+            Go2ItProjectSettings.Instance.ActiveMapViewKey = psR["active_map_key"].ToString();
+            Go2ItProjectSettings.Instance.ActiveMapViewCaption = psR["active_map_caption"].ToString();
+            Go2ItProjectSettings.Instance.UsePretypes = bool.Parse(psR["use_pretypes"].ToString());
+            Go2ItProjectSettings.Instance.HydrantSearchCount = int.Parse(psR["search_hydrant_count"].ToString());
+            Go2ItProjectSettings.Instance.HydrantSearchDistance = int.Parse(psR["search_hydrant_distance"].ToString());
+            Go2ItProjectSettings.Instance.SearchBufferDistance = int.Parse(psR["search_buffer_distance"].ToString());
+            Go2ItProjectSettings.Instance.SearchZoomFactor = decimal.Parse(psR["search_zoom_factor"].ToString());
             // setup all project level graphics settings
-            const string gsQuery = "SELECT point_color, point_style, point_size, line_color, line_size, line_border_color, line_cap, line_style FROM GraphicSettings";
+            const string gsQuery =
+                "SELECT point_color, point_style, point_size, line_color, line_size, line_border_color, line_cap, line_style FROM GraphicSettings";
             DataTable gsTable = SQLiteHelper.GetDataTable(repoConnStr, gsQuery);
-            var gsR = gsTable.Rows[0];  // there is only one row for graphics settings
+            DataRow gsR = gsTable.Rows[0]; // there is only one row for graphics settings
             // setup all project level type lookups and keys
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor = Color.FromArgb(Convert.ToInt32(gsR["point_color"].ToString()));
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle = gsR["point_style"].ToString();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(gsR["point_size"]);
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor = Color.FromArgb(Convert.ToInt32(gsR["line_border_color"].ToString()));
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor = Color.FromArgb(Convert.ToInt32(gsR["line_color"].ToString()));
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(gsR["line_size"]);
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = gsR["line_style"].ToString();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = gsR["line_cap"].ToString();
+            Go2ItProjectSettings.Instance.GraphicPointColor =
+                Color.FromArgb(Convert.ToInt32(gsR["point_color"].ToString()));
+            Go2ItProjectSettings.Instance.GraphicPointStyle = gsR["point_style"].ToString();
+            Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(gsR["point_size"]);
+            Go2ItProjectSettings.Instance.GraphicLineBorderColor =
+                Color.FromArgb(Convert.ToInt32(gsR["line_border_color"].ToString()));
+            Go2ItProjectSettings.Instance.GraphicLineColor =
+                Color.FromArgb(Convert.ToInt32(gsR["line_color"].ToString()));
+            Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(gsR["line_size"]);
+            Go2ItProjectSettings.Instance.GraphicLineStyle = gsR["line_style"].ToString();
+            Go2ItProjectSettings.Instance.GraphicLineCap = gsR["line_cap"].ToString();
             // now lets setup all the layers to proper types
             const string lyrQuery = "SELECT name, layerType, projectType FROM Layers";
             DataTable lyrTable = SQLiteHelper.GetDataTable(repoConnStr, lyrQuery);
             foreach (DataRow row in lyrTable.Rows)
             {
-                var name = row["name"].ToString();
-                var lyrType = row["layerType"].ToString(); // unused
-                var projType = row["projectType"].ToString();
+                string name = row["name"].ToString();
+                string lyrType = row["layerType"].ToString(); // unused
+                string projType = row["projectType"].ToString();
                 switch (projType)
                 {
                     case "t_address":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.AddAddressLayer(name);
+                        Go2ItProjectSettings.Instance.AddAddressLayer(name);
                         break;
                     case "t_road":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.AddRoadLayer(name);
+                        Go2ItProjectSettings.Instance.AddRoadLayer(name);
                         break;
                     case "t_note":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.NotesLayer = name;
+                        Go2ItProjectSettings.Instance.NotesLayer = name;
                         break;
                     case "t_citylimit":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.CityLimitsLayer = name;
+                        Go2ItProjectSettings.Instance.CityLimitsLayer = name;
                         break;
                     case "t_cellsector":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.CellSectorsLayer = name;
+                        Go2ItProjectSettings.Instance.CellSectorsLayer = name;
                         break;
                     case "t_esn":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.EsnsLayer = name;
+                        Go2ItProjectSettings.Instance.EsnsLayer = name;
                         break;
                     case "t_parcel":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.ParcelsLayer = name;
+                        Go2ItProjectSettings.Instance.ParcelsLayer = name;
                         break;
                     case "t_hydrant":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer = name;
+                        Go2ItProjectSettings.Instance.HydrantsLayer = name;
                         break;
                     case "t_keylocation":
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.AddKeyLocationLayer(name);
+                        Go2ItProjectSettings.Instance.AddKeyLocationLayer(name);
                         break;
                 }
             }
@@ -190,17 +195,17 @@ namespace Go2It
             // cycle through all map tabs and generate maps and tabs as needed
             foreach (DataRow row in tabsTable.Rows)
             {
-                var txtKey = row["lookup"].ToString();
-                var txtCaption  = row["caption"].ToString();
-                var txtLayers = row["layers"].ToString();
-                var txtViewExtent = row["viewextent"].ToString();
-                var zorder = row["zorder"].ToString();
-                var txtExtent = row["extent"].ToString();
-                var txtBounds = row["bounds"].ToString(); // unused
+                string txtKey = row["lookup"].ToString();
+                string txtCaption = row["caption"].ToString();
+                string txtLayers = row["layers"].ToString();
+                string txtViewExtent = row["viewextent"].ToString();
+                string zorder = row["zorder"].ToString();
+                string txtExtent = row["extent"].ToString();
+                string txtBounds = row["bounds"].ToString(); // unused
 
                 var nMap = new Map
                 {
-                    BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor,
+                    BackColor = Go2ItProjectSettings.Instance.MapBgColor,
                     Visible = true,
                     Dock = DockStyle.Fill,
                     MapFrame = new EventMapFrame(),
@@ -213,9 +218,9 @@ namespace Go2It
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
                 // LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
 
-                nMapFrame.SuspendViewExtentChanged();  // suspend all view extent changes events
-                nMapFrame.SuspendEvents();  // suspend all layer events
-                nMapFrame.ExtentsInitialized = true;  // set the extents manually below
+                nMapFrame.SuspendViewExtentChanged(); // suspend all view extent changes events
+                nMapFrame.SuspendEvents(); // suspend all layer events
+                nMapFrame.ExtentsInitialized = true; // set the extents manually below
 
                 nMap.MapFrame = nMapFrame;
 
@@ -226,8 +231,9 @@ namespace Go2It
                     if (ml.GetType().Name == "MapImageLayer")
                     {
                         var mImageLyr = (IMapImageLayer) ml;
-                        if (mImageLyr != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImageLyr.Image.Filename))) return;
-                        var fName = Path.GetFileNameWithoutExtension(mImageLyr.Image.Filename);
+                        if (mImageLyr != null &&
+                            String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImageLyr.Image.Filename))) return;
+                        string fName = Path.GetFileNameWithoutExtension(mImageLyr.Image.Filename);
                         foreach (string lyr in lyrs)
                         {
                             // layer names match add them to the new map tab
@@ -240,7 +246,9 @@ namespace Go2It
                     else
                     {
                         var mFeatureLyr = ml as IMapFeatureLayer;
-                        if (mFeatureLyr != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename)))) return;
+                        if (mFeatureLyr != null &&
+                            String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename))))
+                            return;
                         IFeatureSet fs = FeatureSet.Open(mFeatureLyr.DataSet.Filename);
                         if (fs != null)
                         {
@@ -279,15 +287,16 @@ namespace Go2It
                 };
                 App.DockManager.Add(dp);
             }
-            App.Map = null;  // kill the load map
-            App.DockManager.SelectPanel(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey);
-            App.DockManager.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
+            App.Map = null; // kill the load map
+            App.DockManager.SelectPanel(Go2ItProjectSettings.Instance.ActiveMapViewKey);
+            App.DockManager.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
         private void LogMapEvents(IMap map, string name)
         {
             map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::ProjectManager");
-            map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::ProjectManager");
+            map.FunctionModeChanged +=
+                (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::ProjectManager");
             map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::ProjectManager");
             map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::ProjectManager");
             map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::ProjectManager");
@@ -295,32 +304,42 @@ namespace Go2It
 
         private void LogMapFrameEvents(IMapFrame mapframe, string name)
         {
-            mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::ProjectManager");
-            mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::ProjectManager");
-            mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::ProjectManager");
-            mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::ProjectManager");
+            mapframe.BufferChanged +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::ProjectManager");
+            mapframe.EnvelopeChanged +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::ProjectManager");
+            mapframe.FinishedLoading +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::ProjectManager");
+            mapframe.FinishedRefresh +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::ProjectManager");
             mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::ProjectManager");
             mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::ProjectManager");
             mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::ProjectManager");
             mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::ProjectManager");
-            mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::ProjectManager");
+            mapframe.LayerSelected +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::ProjectManager");
             mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::ProjectManager");
-            mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::ProjectManager");
-            mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::ProjectManager");
-            mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::ProjectManager");
+            mapframe.ScreenUpdated +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::ProjectManager");
+            mapframe.SelectionChanged +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::ProjectManager");
+            mapframe.ShowProperties +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::ProjectManager");
             mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::ProjectManager");
             mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::ProjectManager");
-            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::ProjectManager");
-            mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::ProjectManager");
+            mapframe.ViewExtentsChanged +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::ProjectManager");
+            mapframe.VisibleChanged +=
+                (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::ProjectManager");
         }
 
         /// <summary>
-        /// Creates a new 'empty' project
+        ///     Creates a new 'empty' project
         /// </summary>
         public void CreateEmptyProject()
         {
             // reset all project settings to default
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();
+            Go2ItProjectSettings.Instance.ResetProjectSettings();
             // reset all dock controller map tabs and layerlookup dict
             Dock.ResetLayout();
             // setup a temp database to hold our settings
@@ -328,13 +347,14 @@ namespace Go2It
         }
 
         /// <summary>
-        /// This method sets up the default databases.
-        /// By default these are created in the temporary directory.
+        ///     This method sets up the default databases.
+        ///     By default these are created in the temporary directory.
         /// </summary>
         public void SetupDatabase()
         {
             // the 'default' database path is a temporary db file, it is not for use on actual projects
-            var unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour, DateTime.Now.Minute);
+            string unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour,
+                DateTime.Now.Minute);
             string dataRepositoryTempFile = unqTmpId + ".sqlite";
 
             // find or create a temp directory to hold the db and any possible indexes
@@ -372,69 +392,93 @@ namespace Go2It
         public void SaveProjectSettings()
         {
             // get the project settings db connection string
-            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
             // set  basic project level settings at this point
             var d = new Dictionary<string, string>
             {
-                { "addresses_type", SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType },
-                { "keylocations_type", SdrConfig.Project.Go2ItProjectSettings.Instance.KeyLocationsProjectType },
-                { "map_bgcolor", SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
-                { "active_map_key", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey },
-                { "active_map_caption", SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption },
-                { "use_pretypes", SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture) },
-                { "search_zoom_factor", SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture) },
-                { "search_buffer_distance", SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture) },
-                { "search_hydrant_count", SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture) }
+                {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
+                {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
+                {
+                    "map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)
+                },
+                {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
+                {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
+                {"use_pretypes", Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture)},
+                {
+                    "search_zoom_factor",
+                    Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)
+                },
+                {
+                    "search_buffer_distance",
+                    Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)
+                },
+                {
+                    "search_hydrant_count",
+                    Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)
+                },
+                {
+                    "search_hydrant_distance",
+                    Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)
+                }
             };
             // there can only be a single project settings row in the table
             SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
             var g = new Dictionary<string, string>
             {
-                { "point_color", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
-                { "point_style", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle},
-                { "point_size", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture) },
-                { "line_color", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
-                { "line_border_color", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture) },
-                { "line_size", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture) },
-                { "line_cap", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap },
-                { "line_style", SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle }
+                {
+                    "point_color",
+                    Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)
+                },
+                {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
+                {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
+                {
+                    "line_color",
+                    Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)
+                },
+                {
+                    "line_border_color",
+                    Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)
+                },
+                {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
+                {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
+                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
             };
             // there can only be a single grphics settings row in the table
             SQLiteHelper.Update(conn, "GraphicSettings", g, "key = 1");
             // clear any (base map) layers currently set in the table and reset them now
             SQLiteHelper.ClearTable(conn, "Layers");
             // cycle and save all layer types to settings
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.CityLimitsLayer, LayerTypeCityLimit, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.CellSectorsLayer, LayerTypeCellSector, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.EsnsLayer, LayerTypeEsn, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
-            SaveLayerCollection(SdrConfig.Project.Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.CityLimitsLayer, LayerTypeCityLimit, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.CellSectorsLayer, LayerTypeCellSector, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.EsnsLayer, LayerTypeEsn, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
             // check for any map tabs and save them as needed
             SQLiteHelper.ClearTable(conn, "MapTabs");
-            var dc = Dock;
-            foreach (KeyValuePair<string, DockPanelInfo> dpi in dc.DockPanelLookup)
+            DockingControl dc = Dock;
+            foreach (var dpi in dc.DockPanelLookup)
             {
                 if (!dpi.Key.Trim().StartsWith("kMap")) continue;
-                var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
+                var map = (Map) dpi.Value.DotSpatialDockPanel.InnerControl;
                 var mapFrame = map.MapFrame as MapFrame;
-                var layers = map.Layers;  // get the layers
-                var txtLayers = string.Empty;  // text block to store layers
+                IMapLayerCollection layers = map.Layers; // get the layers
+                string txtLayers = string.Empty; // text block to store layers
 
                 foreach (IMapLayer mapLayer in layers)
                 {
                     string layName;
                     if (mapLayer.GetType().Name == "MapImageLayer")
                     {
-                        var mImage = (IMapImageLayer)mapLayer;
+                        var mImage = (IMapImageLayer) mapLayer;
                         layName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
                     }
                     else
                     {
-                        var ftLayer = (FeatureLayer)mapLayer;
+                        var ftLayer = (FeatureLayer) mapLayer;
                         layName = ftLayer.Name;
                     }
                     txtLayers = txtLayers + layName + "|";
@@ -462,9 +506,9 @@ namespace Go2It
         private void SaveLayerCollection(StringCollection sc, string projectType, string conn)
         {
             if (sc == null) return;
-            foreach (var layName in sc)
+            foreach (string layName in sc)
             {
-                var d = CreateLayerDictionary(layName, projectType);
+                Dictionary<string, string> d = CreateLayerDictionary(layName, projectType);
                 if (d != null)
                 {
                     SQLiteHelper.Insert(conn, "Layers", d);
@@ -474,7 +518,7 @@ namespace Go2It
 
         private void SaveLayerCollection(string layName, string projectType, string conn)
         {
-            var d = CreateLayerDictionary(layName, projectType);
+            Dictionary<string, string> d = CreateLayerDictionary(layName, projectType);
             if (d != null)
             {
                 SQLiteHelper.Insert(conn, "Layers", d);
@@ -487,14 +531,14 @@ namespace Go2It
             if (projType.Length == 0) return null;
 
             var d = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, IMapLayer> keyValuePair in Dock.BaseLayerLookup)
+            foreach (var keyValuePair in Dock.BaseLayerLookup)
             {
                 var fl = keyValuePair.Value as IMapFeatureLayer;
                 if (fl != null)
                 {
                     if (keyValuePair.Key == layName)
                     {
-                        var ftLayer = (FeatureLayer)fl;
+                        var ftLayer = (FeatureLayer) fl;
                         d.Add("name", ftLayer.Name);
                         d.Add("layerType", ftLayer.DataSet.FeatureType.ToString());
                         d.Add("projectType", projType);
@@ -550,11 +594,12 @@ namespace Go2It
             string newDbPath = Path.ChangeExtension(projectFileName, ".sqlite");
             string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + "indexes";
 
-            string currentDbPath = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            var d = Path.GetDirectoryName(currentDbPath);
+            string currentDbPath =
+                SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            string d = Path.GetDirectoryName(currentDbPath);
             if (d != null)
             {
-                var currentDirPath = Path.Combine(d, "indexes");
+                string currentDirPath = Path.Combine(d, "indexes");
                 if (newDbPath != currentDbPath)
                 {
                     // copy db to new path. If no db exists, create new db in the new location
@@ -572,7 +617,8 @@ namespace Go2It
                         CreateNewDatabase(newDbPath);
                     }
                     // update application level database configuration settings
-                    SdrConfig.Settings.Instance.ProjectRepoConnectionString = SQLiteHelper.GetSQLiteConnectionString(newDbPath);
+                    SdrConfig.Settings.Instance.ProjectRepoConnectionString =
+                        SQLiteHelper.GetSQLiteConnectionString(newDbPath);
                 }
             }
             SaveProjectSettings();

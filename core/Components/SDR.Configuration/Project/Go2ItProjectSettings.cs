@@ -52,6 +52,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GraphicPointSize = 18;
             Properties.ProjectSettings.Default.GraphicPointStyle = "Triangle";
             Properties.ProjectSettings.Default.HydrantSearchCount = 3;
+            Properties.ProjectSettings.Default.HydrantSearchDistance = 250;
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal)0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
@@ -329,6 +330,12 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.SearchBufferDistance = value; }
             get { return Properties.ProjectSettings.Default.SearchBufferDistance; }
+        }
+
+        public int HydrantSearchDistance
+        {
+            set { Properties.ProjectSettings.Default.HydrantSearchDistance = value; }
+            get { return Properties.ProjectSettings.Default.HydrantSearchDistance; }
         }
     }
 }

@@ -651,7 +651,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 }
             }
 
-            // _hydrantGraphics.Extent.ExpandToInclude();
 
 
             SetupIndexReaderWriter(idxType);  // set the index searcher back
@@ -660,6 +659,8 @@ namespace DotSpatial.SDR.Plugins.Search
             var newExtentHeight = _hydrantGraphics.Extent.Height * zoomFactor;
 
             _hydrantGraphics.Extent.ExpandBy(newExtentWidth, newExtentHeight);
+            // _hydrantGraphics.Extent.ExpandToInclude();
+
             var env = _hydrantGraphics.Extent.ToEnvelope();
             Map.ViewExtents = env.ToExtent();
         }

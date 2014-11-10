@@ -71,7 +71,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 App.Map.MapFunctions.Add(_mapFunction);
             }
             _mapFunction.Map = App.Map;
-            
         }
 
         private void OnMapFunctionOnFunctionActivated(object sender, EventArgs eventArgs)
