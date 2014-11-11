@@ -112,8 +112,8 @@
             this.btnCreateIndex = new System.Windows.Forms.Button();
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
-            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -638,6 +638,11 @@
             // searchHydrantDistance
             // 
             this.searchHydrantDistance.Location = new System.Drawing.Point(56, 627);
+            this.searchHydrantDistance.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
             this.searchHydrantDistance.Name = "searchHydrantDistance";
             this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
             this.searchHydrantDistance.TabIndex = 24;
@@ -1034,6 +1039,19 @@
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(369, 732);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -1047,19 +1065,6 @@
             this.btnSplitSave.Text = "Save";
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(369, 732);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AdminForm
             // 

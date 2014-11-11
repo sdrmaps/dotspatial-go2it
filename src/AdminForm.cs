@@ -729,7 +729,7 @@ namespace Go2It
             chkEnableQuesryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.EnableQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
             searchHydrantCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount;
-            // searchHydrantDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchDistance;
+            searchHydrantDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchDistance;
             searchZoomFactor.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
             mapBGColorPanel.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor;
             // set default settings on admin load
