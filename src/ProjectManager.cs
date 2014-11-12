@@ -118,8 +118,7 @@ namespace Go2It
             string repoConnStr = SQLiteHelper.GetSQLiteConnectionString(dbFileName);
             SdrConfig.Settings.Instance.ProjectRepoConnectionString = repoConnStr;
             // do basic project configuration query
-            const string psQuery =
-                "SELECT keylocations_type, search_hydrant_count, search_zoom_factor, search_buffer_distance, addresses_type, map_bgcolor, active_map_key, active_map_caption, use_pretypes FROM ProjectSettings";
+            const string psQuery = "SELECT * FROM ProjectSettings";
             DataTable psTable = SQLiteHelper.GetDataTable(repoConnStr, psQuery);
             DataRow psR = psTable.Rows[0]; // there is only one row for project settings
             // setup all project level type lookups and keys
@@ -134,8 +133,7 @@ namespace Go2It
             Go2ItProjectSettings.Instance.SearchBufferDistance = int.Parse(psR["search_buffer_distance"].ToString());
             Go2ItProjectSettings.Instance.SearchZoomFactor = decimal.Parse(psR["search_zoom_factor"].ToString());
             // setup all project level graphics settings
-            const string gsQuery =
-                "SELECT point_color, point_style, point_size, line_color, line_size, line_border_color, line_cap, line_style FROM GraphicSettings";
+            const string gsQuery = "SELECT * FROM GraphicSettings";
             DataTable gsTable = SQLiteHelper.GetDataTable(repoConnStr, gsQuery);
             DataRow gsR = gsTable.Rows[0]; // there is only one row for graphics settings
             // setup all project level type lookups and keys
@@ -151,7 +149,7 @@ namespace Go2It
             Go2ItProjectSettings.Instance.GraphicLineStyle = gsR["line_style"].ToString();
             Go2ItProjectSettings.Instance.GraphicLineCap = gsR["line_cap"].ToString();
             // now lets setup all the layers to proper types
-            const string lyrQuery = "SELECT name, layerType, projectType FROM Layers";
+            const string lyrQuery = "SELECT * FROM Layers";
             DataTable lyrTable = SQLiteHelper.GetDataTable(repoConnStr, lyrQuery);
             foreach (DataRow row in lyrTable.Rows)
             {
@@ -190,7 +188,7 @@ namespace Go2It
                 }
             }
             // run a query to get all the map tabs that this project has set
-            const string tabsQuery = "SELECT layers, extent, bounds, zorder, lookup, caption, viewextent FROM MapTabs";
+            const string tabsQuery = "SELECT * FROM MapTabs";
             DataTable tabsTable = SQLiteHelper.GetDataTable(repoConnStr, tabsQuery);
             // cycle through all map tabs and generate maps and tabs as needed
             foreach (DataRow row in tabsTable.Rows)
@@ -292,46 +290,46 @@ namespace Go2It
             App.DockManager.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
-        private void LogMapEvents(IMap map, string name)
-        {
-            map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::ProjectManager");
-            map.FunctionModeChanged +=
-                (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::ProjectManager");
-            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::ProjectManager");
-            map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::ProjectManager");
-            map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::ProjectManager");
-        }
+        //private void LogMapEvents(IMap map, string name)
+        //{
+        //    map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::ProjectManager");
+        //    map.FunctionModeChanged +=
+        //        (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::ProjectManager");
+        //    map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::ProjectManager");
+        //    map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::ProjectManager");
+        //    map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::ProjectManager");
+        //}
 
-        private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        {
-            mapframe.BufferChanged +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::ProjectManager");
-            mapframe.EnvelopeChanged +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::ProjectManager");
-            mapframe.FinishedLoading +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::ProjectManager");
-            mapframe.FinishedRefresh +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::ProjectManager");
-            mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::ProjectManager");
-            mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::ProjectManager");
-            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::ProjectManager");
-            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::ProjectManager");
-            mapframe.LayerSelected +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::ProjectManager");
-            mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::ProjectManager");
-            mapframe.ScreenUpdated +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::ProjectManager");
-            mapframe.SelectionChanged +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::ProjectManager");
-            mapframe.ShowProperties +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::ProjectManager");
-            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::ProjectManager");
-            mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::ProjectManager");
-            mapframe.ViewExtentsChanged +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::ProjectManager");
-            mapframe.VisibleChanged +=
-                (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::ProjectManager");
-        }
+        //private void LogMapFrameEvents(IMapFrame mapframe, string name)
+        //{
+        //    mapframe.BufferChanged +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::ProjectManager");
+        //    mapframe.EnvelopeChanged +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::ProjectManager");
+        //    mapframe.FinishedLoading +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::ProjectManager");
+        //    mapframe.FinishedRefresh +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::ProjectManager");
+        //    mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::ProjectManager");
+        //    mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::ProjectManager");
+        //    mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::ProjectManager");
+        //    mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::ProjectManager");
+        //    mapframe.LayerSelected +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::ProjectManager");
+        //    mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::ProjectManager");
+        //    mapframe.ScreenUpdated +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::ProjectManager");
+        //    mapframe.SelectionChanged +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::ProjectManager");
+        //    mapframe.ShowProperties +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::ProjectManager");
+        //    mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::ProjectManager");
+        //    mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::ProjectManager");
+        //    mapframe.ViewExtentsChanged +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::ProjectManager");
+        //    mapframe.VisibleChanged +=
+        //        (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::ProjectManager");
+        //}
 
         /// <summary>
         ///     Creates a new 'empty' project
@@ -398,16 +396,11 @@ namespace Go2It
             {
                 {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
                 {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
-                {
-                    "map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)
-                },
+                {"map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
                 {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
                 {"use_pretypes", Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture)},
-                {
-                    "search_zoom_factor",
-                    Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)
-                },
+                {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
                 {
                     "search_buffer_distance",
                     Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)

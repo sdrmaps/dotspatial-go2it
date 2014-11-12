@@ -172,18 +172,6 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DrivewaysLayer {
-            get {
-                return ((string)(this["DrivewaysLayer"]));
-            }
-            set {
-                this["DrivewaysLayer"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("kMap_MyMap")]
         public string ActiveMapViewKey {
             get {

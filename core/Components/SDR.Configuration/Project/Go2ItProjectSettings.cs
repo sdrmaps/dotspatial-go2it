@@ -37,7 +37,6 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.EsnsLayer = string.Empty;
             Properties.ProjectSettings.Default.ParcelsLayer = string.Empty;
             Properties.ProjectSettings.Default.HydrantsLayer = string.Empty;
-            Properties.ProjectSettings.Default.DrivewaysLayer = string.Empty;
             Properties.ProjectSettings.Default.ActiveMapViewKey = "kMap_MyMap";
             Properties.ProjectSettings.Default.ActiveMapViewCaption = "My Map";
             Properties.ProjectSettings.Default.AddressesProjectType = "POINT";
@@ -183,15 +182,6 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.MapBgColor = value; }
             get { return Properties.ProjectSettings.Default.MapBgColor; }
-        }
-
-        /// <summary>
-        /// Active Driveway Layer
-        /// </summary>
-        public string DrivewaysLayer
-        {
-            set { Properties.ProjectSettings.Default.DrivewaysLayer = value; }
-            get { return Properties.ProjectSettings.Default.DrivewaysLayer; }
         }
 
         /// <summary>

@@ -41,9 +41,6 @@
     <Setting Name="MapBgColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
     </Setting>
-    <Setting Name="DrivewaysLayer" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="ActiveMapViewKey" Type="System.String" Scope="User">
       <Value Profile="(Default)">kMap_MyMap</Value>
     </Setting>
