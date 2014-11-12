@@ -674,11 +674,10 @@ namespace DotSpatial.SDR.Plugins.Search
             Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(activeLookup.Shape);
             Spatial4n.Core.Shapes.Point centerPt = shp.GetCenter();
 
-            // TODO: make the distance it searches from a user set value
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
             var args = new SpatialArgs(SpatialOperation.Intersects,
                 ctx.MakeCircle(centerPt.GetX(), centerPt.GetY(),
-                    DistanceUtils.Dist2Degrees(10, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
+                    DistanceUtils.Dist2Degrees(SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchDistance, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
 
             Filter filter = strategy.MakeFilter(args);
             ValueSource valueSource = strategy.MakeDistanceValueSource(centerPt);

@@ -2708,14 +2708,14 @@
             Gets or sets a boolean indicating whether or not status bar coordinates should display the unites derived from the projection string.
             </summary>
         </member>
-        <member name="T:DotSpatial.Data.Smoother">
-            <summary>
-            Smoother
-            </summary>
-        </member>
         <member name="M:DotSpatial.Data.Smoother.#ctor(System.Int32,System.Int32,System.Int32,System.Byte[],DotSpatial.Data.IProgressHandler)">
             <summary>
             Creates a new instance of Smoother
+            </summary>
+        </member>
+        <member name="M:DotSpatial.Data.Smoother.#ctor(System.Int32,System.Int32,System.Int32,System.IntPtr,DotSpatial.Data.IProgressHandler)">
+            <summary>
+            Creates a new instance of Smoother with IntPtr for input array
             </summary>
         </member>
         <member name="M:DotSpatial.Data.Smoother.Smooth">
@@ -3223,6 +3223,19 @@
         </member>
         <member name="P:DotSpatial.Data.PointShapefileShapeSource.FeatureType">
             <inheritdocs/>
+        </member>
+        <member name="T:DotSpatial.Data.Argb">
+            <summary>
+            Tiny structure for storing A,R,G,B components of Color
+            </summary>
+        </member>
+        <member name="M:DotSpatial.Data.Argb.ByteRange(System.Int32)">
+            <summary>
+            Returns an integer that ranges from 0 to 255.  If value is larger than 255, the value will be equal to 255.
+            If the value is smaller than 255, it will be equal to 255.
+            </summary>
+            <param name="value">A Double value to convert.</param>
+            <returns>An integer ranging from 0 to 255</returns>
         </member>
         <member name="T:DotSpatial.Data.MessageCancelEventArgs">
             <summary>
@@ -3826,7 +3839,7 @@
         <member name="M:DotSpatial.Data.FeatureSet.AddFid">
             <summary>
             Adds the FID values as a field called FID, but only if the FID field
-            does not already exist
+            does not already exist.
             </summary>
         </member>
         <member name="M:DotSpatial.Data.FeatureSet.AddShape(DotSpatial.Data.Shape)">
@@ -3963,7 +3976,7 @@
             Retrieves a subset using exclusively the features matching the specified values.
             </summary>
             <param name="indices">
-            An integer list of indices to copy into the new FeatureSet
+            An integer list of indices to copy into the new FeatureSet.
             </param>
             <returns>
             A FeatureSet with the new items.
@@ -4124,7 +4137,7 @@
         </member>
         <member name="M:DotSpatial.Data.FeatureSet.FeaturesFromVertices">
             <summary>
-            Calculates the features from the shape indices and vertex array
+            Calculates the features from the shape indices and vertex array.
             </summary>
         </member>
         <member name="M:DotSpatial.Data.FeatureSet.OnDataTableExcluded(System.Data.DataTable)">
@@ -17793,11 +17806,6 @@
         <member name="P:DotSpatial.Data.Segment.Epsilon">
             <summary>
             Gets or sets the precision for calculating equality, but this is just a re-direction to Vertex.Epsilon
-            </summary>
-        </member>
-        <member name="T:DotSpatial.Data.AttributeCache">
-            <summary>
-            Cache
             </summary>
         </member>
         <member name="F:DotSpatial.Data.AttributeCache.EditRow">

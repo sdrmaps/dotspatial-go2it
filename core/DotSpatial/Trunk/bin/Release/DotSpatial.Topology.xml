@@ -15395,11 +15395,6 @@
             <param name="z">The translation in the Z coordinate</param>
             <returns></returns>
         </member>
-        <member name="T:DotSpatial.Topology.FloatVector3">
-            <summary>
-            IFloatVector3
-            </summary>
-        </member>
         <member name="F:DotSpatial.Topology.FloatVector3.X">
             <summary>
             X

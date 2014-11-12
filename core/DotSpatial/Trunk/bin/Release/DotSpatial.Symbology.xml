@@ -6862,9 +6862,14 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:DotSpatial.Symbology.SymbologyMessageStrings.Data">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
+            </summary>
+        </member>
         <member name="P:DotSpatial.Symbology.SymbologyMessageStrings.DesktopRasterExt_CreatingShadedRelief">
             <summary>
-              Looks up a localized string similar to Creating Shaded Relief.
+              Sucht eine lokalisierte Zeichenfolge, die Creating Shaded Relief ähnelt.
             </summary>
         </member>
         <member name="P:DotSpatial.Symbology.SymbologyMessageStrings.DesktopRasterExt_PaintingColorScheme">
@@ -13800,22 +13805,6 @@
             An Exception object for situations where the drawing threw an exception.
             </summary>
         </member>
-        <member name="T:DotSpatial.Symbology.DesktopRasterExt">
-            <summary>
-            A new model, now that we support 3.5 framework and extension methods that are essentially
-            derived characteristics away from the IRaster interface, essentially reducing it
-            to the simplest interface possible for future implementers, while extending the most
-            easy-to-find functionality to the users.
-            </summary>
-        </member>
-        <member name="M:DotSpatial.Symbology.DesktopRasterExt.CreateHillShade(DotSpatial.Data.IRaster,DotSpatial.Symbology.IShadedRelief)">
-            <summary>
-            Create Hillshade of values ranging from 0 to 1, or -1 for no-data regions.
-            This uses the progress handler defined on this raster.
-            </summary>
-            <param name="raster">The raster to create hillshade information for</param>
-            <param name="shadedRelief">An implementation of IShadedRelief describing how the hillshade should be created.</param>
-        </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.CreateHillShade(DotSpatial.Data.IRaster,DotSpatial.Symbology.IShadedRelief,DotSpatial.Data.IProgressHandler)">
             <summary>
             Create Hillshade of values ranging from 0 to 1, or -1 for no-data regions.
@@ -13836,15 +13825,6 @@
             <param name="shadedRelief">An implementation of IShadedRelief describing how the hillshade should be created.</param>
             <param name="progressMeter">An implementation of IProgressHandler for progress messages</param>
         </member>
-        <member name="M:DotSpatial.Symbology.DesktopRasterExt.DrawToBitmap(DotSpatial.Data.IRaster,DotSpatial.Symbology.IRasterSymbolizer,System.Drawing.Bitmap)">
-            <summary>
-            Creates a bitmap from this raster using the specified rasterSymbolizer
-            </summary>
-            <param name="raster">The raster to draw to the bitmap based on the layout specified in the rasterSymbolizer</param>
-            <param name="rasterSymbolizer">The raster symbolizer to use for assigning colors</param>
-            <param name="bitmap">This must be an Format32bbpArgb bitmap that has already been saved to a file so that it exists.</param>
-            <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null</exception>
-        </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.DrawToBitmap(DotSpatial.Data.IRaster,DotSpatial.Symbology.IRasterSymbolizer,System.Drawing.Bitmap,DotSpatial.Data.IProgressHandler)">
             <summary>
             Creates a bitmap from this raster using the specified rasterSymbolizer
@@ -13854,36 +13834,6 @@
             <param name="bitmap">This must be an Format32bbpArgb bitmap that has already been saved to a file so that it exists.</param>
             <param name="progressHandler">The progress handler to use.</param>
             <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null</exception>
-        </member>
-        <member name="M:DotSpatial.Symbology.DesktopRasterExt.DrawToBitmap(DotSpatial.Data.IRaster,DotSpatial.Symbology.IRasterSymbolizer,System.Byte[],System.Int32,DotSpatial.Data.ProgressMeter)">
-            <summary>
-            Creates a bitmap from this raster using the specified rasterSymbolizer
-            </summary>
-            <param name="raster">The raster to draw to a bitmap</param>
-            <param name="rasterSymbolizer">The raster symbolizer to use for assigning colors</param>
-            <param name="rgbData">Byte values representing the ARGB image bytes</param>
-            <param name="stride">The stride</param>
-            <param name="pm">The progress meter to use.</param>
-            <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null</exception>
-        </member>
-        <member name="M:DotSpatial.Symbology.DesktopRasterExt.DrawToBitmapOld(DotSpatial.Data.IRaster,DotSpatial.Symbology.IRasterSymbolizer,System.Byte[],System.Int32,DotSpatial.Data.ProgressMeter)">
-            <summary>
-            Creates a bitmap from this raster using the specified rasterSymbolizer
-            </summary>
-            <param name="raster">The raster to draw to a bitmap</param>
-            <param name="rasterSymbolizer">The raster symbolizer to use for assigning colors</param>
-            <param name="rgbData">Byte values representing the ARGB image bytes</param>
-            <param name="stride">The stride</param>
-            <param name="pm">The progress meter to use.</param>
-            <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null</exception>
-        </member>
-        <member name="M:DotSpatial.Symbology.DesktopRasterExt.ByteRange(System.Int32)">
-            <summary>
-            Returns an integer that ranges from 0 to 255.  If value is larger than 255, the value will be equal to 255.
-            If the value is smaller than 255, it will be equal to 255.
-            </summary>
-            <param name="value">A Double value to convert.</param>
-            <returns>An integer ranging from 0 to 255</returns>
         </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.DrawToBitmapT``1(DotSpatial.Data.Raster{``0},DotSpatial.Symbology.IRasterSymbolizer,System.Byte[],System.Int32,DotSpatial.Data.ProgressMeter)">
             <summary>
@@ -13906,16 +13856,6 @@
             <param name="progressHandler">An IProgressHandler implementation to receive progress updates.</param>
             <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null.</exception>
         </member>
-        <member name="M:DotSpatial.Symbology.DesktopRasterExt.PaintColorSchemeToBitmapOld(DotSpatial.Data.IRaster,DotSpatial.Symbology.IRasterSymbolizer,System.Drawing.Bitmap,DotSpatial.Data.IProgressHandler)">
-            <summary>
-            Creates a bitmap using only the colorscheme, even if a hillshade was specified.
-            </summary>
-            <param name="raster">The Raster containing values that need to be drawn to the bitmap as a color scheme.</param>
-            <param name="rasterSymbolizer">The raster symbolizer to use.</param>
-            <param name="bitmap">The bitmap to edit.  Ensure that this has been created and saved at least once.</param>
-            <param name="progressHandler">An IProgressHandler implementation to receive progress updates.</param>
-            <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null.</exception>
-        </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.PaintColorSchemeToBitmapT``1(DotSpatial.Data.Raster{``0},DotSpatial.Symbology.IRasterSymbolizer,System.Drawing.Bitmap,DotSpatial.Data.IProgressHandler)">
             <summary>
             Creates a bitmap using only the colorscheme, even if a hillshade was specified.
@@ -13924,7 +13864,7 @@
             <param name="rasterSymbolizer">The raster symbolizer to use.</param>
             <param name="bitmap">The bitmap to edit.  Ensure that this has been created and saved at least once.</param>
             <param name="progressHandler">An IProgressHandler implementation to receive progress updates.</param>
-            <exception cref="T:System.ArgumentNullException">rasterSymbolizer cannot be null.</exception>
+            <exception cref="T:System.ArgumentNullException"><see cref="!:rasterSymbolizer"/> cannot be null, <see cref="!:raster"/> cannot be null, <see cref="!:bitmap"/> cannot be null</exception>
         </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.GetUniqueValues(DotSpatial.Data.IRaster)">
             <summary>
@@ -13935,12 +13875,12 @@
         </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.GetUniqueValues(DotSpatial.Data.IRaster,System.Int32,System.Boolean@)">
             <summary>
-            Obtains a list of unique values.  If there are more than maxCount values, the process stops and overMaxCount is set to true.
+            Obtains an set of unique values.  If there are more than maxCount values, the process stops and overMaxCount is set to true.
             </summary>
             <param name="raster">the raster to obtain the unique values from.</param>
             <param name="maxCount">An integer specifying the maximum number of values to add to the list of unique values</param>
             <param name="overMaxCount">A boolean that will be true if the process was halted prematurely.</param>
-            <returns>A list of doubles representing the independant values.</returns>
+            <returns>A set of doubles representing the independant values.</returns>
         </member>
         <member name="M:DotSpatial.Symbology.DesktopRasterExt.GetRandomValues(DotSpatial.Data.IRaster,System.Int32)">
             <summary>

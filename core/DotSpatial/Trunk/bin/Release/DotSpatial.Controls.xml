@@ -3107,6 +3107,16 @@
             Draws a label on a polygon with various different methods
             </summary>
         </member>
+        <member name="M:DotSpatial.Controls.MapLabelLayer.PlacePolygonLabel(DotSpatial.Topology.IBasicGeometry,DotSpatial.Controls.MapArgs,System.Func{System.Drawing.SizeF},DotSpatial.Symbology.ILabelSymbolizer)">
+            <summary>
+            Calculates the position of the polygon label.
+            </summary>
+            <param name="geom"></param>
+            <param name="e"></param>
+            <param name="labelSize"></param>
+            <param name="symb"></param>
+            <returns></returns>
+        </member>
         <member name="M:DotSpatial.Controls.MapLabelLayer.DrawPointFeature(DotSpatial.Controls.MapArgs,System.Drawing.Graphics,DotSpatial.Data.IFeature,DotSpatial.Symbology.ILabelCategory,System.Boolean,System.Collections.Generic.List{System.Drawing.RectangleF})">
             <summary>
             Draws a label on a point with various different methods
@@ -3118,10 +3128,28 @@
             <param name="selected"></param>
             <param name="existingLabels"></param>
         </member>
+        <member name="M:DotSpatial.Controls.MapLabelLayer.PlaceLabel(DotSpatial.Topology.Coordinate,DotSpatial.Controls.MapArgs,System.Func{System.Drawing.SizeF},DotSpatial.Symbology.ILabelSymbolizer)">
+            <summary>
+            Creates the RectangleF for the label.
+            </summary>
+            <param name="c">Coordinate, where the label should be placed.</param>
+            <param name="e">MapArgs for calculating the position of the label on the output medium.</param>
+            <param name="labelSize">Function that calculates the labelSize.</param>
+            <param name="symb">ILabelSymbolizer to calculate the orientation based adjustment.</param>
+            <returns>Empty Rectangle if Coordinate is outside of the drawn extent, otherwise Rectangle needed to draw the label.</returns>
+        </member>
         <member name="M:DotSpatial.Controls.MapLabelLayer.DrawLineFeature(DotSpatial.Controls.MapArgs,System.Drawing.Graphics,DotSpatial.Data.IFeature,DotSpatial.Symbology.ILabelCategory,System.Boolean,System.Collections.Generic.List{System.Drawing.RectangleF})">
             <summary>
             Draws a label on a line with various different methods
             </summary>
+        </member>
+        <member name="M:DotSpatial.Controls.MapLabelLayer.Position(DotSpatial.Symbology.ILabelSymbolizer,System.Drawing.SizeF)">
+            <summary>
+            Calculates the adjustment of the the label's position based on the symbolizers orientation.
+            </summary>
+            <param name="symb">ILabelSymbolizer whose orientation should be considered.</param>
+            <param name="size">Size of the label.</param>
+            <returns>New label-position based on label-size and symbolizer-orientation.</returns>
         </member>
         <member name="M:DotSpatial.Controls.MapLabelLayer.DrawLabel(System.Drawing.Graphics,System.String,System.Drawing.RectangleF,DotSpatial.Symbology.ILabelSymbolizer,DotSpatial.Data.IFeature)">
             <summary>
@@ -4070,6 +4098,17 @@
             <summary>
             Occurs when a new drawing is started, but after the BackBuffer has been established.
             </summary>
+        </member>
+        <member name="M:DotSpatial.Controls.MapPointLayer.DrawPoint(System.Double,System.Double,DotSpatial.Controls.MapArgs,DotSpatial.Symbology.IPointSymbolizer,System.Drawing.Graphics,System.Drawing.Drawing2D.Matrix)">
+            <summary>
+            Draws a point at the given location.
+            </summary>
+            <param name="ptX">X-Coordinate of the point, that should be drawn.</param>
+            <param name="ptY">Y-Coordinate of the point, that should be drawn.</param>
+            <param name="e">MapArgs for calculating the scaleSize.</param>
+            <param name="ps">PointSymbolizer with which the point gets drawn.</param>
+            <param name="g">Graphics-Object that should be used by the PointSymbolizer.</param>
+            <param name="origTransform">The original transformation that is used to position the point.</param>
         </member>
         <member name="M:DotSpatial.Controls.MapPointLayer.OpenFile(System.String,DotSpatial.Data.IProgressHandler)">
             <summary>
@@ -10820,11 +10859,76 @@
             </summary>
             <returns>The list of the layers</returns>
         </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllFeatureLayers(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all feature layers of the map frame including feature layers which are nested
+            within groups. The group objects themselves are not included in this list.
+            </summary>
+            <returns>The list of the feature layers</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllPointLayers(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all point layers of the map frame including point layers which are nested
+            within groups. The group objects themselves are not included in this list.
+            </summary>
+            <returns>The list of the point layers</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllLineLayers(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all line layers of the map frame including line layers which are nested
+            within groups. The group objects themselves are not included in this list.
+            </summary>
+            <returns>The list of the line layers</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllPolygonLayers(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all polygon layers of the map frame including polygon layers which are nested
+            within groups. The group objects themselves are not included in this list.
+            </summary>
+            <returns>The list of the polygon layers</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllRasterLayers(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all raster layers of the map frame including raster layers which are nested
+            within groups. The group objects themselves are not included in this list.
+            </summary>
+            <returns>The list of the raster layers</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllImageLayers(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all image layers of the map frame including image layers which are nested
+            within groups. The group objects themselves are not included in this list.
+            </summary>
+            <returns>The list of the image layers</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetAllTypeLayers``1(DotSpatial.Controls.IMapFrame)">
+            <summary>
+            Gets all the layers of the given type.
+            </summary>
+            <typeparam name="T">Type of the layers that should be included.</typeparam>
+            <param name="mapFrame">mapFrame that contains the layers.</param>
+            <returns>The list of the layers with the given type.</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetNestedLayers``1(DotSpatial.Controls.IMapGroup,System.Collections.Generic.List{``0})">
+            <summary>
+            Recursively adds all the layers of the given type that are found in group to layerList.
+            </summary>
+            <typeparam name="T">Type of the layers that should be included.</typeparam>
+            <param name="group">Group that contains the layers.</param>
+            <param name="layerList">The list the layers should be added to.</param>
+        </member>
         <member name="M:DotSpatial.Controls.MapFrameExt.GetAllGroups(DotSpatial.Controls.IMapFrame)">
             <summary>
-            Gets all map groups in the map including the nested groups
+            Gets all map groups in the map including the nested groups.
             </summary>
             <returns>the list of the groups</returns>
+        </member>
+        <member name="M:DotSpatial.Controls.MapFrameExt.GetNestedGroups(DotSpatial.Controls.IMapGroup,System.Collections.Generic.List{DotSpatial.Controls.IMapGroup})">
+            <summary>
+            Recursively adds all the groups to groupList.
+            </summary>
+            <param name="grp">Group to search through.</param>
+            <param name="groupList">The list the groups should be added to.</param>
         </member>
         <member name="T:DotSpatial.Controls.ItemMouseEventArgs">
             <summary>
