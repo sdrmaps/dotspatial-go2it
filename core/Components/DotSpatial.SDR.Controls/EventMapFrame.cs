@@ -12,6 +12,26 @@ namespace DotSpatial.SDR.Controls
     {
         public bool ViewExtentChangedSuspended { get; private set; }
 
+        //public void DisplayReprojectionDialog()
+        //{
+
+        //    //get { _projectionModeReproject; }
+        //    //set { _projectionModeReproject = value; }
+        //}
+
+        ///// <summary>
+        ///// Gets or sets the PromptMode that determines how to warn users when attempting to add a layer without
+        ///// a projection to a map that has a projection.
+        ///// </summary>
+        //public void AutoReprojection()
+        //{
+        //    //get { return _projectionModeDefine; }
+        //    //set
+        //    //{
+        //    //    _projectionModeDefine = value;
+        //    //}
+        //}
+
         public void SuspendViewExtentChanged()
         {
             ViewExtentChangedSuspended = true;
@@ -23,5 +43,6 @@ namespace DotSpatial.SDR.Controls
             ViewExtentChangedSuspended = false;
             ResumeExtentChanged();   
         }
+
     }
 }

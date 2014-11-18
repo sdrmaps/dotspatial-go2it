@@ -48,7 +48,9 @@ namespace Go2It
             // create a selection status display panel
             // _selectionsDisplay = new SelectionsDisplay(App);
             
-            // create a new lat/long display panel`
+            // create a new lat/long display panel
+
+            // TODO: add this back in shortly
             _latLongDisplay = new CoordinateDisplay(App);
 
             base.Activate();

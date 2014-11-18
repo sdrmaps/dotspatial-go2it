@@ -290,47 +290,6 @@ namespace Go2It
             App.DockManager.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
-        //private void LogMapEvents(IMap map, string name)
-        //{
-        //    map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::ProjectManager");
-        //    map.FunctionModeChanged +=
-        //        (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::ProjectManager");
-        //    map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::ProjectManager");
-        //    map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::ProjectManager");
-        //    map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::ProjectManager");
-        //}
-
-        //private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        //{
-        //    mapframe.BufferChanged +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::ProjectManager");
-        //    mapframe.EnvelopeChanged +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::ProjectManager");
-        //    mapframe.FinishedLoading +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::ProjectManager");
-        //    mapframe.FinishedRefresh +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::ProjectManager");
-        //    mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::ProjectManager");
-        //    mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::ProjectManager");
-        //    mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::ProjectManager");
-        //    mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::ProjectManager");
-        //    mapframe.LayerSelected +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::ProjectManager");
-        //    mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::ProjectManager");
-        //    mapframe.ScreenUpdated +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::ProjectManager");
-        //    mapframe.SelectionChanged +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::ProjectManager");
-        //    mapframe.ShowProperties +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::ProjectManager");
-        //    mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::ProjectManager");
-        //    mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::ProjectManager");
-        //    mapframe.ViewExtentsChanged +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::ProjectManager");
-        //    mapframe.VisibleChanged +=
-        //        (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::ProjectManager");
-        //}
-
         /// <summary>
         ///     Creates a new 'empty' project
         /// </summary>

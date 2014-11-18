@@ -210,37 +210,6 @@ namespace Go2It
             }
         }
 
-        // TODO: we can safely remove our map loggers
-        private void LogMapEvents(IMap map, string name)
-        {
-            //map.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " Map.FinishedRefresh::AdminForm");
-            //map.FunctionModeChanged += (sender, args) => Debug.WriteLine(name + " Map.FunctionModeChanged::AdminForm");
-            map.LayerAdded += (sender, args) => Debug.WriteLine(name + " Map.LayerAdded::AdminForm");
-            //map.SelectionChanged += (sender, args) => Debug.WriteLine(name + " Map.SelectionChanged::AdminForm");
-            //map.Resized += (sender, args) => Debug.WriteLine(name + " Map.Resized::AdminForm");
-        }
-
-        private void LogMapFrameEvents(IMapFrame mapframe, string name)
-        {
-            //mapframe.BufferChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.BufferChanged::AdminForm");
-            //mapframe.EnvelopeChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.EnvelopeChanged::AdminForm");
-            //mapframe.FinishedLoading += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedLoading::AdminForm");
-            //mapframe.FinishedRefresh += (sender, args) => Debug.WriteLine(name + " MapFrame.FinishedRefresh::AdminForm");
-            //mapframe.Invalidated += (sender, args) => Debug.WriteLine(name + " MapFrame.Invalidated::AdminForm");
-            //mapframe.ItemChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ItemChanged::AdminForm");
-            mapframe.LayerAdded += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerAdded::AdminForm");
-            mapframe.LayerRemoved += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerRemoved::AdminForm");
-            //mapframe.LayerSelected += (sender, args) => Debug.WriteLine(name + " MapFrame.LayerSelected::AdminForm");
-            //mapframe.RemoveItem += (sender, args) => Debug.WriteLine(name + " MapFrame.RemoveItem::AdminForm");
-            //mapframe.ScreenUpdated += (sender, args) => Debug.WriteLine(name + " MapFrame.ScreenUpdated::AdminForm");
-            //mapframe.SelectionChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.SelectionChanged::AdminForm");
-            //mapframe.ShowProperties += (sender, args) => Debug.WriteLine(name + " MapFrame.ShowProperties::AdminForm");
-            mapframe.UpdateMap += (sender, args) => Debug.WriteLine(name + " MapFrame.UpdateMap::AdminForm");
-            //mapframe.ViewChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewChanged::AdminForm");
-            mapframe.ViewExtentsChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.ViewExtentsChanged::AdminForm");
-            //mapframe.VisibleChanged += (sender, args) => Debug.WriteLine(name + " MapFrame.VisibleChanged::AdminForm");
-        }
-
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // update the hotkey datagridview as needed

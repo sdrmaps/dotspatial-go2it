@@ -598,9 +598,12 @@
         </member>
         <member name="M:DotSpatial.Projections.ProjectionInfo.Equals(DotSpatial.Projections.ProjectionInfo)">
             <summary>
-            Gets a boolean that is true if the Esri WKT string created by the projections matches.
-              There are multiple ways to write the same projection, but the output Esri WKT string
-              should be a good indicator of whether or not they are the same.
+            The original version of this compared the Esri WKT string or the Proj4 string to determine a match.
+            The issue is that versious shapefiles may actually be using the same projection but using the Open WKT
+            string representation instead of ESRI WKT. Additionally, because of possible issues wtih naming and
+            inconsistencies between BIPM spelling and american spelling, case differentiations and other factors.
+            To solve this we now only compare actual values used by the projections and
+            disregard actual naming conventions, given to each projection info.
             </summary>
             <param name="other">
             The other projection to compare with.

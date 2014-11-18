@@ -47,6 +47,7 @@ namespace Go2It
             var mainForm = new MainForm();
             if (args.Length > 0 && File.Exists(args[0]))
             {
+                log.Info("Opening Project (Program.cs): " + args[0]);
                 // a project is being loaded from command line or double click
                 mainForm.AppManager.SerializationManager.OpenProject(args[0]);
             }
