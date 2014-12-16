@@ -75,20 +75,6 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
-            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
-            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
-            this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
-            this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
-            this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
-            this.lineSymbolCap = new System.Windows.Forms.ComboBox();
-            this.lineSymbolSize = new System.Windows.Forms.NumericUpDown();
-            this.lineSymbolStyle = new System.Windows.Forms.ComboBox();
-            this.lineSymbolColor = new System.Windows.Forms.Panel();
-            this.ptSymbolSize = new System.Windows.Forms.NumericUpDown();
-            this.ptSymbolColor = new System.Windows.Forms.Panel();
-            this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
-            this.lineSymbolGraphic = new System.Windows.Forms.Panel();
-            this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.btnSaveHotKeys = new System.Windows.Forms.Button();
             this.dgvHotKeys = new System.Windows.Forms.DataGridView();
             this.btnUsersDelete = new System.Windows.Forms.Button();
@@ -112,6 +98,21 @@
             this.btnCreateIndex = new System.Windows.Forms.Button();
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
+            this.adminTab_SymbologySettings = new System.Windows.Forms.TabPage();
+            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
+            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
+            this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
+            this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
+            this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
+            this.lineSymbolCap = new System.Windows.Forms.ComboBox();
+            this.lineSymbolSize = new System.Windows.Forms.NumericUpDown();
+            this.lineSymbolStyle = new System.Windows.Forms.ComboBox();
+            this.lineSymbolColor = new System.Windows.Forms.Panel();
+            this.ptSymbolSize = new System.Windows.Forms.NumericUpDown();
+            this.ptSymbolColor = new System.Windows.Forms.Panel();
+            this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
+            this.lineSymbolGraphic = new System.Windows.Forms.Panel();
+            this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
@@ -128,15 +129,16 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProgramManagement.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
+            this.adminTab_SearchProperties.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
+            this.adminTab_SymbologySettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
-            this.adminTab_SearchProperties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -153,7 +155,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(539, 764);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 786);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // adminTab_Control
@@ -162,13 +164,14 @@
             this.adminTab_Control.Controls.Add(this.adminTab_LayerManagement);
             this.adminTab_Control.Controls.Add(this.adminTab_ProgramManagement);
             this.adminTab_Control.Controls.Add(this.adminTab_SearchProperties);
+            this.adminTab_Control.Controls.Add(this.adminTab_SymbologySettings);
             this.adminTab_Control.Dock = System.Windows.Forms.DockStyle.Fill;
             this.adminTab_Control.Location = new System.Drawing.Point(0, 0);
             this.adminTab_Control.Margin = new System.Windows.Forms.Padding(0);
             this.adminTab_Control.Name = "adminTab_Control";
             this.adminTab_Control.Padding = new System.Drawing.Point(0, 0);
             this.adminTab_Control.SelectedIndex = 0;
-            this.adminTab_Control.Size = new System.Drawing.Size(539, 729);
+            this.adminTab_Control.Size = new System.Drawing.Size(1000, 751);
             this.adminTab_Control.TabIndex = 8;
             // 
             // adminTab_LayerManagement
@@ -178,9 +181,9 @@
             this.adminTab_LayerManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_LayerManagement.Margin = new System.Windows.Forms.Padding(0);
             this.adminTab_LayerManagement.Name = "adminTab_LayerManagement";
-            this.adminTab_LayerManagement.Size = new System.Drawing.Size(531, 703);
+            this.adminTab_LayerManagement.Size = new System.Drawing.Size(992, 725);
             this.adminTab_LayerManagement.TabIndex = 0;
-            this.adminTab_LayerManagement.Text = "Map Management";
+            this.adminTab_LayerManagement.Text = "Map Configuration";
             // 
             // adminLayerSplitter
             // 
@@ -228,8 +231,8 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbNotesLayer);
             this.adminLayerSplitter.Panel2.Margin = new System.Windows.Forms.Padding(3);
             this.adminLayerSplitter.Panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.adminLayerSplitter.Size = new System.Drawing.Size(531, 703);
-            this.adminLayerSplitter.SplitterDistance = 187;
+            this.adminLayerSplitter.Size = new System.Drawing.Size(992, 725);
+            this.adminLayerSplitter.SplitterDistance = 204;
             this.adminLayerSplitter.SplitterWidth = 10;
             this.adminLayerSplitter.TabIndex = 8;
             this.adminLayerSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.adminLayerSplitter_SplitterMoved);
@@ -254,8 +257,8 @@
             this.legendSplitter.Panel2.BackColor = System.Drawing.Color.Transparent;
             this.legendSplitter.Panel2.Controls.Add(this.legendButtonTable);
             this.legendSplitter.Panel2MinSize = 33;
-            this.legendSplitter.Size = new System.Drawing.Size(185, 701);
-            this.legendSplitter.SplitterDistance = 667;
+            this.legendSplitter.Size = new System.Drawing.Size(202, 723);
+            this.legendSplitter.SplitterDistance = 689;
             this.legendSplitter.SplitterWidth = 1;
             this.legendSplitter.TabIndex = 0;
             // 
@@ -273,17 +276,17 @@
             this.legendButtonTable.RowCount = 1;
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.legendButtonTable.Size = new System.Drawing.Size(185, 33);
+            this.legendButtonTable.Size = new System.Drawing.Size(202, 33);
             this.legendButtonTable.TabIndex = 0;
             // 
             // btnRemoveLayer
             // 
             this.btnRemoveLayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRemoveLayer.Location = new System.Drawing.Point(95, 3);
+            this.btnRemoveLayer.Location = new System.Drawing.Point(104, 3);
             this.btnRemoveLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnRemoveLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnRemoveLayer.Name = "btnRemoveLayer";
-            this.btnRemoveLayer.Size = new System.Drawing.Size(87, 27);
+            this.btnRemoveLayer.Size = new System.Drawing.Size(95, 27);
             this.btnRemoveLayer.TabIndex = 1;
             this.btnRemoveLayer.Text = "Remove";
             this.btnRemoveLayer.UseVisualStyleBackColor = true;
@@ -296,7 +299,7 @@
             this.btnAddLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnAddLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(86, 27);
+            this.btnAddLayer.Size = new System.Drawing.Size(95, 27);
             this.btnAddLayer.TabIndex = 2;
             this.btnAddLayer.Text = "Add";
             this.btnAddLayer.UseVisualStyleBackColor = true;
@@ -602,20 +605,6 @@
             // 
             // adminTab_ProgramManagement
             // 
-            this.adminTab_ProgramManagement.Controls.Add(this.searchHydrantDistance);
-            this.adminTab_ProgramManagement.Controls.Add(this.searchBufferDistance);
-            this.adminTab_ProgramManagement.Controls.Add(this.searchZoomFactor);
-            this.adminTab_ProgramManagement.Controls.Add(this.searchHydrantCount);
-            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolBorderColor);
-            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolCap);
-            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolSize);
-            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolStyle);
-            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolColor);
-            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolSize);
-            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolColor);
-            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolStyle);
-            this.adminTab_ProgramManagement.Controls.Add(this.lineSymbolGraphic);
-            this.adminTab_ProgramManagement.Controls.Add(this.ptSymbolGraphic);
             this.adminTab_ProgramManagement.Controls.Add(this.btnSaveHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.dgvHotKeys);
             this.adminTab_ProgramManagement.Controls.Add(this.btnUsersDelete);
@@ -630,133 +619,10 @@
             this.adminTab_ProgramManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_ProgramManagement.Name = "adminTab_ProgramManagement";
             this.adminTab_ProgramManagement.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(531, 703);
+            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(992, 725);
             this.adminTab_ProgramManagement.TabIndex = 3;
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
-            // 
-            // searchHydrantDistance
-            // 
-            this.searchHydrantDistance.Location = new System.Drawing.Point(56, 627);
-            this.searchHydrantDistance.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.searchHydrantDistance.Name = "searchHydrantDistance";
-            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
-            this.searchHydrantDistance.TabIndex = 24;
-            // 
-            // searchBufferDistance
-            // 
-            this.searchBufferDistance.Location = new System.Drawing.Point(362, 627);
-            this.searchBufferDistance.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.searchBufferDistance.Name = "searchBufferDistance";
-            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
-            this.searchBufferDistance.TabIndex = 23;
-            // 
-            // searchZoomFactor
-            // 
-            this.searchZoomFactor.DecimalPlaces = 2;
-            this.searchZoomFactor.Increment = new decimal(new int[] {
-            25,
-            0,
-            0,
-            131072});
-            this.searchZoomFactor.Location = new System.Drawing.Point(152, 627);
-            this.searchZoomFactor.Name = "searchZoomFactor";
-            this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
-            this.searchZoomFactor.TabIndex = 22;
-            // 
-            // searchHydrantCount
-            // 
-            this.searchHydrantCount.Location = new System.Drawing.Point(247, 626);
-            this.searchHydrantCount.Name = "searchHydrantCount";
-            this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
-            this.searchHydrantCount.TabIndex = 21;
-            // 
-            // lineSymbolBorderColor
-            // 
-            this.lineSymbolBorderColor.Location = new System.Drawing.Point(88, 577);
-            this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
-            this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
-            this.lineSymbolBorderColor.TabIndex = 20;
-            // 
-            // lineSymbolCap
-            // 
-            this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.lineSymbolCap.FormattingEnabled = true;
-            this.lineSymbolCap.Location = new System.Drawing.Point(156, 580);
-            this.lineSymbolCap.Name = "lineSymbolCap";
-            this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
-            this.lineSymbolCap.TabIndex = 19;
-            // 
-            // lineSymbolSize
-            // 
-            this.lineSymbolSize.Location = new System.Drawing.Point(402, 547);
-            this.lineSymbolSize.Name = "lineSymbolSize";
-            this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
-            this.lineSymbolSize.TabIndex = 18;
-            // 
-            // lineSymbolStyle
-            // 
-            this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.lineSymbolStyle.FormattingEnabled = true;
-            this.lineSymbolStyle.Location = new System.Drawing.Point(152, 546);
-            this.lineSymbolStyle.Name = "lineSymbolStyle";
-            this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
-            this.lineSymbolStyle.TabIndex = 17;
-            // 
-            // lineSymbolColor
-            // 
-            this.lineSymbolColor.Location = new System.Drawing.Point(88, 531);
-            this.lineSymbolColor.Name = "lineSymbolColor";
-            this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
-            this.lineSymbolColor.TabIndex = 16;
-            // 
-            // ptSymbolSize
-            // 
-            this.ptSymbolSize.Location = new System.Drawing.Point(367, 476);
-            this.ptSymbolSize.Name = "ptSymbolSize";
-            this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
-            this.ptSymbolSize.TabIndex = 15;
-            // 
-            // ptSymbolColor
-            // 
-            this.ptSymbolColor.Location = new System.Drawing.Point(115, 472);
-            this.ptSymbolColor.Name = "ptSymbolColor";
-            this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
-            this.ptSymbolColor.TabIndex = 14;
-            // 
-            // ptSymbolStyle
-            // 
-            this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ptSymbolStyle.FormattingEnabled = true;
-            this.ptSymbolStyle.Location = new System.Drawing.Point(143, 475);
-            this.ptSymbolStyle.Name = "ptSymbolStyle";
-            this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
-            this.ptSymbolStyle.TabIndex = 13;
-            // 
-            // lineSymbolGraphic
-            // 
-            this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lineSymbolGraphic.Location = new System.Drawing.Point(30, 522);
-            this.lineSymbolGraphic.Name = "lineSymbolGraphic";
-            this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
-            this.lineSymbolGraphic.TabIndex = 12;
-            // 
-            // ptSymbolGraphic
-            // 
-            this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptSymbolGraphic.Location = new System.Drawing.Point(30, 452);
-            this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
-            this.ptSymbolGraphic.Name = "ptSymbolGraphic";
-            this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
-            this.ptSymbolGraphic.TabIndex = 11;
             // 
             // btnSaveHotKeys
             // 
@@ -901,9 +767,9 @@
             this.adminTab_SearchProperties.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SearchProperties.Name = "adminTab_SearchProperties";
             this.adminTab_SearchProperties.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SearchProperties.Size = new System.Drawing.Size(531, 703);
+            this.adminTab_SearchProperties.Size = new System.Drawing.Size(992, 725);
             this.adminTab_SearchProperties.TabIndex = 4;
-            this.adminTab_SearchProperties.Text = "Search Properties";
+            this.adminTab_SearchProperties.Text = "Layer Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
             // 
             // chkEnableQuesryParserLog
@@ -1039,11 +905,158 @@
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
+            // adminTab_SymbologySettings
+            // 
+            this.adminTab_SymbologySettings.Controls.Add(this.searchHydrantDistance);
+            this.adminTab_SymbologySettings.Controls.Add(this.searchBufferDistance);
+            this.adminTab_SymbologySettings.Controls.Add(this.searchZoomFactor);
+            this.adminTab_SymbologySettings.Controls.Add(this.searchHydrantCount);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolBorderColor);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolCap);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolSize);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolStyle);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolColor);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolSize);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolColor);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolStyle);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolGraphic);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolGraphic);
+            this.adminTab_SymbologySettings.Location = new System.Drawing.Point(4, 22);
+            this.adminTab_SymbologySettings.Name = "adminTab_SymbologySettings";
+            this.adminTab_SymbologySettings.Padding = new System.Windows.Forms.Padding(3);
+            this.adminTab_SymbologySettings.Size = new System.Drawing.Size(992, 725);
+            this.adminTab_SymbologySettings.TabIndex = 5;
+            this.adminTab_SymbologySettings.Text = "Symbology Settings";
+            this.adminTab_SymbologySettings.UseVisualStyleBackColor = true;
+            // 
+            // searchHydrantDistance
+            // 
+            this.searchHydrantDistance.Location = new System.Drawing.Point(69, 412);
+            this.searchHydrantDistance.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.searchHydrantDistance.Name = "searchHydrantDistance";
+            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
+            this.searchHydrantDistance.TabIndex = 40;
+            // 
+            // searchBufferDistance
+            // 
+            this.searchBufferDistance.Location = new System.Drawing.Point(375, 412);
+            this.searchBufferDistance.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.searchBufferDistance.Name = "searchBufferDistance";
+            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
+            this.searchBufferDistance.TabIndex = 39;
+            // 
+            // searchZoomFactor
+            // 
+            this.searchZoomFactor.DecimalPlaces = 2;
+            this.searchZoomFactor.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.searchZoomFactor.Location = new System.Drawing.Point(165, 412);
+            this.searchZoomFactor.Name = "searchZoomFactor";
+            this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
+            this.searchZoomFactor.TabIndex = 38;
+            // 
+            // searchHydrantCount
+            // 
+            this.searchHydrantCount.Location = new System.Drawing.Point(260, 411);
+            this.searchHydrantCount.Name = "searchHydrantCount";
+            this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
+            this.searchHydrantCount.TabIndex = 37;
+            // 
+            // lineSymbolBorderColor
+            // 
+            this.lineSymbolBorderColor.Location = new System.Drawing.Point(101, 362);
+            this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
+            this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
+            this.lineSymbolBorderColor.TabIndex = 36;
+            // 
+            // lineSymbolCap
+            // 
+            this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lineSymbolCap.FormattingEnabled = true;
+            this.lineSymbolCap.Location = new System.Drawing.Point(169, 365);
+            this.lineSymbolCap.Name = "lineSymbolCap";
+            this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
+            this.lineSymbolCap.TabIndex = 35;
+            // 
+            // lineSymbolSize
+            // 
+            this.lineSymbolSize.Location = new System.Drawing.Point(415, 332);
+            this.lineSymbolSize.Name = "lineSymbolSize";
+            this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
+            this.lineSymbolSize.TabIndex = 34;
+            // 
+            // lineSymbolStyle
+            // 
+            this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lineSymbolStyle.FormattingEnabled = true;
+            this.lineSymbolStyle.Location = new System.Drawing.Point(165, 331);
+            this.lineSymbolStyle.Name = "lineSymbolStyle";
+            this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
+            this.lineSymbolStyle.TabIndex = 33;
+            // 
+            // lineSymbolColor
+            // 
+            this.lineSymbolColor.Location = new System.Drawing.Point(101, 316);
+            this.lineSymbolColor.Name = "lineSymbolColor";
+            this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
+            this.lineSymbolColor.TabIndex = 32;
+            // 
+            // ptSymbolSize
+            // 
+            this.ptSymbolSize.Location = new System.Drawing.Point(380, 261);
+            this.ptSymbolSize.Name = "ptSymbolSize";
+            this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
+            this.ptSymbolSize.TabIndex = 31;
+            // 
+            // ptSymbolColor
+            // 
+            this.ptSymbolColor.Location = new System.Drawing.Point(128, 257);
+            this.ptSymbolColor.Name = "ptSymbolColor";
+            this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
+            this.ptSymbolColor.TabIndex = 30;
+            // 
+            // ptSymbolStyle
+            // 
+            this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ptSymbolStyle.FormattingEnabled = true;
+            this.ptSymbolStyle.Location = new System.Drawing.Point(156, 260);
+            this.ptSymbolStyle.Name = "ptSymbolStyle";
+            this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
+            this.ptSymbolStyle.TabIndex = 29;
+            // 
+            // lineSymbolGraphic
+            // 
+            this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lineSymbolGraphic.Location = new System.Drawing.Point(43, 307);
+            this.lineSymbolGraphic.Name = "lineSymbolGraphic";
+            this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
+            this.lineSymbolGraphic.TabIndex = 28;
+            // 
+            // ptSymbolGraphic
+            // 
+            this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptSymbolGraphic.Location = new System.Drawing.Point(43, 237);
+            this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
+            this.ptSymbolGraphic.Name = "ptSymbolGraphic";
+            this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
+            this.ptSymbolGraphic.TabIndex = 27;
+            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
             this.btnSplitSave.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnSplitSave.Location = new System.Drawing.Point(450, 732);
+            this.btnSplitSave.Location = new System.Drawing.Point(911, 754);
             this.btnSplitSave.MaximumSize = new System.Drawing.Size(85, 28);
             this.btnSplitSave.MinimumSize = new System.Drawing.Size(85, 23);
             this.btnSplitSave.Name = "btnSplitSave";
@@ -1056,7 +1069,7 @@
             // btnCancel
             // 
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(369, 732);
+            this.btnCancel.Location = new System.Drawing.Point(830, 754);
             this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
             this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
             this.btnCancel.Name = "btnCancel";
@@ -1070,7 +1083,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(539, 764);
+            this.ClientSize = new System.Drawing.Size(1000, 786);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AdminForm";
@@ -1094,16 +1107,17 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
+            this.adminTab_SearchProperties.ResumeLayout(false);
+            this.adminTab_SearchProperties.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
+            this.adminTab_SymbologySettings.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
-            this.adminTab_SearchProperties.ResumeLayout(false);
-            this.adminTab_SearchProperties.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1173,22 +1187,23 @@
         private System.Windows.Forms.TextBox txtVerifyPassword;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnSaveHotKeys;
-        private System.Windows.Forms.Panel lineSymbolGraphic;
-        private System.Windows.Forms.Panel ptSymbolGraphic;
-        private System.Windows.Forms.Panel ptSymbolColor;
-        private System.Windows.Forms.ComboBox ptSymbolStyle;
+        private System.Windows.Forms.CheckBox chkPretypes;
+        private System.Windows.Forms.CheckBox chkEnableQuesryParserLog;
+        private System.Windows.Forms.TabPage adminTab_SymbologySettings;
+        private System.Windows.Forms.NumericUpDown searchHydrantDistance;
+        private System.Windows.Forms.NumericUpDown searchBufferDistance;
+        private System.Windows.Forms.NumericUpDown searchZoomFactor;
+        private System.Windows.Forms.NumericUpDown searchHydrantCount;
+        private System.Windows.Forms.Panel lineSymbolBorderColor;
+        private System.Windows.Forms.ComboBox lineSymbolCap;
         private System.Windows.Forms.NumericUpDown lineSymbolSize;
         private System.Windows.Forms.ComboBox lineSymbolStyle;
         private System.Windows.Forms.Panel lineSymbolColor;
         private System.Windows.Forms.NumericUpDown ptSymbolSize;
-        private System.Windows.Forms.ComboBox lineSymbolCap;
-        private System.Windows.Forms.Panel lineSymbolBorderColor;
-        private System.Windows.Forms.NumericUpDown searchHydrantCount;
-        private System.Windows.Forms.CheckBox chkPretypes;
-        private System.Windows.Forms.NumericUpDown searchZoomFactor;
-        private System.Windows.Forms.NumericUpDown searchBufferDistance;
-        private System.Windows.Forms.NumericUpDown searchHydrantDistance;
-        private System.Windows.Forms.CheckBox chkEnableQuesryParserLog;
+        private System.Windows.Forms.Panel ptSymbolColor;
+        private System.Windows.Forms.ComboBox ptSymbolStyle;
+        private System.Windows.Forms.Panel lineSymbolGraphic;
+        private System.Windows.Forms.Panel ptSymbolGraphic;
 
     }
 }

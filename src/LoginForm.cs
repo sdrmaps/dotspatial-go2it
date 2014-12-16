@@ -14,13 +14,17 @@ namespace Go2It
         private void OnFormLogin()
         {
             if (FormLogin != null)
+            {
                 FormLogin(this, EventArgs.Empty);
+            }
         }
 
         private void OnFormLogout()
         {
             if (FormLogout != null)
+            {
                 FormLogout(this, EventArgs.Empty);
+            }
         }
 
         public LoginForm()

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using System.ComponentModel.Composition;
-using DotSpatial.Controls.Docking;
 using DotSpatial.SDR.Controls;
 using SdrConfig = SDR.Configuration;
 
