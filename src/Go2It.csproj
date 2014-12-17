@@ -311,6 +311,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\core\DotSpatial\Trunk\DotSpatial.Modeling.Forms\DotSpatial.Modeling.Forms.csproj">
+      <Project>{7ED7B00D-56EE-47CF-AAA5-34A09E40A566}</Project>
+      <Name>DotSpatial.Modeling.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\core\DotSpatial\Trunk\DotSpatial.Symbology.Forms\DotSpatial.Symbology.Forms.csproj">
       <Project>{97EDE2AD-90D0-44B6-ADB6-AD20052C0B6F}</Project>
       <Name>DotSpatial.Symbology.Forms</Name>

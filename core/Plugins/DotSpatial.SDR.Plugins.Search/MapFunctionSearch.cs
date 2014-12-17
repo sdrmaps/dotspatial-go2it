@@ -54,8 +54,6 @@ namespace DotSpatial.SDR.Plugins.Search
         private MapPointLayer _pointGraphicsLayer;
         private FeatureSet _polylineGraphics;
         private MapLineLayer _polylineGraphicsLayer;
-        private FeatureSet _hydrantGraphics;
-        private MapPointLayer _hydrantGraphicsLayer;
 
         private string _indexType;
         private string[] _columnNames;
@@ -273,12 +271,6 @@ namespace DotSpatial.SDR.Plugins.Search
                 Map.MapFrame.DrawingLayers.Remove(_polylineGraphicsLayer);
                 _polylineGraphicsLayer = null;
                 _polylineGraphics = null;
-            }
-            if (Map != null && Map.MapFrame.DrawingLayers.Contains(_hydrantGraphicsLayer))
-            {
-                Map.MapFrame.DrawingLayers.Remove(_hydrantGraphicsLayer);
-                _hydrantGraphicsLayer = null;
-                _hydrantGraphics = null;
             }
             if (Map != null) Map.MapFrame.Invalidate();
         }
@@ -503,24 +495,6 @@ namespace DotSpatial.SDR.Plugins.Search
             return buffer.Envelope;
         }
 
-        private void CreateHydrantGraphic(Coordinate c)
-        {
-            if (_hydrantGraphicsLayer == null)
-            {
-                _hydrantGraphics = new FeatureSet(FeatureType.Point);
-                _hydrantGraphicsLayer = new MapPointLayer(_hydrantGraphics);
-                PointShape hydrantShape = new PointShape();
-                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out hydrantShape);
-                _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
-                    hydrantShape,
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
-                Map.MapFrame.DrawingLayers.Add(_hydrantGraphicsLayer);
-            }
-            var point = new Point(c);
-            _hydrantGraphics.AddFeature(point);
-        }
-
         private void CreatePointGraphic(Coordinate c)
         {
             if (_pointGraphicsLayer == null)
@@ -528,7 +502,8 @@ namespace DotSpatial.SDR.Plugins.Search
                 _pointGraphics = new FeatureSet(FeatureType.Point);
                 _pointGraphicsLayer = new MapPointLayer(_pointGraphics);
                 PointShape pointShape = new PointShape();
-                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out pointShape);
+                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle, true, out pointShape);
+
                 _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
                     pointShape,
@@ -646,22 +621,20 @@ namespace DotSpatial.SDR.Plugins.Search
                     var ft = hydrantfs.GetFeature(Convert.ToInt32(doc.Get(FID)));
                     if (ft.Coordinates.Count == 1)
                     {
-                        CreateHydrantGraphic(ft.Coordinates[0]);
+                        CreatePointGraphic(ft.Coordinates[0]);
                     }
                 }
             }
 
-
-
             SetupIndexReaderWriter(idxType);  // set the index searcher back
             double zoomFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
-            var newExtentWidth = _hydrantGraphics.Extent.Width * zoomFactor;
-            var newExtentHeight = _hydrantGraphics.Extent.Height * zoomFactor;
 
-            _hydrantGraphics.Extent.ExpandBy(newExtentWidth, newExtentHeight);
-            // _hydrantGraphics.Extent.ExpandToInclude();
+            var newExtentWidth = _pointGraphics.Extent.Width * zoomFactor;
+            var newExtentHeight = _pointGraphics.Extent.Height * zoomFactor;
 
-            var env = _hydrantGraphics.Extent.ToEnvelope();
+            _pointGraphics.Extent.ExpandBy(newExtentWidth, newExtentHeight);
+
+            var env = _pointGraphics.Extent.ToEnvelope();
             Map.ViewExtents = env.ToExtent();
         }
         #endregion

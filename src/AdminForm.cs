@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -539,13 +538,20 @@ namespace Go2It
         private void PopulateGraphicsToForm()
         {
             // point symbology for graphics rendering
-            ptSymbolColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor;
+            Color pColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor;
+            ptSymbolColorSlider.Value = pColor.GetOpacity();
+            ptSymbolColorSlider.MaximumColor = Color.FromArgb(255, pColor.R, pColor.G, pColor.B);
+            ptSymbolColorSlider.ValueChanged += PtSymbolColorSliderOnValueChanged;
+            ptSymbolColor.BackColor = pColor;
             ptSymbolColor.Click += PtSymbolColorOnClick;
             ptSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize;
             ptSymbolSize.ValueChanged += PtSymbolSizeOnValueChanged;
             foreach (PointShape ptShape in Enum.GetValues(typeof(PointShape)))
             {
-                ptSymbolStyle.Items.Add(ptShape.ToString());
+                if (ptShape.ToString().ToUpper() != "UNDEFINED")
+                {
+                    ptSymbolStyle.Items.Add(ptShape.ToString());
+                }
             }
             var idx = ptSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle);
             ptSymbolStyle.SelectedIndex = idx;
@@ -555,25 +561,51 @@ namespace Go2It
             // line symbology for graphics rendering
             lineSymbolBorderColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor;
             lineSymbolBorderColor.Click += LineSymbolBorderColorOnClick;
-            lineSymbolColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor;
+            Color lColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor;
+            lineSymbolColorSlider.Value = lColor.GetOpacity();
+            lineSymbolColorSlider.MaximumColor = Color.FromArgb(255, lColor.R, lColor.G, lColor.B);
+            lineSymbolColorSlider.ValueChanged += LineSymbolColorSliderOnValueChanged;
+            lineSymbolColor.BackColor = lColor;
             lineSymbolColor.Click += LineSymbolColorOnClick;
             lineSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize;
             lineSymbolSize.ValueChanged += LineSymbolSizeOnValueChanged;
             foreach (LineCap lineCap in Enum.GetValues(typeof(LineCap)))
             {
-                lineSymbolCap.Items.Add(lineCap.ToString());
+                if (lineCap.ToString().ToUpper() != "CUSTOM")
+                {
+                    lineSymbolCap.Items.Add(lineCap.ToString());
+                }
             }
             idx = lineSymbolCap.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap);
             lineSymbolCap.SelectedIndex = idx;
             lineSymbolCap.SelectedIndexChanged += LineSymbolCapOnSelectedIndexChanged;
             foreach (DashStyle lineStyle in Enum.GetValues(typeof(DashStyle)))
             {
-                lineSymbolStyle.Items.Add(lineStyle.ToString());
+                if (lineStyle.ToString().ToUpper() != "CUSTOM")
+                {
+                    lineSymbolStyle.Items.Add(lineStyle.ToString());
+                }
             }
             idx = lineSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle);
             lineSymbolStyle.SelectedIndex = idx;
             lineSymbolStyle.SelectedIndexChanged += LineSymbolStyleOnSelectedIndexChanged;
             DrawLineGraphics();
+        }
+
+        private void LineSymbolColorSliderOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            int alpha = Convert.ToInt32(lineSymbolColorSlider.Value * 255);
+            lineSymbolColor.BackColor = Color.FromArgb(alpha, lineSymbolColor.BackColor.R, lineSymbolColor.BackColor.G, lineSymbolColor.BackColor.B);
+            DrawLineGraphics();
+            _dirtyProject = true;
+        }
+
+        private void PtSymbolColorSliderOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            int alpha = Convert.ToInt32(ptSymbolColorSlider.Value*255);
+            ptSymbolColor.BackColor = Color.FromArgb(alpha, ptSymbolColor.BackColor.R, ptSymbolColor.BackColor.G, ptSymbolColor.BackColor.B);
+            DrawPointGraphics();
+            _dirtyProject = true;
         }
 
         private void LineSymbolCapOnSelectedIndexChanged(object sender, EventArgs eventArgs)
@@ -600,7 +632,11 @@ namespace Go2It
             var dlg = new ColorDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
 
-            lineSymbolColor.BackColor = dlg.Color;
+            // update the slider max color value for display
+            lineSymbolColorSlider.MaximumColor = Color.FromArgb(255, dlg.Color.R, dlg.Color.G, dlg.Color.B);
+            // update the color and map display with new color accounting for alpha
+            int alpha = Convert.ToInt32(lineSymbolColorSlider.Value * 255);
+            lineSymbolColor.BackColor = Color.FromArgb(alpha, dlg.Color.R, dlg.Color.G, dlg.Color.B);
             if (oColor != lineSymbolColor.BackColor)
             {
                 _dirtyProject = true;
@@ -640,7 +676,11 @@ namespace Go2It
             var dlg = new ColorDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
 
-            ptSymbolColor.BackColor = dlg.Color;
+            // update the slider max color value for display
+            ptSymbolColorSlider.MaximumColor = Color.FromArgb(255, dlg.Color.R, dlg.Color.G, dlg.Color.B);
+            // update the color and map display with new color accounting for alpha
+            int alpha = Convert.ToInt32(ptSymbolColorSlider.Value * 255);
+            ptSymbolColor.BackColor = Color.FromArgb(alpha, dlg.Color.R, dlg.Color.G, dlg.Color.B);
             if (oColor != ptSymbolColor.BackColor)
             {
                 _dirtyProject = true;

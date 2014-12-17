@@ -34,7 +34,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
             this.adminTab_LayerManagement = new System.Windows.Forms.TabPage();
@@ -99,6 +98,12 @@
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.adminTab_SymbologySettings = new System.Windows.Forms.TabPage();
+            this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
+            this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
+            this.lblHydrantDist = new System.Windows.Forms.Label();
+            this.lblZoomFactor = new System.Windows.Forms.Label();
+            this.lblBufDist = new System.Windows.Forms.Label();
+            this.lblHydrantCount = new System.Windows.Forms.Label();
             this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
             this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
             this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
@@ -907,6 +912,12 @@
             // 
             // adminTab_SymbologySettings
             // 
+            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolColorSlider);
+            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolColorSlider);
+            this.adminTab_SymbologySettings.Controls.Add(this.lblHydrantDist);
+            this.adminTab_SymbologySettings.Controls.Add(this.lblZoomFactor);
+            this.adminTab_SymbologySettings.Controls.Add(this.lblBufDist);
+            this.adminTab_SymbologySettings.Controls.Add(this.lblHydrantCount);
             this.adminTab_SymbologySettings.Controls.Add(this.searchHydrantDistance);
             this.adminTab_SymbologySettings.Controls.Add(this.searchBufferDistance);
             this.adminTab_SymbologySettings.Controls.Add(this.searchZoomFactor);
@@ -926,12 +937,116 @@
             this.adminTab_SymbologySettings.Padding = new System.Windows.Forms.Padding(3);
             this.adminTab_SymbologySettings.Size = new System.Drawing.Size(992, 725);
             this.adminTab_SymbologySettings.TabIndex = 5;
-            this.adminTab_SymbologySettings.Text = "Symbology Settings";
+            this.adminTab_SymbologySettings.Text = "Project Settings";
             this.adminTab_SymbologySettings.UseVisualStyleBackColor = true;
+            // 
+            // ptSymbolColorSlider
+            // 
+            this.ptSymbolColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ptSymbolColorSlider.ColorButton = null;
+            this.ptSymbolColorSlider.FlipRamp = false;
+            this.ptSymbolColorSlider.FlipText = false;
+            this.ptSymbolColorSlider.InvertRamp = false;
+            this.ptSymbolColorSlider.Location = new System.Drawing.Point(156, 257);
+            this.ptSymbolColorSlider.Maximum = 1D;
+            this.ptSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
+            this.ptSymbolColorSlider.Minimum = 0D;
+            this.ptSymbolColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.ptSymbolColorSlider.Name = "ptSymbolColorSlider";
+            this.ptSymbolColorSlider.NumberFormat = "#%";
+            this.ptSymbolColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.ptSymbolColorSlider.RampRadius = 10F;
+            this.ptSymbolColorSlider.RampText = null;
+            this.ptSymbolColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ptSymbolColorSlider.RampTextBehindRamp = false;
+            this.ptSymbolColorSlider.RampTextColor = System.Drawing.Color.Black;
+            this.ptSymbolColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ptSymbolColorSlider.ShowMaximum = false;
+            this.ptSymbolColorSlider.ShowMinimum = false;
+            this.ptSymbolColorSlider.ShowTicks = true;
+            this.ptSymbolColorSlider.ShowValue = true;
+            this.ptSymbolColorSlider.Size = new System.Drawing.Size(122, 23);
+            this.ptSymbolColorSlider.SliderColor = System.Drawing.Color.Blue;
+            this.ptSymbolColorSlider.SliderRadius = 4F;
+            this.ptSymbolColorSlider.TabIndex = 47;
+            this.ptSymbolColorSlider.Text = "rampSlider1";
+            this.ptSymbolColorSlider.TickColor = System.Drawing.Color.DarkGray;
+            this.ptSymbolColorSlider.TickSpacing = 5F;
+            this.ptSymbolColorSlider.Value = 1D;
+            // 
+            // lineSymbolColorSlider
+            // 
+            this.lineSymbolColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.lineSymbolColorSlider.ColorButton = null;
+            this.lineSymbolColorSlider.FlipRamp = false;
+            this.lineSymbolColorSlider.FlipText = false;
+            this.lineSymbolColorSlider.InvertRamp = false;
+            this.lineSymbolColorSlider.Location = new System.Drawing.Point(156, 329);
+            this.lineSymbolColorSlider.Maximum = 1D;
+            this.lineSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
+            this.lineSymbolColorSlider.Minimum = 0D;
+            this.lineSymbolColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.lineSymbolColorSlider.Name = "lineSymbolColorSlider";
+            this.lineSymbolColorSlider.NumberFormat = "#%";
+            this.lineSymbolColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.lineSymbolColorSlider.RampRadius = 10F;
+            this.lineSymbolColorSlider.RampText = null;
+            this.lineSymbolColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lineSymbolColorSlider.RampTextBehindRamp = false;
+            this.lineSymbolColorSlider.RampTextColor = System.Drawing.Color.Black;
+            this.lineSymbolColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lineSymbolColorSlider.ShowMaximum = false;
+            this.lineSymbolColorSlider.ShowMinimum = false;
+            this.lineSymbolColorSlider.ShowTicks = true;
+            this.lineSymbolColorSlider.ShowValue = true;
+            this.lineSymbolColorSlider.Size = new System.Drawing.Size(143, 23);
+            this.lineSymbolColorSlider.SliderColor = System.Drawing.Color.Blue;
+            this.lineSymbolColorSlider.SliderRadius = 4F;
+            this.lineSymbolColorSlider.TabIndex = 46;
+            this.lineSymbolColorSlider.Text = "rampSlider1";
+            this.lineSymbolColorSlider.TickColor = System.Drawing.Color.DarkGray;
+            this.lineSymbolColorSlider.TickSpacing = 5F;
+            this.lineSymbolColorSlider.Value = 1D;
+            // 
+            // lblHydrantDist
+            // 
+            this.lblHydrantDist.AutoSize = true;
+            this.lblHydrantDist.Location = new System.Drawing.Point(55, 468);
+            this.lblHydrantDist.Name = "lblHydrantDist";
+            this.lblHydrantDist.Size = new System.Drawing.Size(89, 13);
+            this.lblHydrantDist.TabIndex = 44;
+            this.lblHydrantDist.Text = "Hydrant Distance";
+            // 
+            // lblZoomFactor
+            // 
+            this.lblZoomFactor.AutoSize = true;
+            this.lblZoomFactor.Location = new System.Drawing.Point(184, 528);
+            this.lblZoomFactor.Name = "lblZoomFactor";
+            this.lblZoomFactor.Size = new System.Drawing.Size(67, 13);
+            this.lblZoomFactor.TabIndex = 43;
+            this.lblZoomFactor.Text = "Zoom Factor";
+            // 
+            // lblBufDist
+            // 
+            this.lblBufDist.AutoSize = true;
+            this.lblBufDist.Location = new System.Drawing.Point(535, 487);
+            this.lblBufDist.Name = "lblBufDist";
+            this.lblBufDist.Size = new System.Drawing.Size(117, 13);
+            this.lblBufDist.TabIndex = 42;
+            this.lblBufDist.Text = "Search Buffer Distance";
+            // 
+            // lblHydrantCount
+            // 
+            this.lblHydrantCount.AutoSize = true;
+            this.lblHydrantCount.Location = new System.Drawing.Point(292, 444);
+            this.lblHydrantCount.Name = "lblHydrantCount";
+            this.lblHydrantCount.Size = new System.Drawing.Size(75, 13);
+            this.lblHydrantCount.TabIndex = 41;
+            this.lblHydrantCount.Text = "Hydrant Count";
             // 
             // searchHydrantDistance
             // 
-            this.searchHydrantDistance.Location = new System.Drawing.Point(69, 412);
+            this.searchHydrantDistance.Location = new System.Drawing.Point(58, 487);
             this.searchHydrantDistance.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -943,7 +1058,7 @@
             // 
             // searchBufferDistance
             // 
-            this.searchBufferDistance.Location = new System.Drawing.Point(375, 412);
+            this.searchBufferDistance.Location = new System.Drawing.Point(514, 519);
             this.searchBufferDistance.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -961,14 +1076,14 @@
             0,
             0,
             131072});
-            this.searchZoomFactor.Location = new System.Drawing.Point(165, 412);
+            this.searchZoomFactor.Location = new System.Drawing.Point(185, 544);
             this.searchZoomFactor.Name = "searchZoomFactor";
             this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
             this.searchZoomFactor.TabIndex = 38;
             // 
             // searchHydrantCount
             // 
-            this.searchHydrantCount.Location = new System.Drawing.Point(260, 411);
+            this.searchHydrantCount.Location = new System.Drawing.Point(295, 460);
             this.searchHydrantCount.Name = "searchHydrantCount";
             this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
             this.searchHydrantCount.TabIndex = 37;
@@ -984,14 +1099,14 @@
             // 
             this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lineSymbolCap.FormattingEnabled = true;
-            this.lineSymbolCap.Location = new System.Drawing.Point(169, 365);
+            this.lineSymbolCap.Location = new System.Drawing.Point(156, 362);
             this.lineSymbolCap.Name = "lineSymbolCap";
             this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
             this.lineSymbolCap.TabIndex = 35;
             // 
             // lineSymbolSize
             // 
-            this.lineSymbolSize.Location = new System.Drawing.Point(415, 332);
+            this.lineSymbolSize.Location = new System.Drawing.Point(555, 332);
             this.lineSymbolSize.Name = "lineSymbolSize";
             this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
             this.lineSymbolSize.TabIndex = 34;
@@ -1000,7 +1115,7 @@
             // 
             this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lineSymbolStyle.FormattingEnabled = true;
-            this.lineSymbolStyle.Location = new System.Drawing.Point(165, 331);
+            this.lineSymbolStyle.Location = new System.Drawing.Point(305, 331);
             this.lineSymbolStyle.Name = "lineSymbolStyle";
             this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
             this.lineSymbolStyle.TabIndex = 33;
@@ -1014,7 +1129,7 @@
             // 
             // ptSymbolSize
             // 
-            this.ptSymbolSize.Location = new System.Drawing.Point(380, 261);
+            this.ptSymbolSize.Location = new System.Drawing.Point(499, 257);
             this.ptSymbolSize.Name = "ptSymbolSize";
             this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
             this.ptSymbolSize.TabIndex = 31;
@@ -1030,7 +1145,7 @@
             // 
             this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ptSymbolStyle.FormattingEnabled = true;
-            this.ptSymbolStyle.Location = new System.Drawing.Point(156, 260);
+            this.ptSymbolStyle.Location = new System.Drawing.Point(288, 257);
             this.ptSymbolStyle.Name = "ptSymbolStyle";
             this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
             this.ptSymbolStyle.TabIndex = 29;
@@ -1085,7 +1200,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 786);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AdminForm";
             this.Text = "Go2It Administration";
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -1112,6 +1226,7 @@
             this.adminTab_SearchProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.adminTab_SymbologySettings.ResumeLayout(false);
+            this.adminTab_SymbologySettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
@@ -1204,6 +1319,12 @@
         private System.Windows.Forms.ComboBox ptSymbolStyle;
         private System.Windows.Forms.Panel lineSymbolGraphic;
         private System.Windows.Forms.Panel ptSymbolGraphic;
+        private System.Windows.Forms.Label lblHydrantDist;
+        private System.Windows.Forms.Label lblZoomFactor;
+        private System.Windows.Forms.Label lblBufDist;
+        private System.Windows.Forms.Label lblHydrantCount;
+        private DotSpatial.Symbology.Forms.RampSlider lineSymbolColorSlider;
+        private DotSpatial.Symbology.Forms.RampSlider ptSymbolColorSlider;
 
     }
 }

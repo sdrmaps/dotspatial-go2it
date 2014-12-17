@@ -360,21 +360,15 @@ namespace Go2It
                 {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
                 {"use_pretypes", Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture)},
                 {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
-                {
-                    "search_buffer_distance",
-                    Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)
-                },
-                {
-                    "search_hydrant_count",
-                    Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)
-                },
-                {
-                    "search_hydrant_distance",
-                    Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)
-                }
+                {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
+                {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
+                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
             };
             // there can only be a single project settings row in the table
             SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
+
+            var xll = Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture);
+
             var g = new Dictionary<string, string>
             {
                 {
@@ -387,10 +381,7 @@ namespace Go2It
                     "line_color",
                     Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)
                 },
-                {
-                    "line_border_color",
-                    Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)
-                },
+                {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
                 {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
                 {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
