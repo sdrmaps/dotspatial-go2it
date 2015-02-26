@@ -776,7 +776,7 @@ namespace DotSpatial.SDR.Plugins.Search
             Query query = new MatchAllDocsQuery();  // query grabs all documents
             if (MapFunctionSearch.IndexReader == null)
             {
-                MessageBox.Show("Search index not found");
+                MessageBox.Show(@"Search index not found");
             }
             else
             {

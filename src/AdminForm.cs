@@ -846,6 +846,8 @@ namespace Go2It
         }
 
         /// <summary>
+        /// 
+        /// 3//
         /// Handle all form elements when a new layer is added to the project
         /// </summary>
         /// <param name="mapLayer">The layer added</param>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -366,27 +365,18 @@ namespace Go2It
             };
             // there can only be a single project settings row in the table
             SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
-
-            var xll = Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture);
-
             var g = new Dictionary<string, string>
             {
-                {
-                    "point_color",
-                    Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)
-                },
+                {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
                 {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
-                {
-                    "line_color",
-                    Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)
-                },
+                {"line_color", Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
                 {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
                 {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
             };
-            // there can only be a single grphics settings row in the table
+            // there can only be a single graphics settings row in the table
             SQLiteHelper.Update(conn, "GraphicSettings", g, "key = 1");
             // clear any (base map) layers currently set in the table and reset them now
             SQLiteHelper.ClearTable(conn, "Layers");

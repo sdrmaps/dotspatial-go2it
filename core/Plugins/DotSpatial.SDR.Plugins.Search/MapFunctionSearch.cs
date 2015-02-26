@@ -385,7 +385,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 Reproject.ReprojectPoints(
                     xy, new double[1], KnownCoordinateSystems.Geographic.World.WGS1984, Map.Projection, 0, 1);
             }
-            CreatePointGraphic(new Coordinate(xy[0], xy[1]));
+            CreatePointHighlightGraphic(new Coordinate(xy[0], xy[1]));
             var envelope = CreateBufferGraphic(new DotSpatial.Topology.Point(new Coordinate(xy[0], xy[1])));
 
             double zoomInFactor = (double) SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor; // fixed zoom-in by 10% - 5% on each side
@@ -495,7 +495,7 @@ namespace DotSpatial.SDR.Plugins.Search
             return buffer.Envelope;
         }
 
-        private void CreatePointGraphic(Coordinate c)
+        private void CreatePointHighlightGraphic(Coordinate c)
         {
             if (_pointGraphicsLayer == null)
             {
@@ -508,6 +508,14 @@ namespace DotSpatial.SDR.Plugins.Search
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
                     pointShape,
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
+
+                //  Symbol = new CharacterSymbol()
+                // _pointGraphicsLayer.Symbolizer.Symbols.Add();
+
+
+                var ccc = Map.MapFrame.DrawingLayers.Count;
+                var zzz = Map.MapFrame.Layers.Count;
+                var zxz = Map.MapFrame.LayerCount;
                 Map.MapFrame.DrawingLayers.Add(_pointGraphicsLayer);
             }
             var point = new Point(c);
@@ -536,7 +544,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
                 if (ft.Coordinates.Count == 1)
                 {
-                    CreatePointGraphic(ft.Coordinates[0]);
+                    CreatePointHighlightGraphic(ft.Coordinates[0]);
                 }
                 IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
 
@@ -621,7 +629,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     var ft = hydrantfs.GetFeature(Convert.ToInt32(doc.Get(FID)));
                     if (ft.Coordinates.Count == 1)
                     {
-                        CreatePointGraphic(ft.Coordinates[0]);
+                        CreatePointHighlightGraphic(ft.Coordinates[0]);
                     }
                 }
             }

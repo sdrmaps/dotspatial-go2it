@@ -160,7 +160,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 786);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(654, 786);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // adminTab_Control
@@ -176,7 +176,7 @@
             this.adminTab_Control.Name = "adminTab_Control";
             this.adminTab_Control.Padding = new System.Drawing.Point(0, 0);
             this.adminTab_Control.SelectedIndex = 0;
-            this.adminTab_Control.Size = new System.Drawing.Size(1000, 751);
+            this.adminTab_Control.Size = new System.Drawing.Size(654, 751);
             this.adminTab_Control.TabIndex = 8;
             // 
             // adminTab_LayerManagement
@@ -186,7 +186,7 @@
             this.adminTab_LayerManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_LayerManagement.Margin = new System.Windows.Forms.Padding(0);
             this.adminTab_LayerManagement.Name = "adminTab_LayerManagement";
-            this.adminTab_LayerManagement.Size = new System.Drawing.Size(992, 725);
+            this.adminTab_LayerManagement.Size = new System.Drawing.Size(646, 725);
             this.adminTab_LayerManagement.TabIndex = 0;
             this.adminTab_LayerManagement.Text = "Map Configuration";
             // 
@@ -236,8 +236,8 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbNotesLayer);
             this.adminLayerSplitter.Panel2.Margin = new System.Windows.Forms.Padding(3);
             this.adminLayerSplitter.Panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.adminLayerSplitter.Size = new System.Drawing.Size(992, 725);
-            this.adminLayerSplitter.SplitterDistance = 204;
+            this.adminLayerSplitter.Size = new System.Drawing.Size(646, 725);
+            this.adminLayerSplitter.SplitterDistance = 208;
             this.adminLayerSplitter.SplitterWidth = 10;
             this.adminLayerSplitter.TabIndex = 8;
             this.adminLayerSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.adminLayerSplitter_SplitterMoved);
@@ -262,7 +262,7 @@
             this.legendSplitter.Panel2.BackColor = System.Drawing.Color.Transparent;
             this.legendSplitter.Panel2.Controls.Add(this.legendButtonTable);
             this.legendSplitter.Panel2MinSize = 33;
-            this.legendSplitter.Size = new System.Drawing.Size(202, 723);
+            this.legendSplitter.Size = new System.Drawing.Size(206, 723);
             this.legendSplitter.SplitterDistance = 689;
             this.legendSplitter.SplitterWidth = 1;
             this.legendSplitter.TabIndex = 0;
@@ -281,17 +281,17 @@
             this.legendButtonTable.RowCount = 1;
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.legendButtonTable.Size = new System.Drawing.Size(202, 33);
+            this.legendButtonTable.Size = new System.Drawing.Size(206, 33);
             this.legendButtonTable.TabIndex = 0;
             // 
             // btnRemoveLayer
             // 
             this.btnRemoveLayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRemoveLayer.Location = new System.Drawing.Point(104, 3);
+            this.btnRemoveLayer.Location = new System.Drawing.Point(106, 3);
             this.btnRemoveLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnRemoveLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnRemoveLayer.Name = "btnRemoveLayer";
-            this.btnRemoveLayer.Size = new System.Drawing.Size(95, 27);
+            this.btnRemoveLayer.Size = new System.Drawing.Size(97, 27);
             this.btnRemoveLayer.TabIndex = 1;
             this.btnRemoveLayer.Text = "Remove";
             this.btnRemoveLayer.UseVisualStyleBackColor = true;
@@ -304,7 +304,7 @@
             this.btnAddLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnAddLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(95, 27);
+            this.btnAddLayer.Size = new System.Drawing.Size(97, 27);
             this.btnAddLayer.TabIndex = 2;
             this.btnAddLayer.Text = "Add";
             this.btnAddLayer.UseVisualStyleBackColor = true;
@@ -772,7 +772,7 @@
             this.adminTab_SearchProperties.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SearchProperties.Name = "adminTab_SearchProperties";
             this.adminTab_SearchProperties.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SearchProperties.Size = new System.Drawing.Size(992, 725);
+            this.adminTab_SearchProperties.Size = new System.Drawing.Size(646, 725);
             this.adminTab_SearchProperties.TabIndex = 4;
             this.adminTab_SearchProperties.Text = "Layer Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
@@ -935,7 +935,7 @@
             this.adminTab_SymbologySettings.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SymbologySettings.Name = "adminTab_SymbologySettings";
             this.adminTab_SymbologySettings.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SymbologySettings.Size = new System.Drawing.Size(992, 725);
+            this.adminTab_SymbologySettings.Size = new System.Drawing.Size(646, 725);
             this.adminTab_SymbologySettings.TabIndex = 5;
             this.adminTab_SymbologySettings.Text = "Project Settings";
             this.adminTab_SymbologySettings.UseVisualStyleBackColor = true;
@@ -1171,7 +1171,7 @@
             // 
             this.btnSplitSave.AutoSize = true;
             this.btnSplitSave.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnSplitSave.Location = new System.Drawing.Point(911, 754);
+            this.btnSplitSave.Location = new System.Drawing.Point(565, 754);
             this.btnSplitSave.MaximumSize = new System.Drawing.Size(85, 28);
             this.btnSplitSave.MinimumSize = new System.Drawing.Size(85, 23);
             this.btnSplitSave.Name = "btnSplitSave";
@@ -1184,7 +1184,7 @@
             // btnCancel
             // 
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(830, 754);
+            this.btnCancel.Location = new System.Drawing.Point(484, 754);
             this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
             this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
             this.btnCancel.Name = "btnCancel";
@@ -1198,7 +1198,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 786);
+            this.ClientSize = new System.Drawing.Size(654, 786);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "AdminForm";
             this.Text = "Go2It Administration";
