@@ -64,13 +64,9 @@ namespace Go2It
         //    // locate and toggle required layers visibility
         //    foreach (IMapLayer ml in App.Map.Layers)
         //    {
-
         //        if (ml.GetType().Name != "MapImageLayer")
         //        {
         //            var mFeatureLyr = ml as IMapFeatureLayer;
-
-                   
-
         //            // make sure this is a valid map feature layer
         //            if (mFeatureLyr != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename)))) return;
         //            // get the name of this layer for comparison

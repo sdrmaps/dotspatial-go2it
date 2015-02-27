@@ -165,8 +165,10 @@ namespace Go2It
 
         private void Exit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
-            // Environment.Exit(Environment.ExitCode);
+            // TODO: instead of using an application exit, using an environment exit to "FORCE" kill the app
+            // we really shouldnt do this, it's a temp hack to be removed at a later time
+            // Application.Exit();
+            Environment.Exit(Environment.ExitCode);
         }
 
         private Map CreateLoadMap()
