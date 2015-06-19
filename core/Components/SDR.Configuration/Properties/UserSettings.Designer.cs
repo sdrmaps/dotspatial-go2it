@@ -92,12 +92,12 @@ namespace SDR.Configuration.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string KeyLocationsIndexColumnOrder {
+        public string KeyLocationIndexColumnOrder {
             get {
-                return ((string)(this["KeyLocationsIndexColumnOrder"]));
+                return ((string)(this["KeyLocationIndexColumnOrder"]));
             }
             set {
-                this["KeyLocationsIndexColumnOrder"] = value;
+                this["KeyLocationIndexColumnOrder"] = value;
             }
         }
         

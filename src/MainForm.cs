@@ -11,6 +11,7 @@ namespace Go2It
     /// </summary>
     public partial class MainForm : Form
     {
+        // the main form is exported so that the IHeaderControl plug-in can add the menu or the
         [Export("Shell", typeof(ContainerControl))]
         private static ContainerControl _shell;
 

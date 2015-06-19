@@ -90,6 +90,7 @@
     <None Include="Properties\UserSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>UserSettings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Properties\ProjectSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

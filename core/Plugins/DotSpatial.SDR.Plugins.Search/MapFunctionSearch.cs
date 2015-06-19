@@ -134,7 +134,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Key_Locations:
-                    _indexType = "KeyLocationsIndex";
+                    _indexType = "KeyLocationIndex";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.City:
@@ -885,11 +885,15 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public Directory GetLuceneIndexDirectory(string indexType)
         {
+            
             var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+
+            var projectName = Path.GetFileNameWithoutExtension(db);
+
             var d = Path.GetDirectoryName(db);
             if (d == null) return null;
 
-            var path = Path.Combine(d, "indexes", indexType);
+            var path = Path.Combine(d, projectName + "_indexes", indexType);
             if (!System.IO.Directory.Exists(path)) return null;
 
             Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));

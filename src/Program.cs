@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using SDR.Common;
 using SDR.Common.logging;
@@ -25,6 +26,7 @@ namespace Go2It
 
             // set up a logger for the application
             var log = AppContext.Instance.Get<ILog>();
+
             Application.ApplicationExit +=
                 delegate
                 {

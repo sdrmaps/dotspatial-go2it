@@ -517,28 +517,32 @@ namespace Go2It
 
         public void SavingProject()
         {
-            string projectFileName = App.SerializationManager.CurrentProjectFile;
-            SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFileName);
+            string projectFilePath = App.SerializationManager.CurrentProjectFile;
+            string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
+            SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFilePath);
 
             // App.ProgressHandler.Progress("Saving Project " + projectFileName, 0, "");
             Application.DoEvents();
 
             // check for a project level database
-            string newDbPath = Path.ChangeExtension(projectFileName, ".sqlite");
-            string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + "indexes";
+            string newDbPath = Path.ChangeExtension(projectFilePath, ".sqlite");
+            string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + projectFileName +  "_indexes";
 
             string currentDbPath =
                 SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
             string d = Path.GetDirectoryName(currentDbPath);
             if (d != null)
             {
-                string currentDirPath = Path.Combine(d, "indexes");
+                
                 if (newDbPath != currentDbPath)
                 {
                     // copy db to new path. If no db exists, create new db in the new location
                     if (SQLiteHelper.DatabaseExists(currentDbPath))
                     {
                         File.Copy(currentDbPath, newDbPath, true);
+
+                        string currentDirPath = Path.Combine(d, "_indexes");
+
                         // check if there are any index files available copy them if so
                         if (Directory.Exists(currentDirPath))
                         {

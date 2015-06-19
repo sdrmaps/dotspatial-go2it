@@ -1,4 +1,4 @@
-I realise the function as below:
+I release the function as below:
 
 public void moveUpLayer()
         {

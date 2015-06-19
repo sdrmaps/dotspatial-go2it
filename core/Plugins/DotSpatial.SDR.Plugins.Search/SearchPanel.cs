@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Search.Properties;
 using Lucene.Net.Search;
+using SDR.Common;
+using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Search
@@ -776,7 +778,8 @@ namespace DotSpatial.SDR.Plugins.Search
             Query query = new MatchAllDocsQuery();  // query grabs all documents
             if (MapFunctionSearch.IndexReader == null)
             {
-                MessageBox.Show(@"Search index not found");
+                var log = AppContext.Instance.Get<ILog>();
+                log.Info("No Search index exists");
             }
             else
             {

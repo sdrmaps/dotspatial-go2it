@@ -103,10 +103,10 @@ namespace SDR.Configuration.User
 
         public Dictionary<string, string> KeyLocationIndexColumnOrder
         {
-            get { return FetchDictionarySetting(UserSettings.Default.KeyLocationsIndexColumnOrder); }
+            get { return FetchDictionarySetting(UserSettings.Default.KeyLocationIndexColumnOrder); }
             set
             {
-                UserSettings.Default.KeyLocationsIndexColumnOrder = DictionarySettingsString(value);
+                UserSettings.Default.KeyLocationIndexColumnOrder = DictionarySettingsString(value);
                 UserSettings.Default.Save();
             }
         }

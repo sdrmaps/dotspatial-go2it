@@ -2121,7 +2121,9 @@ namespace Go2It
 
                     foreach (KeyValuePair<string, List<Document>> keyValuePair in docs)
                     {
-                        var path = Path.Combine(d, "indexes", keyValuePair.Key);
+                        
+                        string projectFileName = _appManager.SerializationManager.CurrentProjectFile;
+                        var path = Path.Combine(d, projectFileName + "_indexes", keyValuePair.Key);
                         DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
                         Directory dir = FSDirectory.Open(di);
                         FileInfo[] fi = di.GetFiles();
@@ -2241,7 +2243,8 @@ namespace Go2It
                     var d = Path.GetDirectoryName(db);
                     if (d == null) return;
 
-                    var path = Path.Combine(d, "indexes", idxType);
+                    var projectFileName = _appManager.SerializationManager.CurrentProjectFile;
+                    var path = Path.Combine(d, projectFileName + "_indexes", idxType);
                     Directory dir = FSDirectory.Open(new DirectoryInfo(path));
                     var writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
                     Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
