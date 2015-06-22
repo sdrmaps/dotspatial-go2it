@@ -53,12 +53,15 @@ namespace Go2It
         internal ContainerControl Shell { get; set; }
 
         private const string MapTabDefaultCaption = "My Map";  // name of the initial map tab (default)
+
         // internal lookup names used by lucene to get feature from the dataset also stores ft shape (normalized)
         private const string FID = "FID";
         private const string LYRNAME = "LYRNAME";
         private const string GEOSHAPE = "GEOSHAPE";
 
         private bool _dirtyProject;  // change tracking flag for project changes
+
+
         private bool _isCreatingNewView;  // prevent circular tab selection when adding a new map view tab
 
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
@@ -124,14 +127,6 @@ namespace Go2It
             // overall events tied to main application
             _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
 
-            // map tracking events for removal and addition of layers
-            _baseMap.Layers.LayerRemoved += LayersOnLayerRemoved;
-            _baseMap.Layers.LayerAdded += LayersOnLayerAdded;
-
-            // populate all the settings, layers, and maps to the form and attach a legend
-            AttachLegend();
-            _adminLegend.OrderChanged += AdminLegendOnOrderChanged;
-
             PopulateMapViews();
             PopulateSettingsToForm();
             PopulateUsersToForm();
@@ -150,11 +145,15 @@ namespace Go2It
                 var nMap = CreateNewMap(key);
                 app.Map = nMap;  // assign this as the active map to the application
 
+                app.Map.Layers.LayerAdded += LayersOnLayerAdded;
+                app.Map.Layers.LayerRemoved += LayersOnLayerRemoved;
+
                 // create new dockable panel to hold the map
                 var dp = new DockablePanel(key, caption, nMap, DockStyle.Fill);
                 cmbActiveMapTab.Items.Add(dp.Caption);  // add this map to the map view selections combo
                 cmbActiveMapTab.SelectedIndex = 0;
 
+                AttachLegend(nMap);
                 if (string.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
                 {
                     _appManager.SerializationManager.New();  // create the actual serialized map info now
@@ -164,11 +163,18 @@ namespace Go2It
                 // select the map now to activate plugin bindings
                 _appManager.DockManager.SelectPanel(key);
             }
+            else
+            {
+                // not sure on this
+                AttachLegend((Map)_appManager.Map);
+            }
 
             // setup all interface events now
-            cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
+            // cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
             FormClosing += AdminForm_Closing; // check for isdirty changes to project file
             FormClosed += AdminFormClosed;
+
+
             chkViewLayers.ItemCheck += chkViewLayers_ItemCheck; // add or remove item to specific map tab view
 
             // setup a background worker for update progress bar on indexing tab
@@ -240,9 +246,9 @@ namespace Go2It
             // unbind all our events now
             adminLayerSplitter.Paint -= Splitter_Paint;
             _appManager.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
-            _baseMap.Layers.LayerRemoved -= LayersOnLayerRemoved;
-            _baseMap.Layers.LayerAdded -= LayersOnLayerAdded;
-            _adminLegend.OrderChanged -= AdminLegendOnOrderChanged;
+            //_baseMap.Layers.LayerRemoved -= LayersOnLayerRemoved;
+            //_baseMap.Layers.LayerAdded -= LayersOnLayerAdded;
+            // _adminLegend.OrderChanged -= AdminLegendOnOrderChanged;
             // remove the legend from the control, otherwise leaves disposed object behind
             legendSplitter.Panel1.Controls.Remove(_adminLegend);
             FormClosing -= AdminForm_Closing;
@@ -259,11 +265,12 @@ namespace Go2It
         {
             var layer = (IMapLayer) layerEventArgs.Layer;
             if (layer == null) return;
+            _baseMap.Layers.Add(layer);
 
             string fileName;
             if (layer.GetType().Name == "MapImageLayer")
             {
-                var mImage = (IMapImageLayer) layer;
+                var mImage = (IMapImageLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
                 if (fileName != null) _localBaseMapLayerLookup.Add(fileName, mImage);
@@ -271,7 +278,7 @@ namespace Go2It
             }
             else
             {
-                var mLayer = (IMapFeatureLayer) layer;
+                var mLayer = (IMapFeatureLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
                 if (fileName != null) _localBaseMapLayerLookup.Add(fileName, mLayer);
@@ -281,47 +288,47 @@ namespace Go2It
                 layer.GetType().Name != "MapLineLayer") return;
             if (fileName == null) return;
 
-            var mMapLayer = (IMapFeatureLayer) layer;
+            var mMapLayer = (IMapFeatureLayer)layer;
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
             AddLayer(fs); // perform all form specific add operations
         }
 
         private void LayersOnLayerRemoved(object sender, LayerEventArgs layerEventArgs)
         {
-            var layer = (IMapLayer) layerEventArgs.Layer;
-            if (layer == null) return;
-            string fileName;
-            if (layer.GetType().Name == "MapImageLayer")
-            {
-                var mImage = (IMapImageLayer) layer;
-                if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-                fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
-                _dirtyProject = true;
-            }
-            else
-            {
-                var mLayer = (IMapFeatureLayer) layer;
-                if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-                fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
-                _dirtyProject = true;
-                // remove any layers that could be part of active config now
-                if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
-                     mLayer.DataSet.FeatureType.ToString() != "Line" &&
-                     mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
-                var fs = FeatureSet.Open(mLayer.DataSet.Filename);
-                RemoveLayer(fs); // perform all form specific remove operations
-            }
-            // we need to cycle through all the available dockpanels and check if the layer has been set on that map
-            foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
-            {
-                if (!dockPanelInfo.Key.Trim().StartsWith("kMap")) continue;
-                var map = (Map)dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
-                map.Layers.Remove(layer);
-                // now set the map back to itself
-                dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
-            }
+        //    var layer = (IMapLayer) layerEventArgs.Layer;
+        //    if (layer == null) return;
+        //    string fileName;
+        //    if (layer.GetType().Name == "MapImageLayer")
+        //    {
+        //        var mImage = (IMapImageLayer) layer;
+        //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
+        //        fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
+        //        if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
+        //        _dirtyProject = true;
+        //    }
+        //    else
+        //    {
+        //        var mLayer = (IMapFeatureLayer) layer;
+        //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
+        //        fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
+        //        if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
+        //        _dirtyProject = true;
+        //        // remove any layers that could be part of active config now
+        //        if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
+        //             mLayer.DataSet.FeatureType.ToString() != "Line" &&
+        //             mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
+        //        var fs = FeatureSet.Open(mLayer.DataSet.Filename);
+        //        RemoveLayer(fs); // perform all form specific remove operations
+        //    }
+        //    // we need to cycle through all the available dockpanels and check if the layer has been set on that map
+        //    foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
+        //    {
+        //        if (!dockPanelInfo.Key.Trim().StartsWith("kMap")) continue;
+        //        var map = (Map)dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
+        //        map.Layers.Remove(layer);
+        //        // now set the map back to itself
+        //        dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
+        //    }
         }
 
         private static void Splitter_Paint(object sender, PaintEventArgs e)
@@ -371,53 +378,57 @@ namespace Go2It
             if (dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
                 var caption = dockInfo.DotSpatialDockPanel.Caption;
+            //    var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+                
                 var idx = cmbActiveMapTab.Items.IndexOf(caption);
                 if (idx >= 0)
                 {
                     cmbActiveMapTab.SelectedIndex = idx;
                 }
-                chkViewLayers.Items.Clear();
-                // populate all the layers available to the checkbox
-                foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
-                {
-                    if (layer == null) continue;
-                    string fileName;
-                    if (layer.GetType().Name == "MapImageLayer")
-                    {
-                        var mImage = (IMapImageLayer) layer;
-                        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-                        fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                    }
-                    else
-                    {
-                        var mLayer = (IMapFeatureLayer) layer;
-                        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-                        fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                    }
-                    if (fileName != null) chkViewLayers.Items.Add(fileName);
-                }
-                // now set the selections of active layers on active map tab view
-                foreach (var lyr in _appManager.Map.MapFrame.GetAllLayers())
-                {
-                    var layer = (IMapLayer) lyr;
-                    if (layer == null) continue;
-                    string fileName;
-                    if (layer.GetType().Name == "MapImageLayer")
-                    {
-                        var mImage = (IMapImageLayer) layer;
-                        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-                        fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                    }
-                    else
-                    {
-                        var mLayer = (IMapFeatureLayer) layer;
-                        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-                        fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                    }
-                    if (fileName == null) continue;
-                    var ix = chkViewLayers.Items.IndexOf(fileName);
-                    chkViewLayers.SetItemChecked(ix, true);
-                }
+            //    chkViewLayers.Items.Clear();
+            //    // populate all the layers available to the checkbox
+            //    foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
+            //    {
+            //        if (layer == null) continue;
+            //        string fileName;
+            //        if (layer.GetType().Name == "MapImageLayer")
+            //        {
+            //            var mImage = (IMapImageLayer) layer;
+            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
+            //            fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
+            //        }
+            //        else
+            //        {
+            //            var mLayer = (IMapFeatureLayer) layer;
+            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
+            //            fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
+            //        }
+            //        if (fileName != null) chkViewLayers.Items.Add(fileName);
+            //    }
+            //    // now set the selections of active layers on active map tab view
+            //    foreach (var lyr in _appManager.Map.MapFrame.GetAllLayers())
+            //    {
+            //        var layer = (IMapLayer) lyr;
+            //        if (layer == null) continue;
+            //        string fileName;
+            //        if (layer.GetType().Name == "MapImageLayer")
+            //        {
+            //            var mImage = (IMapImageLayer) layer;
+            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
+            //            fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
+            //        }
+            //        else
+            //        {
+            //            var mLayer = (IMapFeatureLayer) layer;
+            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
+            //            fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
+            //        }
+            //        if (fileName == null) continue;
+            //        var ix = chkViewLayers.Items.IndexOf(fileName);
+            //        chkViewLayers.SetItemChecked(ix, true);
+            //    }
+
+
             }
         }
 
@@ -1080,44 +1091,46 @@ namespace Go2It
             }
         }
 
-        private void AttachLegend()
+        private void AttachLegend(Map map)
         {
-            _adminLegend = new Legend
+            if (_adminLegend == null)
             {
-                BackColor = Color.White,
-                ControlRectangle = new Rectangle(0, 0, 176, 128),
-                DocumentRectangle = new Rectangle(0, 0, 34, 114),
-                HorizontalScrollEnabled = true,
-                Indentation = 20,
-                IsInitialized = false,
-                Location = new Point(217, 12),
-                MinimumSize = new Size(5, 5),
-                Name = "adminLegend",
-                ProgressHandler = null,
-                ResetOnResize = false,
-                SelectionFontColor = Color.Black,
-                SelectionHighlight = Color.FromArgb(215, 238, 252),
-                Size = new Size(176, 128),
-                TabIndex = 0,
-                Text = @"Legend",
-                Dock = DockStyle.Fill,
-                VerticalScrollEnabled = true
-            };
-            _baseMap.Legend = _adminLegend;
-            legendSplitter.Panel1.Controls.Add(_adminLegend);
-        }
-
-        private void AdminLegendOnOrderChanged(object sender, EventArgs eventArgs)
-        {
-            var log = AppContext.Instance.Get<ILog>();
-            log.Info("AdminLegendOnOrderChanged");
-            // todo: some event here to update all map tabs/invalidations/etc.
+                _adminLegend = new Legend
+                {
+                    BackColor = Color.White,
+                    ControlRectangle = new Rectangle(0, 0, 176, 128),
+                    DocumentRectangle = new Rectangle(0, 0, 34, 114),
+                    HorizontalScrollEnabled = true,
+                    Indentation = 20,
+                    IsInitialized = false,
+                    Location = new Point(217, 12),
+                    MinimumSize = new Size(5, 5),
+                    Name = "adminLegend",
+                    ProgressHandler = null,
+                    ResetOnResize = false,
+                    SelectionFontColor = Color.Black,
+                    SelectionHighlight = Color.FromArgb(215, 238, 252),
+                    Size = new Size(176, 128),
+                    TabIndex = 0,
+                    Text = @"Legend",
+                    Dock = DockStyle.Fill,
+                    VerticalScrollEnabled = true
+                };
+                legendSplitter.Panel1.Controls.Add(_adminLegend);
+            }
+            else
+            {
+                _adminLegend.RootNodes.Clear();
+            }
+            // set the active map for the admin legend now
+            if (map == null) return;  // verify the map even exists first tho
+            map.Legend = _adminLegend;
         }
 
         private void btnAddLayer_Click(object sender, EventArgs e)
         {
-            // add layers to base map (fires event watcher of the basemap add event)
-            _baseMap.AddLayers();
+            // add layers to the currently active map
+            _appManager.Map.AddLayers();
         }
 
         private void btnRemoveLayer_Click(object sender, EventArgs e)

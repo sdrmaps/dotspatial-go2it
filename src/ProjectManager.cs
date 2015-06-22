@@ -215,6 +215,7 @@ namespace Go2It
                 var nMapFrame = nMap.MapFrame as EventMapFrame;
                 // LogMapFrameEvents(nMapFrame, txtCaption);  // log all mapframe events
 
+                // TODO: can also suspend map reprojection msgbox and no projection warning
                 nMapFrame.SuspendViewExtentChanged(); // suspend all view extent changes events
                 nMapFrame.SuspendEvents(); // suspend all layer events
                 nMapFrame.ExtentsInitialized = true; // set the extents manually below
