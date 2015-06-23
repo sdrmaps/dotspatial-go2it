@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Data;
+using DotSpatial.Data.Properties;
+using DotSpatial.Extensions;
 using DotSpatial.SDR.Controls;
+using DotSpatial.Serialization;
 using DotSpatial.Symbology;
 using SDR.Configuration.Project;
 using SDR.Configuration.User;
@@ -18,7 +24,7 @@ using SdrConfig = SDR.Configuration;
 
 namespace Go2It
 {
-    public class ProjectManager
+    public class ProjectManager : SerializationManager
     {
         // const variables for project layer types, used in the project settings dbase
         public const string LayerTypeAddress = "t_address";
@@ -35,7 +41,7 @@ namespace Go2It
         ///     Creates a new instance of the project manager
         /// </summary>
         /// <param name="mainApp"></param>
-        public ProjectManager(AppManager mainApp)
+        public ProjectManager(AppManager mainApp) : base(mainApp)
         {
             App = mainApp;
             Dock = (DockingControl) mainApp.DockManager;
@@ -45,8 +51,276 @@ namespace Go2It
         ///     The main app manager
         /// </summary>
         public AppManager App { get; private set; }
-
         public DockingControl Dock { get; private set; }
+
+        public Map CreateNewMap(String mapName)
+        {
+            return CreateNewMap(mapName, Go2ItProjectSettings.Instance.MapBgColor);
+        }
+
+        public Map CreateNewMap(String mapName, Color bgColor)
+        {
+            var map = new Map(); // new map 
+            var mapframe = new EventMapFrame(); // evented map frame so we can disable visualextent events
+            mapframe.SuspendViewExtentChanged();  // suspend view-extents while map is not active
+
+            map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
+            map.BackColor = bgColor;
+            map.Visible = true;  // set visibility to false if it is the _basemap
+            map.Dock = DockStyle.Fill;
+
+            return map;
+        }
+
+        /// <summary>
+        ///     Creates a new 'empty' project
+        /// </summary>
+        public void CreateNewProject()
+        {
+            if (App.Map != null)
+            {
+                App.Map.ClearLayers();
+            }
+            // clear any current project directory
+            SetCurrentProjectDirectory(String.Empty);
+            // reset all project settings to default
+            Go2ItProjectSettings.Instance.ResetProjectSettings();
+            // reset all dock controller map tabs and layerlookup dict
+            if (Dock == null)
+            {
+                Dock = (DockingControl) App.DockManager;
+            }
+            else
+            {
+                Dock.ResetLayout();
+            }
+            // setup a temp database to hold our settings
+            SetupDatabase();
+            base.IsDirty = false;  // and finally set to 'not dirty'
+        }
+
+        /// <summary>
+        /// Filter text for a save project as dialog
+        /// </summary>
+        public new string SaveDialogFilterText
+        {
+            get
+            {
+                return String.Format(SaveDialogFilterFormat, "ProjectFile");
+            }
+        }
+
+        /// <summary>
+        /// Gets the save dialog filter format.
+        /// </summary>
+        public new string SaveDialogFilterFormat
+        {
+            get
+            {
+                return "{0} (*.sqlite)|*.sqlite" + AggregateProviderExtensions(base.SaveProjectFileProviders);
+            }
+        }
+
+        private static string AggregateProviderExtensions(IEnumerable<IProjectFileProvider> providers)
+        {
+            return providers.Aggregate(
+                new StringBuilder(),
+                (sb, p) => sb
+                               .AppendFormat("|{1} (*{0})|*{0}", p.Extension, p.FileTypeDescription),
+                s => s.ToString());
+        }
+
+        private void SetCurrentProjectDirectory(string fileName)
+        {
+            // we set the working directory to the location of the project file. All filenames will be relative to this path.
+            if (String.IsNullOrEmpty(fileName))
+            {
+                base.CurrentProjectFile = CurrentProjectDirectory = String.Empty;
+            }
+            else
+            {
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(fileName));
+                base.CurrentProjectFile = fileName;
+                base.CurrentProjectDirectory = Path.GetDirectoryName(fileName);
+            }
+        }
+
+        private string CreateSerializedGraph(Map map)
+        {
+            var graph = new object[] { map };
+            var s = new XmlSerializer();
+            string xml = s.Serialize(graph);
+            return xml;
+        }
+
+        private void CreateProjectDatabase()
+        {
+            string projectFilePath = App.SerializationManager.CurrentProjectFile;
+            string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
+
+            //SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFilePath);
+
+            // check for a project level database
+            string newDbPath = Path.ChangeExtension(projectFilePath, ".sqlite");
+            string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + projectFileName + "_indexes";
+
+            string currentDbPath = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            string d = Path.GetDirectoryName(currentDbPath);
+            if (d != null)
+            {
+
+                if (newDbPath != currentDbPath)
+                {
+                    // copy db to new path. If no db exists, create new db in the new location
+                    if (SQLiteHelper.DatabaseExists(currentDbPath))
+                    {
+                        File.Copy(currentDbPath, newDbPath, true);
+
+                        string currentDirPath = Path.Combine(d, "_indexes");
+
+                        // check if there are any index files available copy them if so
+                        if (Directory.Exists(currentDirPath))
+                        {
+                            DirectoryCopy(currentDirPath, newDirPath, true);
+                        }
+                    }
+                    else
+                    {
+                        CreateNewDatabase(newDbPath);
+                    }
+                    // update application level database configuration settings
+                    SdrConfig.Settings.Instance.ProjectRepoConnectionString =
+                        SQLiteHelper.GetSQLiteConnectionString(newDbPath);
+                }
+            }
+        }
+
+        private void SaveMapTabs()
+        {
+            // get the project settings db connection string
+            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            SQLiteHelper.ClearTable(conn, "MapTabs");
+            DockingControl dc = Dock;
+
+            foreach (var dpi in dc.DockPanelLookup)
+            {
+                if (!dpi.Key.Trim().StartsWith("kMap")) continue;
+                var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
+                var xmlMap = CreateSerializedGraph(map);
+
+
+                var mapFrame = map.MapFrame as MapFrame;
+                IMapLayerCollection layers = map.Layers; // get the layers
+                string txtLayers = string.Empty; // text block to store layers
+
+                foreach (IMapLayer mapLayer in layers)
+                {
+                    string layName;
+                    if (mapLayer.GetType().Name == "MapImageLayer")
+                    {
+                        var mImage = (IMapImageLayer)mapLayer;
+                        layName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
+                    }
+                    else
+                    {
+                        var ftLayer = (FeatureLayer)mapLayer;
+                        layName = ftLayer.Name;
+                    }
+                    txtLayers = txtLayers + layName + "|";
+                }
+                if (txtLayers.Length != 0)
+                {
+                    txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
+                }
+                // send this all to a dict to save to dbase as a maptab
+                if (mapFrame == null) continue;
+                var dd = new Dictionary<string, string>
+                {
+                    {"lookup", dpi.Key},
+                    {"caption", dpi.Value.DotSpatialDockPanel.Caption},
+                    {"zorder", dpi.Value.SortOrder.ToString(CultureInfo.InvariantCulture)},
+                    {"extent", mapFrame.Extent.ToString()},
+                    {"viewextent", mapFrame.ViewExtents.ToString()},
+                    {"bounds", map.Bounds.ToString()},
+                    {"layers", txtLayers},
+                    {"map_xml", xmlMap}
+                };
+                SQLiteHelper.Insert(conn, "MapTabs", dd);
+            }
+
+
+        }
+
+        public new void SaveProject(string fileName)
+        {
+            Contract.Requires(!String.IsNullOrEmpty(fileName), "fileName is null or empty.");
+            Contract.Requires(App.Map != null);
+
+            SetCurrentProjectDirectory(fileName);
+
+            // App.ProgressHandler.Progress("Saving Project " + projectFileName, 0, "");
+            // Application.DoEvents();
+
+            CreateProjectDatabase();
+
+            // OnSerializing(new SerializingEventArgs());
+
+            // serialize each map that has been created for each tab
+            SaveMapTabs();
+
+
+
+
+            //bool isProviderPresent = false;
+            //string extension = Path.GetExtension(fileName);
+
+            //foreach (ISaveProjectFileProvider provider in SaveProjectFileProviders)
+            //{
+            //    if (String.Equals(provider.Extension, extension, StringComparison.OrdinalIgnoreCase))
+            //    {
+            //        provider.Save(fileName, xml);
+            //        isProviderPresent = true;
+            //    }
+            //}
+
+            //if (!isProviderPresent)
+            //{
+            //    switch (extension)
+            //    {
+            //        case ".sqlite":
+            //            // File.WriteAllText(fileName, xml);
+            //            break;
+            //        default:
+            //            throw new NotImplementedException("There isn't an implementation for saving that file type.");
+            //    }
+            //}
+
+            //AddFileToRecentFiles(fileName);
+
+            //IsDirty = false;
+            //OnIsDirtyChanged();
+
+
+            // SaveProjectSettings();
+            //// App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
+        }
+
+        private static void AddFileToRecentFiles(string fileName)
+        {
+            if (Settings.Default.RecentFiles.Contains(fileName))
+            {
+                Settings.Default.RecentFiles.Remove(fileName);
+            }
+
+            if (Settings.Default.RecentFiles.Count >= Settings.Default.MaximumNumberOfRecentFiles)
+                Settings.Default.RecentFiles.RemoveAt(Settings.Default.RecentFiles.Count - 1);
+
+            // insert value at the top of the list
+            Settings.Default.RecentFiles.Insert(0, fileName);
+
+            Settings.Default.Save();
+        }
+
 
         /// <summary>
         ///     Check if the path is a valid SQLite database
@@ -110,7 +384,7 @@ namespace Go2It
                 {
                     IFeatureSet fs = FeatureSet.Open(fl.DataSet.Filename);
                     // add this as a lookup to the dict
-                    if (fs != null) Dock.BaseLayerLookup.Add(fs.Name, layer);
+                    // if (fs != null) Dock.BaseLayerLookup.Add(fs.Name, layer);
                 }
             }
             // do a basic query to get a key and caption for the panel tab lookup and selection
@@ -290,18 +564,6 @@ namespace Go2It
             App.DockManager.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
-        /// <summary>
-        ///     Creates a new 'empty' project
-        /// </summary>
-        public void CreateEmptyProject()
-        {
-            // reset all project settings to default
-            Go2ItProjectSettings.Instance.ResetProjectSettings();
-            // reset all dock controller map tabs and layerlookup dict
-            Dock.ResetLayout();
-            // setup a temp database to hold our settings
-            SetupDatabase();
-        }
 
         /// <summary>
         ///     This method sets up the default databases.
@@ -461,25 +723,25 @@ namespace Go2It
 
         private Dictionary<string, string> CreateLayerDictionary(string layName, string projType)
         {
-            if (layName.Length == 0) return null;
-            if (projType.Length == 0) return null;
+            //if (layName.Length == 0) return null;
+            //if (projType.Length == 0) return null;
 
-            var d = new Dictionary<string, string>();
-            foreach (var keyValuePair in Dock.BaseLayerLookup)
-            {
-                var fl = keyValuePair.Value as IMapFeatureLayer;
-                if (fl != null)
-                {
-                    if (keyValuePair.Key == layName)
-                    {
-                        var ftLayer = (FeatureLayer) fl;
-                        d.Add("name", ftLayer.Name);
-                        d.Add("layerType", ftLayer.DataSet.FeatureType.ToString());
-                        d.Add("projectType", projType);
-                        return d; // send me home now
-                    }
-                }
-            }
+            //var d = new Dictionary<string, string>();
+            //foreach (var keyValuePair in Dock.BaseLayerLookup)
+            //{
+            //    var fl = keyValuePair.Value as IMapFeatureLayer;
+            //    if (fl != null)
+            //    {
+            //        if (keyValuePair.Key == layName)
+            //        {
+            //            var ftLayer = (FeatureLayer) fl;
+            //            d.Add("name", ftLayer.Name);
+            //            d.Add("layerType", ftLayer.DataSet.FeatureType.ToString());
+            //            d.Add("projectType", projType);
+            //            return d; // send me home now
+            //        }
+            //    }
+            //}
             return null;
         }
 
@@ -518,48 +780,48 @@ namespace Go2It
 
         public void SavingProject()
         {
-            string projectFilePath = App.SerializationManager.CurrentProjectFile;
-            string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
-            SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFilePath);
+            // string projectFilePath = App.SerializationManager.CurrentProjectFile;
+            //string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
+            //SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFilePath);
 
-            // App.ProgressHandler.Progress("Saving Project " + projectFileName, 0, "");
-            Application.DoEvents();
+            //// App.ProgressHandler.Progress("Saving Project " + projectFileName, 0, "");
+            //Application.DoEvents();
 
-            // check for a project level database
-            string newDbPath = Path.ChangeExtension(projectFilePath, ".sqlite");
-            string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + projectFileName +  "_indexes";
+            //// check for a project level database
+            //string newDbPath = Path.ChangeExtension(projectFilePath, ".sqlite");
+            //string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + projectFileName +  "_indexes";
 
-            string currentDbPath =
-                SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            string d = Path.GetDirectoryName(currentDbPath);
-            if (d != null)
-            {
+            //string currentDbPath =
+            //    SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            //string d = Path.GetDirectoryName(currentDbPath);
+            //if (d != null)
+            //{
                 
-                if (newDbPath != currentDbPath)
-                {
-                    // copy db to new path. If no db exists, create new db in the new location
-                    if (SQLiteHelper.DatabaseExists(currentDbPath))
-                    {
-                        File.Copy(currentDbPath, newDbPath, true);
+            //    if (newDbPath != currentDbPath)
+            //    {
+            //        // copy db to new path. If no db exists, create new db in the new location
+            //        if (SQLiteHelper.DatabaseExists(currentDbPath))
+            //        {
+            //            File.Copy(currentDbPath, newDbPath, true);
 
-                        string currentDirPath = Path.Combine(d, "_indexes");
+            //            string currentDirPath = Path.Combine(d, "_indexes");
 
-                        // check if there are any index files available copy them if so
-                        if (Directory.Exists(currentDirPath))
-                        {
-                            DirectoryCopy(currentDirPath, newDirPath, true);
-                        }
-                    }
-                    else
-                    {
-                        CreateNewDatabase(newDbPath);
-                    }
-                    // update application level database configuration settings
-                    SdrConfig.Settings.Instance.ProjectRepoConnectionString =
-                        SQLiteHelper.GetSQLiteConnectionString(newDbPath);
-                }
-            }
-            SaveProjectSettings();
+            //            // check if there are any index files available copy them if so
+            //            if (Directory.Exists(currentDirPath))
+            //            {
+            //                DirectoryCopy(currentDirPath, newDirPath, true);
+            //            }
+            //        }
+            //        else
+            //        {
+            //            CreateNewDatabase(newDbPath);
+            //        }
+            //        // update application level database configuration settings
+            //        SdrConfig.Settings.Instance.ProjectRepoConnectionString =
+            //            SQLiteHelper.GetSQLiteConnectionString(newDbPath);
+            //    }
+            //}
+            //SaveProjectSettings();
             // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
         }
     }

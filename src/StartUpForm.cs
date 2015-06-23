@@ -139,6 +139,7 @@ namespace Go2It
             {
                 if (_app.Map == null)
                 {
+                    // TODO: do we need this here?
                     _app.Map = CreateLoadMap();  // a base level map used to load all layers
                 }
                 _app.SerializationManager.OpenProject(projectFileName);

@@ -47,7 +47,7 @@ namespace Go2It
             {
                 log.Info("Opening Project (Program.cs): " + args[0]);
                 // a project is being loaded from command line or double click
-                mainForm.AppManager.SerializationManager.OpenProject(args[0]);
+                // mainForm.AppManager.SerializationManager.OpenProject(args[0]);
             }
             Application.Run(mainForm);
         }

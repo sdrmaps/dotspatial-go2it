@@ -45,7 +45,6 @@
             this.btnAddView = new System.Windows.Forms.Button();
             this.txtViewName = new System.Windows.Forms.TextBox();
             this.btnDeleteView = new System.Windows.Forms.Button();
-            this.chkViewLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbActiveMapTab = new System.Windows.Forms.ComboBox();
             this.lblMapBGColor = new System.Windows.Forms.Label();
             this.mapBGColorPanel = new System.Windows.Forms.Panel();
@@ -118,8 +117,8 @@
             this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
             this.lineSymbolGraphic = new System.Windows.Forms.Panel();
             this.ptSymbolGraphic = new System.Windows.Forms.Panel();
-            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -210,7 +209,6 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.btnAddView);
             this.adminLayerSplitter.Panel2.Controls.Add(this.txtViewName);
             this.adminLayerSplitter.Panel2.Controls.Add(this.btnDeleteView);
-            this.adminLayerSplitter.Panel2.Controls.Add(this.chkViewLayers);
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbActiveMapTab);
             this.adminLayerSplitter.Panel2.Controls.Add(this.lblMapBGColor);
             this.adminLayerSplitter.Panel2.Controls.Add(this.mapBGColorPanel);
@@ -329,7 +327,7 @@
             // 
             // btnDeleteView
             // 
-            this.btnDeleteView.Location = new System.Drawing.Point(228, 35);
+            this.btnDeleteView.Location = new System.Drawing.Point(250, 35);
             this.btnDeleteView.Name = "btnDeleteView";
             this.btnDeleteView.Size = new System.Drawing.Size(75, 23);
             this.btnDeleteView.TabIndex = 42;
@@ -337,22 +335,13 @@
             this.btnDeleteView.UseVisualStyleBackColor = true;
             this.btnDeleteView.Click += new System.EventHandler(this.btnRemoveView_Click);
             // 
-            // chkViewLayers
-            // 
-            this.chkViewLayers.CheckOnClick = true;
-            this.chkViewLayers.FormattingEnabled = true;
-            this.chkViewLayers.Location = new System.Drawing.Point(43, 63);
-            this.chkViewLayers.Name = "chkViewLayers";
-            this.chkViewLayers.Size = new System.Drawing.Size(241, 94);
-            this.chkViewLayers.TabIndex = 41;
-            // 
             // cmbActiveMapTab
             // 
             this.cmbActiveMapTab.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbActiveMapTab.FormattingEnabled = true;
-            this.cmbActiveMapTab.Location = new System.Drawing.Point(43, 36);
+            this.cmbActiveMapTab.Location = new System.Drawing.Point(32, 36);
             this.cmbActiveMapTab.Name = "cmbActiveMapTab";
-            this.cmbActiveMapTab.Size = new System.Drawing.Size(179, 21);
+            this.cmbActiveMapTab.Size = new System.Drawing.Size(212, 21);
             this.cmbActiveMapTab.TabIndex = 40;
             // 
             // lblMapBGColor
@@ -1167,6 +1156,19 @@
             this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
             this.ptSymbolGraphic.TabIndex = 27;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(484, 754);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -1180,19 +1182,6 @@
             this.btnSplitSave.Text = "Save";
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(484, 754);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AdminForm
             // 
@@ -1252,7 +1241,6 @@
         private System.Windows.Forms.Button btnAddView;
         private System.Windows.Forms.TextBox txtViewName;
         private System.Windows.Forms.Button btnDeleteView;
-        private System.Windows.Forms.CheckedListBox chkViewLayers;
         private System.Windows.Forms.ComboBox cmbActiveMapTab;
         private System.Windows.Forms.Label lblMapBGColor;
         private System.Windows.Forms.Panel mapBGColorPanel;

@@ -330,7 +330,7 @@ namespace SDR.Data.Database
             }
             catch (UnauthorizedAccessException ex)
             {
-                Debug.WriteLine("Error creating the default database " + dbPath +
+                Debug.WriteLine("Error creating the database " + dbPath +
                     ". Please check your write permissions. " + ex.Message);
                 return false;
             }

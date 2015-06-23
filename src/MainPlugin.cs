@@ -33,11 +33,12 @@ namespace Go2It
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
+            //_projManager = (ProjectManager) App.SerializationManager;
+
             // set the application wide project manager now
-            _projManager = new ProjectManager(App);
+            // _projManager = new ProjectManager(App);
 
             // setup new project save and open project serialization events
-            App.SerializationManager.NewProjectCreated += SerializationManagerOnNewProjectCreated;
             App.SerializationManager.Deserializing += SerializationManager_Deserializing;
             App.SerializationManager.Serializing += SerializationManager_Serializing;
 
@@ -67,10 +68,6 @@ namespace Go2It
             }
         }
 
-        private void SerializationManagerOnNewProjectCreated(object sender, SerializingEventArgs serializingEventArgs)
-        {
-            _projManager.CreateEmptyProject();
-        }
 
         void App_ExtensionsActivated(object sender, EventArgs e)
         {
@@ -83,7 +80,6 @@ namespace Go2It
             App.ExtensionsActivated -= App_ExtensionsActivated;
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
             App.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
-            App.SerializationManager.NewProjectCreated -= SerializationManagerOnNewProjectCreated;
             App.SerializationManager.Deserializing -= SerializationManager_Deserializing;
             App.SerializationManager.Serializing -= SerializationManager_Serializing;
             base.Deactivate();

@@ -19,7 +19,6 @@ namespace DotSpatial.SDR.Controls
 
         // lookup list of all available tool and map dockpanels
         public readonly Dictionary<string, DockPanelInfo> DockPanelLookup = new Dictionary<string, DockPanelInfo>();
-        public readonly Dictionary<string, IMapLayer> BaseLayerLookup = new Dictionary<string, IMapLayer>();
 
         private SplitContainer _splitContainer;
         private int _splitterDistance;  // hold the size of the splitter for invalidation
@@ -144,7 +143,6 @@ namespace DotSpatial.SDR.Controls
             {
                 Remove(mapTab.Name);  // same as the tab key (could also use mapTab.Tag)
             }
-            BaseLayerLookup.Clear();  // clear base layer lookup (wipe all layers)
         }
 
         private void MapTabsOnDeselected(object sender, TabControlEventArgs tabControlEventArgs)
@@ -219,13 +217,6 @@ namespace DotSpatial.SDR.Controls
         public void ShowPanel(string key)
         {
             throw new NotImplementedException();
-        }
-
-        public IMapFeatureLayer GetMapFeatureLayerByName(string lyrName)
-        {
-            IMapLayer layer;
-            BaseLayerLookup.TryGetValue(lyrName, out layer);
-            return layer as IMapFeatureLayer;
         }
 
         #endregion

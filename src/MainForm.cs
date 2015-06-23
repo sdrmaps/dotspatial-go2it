@@ -34,6 +34,8 @@ namespace Go2It
             // HotKeyManager.LoadHotKeys();
             // create our application manager
             AppManager = new AppManager();
+            var projManager = new ProjectManager(AppManager);
+            AppManager.SerializationManager = (ProjectManager) projManager;
 
             _shell = this;
             // load any extensions/plugins now

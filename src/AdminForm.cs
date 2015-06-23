@@ -59,24 +59,13 @@ namespace Go2It
         private const string LYRNAME = "LYRNAME";
         private const string GEOSHAPE = "GEOSHAPE";
 
-        private bool _dirtyProject;  // change tracking flag for project changes
-
-
         private bool _isCreatingNewView;  // prevent circular tab selection when adding a new map view tab
-
-        // default sql row creation for an indexing row in the db (key, lookup, fieldname)
-        private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
-        // background worker handles the indexing process
-        private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
-        private ProgressPanel _progressPanel;  // indicate progress of index worker
-        // invalid file name chars array for validation
-        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 
         // admin form controls
         private Legend _adminLegend;
         private readonly AppManager _appManager;
         private readonly DockingControl _dockingControl;
-        private readonly Map _baseMap;
+        private readonly ProjectManager _projectManager;
 
         // store all the layers by type
         private readonly List<IFeatureSet> _pointLayers = new List<IFeatureSet>();
@@ -88,10 +77,20 @@ namespace Go2It
         private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
 
-        // temp dict holds all base map layers for selection/removal on map tabs
-        // on save this is passed to the dockingcontrol baselayerlookup dict (basically a lookup for all available layers)
-        private readonly Dictionary<string, IMapLayer> _localBaseMapLayerLookup = new Dictionary<string, IMapLayer>();
-        
+        // lookup of all layers available to this project, used for easy access indexing
+        private readonly Dictionary<string, IMapLayer> _allLayerLookup = new Dictionary<string, IMapLayer>();
+
+
+
+        private bool _dirtyProject;  // change tracking flag for project changes
+        // default sql row creation for an indexing row in the db (key, lookup, fieldname)
+        private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
+        // background worker handles the indexing process
+        private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
+        private ProgressPanel _progressPanel;  // indicate progress of index worker
+        // invalid file name chars array for validation
+        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+
         // temp storage of layers to index until the "create" button is activated (all queued indexes)
         // inner dict hold type/lookups per row
         // the list stores all rows
@@ -111,14 +110,12 @@ namespace Go2It
             _indexLookupFields.Add("fieldname", "TEXT");
 
             _appManager = app;
+            _projectManager = (ProjectManager)app.SerializationManager;
             _dockingControl = (DockingControl) app.DockManager;
 
-            _baseMap = CreateNewMap("_baseMap");
-            _baseMap.MapFunctions.Clear(); // remove all map functions from basemap
-
             // set options on our indexing bgworker
-            _idxWorker.WorkerReportsProgress = false;
-            _idxWorker.WorkerSupportsCancellation = false;
+            //  _idxWorker.WorkerReportsProgress = false;
+            //  _idxWorker.WorkerSupportsCancellation = false;
 
             // splitter stuff
             adminLayerSplitter.SplitterWidth = 10;
@@ -126,6 +123,7 @@ namespace Go2It
 
             // overall events tied to main application
             _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
+            _appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             PopulateMapViews();
             PopulateSettingsToForm();
@@ -137,51 +135,44 @@ namespace Go2It
             // check if there is a valid map loaded to the application
             if (_appManager.Map == null)
             {
-                // create the default map view and assign to app.map
+                _projectManager.CreateNewProject();
+
+                // generate a default map for display purposes
                 const string caption = MapTabDefaultCaption;
                 var kname = new string(caption.Where(ch => !InvalidFileNameChars.Contains(ch)).ToArray());
                 kname = kname.Replace(" ", "");
                 var key = "kMap_" + kname;
-                var nMap = CreateNewMap(key);
-                app.Map = nMap;  // assign this as the active map to the application
-
-                app.Map.Layers.LayerAdded += LayersOnLayerAdded;
-                app.Map.Layers.LayerRemoved += LayersOnLayerRemoved;
+                var nMap = _projectManager.CreateNewMap(key, mapBGColorPanel.BackColor);
 
                 // create new dockable panel to hold the map
                 var dp = new DockablePanel(key, caption, nMap, DockStyle.Fill);
                 cmbActiveMapTab.Items.Add(dp.Caption);  // add this map to the map view selections combo
                 cmbActiveMapTab.SelectedIndex = 0;
 
-                AttachLegend(nMap);
-                if (string.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
-                {
-                    _appManager.SerializationManager.New();  // create the actual serialized map info now
-                }
                 // add the new tab view to the main form
-                _appManager.DockManager.Add(dp);
+                _dockingControl.Add(dp);
                 // select the map now to activate plugin bindings
-                _appManager.DockManager.SelectPanel(key);
+                _dockingControl.SelectPanel(key);
             }
             else
             {
-                // not sure on this
-                AttachLegend((Map)_appManager.Map);
+                // not sure on this TODO:::
+                // AttachLegend((Map)_appManager.Map);
             }
 
-            // setup all interface events now
-            // cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
+
+            // setup all interface events now (TODO: investigating now
+            cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
+
+
             FormClosing += AdminForm_Closing; // check for isdirty changes to project file
             FormClosed += AdminFormClosed;
 
-
-            chkViewLayers.ItemCheck += chkViewLayers_ItemCheck; // add or remove item to specific map tab view
-
             // setup a background worker for update progress bar on indexing tab
-            _idxWorker.DoWork += idx_DoWork;
-            _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
+            // _idxWorker.DoWork += idx_DoWork;
+            // _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
-            _dirtyProject = false; // reset dirty flag after populating form on startup
+            // _dirtyProject = false; // reset dirty flag after populating form on startup
 
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
@@ -227,20 +218,6 @@ namespace Go2It
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private Map CreateNewMap(String mapName)
-        {
-            var map = new Map(); // new map 
-            var mapframe = new EventMapFrame(); // evented map frame so we can disable visualextent events
-            mapframe.SuspendViewExtentChanged();  // suspend view-extents while map is not active
-
-            map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
-            map.BackColor = mapBGColorPanel.BackColor;
-            map.Visible = mapName != "_baseMap";  // set visibility to false if it is the _basemap
-            map.Dock = DockStyle.Fill;
-
-            return map;
-        }
-
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
         {
             // unbind all our events now
@@ -252,7 +229,7 @@ namespace Go2It
             // remove the legend from the control, otherwise leaves disposed object behind
             legendSplitter.Panel1.Controls.Remove(_adminLegend);
             FormClosing -= AdminForm_Closing;
-            chkViewLayers.ItemCheck -= chkViewLayers_ItemCheck;
+            // chkViewLayers.ItemCheck -= chkViewLayers_ItemCheck;
             _idxWorker.DoWork -= idx_DoWork;
             _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
             FormClosed -= AdminFormClosed;
@@ -265,70 +242,75 @@ namespace Go2It
         {
             var layer = (IMapLayer) layerEventArgs.Layer;
             if (layer == null) return;
-            _baseMap.Layers.Add(layer);
 
+            // add this layer to our 'allLayerLookup' Dictionary for easy access on indexing
             string fileName;
             if (layer.GetType().Name == "MapImageLayer")
             {
-                var mImage = (IMapImageLayer)layer;
+                var mImage = (IMapImageLayer) layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                if (fileName != null) _localBaseMapLayerLookup.Add(fileName, mImage);
-                _dirtyProject = true;
+                if (fileName != null) _allLayerLookup.Add(fileName, mImage);
+                // _dirtyProject = true;
             }
             else
             {
                 var mLayer = (IMapFeatureLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                if (fileName != null) _localBaseMapLayerLookup.Add(fileName, mLayer);
-                _dirtyProject = true;
+                if (fileName != null) _allLayerLookup.Add(fileName, mLayer);
+                // _dirtyProject = true;
             }
             if (layer.GetType().Name != "MapPointLayer" && layer.GetType().Name != "MapPolygonLayer" &&
                 layer.GetType().Name != "MapLineLayer") return;
-            if (fileName == null) return;
-
+            
             var mMapLayer = (IMapFeatureLayer)layer;
+            if (mMapLayer.DataSet.Filename == null) return;
+
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
             AddLayer(fs); // perform all form specific add operations
         }
 
         private void LayersOnLayerRemoved(object sender, LayerEventArgs layerEventArgs)
         {
-        //    var layer = (IMapLayer) layerEventArgs.Layer;
-        //    if (layer == null) return;
-        //    string fileName;
-        //    if (layer.GetType().Name == "MapImageLayer")
-        //    {
-        //        var mImage = (IMapImageLayer) layer;
-        //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-        //        fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-        //        if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
-        //        _dirtyProject = true;
-        //    }
-        //    else
-        //    {
-        //        var mLayer = (IMapFeatureLayer) layer;
-        //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-        //        fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-        //        if (fileName != null) _localBaseMapLayerLookup.Remove(fileName);
-        //        _dirtyProject = true;
-        //        // remove any layers that could be part of active config now
-        //        if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
-        //             mLayer.DataSet.FeatureType.ToString() != "Line" &&
-        //             mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
-        //        var fs = FeatureSet.Open(mLayer.DataSet.Filename);
-        //        RemoveLayer(fs); // perform all form specific remove operations
-        //    }
-        //    // we need to cycle through all the available dockpanels and check if the layer has been set on that map
-        //    foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
-        //    {
-        //        if (!dockPanelInfo.Key.Trim().StartsWith("kMap")) continue;
-        //        var map = (Map)dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
-        //        map.Layers.Remove(layer);
-        //        // now set the map back to itself
-        //        dockPanelInfo.Value.DotSpatialDockPanel.InnerControl = map;
-        //    }
+            var layer = (IMapLayer)layerEventArgs.Layer;
+            if (layer == null) return;
+
+            // before full removal check that this layer doesnt exist on another map tab already
+            foreach (KeyValuePair<string, DockPanelInfo> dockPanelInfo in _dockingControl.DockPanelLookup)
+            {
+                if (!dockPanelInfo.Key.Trim().StartsWith("kMap")) continue;
+                var map = (Map)dockPanelInfo.Value.DotSpatialDockPanel.InnerControl;
+                if (map.Layers.Contains(layer))
+                {
+                    return;
+                }
+            }
+            // it does not appear to be on any other map tabs, remove it from the alllookup dictionary
+            string fileName;
+            if (layer.GetType().Name == "MapImageLayer")
+            {
+                var mImage = (IMapImageLayer)layer;
+                if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
+                fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
+                if (fileName != null) _allLayerLookup.Remove(fileName);
+                // _dirtyProject = true;
+            }
+            else
+            {
+                var mLayer = (IMapFeatureLayer)layer;
+                if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
+                fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
+                if (fileName != null) _allLayerLookup.Remove(fileName);
+                // _dirtyProject = true;
+
+                // remove any layers that could be part of active config now
+                if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
+                     mLayer.DataSet.FeatureType.ToString() != "Line" &&
+                     mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
+                var fs = FeatureSet.Open(mLayer.DataSet.Filename);
+                RemoveLayer(fs); // perform all form specific remove operations
+            }
         }
 
         private static void Splitter_Paint(object sender, PaintEventArgs e)
@@ -369,6 +351,20 @@ namespace Go2It
             }
         }
 
+        private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
+        {
+            var dockControl = (DockingControl) sender;
+            var key = e.ActivePanelKey;
+            DockPanelInfo dockInfo;
+            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
+            if (dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_"))
+            {
+                var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+                map.Layers.LayerAdded -= LayersOnLayerAdded;
+                map.Layers.LayerRemoved -= LayersOnLayerRemoved;
+            }
+        }
+
         private void DockManager_ActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
             var dockControl = (DockingControl) sender;
@@ -378,57 +374,19 @@ namespace Go2It
             if (dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
                 var caption = dockInfo.DotSpatialDockPanel.Caption;
-            //    var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+                var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+
+                map.Layers.LayerAdded += LayersOnLayerAdded;
+                map.Layers.LayerRemoved += LayersOnLayerRemoved;
+
+                _appManager.Map = map;  // assign as the active map of the application
+                AttachLegend(map);
                 
                 var idx = cmbActiveMapTab.Items.IndexOf(caption);
                 if (idx >= 0)
                 {
                     cmbActiveMapTab.SelectedIndex = idx;
                 }
-            //    chkViewLayers.Items.Clear();
-            //    // populate all the layers available to the checkbox
-            //    foreach (ILayer layer in _baseMap.MapFrame.GetAllLayers())
-            //    {
-            //        if (layer == null) continue;
-            //        string fileName;
-            //        if (layer.GetType().Name == "MapImageLayer")
-            //        {
-            //            var mImage = (IMapImageLayer) layer;
-            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-            //            fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-            //        }
-            //        else
-            //        {
-            //            var mLayer = (IMapFeatureLayer) layer;
-            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-            //            fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-            //        }
-            //        if (fileName != null) chkViewLayers.Items.Add(fileName);
-            //    }
-            //    // now set the selections of active layers on active map tab view
-            //    foreach (var lyr in _appManager.Map.MapFrame.GetAllLayers())
-            //    {
-            //        var layer = (IMapLayer) lyr;
-            //        if (layer == null) continue;
-            //        string fileName;
-            //        if (layer.GetType().Name == "MapImageLayer")
-            //        {
-            //            var mImage = (IMapImageLayer) layer;
-            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-            //            fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-            //        }
-            //        else
-            //        {
-            //            var mLayer = (IMapFeatureLayer) layer;
-            //            if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-            //            fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-            //        }
-            //        if (fileName == null) continue;
-            //        var ix = chkViewLayers.Items.IndexOf(fileName);
-            //        chkViewLayers.SetItemChecked(ix, true);
-            //    }
-
-
             }
         }
 
@@ -765,23 +723,23 @@ namespace Go2It
                 radKeyLocationsPolygons.Checked = true;
             }
             // cycle through all our layers and store them to arrays for tracking
-            foreach (KeyValuePair<string, IMapLayer> keyValuePair in _dockingControl.BaseLayerLookup)
-            {
-                var layer = keyValuePair.Value;
-                if (layer == null) return;
-                if (layer.GetType().Name == "MapImageLayer")
-                {
-                    var mImage = (IMapImageLayer) layer;
-                    if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-                    _baseMap.Layers.Add(mImage);
-                }
-                else
-                {
-                    var mLayer = (IMapFeatureLayer) layer;
-                    if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-                    _baseMap.Layers.Add(mLayer);
-                }
-            }
+            //foreach (KeyValuePair<string, IMapLayer> keyValuePair in _dockingControl.BaseLayerLookup)
+            //{
+            //    var layer = keyValuePair.Value;
+            //    if (layer == null) return;
+            //    if (layer.GetType().Name == "MapImageLayer")
+            //    {
+            //        var mImage = (IMapImageLayer) layer;
+            //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
+            //        _baseMap.Layers.Add(mImage);
+            //    }
+            //    else
+            //    {
+            //        var mLayer = (IMapFeatureLayer) layer;
+            //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
+            //        _baseMap.Layers.Add(mLayer);
+            //    }
+            //}
             SetupLayerSelectionSwitchers();
             SetActiveLayerSelections();
         }
@@ -926,10 +884,6 @@ namespace Go2It
                     chkKeyLocationsLayers.Items.Add(f);
                 }
             }
-            chkViewLayers.Items.Add(f);
-            int idx = chkViewLayers.Items.IndexOf(f);
-            chkViewLayers.SelectedIndex = idx;
-            chkViewLayers.SetItemCheckState(idx, CheckState.Checked);
         }
 
         private void RemoveLayer(IFeatureSet mapLayer)
@@ -996,7 +950,6 @@ namespace Go2It
                     chkKeyLocationsLayers.Items.Remove(f);
                 }
             }
-            chkViewLayers.Items.Remove(f);
         }
 
         private bool ShowSaveProjectDialog()
@@ -1135,10 +1088,10 @@ namespace Go2It
 
         private void btnRemoveLayer_Click(object sender, EventArgs e)
         {
-            var layer = _baseMap.Layers.SelectedLayer;
+            var layer = _appManager.Map.Layers.SelectedLayer;
             if (layer != null)
             {
-                _baseMap.Layers.Remove(layer);
+                _appManager.Map.Layers.Remove(layer);
             }
         }
 
@@ -1148,13 +1101,14 @@ namespace Go2It
                 if (btnSplitSave.Text == @"Save")
                 {
                     bool result;
-                    if (String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
+                    if (String.IsNullOrEmpty(_projectManager.CurrentProjectFile))
                     {
                         result = SaveProjectAs();
                     }
+
                     else
                     {
-                        result = SaveProject(_appManager.SerializationManager.CurrentProjectFile);
+                        result = SaveProject(_projectManager.CurrentProjectFile);
                     }
                     if (result)
                     {
@@ -1191,13 +1145,6 @@ namespace Go2It
 
         private void ApplyProjectSettings()
         {
-            // set all the settings variables, these are then serialized into the database via the project manager [SaveProjectSettings()]
-            // set the baselayer lookup to the localized lookup used by the admin form
-            _dockingControl.BaseLayerLookup.Clear();
-            foreach (KeyValuePair<string, IMapLayer> keyValuePair in _localBaseMapLayerLookup)
-            {
-                _dockingControl.BaseLayerLookup.Add(keyValuePair.Key, keyValuePair.Value);
-            }
             // setup all project level type lookups
             SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType =
                 SetPointOrPolygonType(radAddressPoints);
@@ -1264,12 +1211,14 @@ namespace Go2It
                 // this is saved to dbase by project manager on serialization event, which is fired just below
                 ApplyProjectSettings();
                 // swap the active map out with our base map now -> all layers will be serialized (not just layers in current active tab)
-                var tMap = _appManager.Map;
-                _appManager.Map = _baseMap;
-                _appManager.SerializationManager.SaveProject(fileName);
+                // var tMap = _appManager.Map;
+                // _appManager.Map = _baseMap;
+                _projectManager.SaveProject(fileName);
+
+                // _appManager.SerializationManager.SaveProject(fileName);
                 // reset our orginal map view back to the active map
-                _appManager.Map = tMap;
-                _dirtyProject = false;
+                // _appManager.Map = tMap;
+                // _dirtyProject = false;
                 return true;
             }
             catch (XmlException)
@@ -1300,7 +1249,7 @@ namespace Go2It
             using (
                 var dlg = new SaveFileDialog
                 {
-                    Filter = _appManager.SerializationManager.SaveDialogFilterText,
+                    Filter = _projectManager.SaveDialogFilterText,
                     SupportMultiDottedExtensions = true
                 })
             {
@@ -1766,7 +1715,7 @@ namespace Go2It
 
             // add all the data field columns to the checkbox list
             IMapLayer mapLyr;
-            _localBaseMapLayerLookup.TryGetValue(lyrName, out mapLyr);
+            _allLayerLookup.TryGetValue(lyrName, out mapLyr);
             var mfl = mapLyr as IMapFeatureLayer;
             if (mfl != null && mfl.DataSet != null)
             {
@@ -1959,7 +1908,7 @@ namespace Go2It
                     }
                     // setup everything else we need to generate our lucene index      
                     IMapLayer mapLyr;
-                    _localBaseMapLayerLookup.TryGetValue(lyrName, out mapLyr);
+                    _allLayerLookup.TryGetValue(lyrName, out mapLyr);
                     var mfl = mapLyr as IMapFeatureLayer;
                     IFeatureSet fs;
                     if (mfl != null && mfl.DataSet != null)
@@ -2274,28 +2223,14 @@ namespace Go2It
             }
         }
 
-        private void chkViewLayers_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            var clb = (CheckedListBox)sender;
-            if (clb.SelectedItem == null) return;
-
-            var lyr = _localBaseMapLayerLookup[clb.SelectedItem.ToString()];
-            if (e.NewValue.ToString() == "Checked")
-            {
-                _appManager.Map.Layers.Add(lyr);  // add the checked layer to the active map tab
-            }
-            else
-            {
-                _appManager.Map.Layers.Remove(lyr);  // remove the checked layer from the active map
-            }
-            _appManager.Map.Invalidate();
-            _dirtyProject = true;
-        }
-
         private void btnAddView_Click(object sender, EventArgs e)
         {
-            if (txtViewName.Text.Length <= 0) return;
-
+            if (txtViewName.Text.Length <= 0)
+            {
+                // TODO; allow the messagebox to send a name back
+                MessageBox.Show("Please assign a name to the new map view");
+                return;
+            }
             _isCreatingNewView = true;  // prevent the cmbBox pulldown from performing circular panel selection
 
             var txt = txtViewName.Text;
@@ -2314,13 +2249,13 @@ namespace Go2It
             cmbActiveMapTab.Items.Add(txt);
 
             // create a new map to stick to the tab
-            var nMap = CreateNewMap(key);
+            var nMap = _projectManager.CreateNewMap(key);
             // create new dockable panel and stow that shit yo!
             var dp = new DockablePanel(key, txt, nMap, DockStyle.Fill);
             _appManager.DockManager.Add(dp);
             _appManager.DockManager.SelectPanel(key);
 
-            _dirtyProject = true;
+            //_dirtyProject = true;
             _isCreatingNewView = false;  // reset the new view creation flag back to false
         }
 
@@ -2337,13 +2272,6 @@ namespace Go2It
             _appManager.DockManager.Remove(key);
             // also remove it from the combo box selections
             cmbActiveMapTab.Items.Remove(txt);
-            if (_dockingControl.DockPanelLookup.Count == 0)
-            {
-                for (int i = 0; i < chkViewLayers.Items.Count; i++)
-                {
-                    chkViewLayers.SetItemCheckState(i, (CheckState.Unchecked));
-                }
-            }
             _dirtyProject = true;
         }
 
