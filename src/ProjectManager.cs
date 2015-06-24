@@ -26,6 +26,10 @@ namespace Go2It
 {
     public class ProjectManager : SerializationManager
     {
+
+        // lookup for all layers that exist on any map tab (populated on "save" and "open"
+        public readonly Dictionary<string, IMapLayer> AllLayersLookup = new Dictionary<string, IMapLayer>();
+
         // const variables for project layer types, used in the project settings dbase
         public const string LayerTypeAddress = "t_address";
         public const string LayerTypeRoad = "t_road";
@@ -96,7 +100,8 @@ namespace Go2It
             }
             // setup a temp database to hold our settings
             SetupDatabase();
-            base.IsDirty = false;  // and finally set to 'not dirty'
+
+            IsDirty = false;  // and finally set to 'not dirty'
         }
 
         /// <summary>
@@ -195,6 +200,63 @@ namespace Go2It
             }
         }
 
+        public void SaveProjectSettings()
+        {
+            // get the project settings db connection string
+            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            // set  basic project level settings at this point
+            var d = new Dictionary<string, string>
+            {
+                {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
+                {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
+                {"map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
+                {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
+                {"use_pretypes", Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture)},
+                {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
+                {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
+                {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
+                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
+            };
+            // there can only be a single project settings row in the table
+            SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
+            var g = new Dictionary<string, string>
+            {
+                {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
+                {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
+                {"line_color", Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
+                {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
+                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
+            };
+            // there can only be a single graphics settings row in the table
+            SQLiteHelper.Update(conn, "GraphicSettings", g, "key = 1");
+            // clear any (base map) layers currently set in the table and reset them now
+            SQLiteHelper.ClearTable(conn, "Layers");
+            // cycle and save all layer types to settings
+            SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.CityLimitsLayer, LayerTypeCityLimit, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.CellSectorsLayer, LayerTypeCellSector, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.EsnsLayer, LayerTypeEsn, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
+        }
+
+        /// <summary>
+        /// True if there are some unsaved changes in the current project,
+        /// False otherwise
+        /// </summary>
+        public new bool IsDirty
+        {
+            get { return base.IsDirty;  }
+            set { base.IsDirty = value;  }
+        }
+
         private void SaveMapTabs()
         {
             // get the project settings db connection string
@@ -207,7 +269,6 @@ namespace Go2It
                 if (!dpi.Key.Trim().StartsWith("kMap")) continue;
                 var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
                 var xmlMap = CreateSerializedGraph(map);
-
 
                 var mapFrame = map.MapFrame as MapFrame;
                 IMapLayerCollection layers = map.Layers; // get the layers
@@ -224,7 +285,11 @@ namespace Go2It
                     else
                     {
                         var ftLayer = (FeatureLayer)mapLayer;
+                        var mpLayer = (IMapFeatureLayer) mapLayer;
                         layName = ftLayer.Name;
+                        // assign this to our layer lookup now
+                        var fileName = Path.GetFileNameWithoutExtension(ftLayer.DataSet.Filename);
+                        if (fileName != null) AllLayersLookup.Add(fileName, mpLayer);
                     }
                     txtLayers = txtLayers + layName + "|";
                 }
@@ -247,8 +312,6 @@ namespace Go2It
                 };
                 SQLiteHelper.Insert(conn, "MapTabs", dd);
             }
-
-
         }
 
         public new void SaveProject(string fileName)
@@ -265,62 +328,19 @@ namespace Go2It
 
             // OnSerializing(new SerializingEventArgs());
 
+            // save all the generic project settings
+            
             // serialize each map that has been created for each tab
             SaveMapTabs();
+            SaveProjectSettings();
 
+            SdrConfig.Settings.Instance.AddFileToRecentFiles(fileName);
 
-
-
-            //bool isProviderPresent = false;
-            //string extension = Path.GetExtension(fileName);
-
-            //foreach (ISaveProjectFileProvider provider in SaveProjectFileProviders)
-            //{
-            //    if (String.Equals(provider.Extension, extension, StringComparison.OrdinalIgnoreCase))
-            //    {
-            //        provider.Save(fileName, xml);
-            //        isProviderPresent = true;
-            //    }
-            //}
-
-            //if (!isProviderPresent)
-            //{
-            //    switch (extension)
-            //    {
-            //        case ".sqlite":
-            //            // File.WriteAllText(fileName, xml);
-            //            break;
-            //        default:
-            //            throw new NotImplementedException("There isn't an implementation for saving that file type.");
-            //    }
-            //}
-
-            //AddFileToRecentFiles(fileName);
-
-            //IsDirty = false;
+            IsDirty = false;
             //OnIsDirtyChanged();
 
-
-            // SaveProjectSettings();
-            //// App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
+            // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
         }
-
-        private static void AddFileToRecentFiles(string fileName)
-        {
-            if (Settings.Default.RecentFiles.Contains(fileName))
-            {
-                Settings.Default.RecentFiles.Remove(fileName);
-            }
-
-            if (Settings.Default.RecentFiles.Count >= Settings.Default.MaximumNumberOfRecentFiles)
-                Settings.Default.RecentFiles.RemoveAt(Settings.Default.RecentFiles.Count - 1);
-
-            // insert value at the top of the list
-            Settings.Default.RecentFiles.Insert(0, fileName);
-
-            Settings.Default.Save();
-        }
-
 
         /// <summary>
         ///     Check if the path is a valid SQLite database
@@ -608,97 +628,6 @@ namespace Go2It
             }
         }
 
-        public void SaveProjectSettings()
-        {
-            // get the project settings db connection string
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            // set  basic project level settings at this point
-            var d = new Dictionary<string, string>
-            {
-                {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
-                {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
-                {"map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
-                {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
-                {"use_pretypes", Go2ItProjectSettings.Instance.UsePretypes.ToString(CultureInfo.InvariantCulture)},
-                {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
-                {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
-            };
-            // there can only be a single project settings row in the table
-            SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
-            var g = new Dictionary<string, string>
-            {
-                {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
-                {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
-                {"line_color", Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
-                {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
-                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
-            };
-            // there can only be a single graphics settings row in the table
-            SQLiteHelper.Update(conn, "GraphicSettings", g, "key = 1");
-            // clear any (base map) layers currently set in the table and reset them now
-            SQLiteHelper.ClearTable(conn, "Layers");
-            // cycle and save all layer types to settings
-            SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.CityLimitsLayer, LayerTypeCityLimit, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.CellSectorsLayer, LayerTypeCellSector, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.EsnsLayer, LayerTypeEsn, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
-            // check for any map tabs and save them as needed
-            SQLiteHelper.ClearTable(conn, "MapTabs");
-            DockingControl dc = Dock;
-            foreach (var dpi in dc.DockPanelLookup)
-            {
-                if (!dpi.Key.Trim().StartsWith("kMap")) continue;
-                var map = (Map) dpi.Value.DotSpatialDockPanel.InnerControl;
-                var mapFrame = map.MapFrame as MapFrame;
-                IMapLayerCollection layers = map.Layers; // get the layers
-                string txtLayers = string.Empty; // text block to store layers
-
-                foreach (IMapLayer mapLayer in layers)
-                {
-                    string layName;
-                    if (mapLayer.GetType().Name == "MapImageLayer")
-                    {
-                        var mImage = (IMapImageLayer) mapLayer;
-                        layName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                    }
-                    else
-                    {
-                        var ftLayer = (FeatureLayer) mapLayer;
-                        layName = ftLayer.Name;
-                    }
-                    txtLayers = txtLayers + layName + "|";
-                }
-                if (txtLayers.Length != 0)
-                {
-                    txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
-                }
-                // send this all to a dict to save to dbase as a maptab
-                if (mapFrame == null) continue;
-                var dd = new Dictionary<string, string>
-                {
-                    {"lookup", dpi.Key},
-                    {"caption", dpi.Value.DotSpatialDockPanel.Caption},
-                    {"zorder", dpi.Value.SortOrder.ToString(CultureInfo.InvariantCulture)},
-                    {"extent", mapFrame.Extent.ToString()},
-                    {"viewextent", mapFrame.ViewExtents.ToString()},
-                    {"bounds", map.Bounds.ToString()},
-                    {"layers", txtLayers}
-                };
-                SQLiteHelper.Insert(conn, "MapTabs", dd);
-            }
-        }
-
         private void SaveLayerCollection(StringCollection sc, string projectType, string conn)
         {
             if (sc == null) return;
@@ -723,25 +652,26 @@ namespace Go2It
 
         private Dictionary<string, string> CreateLayerDictionary(string layName, string projType)
         {
-            //if (layName.Length == 0) return null;
-            //if (projType.Length == 0) return null;
+            if (layName.Length == 0) return null;
+            if (projType.Length == 0) return null;
 
-            //var d = new Dictionary<string, string>();
-            //foreach (var keyValuePair in Dock.BaseLayerLookup)
-            //{
-            //    var fl = keyValuePair.Value as IMapFeatureLayer;
-            //    if (fl != null)
-            //    {
-            //        if (keyValuePair.Key == layName)
-            //        {
-            //            var ftLayer = (FeatureLayer) fl;
-            //            d.Add("name", ftLayer.Name);
-            //            d.Add("layerType", ftLayer.DataSet.FeatureType.ToString());
-            //            d.Add("projectType", projType);
-            //            return d; // send me home now
-            //        }
-            //    }
-            //}
+            var d = new Dictionary<string, string>();
+
+            foreach (var keyValuePair in AllLayersLookup)
+            {
+                var fl = keyValuePair.Value as IMapFeatureLayer;
+                if (fl != null)
+                {
+                    if (keyValuePair.Key == layName)
+                    {
+                        var ftLayer = (FeatureLayer)fl;
+                        d.Add("name", ftLayer.Name);
+                        d.Add("layerType", ftLayer.DataSet.FeatureType.ToString());
+                        d.Add("projectType", projType);
+                        return d; // send me home now
+                    }
+                }
+            }
             return null;
         }
 
@@ -776,53 +706,6 @@ namespace Go2It
                 string temppath = Path.Combine(destDirName, subdir.Name);
                 DirectoryCopy(subdir.FullName, temppath, true);
             }
-        }
-
-        public void SavingProject()
-        {
-            // string projectFilePath = App.SerializationManager.CurrentProjectFile;
-            //string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
-            //SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFilePath);
-
-            //// App.ProgressHandler.Progress("Saving Project " + projectFileName, 0, "");
-            //Application.DoEvents();
-
-            //// check for a project level database
-            //string newDbPath = Path.ChangeExtension(projectFilePath, ".sqlite");
-            //string newDirPath = Path.GetDirectoryName(newDbPath) + "\\" + projectFileName +  "_indexes";
-
-            //string currentDbPath =
-            //    SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            //string d = Path.GetDirectoryName(currentDbPath);
-            //if (d != null)
-            //{
-                
-            //    if (newDbPath != currentDbPath)
-            //    {
-            //        // copy db to new path. If no db exists, create new db in the new location
-            //        if (SQLiteHelper.DatabaseExists(currentDbPath))
-            //        {
-            //            File.Copy(currentDbPath, newDbPath, true);
-
-            //            string currentDirPath = Path.Combine(d, "_indexes");
-
-            //            // check if there are any index files available copy them if so
-            //            if (Directory.Exists(currentDirPath))
-            //            {
-            //                DirectoryCopy(currentDirPath, newDirPath, true);
-            //            }
-            //        }
-            //        else
-            //        {
-            //            CreateNewDatabase(newDbPath);
-            //        }
-            //        // update application level database configuration settings
-            //        SdrConfig.Settings.Instance.ProjectRepoConnectionString =
-            //            SQLiteHelper.GetSQLiteConnectionString(newDbPath);
-            //    }
-            //}
-            //SaveProjectSettings();
-            // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
         }
     }
 }

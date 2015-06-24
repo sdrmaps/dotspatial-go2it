@@ -80,9 +80,10 @@ namespace Go2It
         // lookup of all layers available to this project, used for easy access indexing
         private readonly Dictionary<string, IMapLayer> _allLayerLookup = new Dictionary<string, IMapLayer>();
 
+        // private bool _dirtyProject;  // change tracking flag for project changes
 
 
-        private bool _dirtyProject;  // change tracking flag for project changes
+
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
         private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
         // background worker handles the indexing process
@@ -566,7 +567,7 @@ namespace Go2It
             int alpha = Convert.ToInt32(lineSymbolColorSlider.Value * 255);
             lineSymbolColor.BackColor = Color.FromArgb(alpha, lineSymbolColor.BackColor.R, lineSymbolColor.BackColor.G, lineSymbolColor.BackColor.B);
             DrawLineGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void PtSymbolColorSliderOnValueChanged(object sender, EventArgs eventArgs)
@@ -574,25 +575,25 @@ namespace Go2It
             int alpha = Convert.ToInt32(ptSymbolColorSlider.Value*255);
             ptSymbolColor.BackColor = Color.FromArgb(alpha, ptSymbolColor.BackColor.R, ptSymbolColor.BackColor.G, ptSymbolColor.BackColor.B);
             DrawPointGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void LineSymbolCapOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             DrawLineGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void LineSymbolStyleOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             DrawLineGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void LineSymbolSizeOnValueChanged(object sender, EventArgs eventArgs)
         {
             DrawLineGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void LineSymbolColorOnClick(object sender, EventArgs eventArgs)
@@ -608,7 +609,7 @@ namespace Go2It
             lineSymbolColor.BackColor = Color.FromArgb(alpha, dlg.Color.R, dlg.Color.G, dlg.Color.B);
             if (oColor != lineSymbolColor.BackColor)
             {
-                _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             DrawLineGraphics();
         }
@@ -622,7 +623,7 @@ namespace Go2It
             lineSymbolBorderColor.BackColor = dlg.Color;
             if (oColor != lineSymbolBorderColor.BackColor)
             {
-                _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             DrawLineGraphics();
         }
@@ -630,13 +631,13 @@ namespace Go2It
         private void PtSymbolStyleOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             DrawPointGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void PtSymbolSizeOnValueChanged(object sender, EventArgs eventArgs)
         {
             DrawPointGraphics();
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void PtSymbolColorOnClick(object sender, EventArgs eventArgs)
@@ -652,7 +653,7 @@ namespace Go2It
             ptSymbolColor.BackColor = Color.FromArgb(alpha, dlg.Color.R, dlg.Color.G, dlg.Color.B);
             if (oColor != ptSymbolColor.BackColor)
             {
-                _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             DrawPointGraphics();
         }
@@ -1008,8 +1009,7 @@ namespace Go2It
             } 
             else // project file exists, check for any changes the user made and account for them
             {
-                var hasProjectChanges = _appManager.SerializationManager.IsDirty;
-                if (hasProjectChanges || _dirtyProject)
+                if (_projectManager.IsDirty)
                 {
                     // user has made changes lets see if they want to save them
                     var res =
@@ -1331,7 +1331,7 @@ namespace Go2It
                 }
             }
             _polygonLayerSwitcher.Add(checkBox);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void PointCheckChange(CheckedListBox checkBox)
@@ -1346,7 +1346,7 @@ namespace Go2It
                 }
             }
             _pointLayerSwitcher.Add(checkBox);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void radAddressPolygons_CheckedChanged(object sender, EventArgs e)
@@ -1400,7 +1400,7 @@ namespace Go2It
             mapBGColorPanel.BackColor = dlg.Color;
             if (oColor != mapBGColorPanel.BackColor)
             {
-                _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             var m = (Map) _appManager.Map;
             m.BackColor = mapBGColorPanel.BackColor;
@@ -2272,7 +2272,7 @@ namespace Go2It
             _appManager.DockManager.Remove(key);
             // also remove it from the combo box selections
             cmbActiveMapTab.Items.Remove(txt);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private List<string> AddLayersToIndex(CheckedListBox clb)
@@ -2321,7 +2321,7 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void chkAddressLayers_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -2340,7 +2340,7 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void chkKeyLocationsLayers_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -2359,7 +2359,7 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         internal class IndexObject
@@ -2395,12 +2395,12 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void cmbNotesLayer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void cmbCityLimitLayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -2419,7 +2419,7 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void cmbESNLayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -2438,7 +2438,7 @@ namespace Go2It
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void cmbParcelsLayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -2457,7 +2457,7 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void cmbHydrantsLayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -2476,7 +2476,7 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
-            _dirtyProject = true;
+            _projectManager.IsDirty = true;
         }
 
         private void btnRemoveIndex_Click(object sender, EventArgs e)

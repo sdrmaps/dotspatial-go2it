@@ -27,7 +27,7 @@ namespace Go2It
             var log = AppContext.Instance.Get<ILog>();
             Application.ApplicationExit += delegate
                 {
-                    log.Info("Application Exit");
+                    log.Info("Go2It Exited");
                     AppContext.Instance.Dispose();
                 };
             // log all unhandled exceptions
@@ -40,11 +40,12 @@ namespace Go2It
                         AppContext.Instance.Dispose();
                     };
 
-            log.Info("Application Started");
+            log.Info("Go2It Started");
 
             var mainForm = new MainForm();
             if (args.Length > 0 && File.Exists(args[0]))
             {
+                // TODO: Add back in load from command line / double click
                 log.Info("Opening Project (Program.cs): " + args[0]);
                 // a project is being loaded from command line or double click
                 // mainForm.AppManager.SerializationManager.OpenProject(args[0]);
@@ -52,6 +53,9 @@ namespace Go2It
             Application.Run(mainForm);
         }
 
+        /// <summary>
+        /// Load Application Configuration ie. (default db, install path, application name)
+        /// </summary>
         private static void LoadApplicationConfig()
         {
             // set the name of the application on startup to the SdrConfig assembly
@@ -65,6 +69,9 @@ namespace Go2It
             SdrConfig.Settings.Instance.ApplicationRepoConnectionString = conString;
         }
 
+        /// <summary>
+        /// Log Overall ProcessUnhandled Exception
+        /// </summary>
         private static void ProcessUnhandled(Exception ex, bool isFatal)
         {
             var log = AppContext.Instance.Get<ILog>();

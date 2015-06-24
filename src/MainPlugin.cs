@@ -24,8 +24,8 @@ namespace Go2It
         internal ContainerControl Shell { get; set; }
 
         private StartUpForm _startUpForm;
-        private ProjectManager _projManager;
         private CoordinateDisplay _latLongDisplay;
+        // TODO: add the selections display message back to application
         // private SelectionsDisplay _selectionsDisplay;
 
         public override void Activate()
@@ -57,8 +57,6 @@ namespace Go2It
 
         void SerializationManager_Serializing(object sender, SerializingEventArgs e)
         {
-            // save the project 
-            _projManager.SavingProject();
             // set shell window title
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
 
@@ -67,7 +65,6 @@ namespace Go2It
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
         }
-
 
         void App_ExtensionsActivated(object sender, EventArgs e)
         {
@@ -99,6 +96,7 @@ namespace Go2It
 
         void mainForm_Shown(object sender, EventArgs e)
         {
+            App.ProgressHandler.Progress("", 0, "Handy Startup Message!");
             // displays the initial startup dialog for projects
             if (string.IsNullOrEmpty(App.SerializationManager.CurrentProjectFile))
             {
@@ -138,8 +136,6 @@ namespace Go2It
 
         void SerializationManager_Deserializing(object sender, SerializingEventArgs e)
         {
-            // open up the project and assign all attributes and properties
-            _projManager.OpeningProject();
             // set shell window title
             Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
 

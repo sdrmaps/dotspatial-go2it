@@ -63,7 +63,7 @@ namespace Go2It
             rbOpenExistingProject.Checked = true;
             var fileDialog = new OpenFileDialog
             {
-                Filter = @"Go2It Project File|*.dspx",
+                Filter = @"Go2It Project File|*.sqlite",
                 Title = @"Select the Project File to Open"
             };
             if (fileDialog.ShowDialog() == DialogResult.OK)

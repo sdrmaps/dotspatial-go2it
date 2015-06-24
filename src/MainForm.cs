@@ -14,7 +14,6 @@ namespace Go2It
     /// </summary>
     public partial class MainForm : Form
     {
-        // the main form is exported so that the IHeaderControl plug-in can add the menu or the
         [Export("Shell", typeof(ContainerControl))]
         private static ContainerControl _shell;
 
@@ -29,19 +28,21 @@ namespace Go2It
         public MainForm()
         {
             InitializeComponent();
-            // load any custom set hotkeys from the app db | else hotkeys load from assemblies in extension load
+
             // TODO: Add back in HotKey Manager
+            // load any custom set hotkeys from the app db | else hotkeys load from assemblies in extension load
             // HotKeyManager.LoadHotKeys();
+
             // create our application manager
             AppManager = new AppManager();
+            // replace the default SerializationManager with our custom ProjectManager
             var projManager = new ProjectManager(AppManager);
             AppManager.SerializationManager = (ProjectManager) projManager;
 
             _shell = this;
             // load any extensions/plugins now
             AppManager.LoadExtensions();
-            // TODO: do we want a startup message
-            // AppManager.ProgressHandler.Progress("", 0, "Handy Startup Message!");
+            AppManager.ProgressHandler.Progress("", 0, "Go2It Starting...!");
         }
 
         // TODO: Add HotKey Manager Events back
