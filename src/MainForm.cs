@@ -2,9 +2,6 @@
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.SDR.Controls;
-using Lucene.Net.Search;
-using SDR.Common;
-using SDR.Common.logging;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -29,9 +26,8 @@ namespace Go2It
         {
             InitializeComponent();
 
-            // TODO: Add back in HotKey Manager
             // load any custom set hotkeys from the app db | else hotkeys load from assemblies in extension load
-            // HotKeyManager.LoadHotKeys();
+            HotKeyManager.LoadHotKeys();
 
             // create our application manager
             AppManager = new AppManager();
@@ -45,12 +41,11 @@ namespace Go2It
             AppManager.ProgressHandler.Progress("", 0, "Starting Go2It...");
         }
 
-        // TODO: Add HotKey Manager Events back
-        /*protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // static hotkeymanager for communicating with all tools and controls loaded via extensions
             // returns a bool to indicate if the hotkey event was handled or not
             return HotKeyManager.FireHotKeyEvent(ref msg, keyData) || base.ProcessCmdKey(ref msg, keyData);
-        }*/
+        }
     }
 }

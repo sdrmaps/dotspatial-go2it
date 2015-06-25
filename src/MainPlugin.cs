@@ -6,10 +6,7 @@ using System.Xml;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.SDR.Controls;
-using DotSpatial.Symbology;
 using Go2It.Properties;
-using SDR.Common;
-using ILog = SDR.Common.logging.ILog;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It

@@ -165,27 +165,19 @@ namespace Go2It
 
         private void Exit_Click(object sender, EventArgs e)
         {
-            // TODO: instead of using an application exit, using an environment exit to "FORCE" kill the app
-            // we really shouldnt do this, it's a temp hack to be removed at a later time
             Application.Exit();
-            // Environment.Exit(Environment.ExitCode);
         }
 
         private void OpenProject_Click(object sender, EventArgs e)
         {
             using (var dlg = new OpenFileDialog())
             {
-                dlg.Filter = App.SerializationManager.OpenDialogFilterText;
+                var projectManager = (ProjectManager) App.SerializationManager;
+                dlg.Filter = @"Go2It Project File|*.sqlite";
                 if (dlg.ShowDialog() != DialogResult.OK)
                     return;
                 try
                 {
-                    //if (_appManager.Map == null)
-                    //{
-                    //    _appManager.Map = CreateLoadMap();  // a base level map used to load all layers
-                    //}
-                    //App.SerializationManager.OpenProject(dlg.FileName);
-                    var projectManager = (ProjectManager) App.SerializationManager;
                     projectManager.OpenProject(dlg.FileName);
                 }
                 catch (IOException)

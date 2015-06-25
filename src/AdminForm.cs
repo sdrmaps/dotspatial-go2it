@@ -715,24 +715,6 @@ namespace Go2It
             {
                 radKeyLocationsPolygons.Checked = true;
             }
-            // cycle through all our layers and store them to arrays for tracking
-            //foreach (KeyValuePair<string, IMapLayer> keyValuePair in _dockingControl.BaseLayerLookup)
-            //{
-            //    var layer = keyValuePair.Value;
-            //    if (layer == null) return;
-            //    if (layer.GetType().Name == "MapImageLayer")
-            //    {
-            //        var mImage = (IMapImageLayer) layer;
-            //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
-            //        _baseMap.Layers.Add(mImage);
-            //    }
-            //    else
-            //    {
-            //        var mLayer = (IMapFeatureLayer) layer;
-            //        if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
-            //        _baseMap.Layers.Add(mLayer);
-            //    }
-            //}
             SetupLayerSelectionSwitchers();
             SetActiveLayerSelections();
         }
@@ -808,8 +790,6 @@ namespace Go2It
         }
 
         /// <summary>
-        /// 
-        /// 3//
         /// Handle all form elements when a new layer is added to the project
         /// </summary>
         /// <param name="mapLayer">The layer added</param>
@@ -879,6 +859,10 @@ namespace Go2It
             }
         }
 
+        /// <summary>
+        /// Handle all form elements when a layer is removed
+        /// </summary>
+        /// <param name="mapLayer">layer removed</param>
         private void RemoveLayer(IFeatureSet mapLayer)
         {
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;

@@ -2,6 +2,8 @@
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Xml;
+using Go2It.Properties;
 using SDR.Common;
 using SDR.Common.logging;
 using SDR.Data.Database;
@@ -43,12 +45,32 @@ namespace Go2It
                     };
 
             log.Info(".:: Go2It Started ::.");
+
             var mainForm = new MainForm();
             if (args.Length > 0 && File.Exists(args[0]))
             {
                 // a project is being loaded from command line or a double click event
                 var projectManager = (ProjectManager)mainForm.AppManager.SerializationManager;
-                projectManager.OpenProject(args[0]);
+                var projectFileName = args[0];
+                try
+                {
+                    projectManager.OpenProject(projectFileName);
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show(String.Format(Resources.CouldNotOpenMapFile, projectFileName), Resources.CouldNotOpenMapFile,
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (XmlException)
+                {
+                    MessageBox.Show(String.Format(Resources.CouldNotReadMapFile, projectFileName), Resources.CouldNotReadMapFile,
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show(String.Format(Resources.CouldNotReadAPortionMapFile, projectFileName), Resources.CouldNotReadAPortionMapFile,
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             Application.Run(mainForm);
         }
