@@ -14,6 +14,7 @@ namespace Go2It
         /// <summary>
         /// Main entry point for the application.
         /// </summary>
+        /// <param name="args">path to .sqlite file</param>
         [STAThread]
         private static void Main(string[] args)
         {
@@ -27,9 +28,10 @@ namespace Go2It
             var log = AppContext.Instance.Get<ILog>();
             Application.ApplicationExit += delegate
                 {
-                    log.Info("Go2It Exited");
+                    log.Info(".:: Go2It Exited ::.");
                     AppContext.Instance.Dispose();
                 };
+
             // log all unhandled exceptions
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += (sender, e) => ProcessUnhandled(e.Exception, false);
@@ -40,21 +42,22 @@ namespace Go2It
                         AppContext.Instance.Dispose();
                     };
 
-            log.Info("Go2It Started");
-
+            log.Info(".:: Go2It Started ::.");
             var mainForm = new MainForm();
             if (args.Length > 0 && File.Exists(args[0]))
             {
-                // TODO: Add back in load from command line / double click
-                log.Info("Opening Project (Program.cs): " + args[0]);
-                // a project is being loaded from command line or double click
-                // mainForm.AppManager.SerializationManager.OpenProject(args[0]);
+                // a project is being loaded from command line or a double click event
+                var projectManager = (ProjectManager)mainForm.AppManager.SerializationManager;
+                projectManager.OpenProject(args[0]);
             }
             Application.Run(mainForm);
         }
 
         /// <summary>
-        /// Load Application Configuration ie. (default db, install path, application name)
+        /// Load Application Configuration, setting the:
+        ///     ApplicationName: Go2It
+        ///     ApplicationDataDirectory: Install Directory
+        ///     ApplicationRepoConnectionString: SQL connection string to ApplicationDatabase
         /// </summary>
         private static void LoadApplicationConfig()
         {
@@ -70,8 +73,10 @@ namespace Go2It
         }
 
         /// <summary>
-        /// Log Overall ProcessUnhandled Exception
+        /// Overall ProcessUnhandled Exception (Logs all exceptions)
         /// </summary>
+        /// <param name="ex">the unhandled exception</param>
+        /// <param name="isFatal">bool indicating if exception was fatal</param>
         private static void ProcessUnhandled(Exception ex, bool isFatal)
         {
             var log = AppContext.Instance.Get<ILog>();

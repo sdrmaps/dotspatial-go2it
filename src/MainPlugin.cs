@@ -1,14 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
-using DotSpatial.Data;
-using DotSpatial.Data.Properties;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using Go2It.Properties;
@@ -23,9 +19,14 @@ namespace Go2It
         [Import("Shell")]
         internal ContainerControl Shell { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ProjectManager (Replacement for SerializationManager)
+        /// </summary>
+        private ProjectManager ProjectManager { get; set; }
+
+        // TODO: add the selections display message back to application
         private StartUpForm _startUpForm;
         private CoordinateDisplay _latLongDisplay;
-        // TODO: add the selections display message back to application
         // private SelectionsDisplay _selectionsDisplay;
 
         public override void Activate()
@@ -33,14 +34,10 @@ namespace Go2It
             App.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
-            //_projManager = (ProjectManager) App.SerializationManager;
-
-            // set the application wide project manager now
-            // _projManager = new ProjectManager(App);
-
             // setup new project save and open project serialization events
-            App.SerializationManager.Deserializing += SerializationManager_Deserializing;
-            App.SerializationManager.Serializing += SerializationManager_Serializing;
+            this.ProjectManager = (ProjectManager) App.SerializationManager;
+            this.ProjectManager.Deserializing += ProjectManagerOnDeserializing;
+            this.ProjectManager.Serializing += ProjectManagerOnSerializing;
 
             // activate all available extensions now
             App.ExtensionsActivated += App_ExtensionsActivated;
@@ -55,10 +52,21 @@ namespace Go2It
             base.Activate();
         }
 
-        void SerializationManager_Serializing(object sender, SerializingEventArgs e)
+        private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
         {
             // set shell window title
-            Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
+            Shell.Text = string.Format("{0} - {1}", Resources.AppName, this.ProjectManager.GetProjectShortName());
+
+            if (App.Map.Projection != null)
+            {
+                _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
+            }
+        }
+
+        private void ProjectManagerOnDeserializing(object sender, SerializingEventArgs serializingEventArgs)
+        {
+            // set shell window title
+            Shell.Text = string.Format("{0} - {1}", Resources.AppName, this.ProjectManager.GetProjectShortName());
 
             if (App.Map.Projection != null)
             {
@@ -77,8 +85,8 @@ namespace Go2It
             App.ExtensionsActivated -= App_ExtensionsActivated;
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
             App.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
-            App.SerializationManager.Deserializing -= SerializationManager_Deserializing;
-            App.SerializationManager.Serializing -= SerializationManager_Serializing;
+            this.ProjectManager.Deserializing -= ProjectManagerOnDeserializing;
+            this.ProjectManager.Serializing -= ProjectManagerOnSerializing;
             base.Deactivate();
         }
 
@@ -96,7 +104,6 @@ namespace Go2It
 
         void mainForm_Shown(object sender, EventArgs e)
         {
-            App.ProgressHandler.Progress("", 0, "Handy Startup Message!");
             // displays the initial startup dialog for projects
             if (string.IsNullOrEmpty(App.SerializationManager.CurrentProjectFile))
             {
@@ -106,8 +113,8 @@ namespace Go2It
             {
                 try
                 {
-                    // project is being opened currently do not show startup form
-                    SerializationManager_Deserializing(null, null);
+                    // project is currently being opened, do not show toe startup form
+                    ProjectManagerOnDeserializing(null, null);
                 }
                 catch (IOException)
                 {
@@ -129,21 +136,6 @@ namespace Go2It
 
         #endregion
 
-        private string GetProjectShortName()
-        {
-            return Path.GetFileName(App.SerializationManager.CurrentProjectFile);
-        }
-
-        void SerializationManager_Deserializing(object sender, SerializingEventArgs e)
-        {
-            // set shell window title
-            Shell.Text = string.Format("{0} - {1}", Resources.AppName, GetProjectShortName());
-
-            if (App.Map.Projection != null)
-            {
-                _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
-            }
-        }
 
         private void ShowStartupScreen()
         {

@@ -26,8 +26,10 @@ namespace Go2It
 {
     public class ProjectManager : SerializationManager
     {
+        public AppManager App { get; private set; }
+        public DockingControl Dock { get; private set; }
 
-        // lookup for all layers that exist on any map tab (populated on "save" and "open"
+        // lookup for all layers that exist on any map tab (populated on "save" and "open")
         public readonly Dictionary<string, IMapLayer> AllLayersLookup = new Dictionary<string, IMapLayer>();
 
         // const variables for project layer types, used in the project settings dbase
@@ -41,21 +43,16 @@ namespace Go2It
         public const string LayerTypeHydrant = "t_hydrant";
         public const string LayerTypeKeyLocation = "t_keylocation";
 
-        /// <summary>
-        ///     Creates a new instance of the project manager
-        /// </summary>
-        /// <param name="mainApp"></param>
         public ProjectManager(AppManager mainApp) : base(mainApp)
         {
             App = mainApp;
             Dock = (DockingControl) mainApp.DockManager;
         }
 
-        /// <summary>
-        ///     The main app manager
-        /// </summary>
-        public AppManager App { get; private set; }
-        public DockingControl Dock { get; private set; }
+        public string GetProjectShortName()
+        {
+            return Path.GetFileName(base.CurrentProjectFile);
+        }
 
         public Map CreateNewMap(String mapName)
         {
@@ -67,6 +64,9 @@ namespace Go2It
             var map = new Map(); // new map 
             var mapframe = new EventMapFrame(); // evented map frame so we can disable visualextent events
             mapframe.SuspendViewExtentChanged();  // suspend view-extents while map is not active
+            // TODO: investigate this further (don't think they are applicable)
+            // mapframe.SuspendChangeEvent();
+            // mapframe.SuspendEvents();
 
             map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
             map.BackColor = bgColor;
@@ -89,6 +89,7 @@ namespace Go2It
             SetCurrentProjectDirectory(String.Empty);
             // reset all project settings to default
             Go2ItProjectSettings.Instance.ResetProjectSettings();
+
             // reset all dock controller map tabs and layerlookup dict
             if (Dock == null)
             {
@@ -100,6 +101,36 @@ namespace Go2It
             }
             // setup a temp database to hold our settings
             SetupDatabase();
+
+            IsDirty = false;  // and finally set to 'not dirty'
+        }
+
+        public void OpenExistingProject(string projectFile)
+        {
+            if (App.Map != null)
+            {
+                App.Map.ClearLayers();
+            }
+            // clear any current project directory
+            SetCurrentProjectDirectory(projectFile);
+            // reset all project settings to default
+            Go2ItProjectSettings.Instance.ResetProjectSettings();
+
+            // reset all dock controller map tabs and layerlookup dict
+            if (Dock == null)
+            {
+                Dock = (DockingControl)App.DockManager;
+            }
+            else
+            {
+                Dock.ResetLayout();
+            }
+            // setup a temp database to hold our settings
+            // TODO: assign db lookup configs here
+            // SetupDatabase();
+            string conString1 = SQLiteHelper.GetSQLiteConnectionString(projectFile);
+            SdrConfig.Settings.Instance.ProjectRepoConnectionString = conString1;
+
 
             IsDirty = false;  // and finally set to 'not dirty'
         }
@@ -158,12 +189,19 @@ namespace Go2It
             return xml;
         }
 
+        private Map LoadSerializedGraph(string xmlString, string mapName)
+        {
+            var map = CreateNewMap(mapName);
+            var graph = new object[] { map };
+            var d = new XmlDeserializer();
+            d.Deserialize(graph, xmlString);
+            return (Map)graph[0];
+        }
+
         private void CreateProjectDatabase()
         {
             string projectFilePath = App.SerializationManager.CurrentProjectFile;
             string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
-
-            //SdrConfig.Settings.Instance.AddFileToRecentFiles(projectFilePath);
 
             // check for a project level database
             string newDbPath = Path.ChangeExtension(projectFilePath, ".sqlite");
@@ -182,7 +220,6 @@ namespace Go2It
                         File.Copy(currentDbPath, newDbPath, true);
 
                         string currentDirPath = Path.Combine(d, "_indexes");
-
                         // check if there are any index files available copy them if so
                         if (Directory.Exists(currentDirPath))
                         {
@@ -268,6 +305,8 @@ namespace Go2It
             {
                 if (!dpi.Key.Trim().StartsWith("kMap")) continue;
                 var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
+
+
                 var xmlMap = CreateSerializedGraph(map);
 
                 var mapFrame = map.MapFrame as MapFrame;
@@ -340,6 +379,144 @@ namespace Go2It
             //OnIsDirtyChanged();
 
             // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
+        }
+
+        /// <summary>
+        /// Deserializes the map from a file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public new void OpenProject(string fileName)
+        {
+            Contract.Requires(!String.IsNullOrEmpty(fileName), "fileName is null or empty.");
+            // Contract.Requires(App.Map != null);
+
+            if (App.Map != null)
+            {
+                App.Map.ClearLayers();
+            }
+            this.SetCurrentProjectDirectory(fileName);
+
+            string extension = Path.GetExtension(fileName);
+
+            bool isProviderPresent = false;
+            foreach (var provider in OpenProjectFileProviders)
+            {
+                if (String.Equals(provider.Extension, extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    provider.Open(fileName);
+                    isProviderPresent = true;
+                }
+            }
+
+            if (!isProviderPresent)
+            {
+                OpenProjectFile(fileName);
+            }
+
+            
+            SdrConfig.Settings.Instance.AddFileToRecentFiles(fileName);
+            
+            //_changeTracker.Map = _applicationManager.Map;
+            IsDirty = false;
+            OnIsDirtyChanged();
+
+            OnDeserializing(new SerializingEventArgs());
+        }
+
+        private void AssignLayerSymbologies(IMapFrame mapFrame)
+        {
+            foreach (ILayer layer in mapFrame.GetAllLayers())
+            {
+                IMapLineLayer lineLayer = layer as IMapLineLayer;
+                if (lineLayer != null)
+                {
+                    ILineScheme original = lineLayer.Symbology;
+                    if (original != null)
+                    {
+                        ILineScheme newScheme = original.Clone() as ILineScheme;
+                        original.CopyProperties(newScheme);
+                        original.ResumeEvents();
+                    }
+                }
+
+                //to correctly draw categories:
+                IMapFeatureLayer featureLayer = layer as IMapFeatureLayer;
+                if (featureLayer != null)
+                {
+                    if (featureLayer.Symbology.NumCategories > 1)
+                    {
+                        featureLayer.DataSet.FillAttributes();
+                        featureLayer.ApplyScheme(featureLayer.Symbology);
+                    }
+                }
+            }
+        }
+        private void AssignParentGroups(IGroup parentGroup, IMapFrame parentMapFrame)
+        {
+            //this method will assign the parent groups.
+            //it needs to be applied after opening project so that none of
+            //the parent groups are NULL.
+            foreach (ILayer child in parentGroup.GetLayers())
+            {
+                IGroup childGroup = child as IGroup;
+                if (childGroup != null)
+                {
+                    AssignParentGroups(childGroup, parentMapFrame);
+                }
+                child.SetParentItem(parentGroup);
+                child.MapFrame = parentMapFrame;
+            }
+        }
+
+        private void OpenProjectFile(string fileName)
+        {
+            OpenExistingProject(fileName);
+
+
+            string repoConnStr = SQLiteHelper.GetSQLiteConnectionString(fileName);
+            SdrConfig.Settings.Instance.ProjectRepoConnectionString = repoConnStr;
+
+            const string tabsQuery = "SELECT * FROM MapTabs";
+            DataTable tabsTable = SQLiteHelper.GetDataTable(repoConnStr, tabsQuery);
+            // cycle through all map tabs and generate maps and tabs as needed
+            foreach (DataRow row in tabsTable.Rows)
+            {
+                string txtMapXml = row["map_xml"].ToString();
+                string txtKey = row["lookup"].ToString();
+                string txtCaption = row["caption"].ToString();
+                string txtLayers = row["layers"].ToString();
+                string txtViewExtent = row["viewextent"].ToString();
+                string zorder = row["zorder"].ToString();
+                string txtExtent = row["extent"].ToString();
+                string txtBounds = row["bounds"].ToString(); // unused
+
+                Map graph = LoadSerializedGraph(txtMapXml, txtKey);
+
+
+                // create new dockable panel to hold the map
+                var dp = new DockablePanel(txtKey, txtCaption, graph, DockStyle.Fill);
+               
+                
+                // add the new tab view to the main form
+                Dock.Add(dp);
+                // select the map now to activate plugin bindings
+                Dock.SelectPanel(txtKey);
+                ResetMapProjection();
+
+                //_applicationManager.Map.Invalidate();
+
+                ////temporary fix by Jiri to properly assign the parent groups
+                //if (_applicationManager.Map.MapFrame != null)
+                //{
+                //    AssignParentGroups(_applicationManager.Map.MapFrame, _applicationManager.Map.MapFrame);
+                //    AssignLayerSymbologies(_applicationManager.Map.MapFrame);
+                //}
+                //end temporary fix
+                 
+            }
+
+
+
         }
 
         /// <summary>

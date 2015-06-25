@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Controls;
-using DotSpatial.SDR.Controls;
 using Go2It.Properties;
 using SdrConfig = SDR.Configuration;
 
@@ -102,25 +101,6 @@ namespace Go2It
             Close();
         }
 
-        private Map CreateLoadMap()
-        {
-            // basically this map loads all the layers that exists on all tabs using default dotspatial
-            // load routines, we then create our map tabs seperately and populate as needed from this map
-            var map = new Map();
-            var mapframe = new EventMapFrame();
-
-            // suspend all events associated with load map (do not fire ANY events EVER, EVAR, EVA!!)
-            mapframe.SuspendChangeEvent();
-            mapframe.SuspendEvents();
-            mapframe.SuspendViewExtentChanged();
-
-            map.MapFrame = mapframe;
-            map.Visible = false;
-            map.Dock = DockStyle.Fill;
-            map.MapFunctions.Clear();  // remove all map functions from load map
-            return map;
-        }
-
         private void OpenProject()
         {
             var selected = lstRecentProjects.SelectedValue as ProjectFileInfo;
@@ -137,12 +117,8 @@ namespace Go2It
             // open the project up using the default open routines
             try
             {
-                if (_app.Map == null)
-                {
-                    // TODO: do we need this here?
-                    _app.Map = CreateLoadMap();  // a base level map used to load all layers
-                }
-                _app.SerializationManager.OpenProject(projectFileName);
+                var projectManager = (ProjectManager) _app.SerializationManager;
+                projectManager.OpenProject(projectFileName);
             }
             catch (IOException)
             {

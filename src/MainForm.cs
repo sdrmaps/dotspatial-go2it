@@ -18,7 +18,7 @@ namespace Go2It
         private static ContainerControl _shell;
 
         /// <summary>
-        /// Gets or sets the appManager
+        /// Gets or Sets the AppManager
         /// </summary>
         public AppManager AppManager { get; set; }
 
@@ -42,7 +42,7 @@ namespace Go2It
             _shell = this;
             // load any extensions/plugins now
             AppManager.LoadExtensions();
-            AppManager.ProgressHandler.Progress("", 0, "Go2It Starting...!");
+            AppManager.ProgressHandler.Progress("", 0, "Starting Go2It...");
         }
 
         // TODO: Add HotKey Manager Events back

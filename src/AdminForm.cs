@@ -80,10 +80,6 @@ namespace Go2It
         // lookup of all layers available to this project, used for easy access indexing
         private readonly Dictionary<string, IMapLayer> _allLayerLookup = new Dictionary<string, IMapLayer>();
 
-        // private bool _dirtyProject;  // change tracking flag for project changes
-
-
-
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
         private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
         // background worker handles the indexing process
@@ -173,8 +169,6 @@ namespace Go2It
             // _idxWorker.DoWork += idx_DoWork;
             // _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
-            // _dirtyProject = false; // reset dirty flag after populating form on startup
-
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
@@ -224,8 +218,6 @@ namespace Go2It
             // unbind all our events now
             adminLayerSplitter.Paint -= Splitter_Paint;
             _appManager.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
-            //_baseMap.Layers.LayerRemoved -= LayersOnLayerRemoved;
-            //_baseMap.Layers.LayerAdded -= LayersOnLayerAdded;
             // _adminLegend.OrderChanged -= AdminLegendOnOrderChanged;
             // remove the legend from the control, otherwise leaves disposed object behind
             legendSplitter.Panel1.Controls.Remove(_adminLegend);
@@ -252,7 +244,7 @@ namespace Go2It
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
                 if (fileName != null) _allLayerLookup.Add(fileName, mImage);
-                // _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             else
             {
@@ -260,7 +252,7 @@ namespace Go2It
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
                 if (fileName != null) _allLayerLookup.Add(fileName, mLayer);
-                // _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             if (layer.GetType().Name != "MapPointLayer" && layer.GetType().Name != "MapPolygonLayer" &&
                 layer.GetType().Name != "MapLineLayer") return;
@@ -295,7 +287,7 @@ namespace Go2It
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
                 if (fileName != null) _allLayerLookup.Remove(fileName);
-                // _dirtyProject = true;
+                _projectManager.IsDirty = true;
             }
             else
             {
@@ -303,7 +295,7 @@ namespace Go2It
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
                 if (fileName != null) _allLayerLookup.Remove(fileName);
-                // _dirtyProject = true;
+                _projectManager.IsDirty = true;
 
                 // remove any layers that could be part of active config now
                 if ((mLayer.DataSet.FeatureType.ToString() != "Point" &&
@@ -1210,15 +1202,8 @@ namespace Go2It
                 }*/
                 // this is saved to dbase by project manager on serialization event, which is fired just below
                 ApplyProjectSettings();
-                // swap the active map out with our base map now -> all layers will be serialized (not just layers in current active tab)
-                // var tMap = _appManager.Map;
-                // _appManager.Map = _baseMap;
-                _projectManager.SaveProject(fileName);
 
-                // _appManager.SerializationManager.SaveProject(fileName);
-                // reset our orginal map view back to the active map
-                // _appManager.Map = tMap;
-                // _dirtyProject = false;
+                _projectManager.SaveProject(fileName);
                 return true;
             }
             catch (XmlException)

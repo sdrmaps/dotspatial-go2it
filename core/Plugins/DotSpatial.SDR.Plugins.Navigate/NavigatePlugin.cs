@@ -93,7 +93,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             // watch for hotkeys activated via the mainform plugin
-            HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
+            // TODO: readd in hotkey manager
+            // HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
         }
 
