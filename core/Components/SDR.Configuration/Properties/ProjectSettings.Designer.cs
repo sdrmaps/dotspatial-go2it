@@ -340,13 +340,13 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EnableQueryParserLogging {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SearchQueryParserLogging {
             get {
-                return ((bool)(this["EnableQueryParserLogging"]));
+                return ((bool)(this["SearchQueryParserLogging"]));
             }
             set {
-                this["EnableQueryParserLogging"] = value;
+                this["SearchQueryParserLogging"] = value;
             }
         }
         

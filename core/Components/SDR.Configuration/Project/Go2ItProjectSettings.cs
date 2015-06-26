@@ -37,8 +37,8 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.EsnsLayer = string.Empty;
             Properties.ProjectSettings.Default.ParcelsLayer = string.Empty;
             Properties.ProjectSettings.Default.HydrantsLayer = string.Empty;
-            Properties.ProjectSettings.Default.ActiveMapViewKey = "kMap_MyMap";
-            Properties.ProjectSettings.Default.ActiveMapViewCaption = "My Map";
+            Properties.ProjectSettings.Default.ActiveMapViewKey = "";
+            Properties.ProjectSettings.Default.ActiveMapViewCaption = "";
             Properties.ProjectSettings.Default.AddressesProjectType = "POINT";
             Properties.ProjectSettings.Default.KeyLocationsProjectType = "POINT";
             Properties.ProjectSettings.Default.MapBgColor = Color.Black;
@@ -55,7 +55,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal)0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
-            Properties.ProjectSettings.Default.EnableQueryParserLogging = true;
+            Properties.ProjectSettings.Default.SearchQueryParserLogging = false;
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace SDR.Configuration.Project
         /// <summary>
         /// Use Pretypes in search
         /// </summary>
-        public bool UsePretypes
+        public bool SearchUsePretypes
         {
             set { Properties.ProjectSettings.Default.SearchUsePretypes =  value; }
             get { return Properties.ProjectSettings.Default.SearchUsePretypes; }
@@ -172,10 +172,10 @@ namespace SDR.Configuration.Project
         /// <summary>
         /// Enable Logging of Search Querys and Parsed Results
         /// </summary>
-        public bool EnableQueryParserLogging
+        public bool SearchQueryParserLogging
         {
-            set { Properties.ProjectSettings.Default.EnableQueryParserLogging = value; }
-            get { return Properties.ProjectSettings.Default.EnableQueryParserLogging; }
+            set { Properties.ProjectSettings.Default.SearchQueryParserLogging = value; }
+            get { return Properties.ProjectSettings.Default.SearchQueryParserLogging; }
         }
 
         public Color MapBgColor

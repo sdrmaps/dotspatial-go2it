@@ -38,7 +38,7 @@ namespace Go2It
             _shell = this;
             // load any extensions/plugins now
             AppManager.LoadExtensions();
-            AppManager.ProgressHandler.Progress("", 0, "Starting Go2It...");
+            AppManager.ProgressHandler.Progress("", 0, "");
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

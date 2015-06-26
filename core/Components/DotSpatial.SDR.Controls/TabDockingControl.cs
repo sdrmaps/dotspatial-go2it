@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 
 namespace DotSpatial.SDR.Controls

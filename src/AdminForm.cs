@@ -52,14 +52,8 @@ namespace Go2It
         [Import("Shell")]
         internal ContainerControl Shell { get; set; }
 
-        private const string MapTabDefaultCaption = "My Map";  // name of the initial map tab (default)
-
-        // internal lookup names used by lucene to get feature from the dataset also stores ft shape (normalized)
-        private const string FID = "FID";
-        private const string LYRNAME = "LYRNAME";
-        private const string GEOSHAPE = "GEOSHAPE";
-
-        private bool _isCreatingNewView;  // prevent circular tab selection when adding a new map view tab
+        // name of the initial map tab, if no map tabs currently exist
+        private const string MapTabDefaultCaption = "My Map";
 
         // admin form controls
         private Legend _adminLegend;
@@ -67,7 +61,15 @@ namespace Go2It
         private readonly DockingControl _dockingControl;
         private readonly ProjectManager _projectManager;
 
-        // store all the layers by type
+        // internal lookup names used by lucene to get feature from the dataset also stores ft shape (normalized)
+        private const string FID = "FID";
+        private const string LYRNAME = "LYRNAME";
+        private const string GEOSHAPE = "GEOSHAPE";
+
+        // bool to prevent circular tab selection when adding a new map view tab
+        private bool _isCreatingNewView;
+
+        // store all avalable layers by type
         private readonly List<IFeatureSet> _pointLayers = new List<IFeatureSet>();
         private readonly List<IFeatureSet> _polygonLayers = new List<IFeatureSet>();
         private readonly List<IFeatureSet> _lineLayers = new List<IFeatureSet>();
@@ -77,57 +79,53 @@ namespace Go2It
         private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
 
-        // lookup of all layers available to this project, used for easy access indexing
-        private readonly Dictionary<string, IMapLayer> _allLayerLookup = new Dictionary<string, IMapLayer>();
+        // lookup of all layers available to this project
+        private readonly Dictionary<string, IMapLayer> _layerLookup = new Dictionary<string, IMapLayer>();
 
         // default sql row creation for an indexing row in the db (key, lookup, fieldname)
         private readonly Dictionary<string, string> _indexLookupFields = new Dictionary<string, string>();
+        
         // background worker handles the indexing process
         private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
         private ProgressPanel _progressPanel;  // indicate progress of index worker
+
         // invalid file name chars array for validation
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 
-        // temp storage of layers to index until the "create" button is activated (all queued indexes)
-        // inner dict hold type/lookups per row
-        // the list stores all rows
-        // the outer dict holds layer name and list with all dicts
+        // queued indexes awaiting processing
+        // -> the inner most list stores all the rows (field maps)
+        // -> the inner dict stores the type/lookups per row
+        // -> the outer dict stores the layer name and another list with all the inner dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
 
         private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
+
+        private string TempIndexDir { get; set; }
+
+
 
         public AdminForm(AppManager app)
         {
             InitializeComponent();
             InitializeSaveSplitButton();
+            InitializeIndexLookupFields();
 
-            // setup the default indexing field names
-            _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
-            _indexLookupFields.Add("lookup", "TEXT");
-            _indexLookupFields.Add("fieldname", "TEXT");
-
+            // assign all the admin form elements
             _appManager = app;
             _projectManager = (ProjectManager)app.SerializationManager;
             _dockingControl = (DockingControl) app.DockManager;
 
             // set options on our indexing bgworker
-            //  _idxWorker.WorkerReportsProgress = false;
-            //  _idxWorker.WorkerSupportsCancellation = false;
+            _idxWorker.WorkerReportsProgress = false;
+            _idxWorker.WorkerSupportsCancellation = false;
 
             // splitter stuff
             adminLayerSplitter.SplitterWidth = 10;
             adminLayerSplitter.Paint += Splitter_Paint;
 
-            // overall events tied to main application
+            // setup docking control events
             _appManager.DockManager.ActivePanelChanged += DockManager_ActivePanelChanged;
             _appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
-
-            PopulateMapViews();
-            PopulateSettingsToForm();
-            PopulateUsersToForm();
-            PopulateHotKeysToForm();
-            PopulateIndexesToForm();
-            PopulateGraphicsToForm();
 
             // check if there is a valid map loaded to the application
             if (_appManager.Map == null)
@@ -146,31 +144,44 @@ namespace Go2It
                 cmbActiveMapTab.Items.Add(dp.Caption);  // add this map to the map view selections combo
                 cmbActiveMapTab.SelectedIndex = 0;
 
-                // add the new tab view to the main form
                 _dockingControl.Add(dp);
-                // select the map now to activate plugin bindings
-                _dockingControl.SelectPanel(key);
+                _dockingControl.SelectPanel(key);  // select the map now to activate plugin bindings
             }
             else
             {
-                // not sure on this TODO:::
-                // AttachLegend((Map)_appManager.Map);
+                PopulateMapViews();  // add all the map views to the pull down menu
+                // set the active map index on the pull down menu
+                cmbActiveMapTab.SelectedIndex = cmbActiveMapTab.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption);
+                _layerLookup = _projectManager.GetLayerLookup;  // get the layer lookup for type assignment
+                AttachLegend((Map)_appManager.Map);  // assign the admin lefgend to the active map
             }
 
+            PopulateSettingsToForm();
+            PopulateUsersToForm();
+            PopulateHotKeysToForm();
+            PopulateIndexesToForm();
+            PopulateGraphicsToForm();
 
-            // setup all interface events now (TODO: investigating now
+            // watch for changes of index on the pull down map tab change
             cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
-
 
             FormClosing += AdminForm_Closing; // check for isdirty changes to project file
             FormClosed += AdminFormClosed;
 
             // setup a background worker for update progress bar on indexing tab
-            // _idxWorker.DoWork += idx_DoWork;
-            // _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
+            _idxWorker.DoWork += idx_DoWork;
+            _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
+        }
+
+        private void InitializeIndexLookupFields()
+        {
+            // setup the default indexing field names
+            _indexLookupFields.Add("key", "INTEGER PRIMARY KEY");
+            _indexLookupFields.Add("lookup", "TEXT");
+            _indexLookupFields.Add("fieldname", "TEXT");
         }
 
         private void InitializeSaveSplitButton()
@@ -197,7 +208,7 @@ namespace Go2It
             var key = "kMap_" + fname;
             if (cmbActiveMapTab.Items.Contains(txt))
             {
-                _appManager.DockManager.SelectPanel(key);
+                _dockingControl.SelectPanel(key);
             }
         }
 
@@ -215,6 +226,7 @@ namespace Go2It
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
         {
+            // TODO: verify this all matches up properly
             // unbind all our events now
             adminLayerSplitter.Paint -= Splitter_Paint;
             _appManager.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
@@ -228,7 +240,7 @@ namespace Go2It
             FormClosed -= AdminFormClosed;
             
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = false;
-            _appManager.DockManager.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
+            _dockingControl.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
@@ -236,14 +248,14 @@ namespace Go2It
             var layer = (IMapLayer) layerEventArgs.Layer;
             if (layer == null) return;
 
-            // add this layer to our 'allLayerLookup' Dictionary for easy access on indexing
+            // add this layer to our '_layerLookup' Dictionary for easy access on indexing
             string fileName;
             if (layer.GetType().Name == "MapImageLayer")
             {
                 var mImage = (IMapImageLayer) layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                if (fileName != null) _allLayerLookup.Add(fileName, mImage);
+                if (fileName != null) _layerLookup.Add(fileName, mImage);
                 _projectManager.IsDirty = true;
             }
             else
@@ -251,7 +263,7 @@ namespace Go2It
                 var mLayer = (IMapFeatureLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                if (fileName != null) _allLayerLookup.Add(fileName, mLayer);
+                if (fileName != null) _layerLookup.Add(fileName, mLayer);
                 _projectManager.IsDirty = true;
             }
             if (layer.GetType().Name != "MapPointLayer" && layer.GetType().Name != "MapPolygonLayer" &&
@@ -286,7 +298,7 @@ namespace Go2It
                 var mImage = (IMapImageLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                if (fileName != null) _allLayerLookup.Remove(fileName);
+                if (fileName != null) _layerLookup.Remove(fileName);
                 _projectManager.IsDirty = true;
             }
             else
@@ -294,7 +306,7 @@ namespace Go2It
                 var mLayer = (IMapFeatureLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                if (fileName != null) _allLayerLookup.Remove(fileName);
+                if (fileName != null) _layerLookup.Remove(fileName);
                 _projectManager.IsDirty = true;
 
                 // remove any layers that could be part of active config now
@@ -691,8 +703,8 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
-            chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes;
-            chkEnableQuesryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.EnableQueryParserLogging;
+            chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes;
+            chkEnableQueryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
             searchHydrantCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount;
             searchHydrantDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchDistance;
@@ -714,6 +726,14 @@ namespace Go2It
             else
             {
                 radKeyLocationsPolygons.Checked = true;
+            }
+            // populate all the layers from the lookup to their respective array types for form display
+            foreach (KeyValuePair<string, IMapLayer> kvp in _layerLookup)
+            {
+                var ftLayer = (IMapFeatureLayer)kvp.Value;
+                if (ftLayer.DataSet.Filename == null) continue;
+                var fs = FeatureSet.Open(ftLayer.DataSet.Filename);
+                AddLayer(fs); // perform all form specific add operations
             }
             SetupLayerSelectionSwitchers();
             SetActiveLayerSelections();
@@ -1122,10 +1142,8 @@ namespace Go2It
         private void ApplyProjectSettings()
         {
             // setup all project level type lookups
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType =
-                SetPointOrPolygonType(radAddressPoints);
-            SdrConfig.Project.Go2ItProjectSettings.Instance.KeyLocationsProjectType =
-                SetPointOrPolygonType(radKeyLocationsPoints);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AddressesProjectType = SetPointOrPolygonType(radAddressPoints);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.KeyLocationsProjectType = SetPointOrPolygonType(radKeyLocationsPoints);
             // setup layers inside checkboxes
             SdrConfig.Project.Go2ItProjectSettings.Instance.AddressLayers = ApplyCheckBoxSetting(chkAddressLayers);
             SdrConfig.Project.Go2ItProjectSettings.Instance.RoadLayers = ApplyCheckBoxSetting(chkRoadLayers);
@@ -1139,8 +1157,8 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer = ApplyComboBoxSetting(cmbHydrantsLayer);
             // set the map background color
             SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor = mapBGColorPanel.BackColor;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes = chkPretypes.Checked;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.EnableQueryParserLogging = chkEnableQuesryParserLog.Checked;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes = chkPretypes.Checked;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging = chkEnableQueryParserLog.Checked;
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount = (int)searchHydrantCount.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchDistance = (int) searchHydrantDistance.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance = (int)searchBufferDistance.Value;
@@ -1578,7 +1596,8 @@ namespace Go2It
 
         private void PopulateIndexesToForm()
         {
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            if (_projectManager.CurrentProjectFile.Length == 0) return;
+            string conn = SQLiteHelper.GetSQLiteConnectionString(_projectManager.CurrentProjectFile);
             if (conn == null) return;
             string[] tblNames = SQLiteHelper.GetAllTableNames(conn);
             foreach (string tblName in tblNames)
@@ -1659,118 +1678,118 @@ namespace Go2It
 
         private void cmbLayerIndex_SelectedValueChanged(object sender, EventArgs e)
         {
-            chkLayerIndex.Items.Clear();
-            dgvLayerIndex.Rows.Clear();
-            dgvLayerIndex.Columns.Clear();
+            //chkLayerIndex.Items.Clear();
+            //dgvLayerIndex.Rows.Clear();
+            //dgvLayerIndex.Columns.Clear();
 
-            string lyrName = cmbLayerIndex.SelectedItem.ToString();
-            if (lyrName.Length == 0) return;
+            //string lyrName = cmbLayerIndex.SelectedItem.ToString();
+            //if (lyrName.Length == 0) return;
 
-            var txtIndexColumn = new DataGridViewTextBoxColumn
-            {
-                HeaderText = @"Field Index",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-            dgvLayerIndex.Columns.Add(txtIndexColumn);
-            dgvLayerIndex.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //var txtIndexColumn = new DataGridViewTextBoxColumn
+            //{
+            //    HeaderText = @"Field Index",
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            //};
+            //dgvLayerIndex.Columns.Add(txtIndexColumn);
+            //dgvLayerIndex.Columns[0].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-            var txtValueColumn = new DataGridViewTextBoxColumn
-            {
-                HeaderText = @"Field Value",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-            dgvLayerIndex.Columns.Add(txtValueColumn);
-            dgvLayerIndex.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
+            //var txtValueColumn = new DataGridViewTextBoxColumn
+            //{
+            //    HeaderText = @"Field Value",
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            //};
+            //dgvLayerIndex.Columns.Add(txtValueColumn);
+            //dgvLayerIndex.Columns[1].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-            // add all the data field columns to the checkbox list
-            IMapLayer mapLyr;
-            _allLayerLookup.TryGetValue(lyrName, out mapLyr);
-            var mfl = mapLyr as IMapFeatureLayer;
-            if (mfl != null && mfl.DataSet != null)
-            {
-                IFeatureSet fl = mfl.DataSet;
-                foreach (DataColumn dc in fl.DataTable.Columns)
-                {
-                    chkLayerIndex.Items.Add(dc.ColumnName);
-                }
-            }
+            //// add all the data field columns to the checkbox list
+            //IMapLayer mapLyr;
+            //_allLayerLookup.TryGetValue(lyrName, out mapLyr);
+            //var mfl = mapLyr as IMapFeatureLayer;
+            //if (mfl != null && mfl.DataSet != null)
+            //{
+            //    IFeatureSet fl = mfl.DataSet;
+            //    foreach (DataColumn dc in fl.DataTable.Columns)
+            //    {
+            //        chkLayerIndex.Items.Add(dc.ColumnName);
+            //    }
+            //}
 
-            // determine what type of layer we have and set lookup indexes
-            string lyrType = GetLayerIndexTableType(lyrName);
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            //// determine what type of layer we have and set lookup indexes
+            //string lyrType = GetLayerIndexTableType(lyrName);
+            //string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
 
-            DataTable defaults = GetLayerTypeIndexes(lyrName);
-            var table = new DataTable();
+            //DataTable defaults = GetLayerTypeIndexes(lyrName);
+            //var table = new DataTable();
 
-            // check if this layer has already been added to queue
-            if (chkLayersToIndex.Items.Contains(lyrName))
-            {
-                // in this case we will use the temp set values
-                List<Dictionary<string, string>> idx;
-                _indexQueue.TryGetValue(lyrName, out idx);
-                // generate the table for population
-                table.Columns.Add("lookup");
-                table.Columns.Add("fieldname");
-                if (idx != null)
-                {
-                    foreach (Dictionary<string, string> d in idx)
-                    {
-                        DataRow dr = table.NewRow();
-                        string lookup;
-                        d.TryGetValue("lookup", out lookup);
-                        dr["lookup"] = lookup;
-                        string fieldname;
-                        d.TryGetValue("fieldname", out fieldname);
-                        dr["fieldname"] = fieldname;
-                        table.Rows.Add(dr);
-                    }
-                }
-            }
-            else // no active queue lets check the table for one instead
-            {
-                if (SQLiteHelper.TableExists(conn, lyrType + "_" + lyrName))
-                {
-                    string query = "SELECT * FROM " + lyrType + "_" + lyrName;
-                    table = SQLiteHelper.GetDataTable(conn, query);
-                    if (table.Rows.Count == 0)
-                    {
-                        table = defaults;
-                    }
-                }
-                else // none saved to table, set as the defaults
-                {
-                    table = defaults;
-                }
-            }
-            // go ahead and populate our data grid view with our table data
-            for (int i = 0; i < defaults.Rows.Count; i++)
-            {
-                DataRow r = defaults.Rows[i];
-                var key = r["lookup"].ToString();
-                var val = string.Empty;
-                string exp = "lookup = " + "'" + key + "'";
-                DataRow[] foundRows = table.Select(exp);
-                if (foundRows.Length > 0)
-                {
-                    DataRow d = foundRows[0];
-                    val = d["fieldname"].ToString();
-                }
-                var row = new DataGridViewRow();
-                var txtKey = new DataGridViewTextBoxCell {Value = key};
-                var txtValue = new DataGridViewTextBoxCell {Value = val};
-                row.Cells.Add(txtKey);
-                row.Cells.Add(txtValue);
-                dgvLayerIndex.Rows.Add(row);
-                if (val.Length <= 0) continue;
-                for (int j = 0; j < chkLayerIndex.Items.Count; j++)
-                {
-                    if (chkLayerIndex.Items[j].ToString() == val)
-                    {
-                        chkLayerIndex.SetItemCheckState(j, CheckState.Checked);
-                        break;
-                    }
-                }
-            }
+            //// check if this layer has already been added to queue
+            //if (chkLayersToIndex.Items.Contains(lyrName))
+            //{
+            //    // in this case we will use the temp set values
+            //    List<Dictionary<string, string>> idx;
+            //    _indexQueue.TryGetValue(lyrName, out idx);
+            //    // generate the table for population
+            //    table.Columns.Add("lookup");
+            //    table.Columns.Add("fieldname");
+            //    if (idx != null)
+            //    {
+            //        foreach (Dictionary<string, string> d in idx)
+            //        {
+            //            DataRow dr = table.NewRow();
+            //            string lookup;
+            //            d.TryGetValue("lookup", out lookup);
+            //            dr["lookup"] = lookup;
+            //            string fieldname;
+            //            d.TryGetValue("fieldname", out fieldname);
+            //            dr["fieldname"] = fieldname;
+            //            table.Rows.Add(dr);
+            //        }
+            //    }
+            //}
+            //else // no active queue lets check the table for one instead
+            //{
+            //    if (SQLiteHelper.TableExists(conn, lyrType + "_" + lyrName))
+            //    {
+            //        string query = "SELECT * FROM " + lyrType + "_" + lyrName;
+            //        table = SQLiteHelper.GetDataTable(conn, query);
+            //        if (table.Rows.Count == 0)
+            //        {
+            //            table = defaults;
+            //        }
+            //    }
+            //    else // none saved to table, set as the defaults
+            //    {
+            //        table = defaults;
+            //    }
+            //}
+            //// go ahead and populate our data grid view with our table data
+            //for (int i = 0; i < defaults.Rows.Count; i++)
+            //{
+            //    DataRow r = defaults.Rows[i];
+            //    var key = r["lookup"].ToString();
+            //    var val = string.Empty;
+            //    string exp = "lookup = " + "'" + key + "'";
+            //    DataRow[] foundRows = table.Select(exp);
+            //    if (foundRows.Length > 0)
+            //    {
+            //        DataRow d = foundRows[0];
+            //        val = d["fieldname"].ToString();
+            //    }
+            //    var row = new DataGridViewRow();
+            //    var txtKey = new DataGridViewTextBoxCell {Value = key};
+            //    var txtValue = new DataGridViewTextBoxCell {Value = val};
+            //    row.Cells.Add(txtKey);
+            //    row.Cells.Add(txtValue);
+            //    dgvLayerIndex.Rows.Add(row);
+            //    if (val.Length <= 0) continue;
+            //    for (int j = 0; j < chkLayerIndex.Items.Count; j++)
+            //    {
+            //        if (chkLayerIndex.Items[j].ToString() == val)
+            //        {
+            //            chkLayerIndex.SetItemCheckState(j, CheckState.Checked);
+            //            break;
+            //        }
+            //    }
+            //}
         }
 
         private void chkLayerIndex_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -1852,65 +1871,65 @@ namespace Go2It
 
         private void btnCreateIndex_Click(object sender, EventArgs e)
         {
-            if (_idxWorker.IsBusy != true)
-            {
-                // TODO: investigate a better progress panel, so that it parents properly to the form
-                _progressPanel = new ProgressPanel();
-                _progressPanel.StartProgress("Creating Indexes...");
+            //if (_idxWorker.IsBusy != true)
+            //{
+            //    // TODO: investigate a better progress panel, so that it parents properly to the form
+            //    _progressPanel = new ProgressPanel();
+            //    _progressPanel.StartProgress("Creating Indexes...");
 
-                string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-                var iobjects = new IndexObject[_indexQueue.Count];
-                int count = 0;
+            //    string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            //    var iobjects = new IndexObject[_indexQueue.Count];
+            //    int count = 0;
 
-                foreach (KeyValuePair<string, List<Dictionary<string, string>>> keyValuePair in _indexQueue)
-                {
-                    string lyrName = keyValuePair.Key;
-                    string idxType = GetLayerIndexTableType(lyrName);
-                    // check if the table exists - then clear and clean it or create a new one
-                    if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
-                    {
-                        SQLiteHelper.ClearTable(conn, idxType + "_" + lyrName);
-                    }
-                    else
-                    {
-                        SQLiteHelper.CreateTable(conn, idxType + "_" + lyrName, _indexLookupFields);
-                    }
-                    // setup everything else we need to generate our lucene index      
-                    IMapLayer mapLyr;
-                    _allLayerLookup.TryGetValue(lyrName, out mapLyr);
-                    var mfl = mapLyr as IMapFeatureLayer;
-                    IFeatureSet fs;
-                    if (mfl != null && mfl.DataSet != null)
-                    {
-                        fs = mfl.DataSet;
-                    }
-                    else
-                    {
-                        var msg = AppContext.Instance.Get<IUserMessage>();
-                        msg.Warn("Error on Create Index, FeatureDataset is null", new Exception());
-                        return;
-                    }
-                    // make sure this featureset has FID values for lookup
-                    fs.AddFid(); 
-                    fs.Save();
-                    // array of indexobjects we will add to the index
-                    List<Dictionary<string, string>> indexList = keyValuePair.Value;
-                    var list = new List<KeyValuePair<string, string>>();
-                    // iterate through all the field indexes
-                    for (int i = 0; i <= indexList.Count - 1; i++)
-                    {
-                        Dictionary<string, string> d = indexList[i];
-                        SQLiteHelper.Insert(conn, idxType + "_" + lyrName, d);
-                        var kvPair = new KeyValuePair<string, string>(d["lookup"], d["fieldname"]);
-                        list.Add(kvPair);
-                    }
-                    var io = new IndexObject(fs, list, lyrName, mapLyr.Projection, idxType);
-                    // add the indexobject to our array for creation
-                    iobjects.SetValue(io, count);
-                    count++;
-                }
-                _idxWorker.RunWorkerAsync(iobjects);
-            }
+            //    foreach (KeyValuePair<string, List<Dictionary<string, string>>> keyValuePair in _indexQueue)
+            //    {
+            //        string lyrName = keyValuePair.Key;
+            //        string idxType = GetLayerIndexTableType(lyrName);
+            //        // check if the table exists - then clear and clean it or create a new one
+            //        if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
+            //        {
+            //            SQLiteHelper.ClearTable(conn, idxType + "_" + lyrName);
+            //        }
+            //        else
+            //        {
+            //            SQLiteHelper.CreateTable(conn, idxType + "_" + lyrName, _indexLookupFields);
+            //        }
+            //        // setup everything else we need to generate our lucene index      
+            //        IMapLayer mapLyr;
+            //        _allLayerLookup.TryGetValue(lyrName, out mapLyr);
+            //        var mfl = mapLyr as IMapFeatureLayer;
+            //        IFeatureSet fs;
+            //        if (mfl != null && mfl.DataSet != null)
+            //        {
+            //            fs = mfl.DataSet;
+            //        }
+            //        else
+            //        {
+            //            var msg = AppContext.Instance.Get<IUserMessage>();
+            //            msg.Warn("Error on Create Index, FeatureDataset is null", new Exception());
+            //            return;
+            //        }
+            //        // make sure this featureset has FID values for lookup
+            //        fs.AddFid(); 
+            //        fs.Save();
+            //        // array of indexobjects we will add to the index
+            //        List<Dictionary<string, string>> indexList = keyValuePair.Value;
+            //        var list = new List<KeyValuePair<string, string>>();
+            //        // iterate through all the field indexes
+            //        for (int i = 0; i <= indexList.Count - 1; i++)
+            //        {
+            //            Dictionary<string, string> d = indexList[i];
+            //            SQLiteHelper.Insert(conn, idxType + "_" + lyrName, d);
+            //            var kvPair = new KeyValuePair<string, string>(d["lookup"], d["fieldname"]);
+            //            list.Add(kvPair);
+            //        }
+            //        var io = new IndexObject(fs, list, lyrName, mapLyr.Projection, idxType);
+            //        // add the indexobject to our array for creation
+            //        iobjects.SetValue(io, count);
+            //        count++;
+            //    }
+            //    _idxWorker.RunWorkerAsync(iobjects);
+            //}
         }
 
         private static void LogGeometryIndexError(string file, string ftId, Shape shape, string wkt, Exception ex)
@@ -2039,72 +2058,72 @@ namespace Go2It
 
         private void idx_DoWork(object sender, DoWorkEventArgs e)
         {
-            try
-            {
-                var iobjects = e.Argument as IndexObject[];
-                Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
-                if (docs.Count > 0)
-                {
-                    Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-                    var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-                    var d = Path.GetDirectoryName(db);
-                    if (d == null) return;
+        //    try
+        //    {
+        //        var iobjects = e.Argument as IndexObject[];
+        //        Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
+        //        if (docs.Count > 0)
+        //        {
+        //            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+        //            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+        //            var d = Path.GetDirectoryName(db);
+        //            if (d == null) return;
 
-                    foreach (KeyValuePair<string, List<Document>> keyValuePair in docs)
-                    {
+        //            foreach (KeyValuePair<string, List<Document>> keyValuePair in docs)
+        //            {
                         
-                        string projectFileName = _appManager.SerializationManager.CurrentProjectFile;
-                        var path = Path.Combine(d, projectFileName + "_indexes", keyValuePair.Key);
-                        DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
-                        Directory dir = FSDirectory.Open(di);
-                        FileInfo[] fi = di.GetFiles();
+        //                string projectFileName = _appManager.SerializationManager.CurrentProjectFile;
+        //                var path = Path.Combine(d, projectFileName + "_indexes", keyValuePair.Key);
+        //                DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
+        //                Directory dir = FSDirectory.Open(di);
+        //                FileInfo[] fi = di.GetFiles();
                         
-                        // single indexwriter is thread safe so lets use it in parallel
-                        IndexWriter writer = fi.Length == 0 ?
-                            new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) :
-                            new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
+        //                // single indexwriter is thread safe so lets use it in parallel
+        //                IndexWriter writer = fi.Length == 0 ?
+        //                    new IndexWriter(dir, analyzer, true, IndexWriter.MaxFieldLength.LIMITED) :
+        //                    new IndexWriter(dir, analyzer, false, IndexWriter.MaxFieldLength.LIMITED);
 
-                        // iterate all our documents and add them
-                        var documents = keyValuePair.Value;
-                        Parallel.ForEach(documents, delegate(Document document, ParallelLoopState state)
-                        {
-                            // check if this document already exists in the index
-                            var fid = document.GetField(FID).StringValue;
-                            var lyr = document.GetField(LYRNAME).StringValue;
+        //                // iterate all our documents and add them
+        //                var documents = keyValuePair.Value;
+        //                Parallel.ForEach(documents, delegate(Document document, ParallelLoopState state)
+        //                {
+        //                    // check if this document already exists in the index
+        //                    var fid = document.GetField(FID).StringValue;
+        //                    var lyr = document.GetField(LYRNAME).StringValue;
 
-                            Query qfid = new TermQuery(new Term(FID, fid));
-                            Query qlyr = new TermQuery(new Term(LYRNAME, lyr));
+        //                    Query qfid = new TermQuery(new Term(FID, fid));
+        //                    Query qlyr = new TermQuery(new Term(LYRNAME, lyr));
 
-                            var query = new BooleanQuery {{qfid, Occur.MUST}, {qlyr, Occur.MUST}};
+        //                    var query = new BooleanQuery {{qfid, Occur.MUST}, {qlyr, Occur.MUST}};
 
-                            writer.DeleteDocuments(query);
+        //                    writer.DeleteDocuments(query);
 
-                            // clean the numeric fields
-                            if (document.GetField("Phone") != null)
-                            {
-                                document.GetField("Phone").SetValue(DigitsOnly.Replace(document.GetField("Phone").StringValue, ""));
-                            }
-                            if (document.GetField("Aux. Phone") != null)
-                            {
-                                document.GetField("Aux. Phone").SetValue(DigitsOnly.Replace(document.GetField("Aux. Phone").StringValue, ""));
-                            }
-                            if (document.GetField("Structure Number") != null)
-                            {
-                                document.GetField("Structure Number").SetValue(DigitsOnly.Replace(document.GetField("Structure Number").StringValue, ""));
-                            }
+        //                    // clean the numeric fields
+        //                    if (document.GetField("Phone") != null)
+        //                    {
+        //                        document.GetField("Phone").SetValue(DigitsOnly.Replace(document.GetField("Phone").StringValue, ""));
+        //                    }
+        //                    if (document.GetField("Aux. Phone") != null)
+        //                    {
+        //                        document.GetField("Aux. Phone").SetValue(DigitsOnly.Replace(document.GetField("Aux. Phone").StringValue, ""));
+        //                    }
+        //                    if (document.GetField("Structure Number") != null)
+        //                    {
+        //                        document.GetField("Structure Number").SetValue(DigitsOnly.Replace(document.GetField("Structure Number").StringValue, ""));
+        //                    }
                             
-                            writer.AddDocument(document);
-                        });
-                        writer.Optimize();
-                        writer.Dispose();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = AppContext.Instance.Get<IUserMessage>();
-                msg.Error("Error on creating index :: BackgroundWorker Failed", ex);
-            }
+        //                    writer.AddDocument(document);
+        //                });
+        //                writer.Optimize();
+        //                writer.Dispose();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var msg = AppContext.Instance.Get<IUserMessage>();
+        //        msg.Error("Error on creating index :: BackgroundWorker Failed", ex);
+        //    }
         }
 
         private void idx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -2154,42 +2173,42 @@ namespace Go2It
 
         private void DeleteIndex()
         {
-            string lyrName = lstExistingIndexes.SelectedItem.ToString();
-            if (lyrName.Length > 0)
-            {
-                try
-                {
-                    // remove the layer name from the existing listbox
-                    lstExistingIndexes.Items.Remove(lyrName);
-                    // now remove the keyvalue lookups from the config database
-                    string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-                    string idxType = GetLayerIndexTableType(lyrName);
-                    // check if the table exists and drop it if so
-                    if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
-                    {
-                        SQLiteHelper.DropTable(conn, idxType + "_" + lyrName);
-                    }
-                    // time to update our lucene indexes
-                    var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-                    var d = Path.GetDirectoryName(db);
-                    if (d == null) return;
+            //string lyrName = lstExistingIndexes.SelectedItem.ToString();
+            //if (lyrName.Length > 0)
+            //{
+            //    try
+            //    {
+            //        // remove the layer name from the existing listbox
+            //        lstExistingIndexes.Items.Remove(lyrName);
+            //        // now remove the keyvalue lookups from the config database
+            //        string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            //        string idxType = GetLayerIndexTableType(lyrName);
+            //        // check if the table exists and drop it if so
+            //        if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
+            //        {
+            //            SQLiteHelper.DropTable(conn, idxType + "_" + lyrName);
+            //        }
+            //        // time to update our lucene indexes
+            //        var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            //        var d = Path.GetDirectoryName(db);
+            //        if (d == null) return;
 
-                    var projectFileName = _appManager.SerializationManager.CurrentProjectFile;
-                    var path = Path.Combine(d, projectFileName + "_indexes", idxType);
-                    Directory dir = FSDirectory.Open(new DirectoryInfo(path));
-                    var writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
-                    Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
-                    writer.DeleteDocuments(q);
-                    writer.Optimize();
-                    writer.Commit();
-                    writer.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    var msg = AppContext.Instance.Get<IUserMessage>();
-                    msg.Error("Error on deleting index", ex);
-                }
-            }
+            //        var projectFileName = _appManager.SerializationManager.CurrentProjectFile;
+            //        var path = Path.Combine(d, projectFileName + "_indexes", idxType);
+            //        Directory dir = FSDirectory.Open(new DirectoryInfo(path));
+            //        var writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
+            //        Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
+            //        writer.DeleteDocuments(q);
+            //        writer.Optimize();
+            //        writer.Commit();
+            //        writer.Dispose();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var msg = AppContext.Instance.Get<IUserMessage>();
+            //        msg.Error("Error on deleting index", ex);
+            //    }
+            //}
         }
 
         private void btnAddView_Click(object sender, EventArgs e)
@@ -2224,7 +2243,7 @@ namespace Go2It
             _appManager.DockManager.Add(dp);
             _appManager.DockManager.SelectPanel(key);
 
-            //_dirtyProject = true;
+            _projectManager.IsDirty = true;
             _isCreatingNewView = false;  // reset the new view creation flag back to false
         }
 

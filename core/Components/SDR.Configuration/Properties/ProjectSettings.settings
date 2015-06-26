@@ -83,8 +83,8 @@
     <Setting Name="SearchBufferDistance" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>
-    <Setting Name="EnableQueryParserLogging" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="SearchQueryParserLogging" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="HydrantSearchDistance" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>

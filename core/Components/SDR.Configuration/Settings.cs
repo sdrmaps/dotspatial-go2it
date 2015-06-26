@@ -10,8 +10,6 @@ namespace SDR.Configuration
     /// </summary>
     public class Settings
     {
-        private string _projectConnectionString;
-
         /// <summary>
         /// Allocate ourselves. We have a private constructor, so no one else can.
         /// </summary>
@@ -32,21 +30,6 @@ namespace SDR.Configuration
         /// </summary>
         private Settings()
         {
-        }
-
-        /// <summary>
-        /// The user-defined data repository connection string
-        /// </summary>
-        public string ProjectRepoConnectionString
-        {
-            get { return _projectConnectionString; }
-            set
-            {
-                string oldValue = _projectConnectionString;
-                _projectConnectionString = value;
-                if (oldValue != value)
-                    OnDatabaseChanged();
-            }
         }
 
         /// <summary>
