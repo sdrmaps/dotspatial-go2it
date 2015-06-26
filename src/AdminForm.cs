@@ -950,7 +950,7 @@ namespace Go2It
         {
             _dockingControl.ResetLayout();  // remove all maptabs now
             SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();  // set all project settings to defaults
-            SdrConfig.Settings.Instance.ProjectRepoConnectionString = null;  // clear any repo connection string available
+            // SdrConfig.Settings.Instance.ProjectRepoConnectionString = null;  // clear any repo connection string available
             _appManager.Map = null;  // remove the appmanager map
             Cursor = Cursors.Default;  
         }

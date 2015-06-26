@@ -29,9 +29,9 @@ namespace Go2It
         public AppManager App { get; private set; }
         public DockingControl Dock { get; private set; }
 
-        // lookup for all layers that exist on any map tab (populated on "save" and "open")
-        public readonly Dictionary<string, IMapLayer> AllLayersLookup = new Dictionary<string, IMapLayer>();
-
+        // lookup for any layer that may exist on any or multiple maptabs used to ease serialization of types below
+        // Populated with 'GenerateLayersTextBlock()' & used by CreateLayerDictionary()
+        private readonly Dictionary<string, IMapLayer> _allLayersLookup = new Dictionary<string, IMapLayer>();
         // const variables for project layer types, used in the project settings dbase
         public const string LayerTypeAddress = "t_address";
         public const string LayerTypeRoad = "t_road";
@@ -42,6 +42,8 @@ namespace Go2It
         public const string LayerTypeParcel = "t_parcel";
         public const string LayerTypeHydrant = "t_hydrant";
         public const string LayerTypeKeyLocation = "t_keylocation";
+
+        private string TempIndexDir { get; set; }
 
         public ProjectManager(AppManager mainApp) : base(mainApp)
         {
@@ -76,17 +78,19 @@ namespace Go2It
             return map;
         }
 
-        /// <summary>
-        ///     Creates a new 'empty' project
-        /// </summary>
         public void CreateNewProject()
+        {
+            LoadExistingProject(string.Empty);
+        }
+
+        public void LoadExistingProject(string file)
         {
             if (App.Map != null)
             {
                 App.Map.ClearLayers();
             }
             // clear any current project directory
-            SetCurrentProjectDirectory(String.Empty);
+            SetCurrentProjectDirectory(file);
             // reset all project settings to default
             Go2ItProjectSettings.Instance.ResetProjectSettings();
 
@@ -99,10 +103,8 @@ namespace Go2It
             {
                 Dock.ResetLayout();
             }
-            // setup a temp database to hold our settings
-            SetupDatabase();
-
             IsDirty = false;  // and finally set to 'not dirty'
+            OnIsDirtyChanged(); // and fire off the dirty change event
         }
 
         /// <summary>
@@ -131,14 +133,16 @@ namespace Go2It
         {
             return providers.Aggregate(
                 new StringBuilder(),
-                (sb, p) => sb
-                               .AppendFormat("|{1} (*{0})|*{0}", p.Extension, p.FileTypeDescription),
-                s => s.ToString());
+                (sb, p) => sb.AppendFormat("|{1} (*{0})|*{0}", 
+                    p.Extension, 
+                    p.FileTypeDescription), 
+                    s => s.ToString());
         }
 
         private void SetCurrentProjectDirectory(string fileName)
         {
-            // we set the working directory to the location of the project file. All filenames will be relative to this path.
+            // we set the working directory to the location of the project file.
+            // all filenames will be relative to this path once set
             if (String.IsNullOrEmpty(fileName))
             {
                 base.CurrentProjectFile = CurrentProjectDirectory = String.Empty;
@@ -151,7 +155,7 @@ namespace Go2It
             }
         }
 
-        private string CreateSerializedGraph(Map map)
+        private string CreateSerializedMap(Map map)
         {
             var graph = new object[] { map };
             var s = new XmlSerializer();
@@ -159,7 +163,7 @@ namespace Go2It
             return xml;
         }
 
-        private Map LoadSerializedGraph(string xmlString, string mapName)
+        private Map LoadSerializedMap(string xmlString, string mapName)
         {
             var map = CreateNewMap(mapName);
             var graph = new object[] { map };
@@ -170,46 +174,26 @@ namespace Go2It
 
         private void CreateProjectDatabase()
         {
-            var cc = App.SerializationManager.CurrentProjectDirectory;
-            string projectFilePath = App.SerializationManager.CurrentProjectFile;
-            string projectFileName = Path.GetFileNameWithoutExtension(projectFilePath);
-
-            // check for a project level database
-            string newDirPath = Path.GetDirectoryName(projectFilePath) + "\\" + projectFileName + "_indexes";
-
-            string currentDbPath = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            string d = Path.GetDirectoryName(currentDbPath);
-            if (d != null)
+            // check for an existing sqlite file, if it exists then clear it now
+            if (SQLiteHelper.DatabaseExists(CurrentProjectFile))
             {
-                if (projectFilePath != currentDbPath)
+                if (HasWriteAccessToFolder(CurrentProjectDirectory))
                 {
-                    // copy db to new path. If no db exists, create new db in the new location
-                    if (SQLiteHelper.DatabaseExists(currentDbPath))
-                    {
-                        File.Copy(currentDbPath, projectFilePath, true);
-                        string currentDirPath = Path.Combine(d, "_indexes");
-                        // check if there are any index files available copy them if so
-                        if (Directory.Exists(currentDirPath))
-                        {
-                            DirectoryCopy(currentDirPath, newDirPath, true);
-                        }
-                    }
-                    else
-                    {
-                        CreateNewDatabase(projectFilePath);
-                    }
-                    // update application level database configuration settings
-                    SdrConfig.Settings.Instance.ProjectRepoConnectionString =
-                        SQLiteHelper.GetSQLiteConnectionString(projectFilePath);
+                    var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+                    SQLiteHelper.ClearDb(conn);
                 }
+            }
+            else
+            {
+                CreateNewDatabase(CurrentProjectFile);
             }
         }
 
         public void SaveProjectSettings()
         {
             // get the project settings db connection string
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            // set  basic project level settings at this point
+            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+            // set the layer type 
             var d = new Dictionary<string, string>
             {
                 {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
@@ -223,8 +207,7 @@ namespace Go2It
                 {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
                 {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
             };
-            // there can only be a single project settings row in the table
-            SQLiteHelper.Update(conn, "ProjectSettings", d, "key = 1");
+            SQLiteHelper.Insert(conn, "ProjectSettings", d);
             var g = new Dictionary<string, string>
             {
                 {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
@@ -236,10 +219,7 @@ namespace Go2It
                 {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
                 {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
             };
-            // there can only be a single graphics settings row in the table
-            SQLiteHelper.Update(conn, "GraphicSettings", g, "key = 1");
-            // clear any (base map) layers currently set in the table and reset them now
-            SQLiteHelper.ClearTable(conn, "Layers");
+            SQLiteHelper.Insert(conn, "GraphicSettings", g);
             // cycle and save all layer types to settings
             SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
             SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
@@ -262,48 +242,56 @@ namespace Go2It
             set { base.IsDirty = value;  }
         }
 
+        private string GenerateLayersTextBlock(IMapLayerCollection layers)
+        {
+            _allLayersLookup.Clear();  // internally used on the CreateLayerDictionary() save routine
+            string txtLayers = string.Empty;
+
+            foreach (IMapLayer mapLayer in layers)
+            {
+                string layName;
+                if (mapLayer.GetType().Name == "MapImageLayer")
+                {
+                    var mImage = (IMapImageLayer)mapLayer;
+                    layName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
+                }
+                else
+                {
+                    var ftLayer = (FeatureLayer)mapLayer;
+                    var mpLayer = (IMapFeatureLayer)mapLayer;
+                    layName = ftLayer.Name;
+                    // assign this to our layer lookup now
+                    var fileName = Path.GetFileNameWithoutExtension(ftLayer.DataSet.Filename);
+                    // store all featurelayers to lookup, to ease type serialization on settings save
+                    if (fileName != null) _allLayersLookup.Add(fileName, mpLayer);
+                }
+                txtLayers = txtLayers + layName + "|";
+            }
+            if (txtLayers.Length != 0)
+            {
+                txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
+            }
+            return txtLayers;
+        }
+
         private void SaveMapTabs()
         {
-            // get the project settings db connection string
-            string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            SQLiteHelper.ClearTable(conn, "MapTabs");
-            DockingControl dc = Dock;
+            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
 
+            DockingControl dc = Dock;
             foreach (var dpi in dc.DockPanelLookup)
             {
                 if (!dpi.Key.Trim().StartsWith("kMap")) continue;
                 var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
-                var xmlMap = CreateSerializedGraph(map);
+                var xmlMap = CreateSerializedMap(map);
 
                 var mapFrame = map.MapFrame as MapFrame;
-                IMapLayerCollection layers = map.Layers; // get the layers
-                string txtLayers = string.Empty; // text block to store layers
-
-                foreach (IMapLayer mapLayer in layers)
-                {
-                    string layName;
-                    if (mapLayer.GetType().Name == "MapImageLayer")
-                    {
-                        var mImage = (IMapImageLayer)mapLayer;
-                        layName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                    }
-                    else
-                    {
-                        var ftLayer = (FeatureLayer)mapLayer;
-                        var mpLayer = (IMapFeatureLayer) mapLayer;
-                        layName = ftLayer.Name;
-                        // assign this to our layer lookup now
-                        var fileName = Path.GetFileNameWithoutExtension(ftLayer.DataSet.Filename);
-                        if (fileName != null) AllLayersLookup.Add(fileName, mpLayer);
-                    }
-                    txtLayers = txtLayers + layName + "|";
-                }
-                if (txtLayers.Length != 0)
-                {
-                    txtLayers = txtLayers.Remove(txtLayers.Length - 1, 1);
-                }
-                // send this all to a dict to save to dbase as a maptab
                 if (mapFrame == null) continue;
+
+                IMapLayerCollection layers = map.Layers; // get the layers
+                string txtLayers = GenerateLayersTextBlock(layers);
+
+                // store it all to a dict for storage into the sqlite db
                 var dd = new Dictionary<string, string>
                 {
                     {"lookup", dpi.Key},
@@ -327,25 +315,21 @@ namespace Go2It
             this.SetCurrentProjectDirectory(fileName);
 
             App.ProgressHandler.Progress("Saving Project " + fileName, 0, "");
-            Application.DoEvents();
+            Application.DoEvents();  // TODO: investigate this further
 
-            CreateProjectDatabase();
-            SaveMapTabs();
-            SaveProjectSettings();
+            CreateProjectDatabase();  // either create new sqlite db or clear an existing one
+            SaveMapTabs();  // serialize all the map tabs xml
+            SaveProjectSettings();  // now save the general project settings: bgcolor, default activeTabs, etc
 
             SdrConfig.Settings.Instance.AddFileToRecentFiles(fileName);
 
             IsDirty = false;
             OnIsDirtyChanged();
+            OnSerializing(new SerializingEventArgs());  // event for other plugins to listen for
 
-            OnSerializing(new SerializingEventArgs());
             App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
         }
 
-        /// <summary>
-        /// Deserializes the map from a file.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
         public new void OpenProject(string fileName)
         {
             Contract.Requires(!String.IsNullOrEmpty(fileName), "fileName is null or empty.");
@@ -353,8 +337,9 @@ namespace Go2It
             this.SetCurrentProjectDirectory(fileName);
 
             App.ProgressHandler.Progress("Opening Project " + fileName, 0, "");
-            Application.DoEvents();
+            Application.DoEvents();  // TODO: investigate this further
 
+            // check if there is an additional provider avaiable to open this type
             string extension = Path.GetExtension(fileName);
             bool isProviderPresent = false;
             foreach (var provider in OpenProjectFileProviders)
@@ -365,7 +350,6 @@ namespace Go2It
                     isProviderPresent = true;
                 }
             }
-
             if (!isProviderPresent)
             {
                 OpenProjectFile(fileName);
@@ -373,11 +357,10 @@ namespace Go2It
 
             SdrConfig.Settings.Instance.AddFileToRecentFiles(fileName);
             
-            //_changeTracker.Map = _applicationManager.Map;
             IsDirty = false;
             OnIsDirtyChanged();
-
             OnDeserializing(new SerializingEventArgs());
+
             App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
         }
 
@@ -426,76 +409,52 @@ namespace Go2It
             }
         }
 
-        public void OpenExistingProject(string projectFile)
+        private void LoadMapTabs()
         {
-            if (App.Map != null)
-            {
-                App.Map.ClearLayers();
-            }
-            // clear any current project directory
-            SetCurrentProjectDirectory(projectFile);
-            // reset all project settings to default
-            Go2ItProjectSettings.Instance.ResetProjectSettings();
+            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
 
-            // reset all dock controller map tabs and layerlookup dict
-            if (Dock == null)
-            {
-                Dock = (DockingControl)App.DockManager;
-            }
-            else
-            {
-                Dock.ResetLayout();
-            }
-            // assign db connection string
-            SdrConfig.Settings.Instance.ProjectRepoConnectionString = SQLiteHelper.GetSQLiteConnectionString(projectFile);
-
-            IsDirty = false;  // and finally set to 'not dirty'
-        }
-
-        private void OpenProjectFile(string fileName)
-        {
-            OpenExistingProject(fileName);
-
-            string repoConnStr = SQLiteHelper.GetSQLiteConnectionString(fileName);
-            SdrConfig.Settings.Instance.ProjectRepoConnectionString = repoConnStr;
-
+            // snag all the maptab records from the db: deserialize and populate tabs
             const string tabsQuery = "SELECT * FROM MapTabs";
-            DataTable tabsTable = SQLiteHelper.GetDataTable(repoConnStr, tabsQuery);
-            // cycle through all map tabs and generate maps and tabs as needed
+            DataTable tabsTable = SQLiteHelper.GetDataTable(conn, tabsQuery);
+
             foreach (DataRow row in tabsTable.Rows)
             {
                 string txtMapXml = row["map_xml"].ToString();
                 string txtKey = row["lookup"].ToString();
                 string txtCaption = row["caption"].ToString();
+                // TODO: implement these settings as needed (zorder is really the only one)
                 string txtLayers = row["layers"].ToString();
                 string txtViewExtent = row["viewextent"].ToString();
                 string zorder = row["zorder"].ToString();
                 string txtExtent = row["extent"].ToString();
                 string txtBounds = row["bounds"].ToString(); // unused
 
-                Map graph = LoadSerializedGraph(txtMapXml, txtKey);
-
-
-                // create new dockable panel to hold the map
-                var dp = new DockablePanel(txtKey, txtCaption, graph, DockStyle.Fill);
-               
-                
-                // add the new tab view to the main form
-                Dock.Add(dp);
-                // select the map now to activate plugin bindings
-                Dock.SelectPanel(txtKey);
-                ResetMapProjection();
-
-                App.Map.Invalidate();
-
-                // temporary fix by Jiri to properly assign the parent groups
-                if (App.Map.MapFrame != null)
+                Map map = LoadSerializedMap(txtMapXml, txtKey);
+                // properly parent the mapframe groups and assign symbology
+                if (map.MapFrame != null)
                 {
-                    AssignParentGroups(App.Map.MapFrame, App.Map.MapFrame);
-                    AssignLayerSymbologies(App.Map.MapFrame);
+                    AssignParentGroups(map.MapFrame, map.MapFrame);
+                    AssignLayerSymbologies(map.MapFrame);
                 }
-                //end temporary fix
+                // create new dockable panel to hold the new map
+                var dp = new DockablePanel(txtKey, txtCaption, map, DockStyle.Fill);
+                Dock.Add(dp);  // add the new tab view to the main form
             }
+        }
+
+        private void OpenProjectFile(string fileName)
+        {
+            LoadExistingProject(fileName);  // resets everything to default and sets CurrentProjectFile etc.
+            LoadMapTabs();
+
+            LoadProjectSettings(); 
+
+            // TODO: Move this outside of this code
+            // select the map now to activate plugin bindings
+            // Dock.SelectPanel(txtKey);
+            // ResetMapProjection();
+            // App.Map.Invalidate();
+
         }
 
         /// <summary>
@@ -747,25 +706,25 @@ namespace Go2It
         /// </summary>
         public void SetupDatabase()
         {
-            // the 'default' database path is a temporary db file, it is not for use on actual projects
-            string unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour,
-                DateTime.Now.Minute);
-            string dataRepositoryTempFile = unqTmpId + ".sqlite";
+            //// the 'default' database path is a temporary db file, it is not for use on actual projects
+            //string unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour,
+            //    DateTime.Now.Minute);
+            //string dataRepositoryTempFile = unqTmpId + ".sqlite";
 
-            // find or create a temp directory to hold the db and any possible indexes
-            string tempDir = SdrConfig.ConfigurationHelper.FindOrCreateTempDirectory(
-                SdrConfig.Settings.Instance.ApplicationName + "\\" + unqTmpId);
+            //// find or create a temp directory to hold the db and any possible indexes
+            //string tempDir = SdrConfig.ConfigurationHelper.FindOrCreateTempDirectory(
+            //    SdrConfig.Settings.Instance.ApplicationName + "\\" + unqTmpId);
 
-            // setup the basic data repo path
-            string dataRepositoryPath = Path.Combine(tempDir, dataRepositoryTempFile);
-            // validate we can write to temp access directory
-            if (HasWriteAccessToFolder(tempDir))
-            {
-                // create (copy) a new dataRepository Db
-                SQLiteHelper.CreateSQLiteDatabase(dataRepositoryPath, "Go2It.Resources.defaultDatabase.sqlite");
-                string conString1 = SQLiteHelper.GetSQLiteConnectionString(dataRepositoryPath);
-                SdrConfig.Settings.Instance.ProjectRepoConnectionString = conString1;
-            }
+            //// setup the basic data repo path
+            //string dataRepositoryPath = Path.Combine(tempDir, dataRepositoryTempFile);
+            //// validate we can write to temp access directory
+            //if (HasWriteAccessToFolder(tempDir))
+            //{
+            //    // create (copy) a new dataRepository Db
+            //    SQLiteHelper.CreateSQLiteDatabase(dataRepositoryPath, "Go2It.Resources.defaultDatabase.sqlite");
+            //    string conString1 = SQLiteHelper.GetSQLiteConnectionString(dataRepositoryPath);
+            //    SdrConfig.Settings.Instance.ProjectRepoConnectionString = conString1;
+            //}
         }
 
         private static bool HasWriteAccessToFolder(string folderPath)
@@ -813,7 +772,7 @@ namespace Go2It
 
             var d = new Dictionary<string, string>();
 
-            foreach (var keyValuePair in AllLayersLookup)
+            foreach (var keyValuePair in _allLayersLookup)
             {
                 var fl = keyValuePair.Value as IMapFeatureLayer;
                 if (fl != null)
