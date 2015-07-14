@@ -15,6 +15,8 @@ using DotSpatial.Extensions;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Serialization;
 using DotSpatial.Symbology;
+using SDR.Common;
+using SDR.Common.UserMessage;
 using SDR.Configuration.Project;
 using SDR.Configuration.User;
 using SDR.Data.Database;
@@ -178,17 +180,17 @@ namespace Go2It
         private void CreateProjectDatabase()
         {
             // check for an existing sqlite file, if it exists then clear it now
-            if (SQLiteHelper.DatabaseExists(CurrentProjectFile))
+            if (!SQLiteHelper.DatabaseExists(CurrentProjectFile))
             {
                 if (HasWriteAccessToFolder(CurrentProjectDirectory))
                 {
-                    var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
-                    SQLiteHelper.ClearDb(conn);
+                    CreateNewDatabase(CurrentProjectFile);
                 }
-            }
-            else
-            {
-                CreateNewDatabase(CurrentProjectFile);
+                else
+                {
+                    var msg = AppContext.Instance.Get<IUserMessage>();
+                    msg.Error("Attempt to write to " + CurrentProjectDirectory + " failed, please check permissions");
+                }
             }
         }
 
@@ -197,6 +199,7 @@ namespace Go2It
             // get the project settings db connection string
             string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
             // set the layer type 
+            SQLiteHelper.ClearTable(conn, "ProjectSettings");
             var d = new Dictionary<string, string>
             {
                 {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
@@ -212,6 +215,8 @@ namespace Go2It
                 {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
             };
             SQLiteHelper.Insert(conn, "ProjectSettings", d);
+
+            SQLiteHelper.ClearTable(conn, "GraphicSettings");
             var g = new Dictionary<string, string>
             {
                 {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
@@ -225,6 +230,7 @@ namespace Go2It
             };
             SQLiteHelper.Insert(conn, "GraphicSettings", g);
             // cycle and save all layer types to settings
+            SQLiteHelper.ClearTable(conn, "Layers");
             SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
             SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
             SaveLayerCollection(Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
@@ -344,7 +350,13 @@ namespace Go2It
                     // assign this to our layer lookup now
                     var fileName = Path.GetFileNameWithoutExtension(ftLayer.DataSet.Filename);
                     // store all featurelayers to lookup, to ease type serialization on settings save
-                    if (fileName != null) _allLayersLookup.Add(fileName, mpLayer);
+                    if (fileName != null)
+                    {
+                        if (!_allLayersLookup.ContainsKey(fileName))
+                        {
+                            _allLayersLookup.Add(fileName, mpLayer);
+                        }
+                    }
                 }
                 txtLayers = txtLayers + layName + "|";
             }
@@ -358,6 +370,8 @@ namespace Go2It
         private void SaveMapTabs()
         {
             string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+            // clear the existing maptabs saved to db
+            SQLiteHelper.ClearTable(conn, "MapTabs");
 
             DockingControl dc = Dock;
             foreach (var dpi in dc.DockPanelLookup)
@@ -487,6 +501,7 @@ namespace Go2It
                 }
             }
         }
+
         private void AssignParentGroups(IGroup parentGroup, IMapFrame parentMapFrame)
         {
             // this method will assign the parent groups.

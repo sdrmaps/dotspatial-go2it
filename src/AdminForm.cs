@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -89,22 +88,42 @@ namespace Go2It
 
         // invalid file name chars array for validation
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+        // numeric digits only regex
+        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
 
-        // queued indexes awaiting processing
+        // queued indexes awaiting processing, and another to hold saved indexes, for copy to save dir on event
         // -> the inner most list stores all the rows (field maps)
         // -> the inner dict stores the type/lookups per row
         // -> the outer dict stores the layer name and another list with all the inner dicts
         private readonly Dictionary<string, List<Dictionary<string, string>>> _indexQueue = new Dictionary<string, List<Dictionary<string, string>>>();
         private readonly Dictionary<string, List<Dictionary<string, string>>> _savedIndexes = new Dictionary<string, List<Dictionary<string, string>>>();
+        // track any indexes the user chooses to delete, for use on serializing event
+        private readonly List<string> _deleteIndexes = new List<string>();
 
-        private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
+        // index object for tracking and storing various layer/featureset index information
+        internal class IndexObject
+        {
+            public IFeatureSet FeatureSet { get; private set; }
+            public string LayerName { get; private set; }
+            public ProjectionInfo LayerProjection { get; set; }
+            public string IndexType { get; private set; }
+            public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
+            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, ProjectionInfo projectionInfo, string indexType)
+            {
+                FeatureSet = featureSet;
+                FieldLookup = fieldLookup;
+                LayerName = layerName;
+                LayerProjection = projectionInfo;
+                IndexType = indexType;
+            }
+        }
 
+        private static string _tempIdxPath = string.Empty;
         private string TempIndexDir
         {
             get { return _tempIdxPath; }
         }
-        private static string _tempIdxPath = string.Empty;
-
+        
         private static void AssignTempIndexDir()
         {
             string unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour,DateTime.Now.Minute);
@@ -122,7 +141,7 @@ namespace Go2It
             try
             {
                 // attempt to get a list of security permissions from the folder. 
-                // this will raise an exception if the path is read only or do not have access to view the permissions.
+                // this will raise an exception if the path is read only or does not have access to view the permissions.
                 System.Security.AccessControl.DirectorySecurity ds = System.IO.Directory.GetAccessControl(folderPath);
                 return true;
             }
@@ -225,18 +244,51 @@ namespace Go2It
             _idxWorker.DoWork += idx_DoWork;
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
+            _projectManager.IsDirty = false;
             // TODO: investigate this flag further
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
-
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
         {
-            string projectName = Path.GetFileNameWithoutExtension(_projectManager.CurrentProjectFile);
-            string conn = SQLiteHelper.GetSQLiteConnectionString(_projectManager.CurrentProjectFile);
             // at this point all the projectManager settings have been saved
-            // ie we have a path to move any possible indexes created this session
+            // ie we have a path to move/delete any possible indexes created/deleted this session
+            string projectName = Path.GetFileNameWithoutExtension(_projectManager.GetProjectShortName());
+            string conn = SQLiteHelper.GetSQLiteConnectionString(_projectManager.CurrentProjectFile);
+            // first check if there are any deleted indexes to handle
+            if (_deleteIndexes.Count > 0)
+            {
+                foreach (string lyrName in _deleteIndexes)
+                {
+                    string idxType = GetLayerIndexTableType(lyrName);
+                    // check if the table exists and drop it if so
+                    if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
+                    {
+                        SQLiteHelper.DropTable(conn, idxType + "_" + lyrName);
+                    }
+                    // check if this index type exists in the temp dir
+                    var tdir = Path.Combine(TempIndexDir, "_indexes", idxType);
+                    if (System.IO.Directory.Exists(tdir))
+                    {
+                        System.IO.Directory.Delete(tdir, true);
+                    }
+                    // check if it exists in the project storage dir
+                    var pdir = Path.Combine(_projectManager.CurrentProjectDirectory, projectName + "_indexes", idxType);
+                    if (System.IO.Directory.Exists(pdir))
+                    {
+                        System.IO.Directory.Delete(pdir, true);
+                        // remove the whole index dir if there are no indexes present
+                        var intdir = Path.Combine(_projectManager.CurrentProjectDirectory, projectName + "_indexes");
+                        var dirarr = System.IO.Directory.GetDirectories(intdir);
+                        if (dirarr.Length == 0)
+                        {
+                            System.IO.Directory.Delete(intdir);
+                        }
+                    }
+                }
+            }
+            // now save all new indexes created
             foreach (KeyValuePair<string, List<Dictionary<string, string>>> sKeyVal in _savedIndexes)
             {
                 string lyrName = sKeyVal.Key;
@@ -266,7 +318,11 @@ namespace Go2It
                 // and finally be sure to copy all index directories over from the temp dir to the project save dir
                 var src = Path.Combine(TempIndexDir, "_indexes", idxType);
                 var dst = Path.Combine(_projectManager.CurrentProjectDirectory, projectName + "_indexes", idxType);
-                DirectoryCopy(src, dst, true);
+                // if the idxType is in the temp dir, move it now
+                if (System.IO.Directory.Exists(src))
+                {
+                    DirectoryCopy(src, dst, true);
+                }
             }
         }
 
@@ -353,9 +409,9 @@ namespace Go2It
 
             // _adminLegend.OrderChanged -= AdminLegendOnOrderChanged;
             // remove the legend from the control, otherwise leaves disposed object behind
+            // TODO: HUH
             legendSplitter.Panel1.Controls.Remove(_adminLegend);
             FormClosing -= AdminForm_Closing;
-            // chkViewLayers.ItemCheck -= chkViewLayers_ItemCheck;
             _idxWorker.DoWork -= idx_DoWork;
             _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
             FormClosed -= AdminFormClosed;
@@ -1087,6 +1143,9 @@ namespace Go2It
             }
         }
 
+        /// <summary>
+        /// Used when a user has chosen not to load or save a map and closes the admin panel
+        /// </summary>
         private void SetNoProject()
         {
             _dockingControl.ResetLayout();  // remove all maptabs now
@@ -1098,65 +1157,72 @@ namespace Go2It
 
         private void AdminForm_Closing(object sender, FormClosingEventArgs e)
         {
-            // check if this project file has ever been saved
-            if (String.IsNullOrEmpty(_appManager.SerializationManager.CurrentProjectFile))
+            if (_idxWorker.IsBusy)
             {
-                // this project file has never been saved before lets ask the user what they want to do?
-                var res = MessageBox.Show(string.Format("Save current project before exiting?"),
-                    Resources.AppName,
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button3);
-                switch (res)
-                {
-                    case DialogResult.Cancel:
-                        e.Cancel = true; // cancel the closing of the admin form
-                        break;
-                    case DialogResult.No:
-                        e.Cancel = false;  // allow this dialog to continue closing
-                        SetNoProject();
-                        break;
-                    case DialogResult.Yes:
-                        e.Cancel = false;  // continue to allow the form to close
-                        if (!ShowSaveProjectDialog())
-                        {
-                            SetNoProject();  // user decided not to save, reset main app map back to defaults
-                        } // else the user did a proper save and all things should be synced at this point
-                        break;
-                }
-            } 
-            else // project file exists, check for any changes the user made and account for them
+                e.Cancel = true;
+            }
+            else
             {
-                if (_projectManager.IsDirty)
+                // check if this project file has ever been saved
+                if (String.IsNullOrEmpty(_projectManager.CurrentProjectFile))
                 {
-                    // user has made changes lets see if they want to save them
-                    var res =
-                        MessageBox.Show(string.Format("Save changes to current project [{0}]?", Path.GetFileName(_appManager.SerializationManager.CurrentProjectFile)),
-                            Resources.AppName,
-                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
-                            MessageBoxDefaultButton.Button3);
+                    // this project file has never been saved before lets ask the user what they want to do?
+                    var res = MessageBox.Show(string.Format("Save current project before exiting?"),
+                        Resources.AppName,
+                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button3);
                     switch (res)
                     {
                         case DialogResult.Cancel:
                             e.Cancel = true; // cancel the closing of the admin form
                             break;
                         case DialogResult.No:
-                            e.Cancel = false;  // allow form to finish closing
-                            // user did not save the new changes, so reload the original project file now
-                            _appManager.SerializationManager.OpenProject(_appManager.SerializationManager.CurrentProjectFile);
+                            e.Cancel = false;  // allow this dialog to continue closing
+                            SetNoProject();
                             break;
                         case DialogResult.Yes:
-                            e.Cancel = false; // allow form to finish closing
-                            if (!SaveProject(_appManager.SerializationManager.CurrentProjectFile))
+                            e.Cancel = false;  // continue to allow the form to close
+                            if (!ShowSaveProjectDialog())
                             {
-                                // user canceled the save, so reload the original project file now
-                                _appManager.SerializationManager.OpenProject(_appManager.SerializationManager.CurrentProjectFile);
-                            } // else the save was successful and thus everything is in sync now
+                                SetNoProject();  // user decided not to save, reset main app map back to defaults
+                            } // else the user did a proper save and all things should be synced at this point
                             break;
                     }
                 }
-                else // no changes have been made, finish closing the form
+                else // project file exists, check for any changes the user made and account for them
                 {
-                    e.Cancel = false;
+                    if (_projectManager.IsDirty)
+                    {
+                        // user has made changes lets see if they want to save them
+                        var res =
+                            MessageBox.Show(string.Format("Save changes to current project [{0}]?", Path.GetFileName(_projectManager.CurrentProjectFile)),
+                                Resources.AppName,
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button3);
+                        switch (res)
+                        {
+                            case DialogResult.Cancel:
+                                e.Cancel = true; // cancel the closing of the admin form
+                                break;
+                            case DialogResult.No:
+                                e.Cancel = false;  // allow form to finish closing
+                                // user did not save the new changes, so reload the original project file now
+                                _projectManager.OpenProject(_projectManager.CurrentProjectFile);
+                                break;
+                            case DialogResult.Yes:
+                                e.Cancel = false; // allow form to finish closing
+                                if (!SaveProject(_projectManager.CurrentProjectFile))
+                                {
+                                    // user canceled the save, so reload the original project file now
+                                    _projectManager.OpenProject(_projectManager.CurrentProjectFile);
+                                } // else the save was successful and thus everything is in sync now
+                                break;
+                        }
+                    }
+                    else // no changes have been made, finish closing the form
+                    {
+                        e.Cancel = false;
+                    }
                 }
             }
         }
@@ -1726,11 +1792,6 @@ namespace Go2It
             foreach (string tblName in tblNames)
             {
                 string[] split = tblName.Split('_');
-
-                var one = split[0];
-                var two = split[1];
-                var x = tblName.Substring(13);
-
                 if (split.Length >= 2)
                 {
                     switch (split[0])
@@ -1926,12 +1987,15 @@ namespace Go2It
 
                 if (newList != null)
                 {
-                    var d = new Dictionary<string, string>
+                    if (dgvLayerIndex.Rows[i].Cells[1].Value.ToString().Length > 0)
                     {
-                        {"lookup", dgvLayerIndex.Rows[i].Cells[0].Value.ToString()},
-                        {"fieldname", dgvLayerIndex.Rows[i].Cells[1].Value.ToString()}
-                    };
-                    newList.Add(d);
+                        var d = new Dictionary<string, string>
+                        {
+                            {"lookup", dgvLayerIndex.Rows[i].Cells[0].Value.ToString()},
+                            {"fieldname", dgvLayerIndex.Rows[i].Cells[1].Value.ToString()}
+                        };
+                        newList.Add(d);
+                    }
                 }
 
                 if (val.Length <= 0) continue;  // if value is set then set the checked state to true
@@ -2145,7 +2209,6 @@ namespace Go2It
 
                 if (o.LayerProjection.ToEsriString() != KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString())
                 {
-                    // TODO: this seems to cause issues on the inital load
                     // reproject the in-memory representation of our featureset (actual file remains unchanged)
                     fs.Reproject(KnownCoordinateSystems.Geographic.World.WGS1984);
                 }
@@ -2221,6 +2284,11 @@ namespace Go2It
                 {
                     docs.Add(o.IndexType, docList);
                 }
+                // reproject the in-memory representation of our featureset back to original projection if needed
+                if (o.LayerProjection.ToEsriString() != KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString())
+                {
+                    fs.Reproject(o.LayerProjection);
+                }
             }
             return docs;
         }
@@ -2233,11 +2301,23 @@ namespace Go2It
                 Dictionary<string, List<Document>> docs = GetDocuments(iobjects);
                 if (docs.Count > 0)
                 {
+                    var path = string.Empty;
                     Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
                     foreach (KeyValuePair<string, List<Document>> keyValuePair in docs)
                     {
-                        // string projectName = _projectManager.CurrentProjectFile;
-                        var path = Path.Combine(TempIndexDir, "_indexes", keyValuePair.Key);
+                        path = Path.Combine(TempIndexDir, "_indexes", keyValuePair.Key);
+
+                        // removed as the save event now moves them to the proper location
+                        //if (_projectManager.CurrentProjectFile.Length == 0)
+                        //{
+                        //     path = Path.Combine(TempIndexDir, "_indexes", keyValuePair.Key);
+                        //}
+                        //else
+                        //{
+                        //    var pName = Path.GetFileNameWithoutExtension(_projectManager.GetProjectShortName());
+                        //    path = Path.Combine(_projectManager.CurrentProjectDirectory, pName + "_indexes", keyValuePair.Key);
+                        //}
+
                         DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
                         Directory dir = FSDirectory.Open(di);
                         FileInfo[] fi = di.GetFiles();
@@ -2295,6 +2375,8 @@ namespace Go2It
             // kill the progress indicator
             _progressPanel.StopProgress();
             _progressPanel = null;
+            // make sure we set the project as dirty
+            _projectManager.IsDirty = true;
 
             var cleanQueue = new List<string>();
             for (int i = 0; i <= chkLayersToIndex.Items.Count - 1; i++)
@@ -2342,42 +2424,17 @@ namespace Go2It
 
         private void DeleteIndex()
         {
-            //string lyrName = lstExistingIndexes.SelectedItem.ToString();
-            //if (lyrName.Length > 0)
-            //{
-            //    try
-            //    {
-            //        // remove the layer name from the existing listbox
-            //        lstExistingIndexes.Items.Remove(lyrName);
-            //        // now remove the keyvalue lookups from the config database
-            //        string conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
-            //        string idxType = GetLayerIndexTableType(lyrName);
-            //        // check if the table exists and drop it if so
-            //        if (SQLiteHelper.TableExists(conn, idxType + "_" + lyrName))
-            //        {
-            //            SQLiteHelper.DropTable(conn, idxType + "_" + lyrName);
-            //        }
-            //        // time to update our lucene indexes
-            //        var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
-            //        var d = Path.GetDirectoryName(db);
-            //        if (d == null) return;
-
-            //        var projectFileName = _appManager.SerializationManager.CurrentProjectFile;
-            //        var path = Path.Combine(d, projectFileName + "_indexes", idxType);
-            //        Directory dir = FSDirectory.Open(new DirectoryInfo(path));
-            //        var writer = new IndexWriter(dir, new KeywordAnalyzer(), IndexWriter.MaxFieldLength.LIMITED);
-            //        Query q = new QueryParser(Version.LUCENE_30, "LYRNAME", new KeywordAnalyzer()).Parse(lyrName);
-            //        writer.DeleteDocuments(q);
-            //        writer.Optimize();
-            //        writer.Commit();
-            //        writer.Dispose();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        var msg = AppContext.Instance.Get<IUserMessage>();
-            //        msg.Error("Error on deleting index", ex);
-            //    }
-            //}
+            string lyrName = lstExistingIndexes.SelectedItem.ToString();
+            if (lyrName.Length > 0)
+            {
+                _projectManager.IsDirty = true;
+                _deleteIndexes.Add(lyrName);
+                lstExistingIndexes.Items.Remove(lyrName);
+                if (_savedIndexes.ContainsKey(lyrName))
+                {
+                    _savedIndexes.Remove(lyrName);
+                }
+            }
         }
 
         private void btnAddView_Click(object sender, EventArgs e)
@@ -2517,23 +2574,6 @@ namespace Go2It
             var hy = AddLayersToIndex(cmbHydrantsLayer);
             UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
-        }
-
-        internal class IndexObject
-        {
-            public IFeatureSet FeatureSet { get; private set; }
-            public string LayerName { get; private set; }
-            public ProjectionInfo LayerProjection { get; set; }
-            public string IndexType { get; private set; }
-            public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
-            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, ProjectionInfo projectionInfo, string indexType)
-            {
-                FeatureSet = featureSet;
-                FieldLookup = fieldLookup;
-                LayerName = layerName;
-                LayerProjection = projectionInfo;
-                IndexType = indexType;
-            }
         }
 
         private void cmbCellSectorLayer_SelectedIndexChanged(object sender, EventArgs e)
