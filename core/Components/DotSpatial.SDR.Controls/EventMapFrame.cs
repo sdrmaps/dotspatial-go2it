@@ -12,6 +12,18 @@ namespace DotSpatial.SDR.Controls
     {
         public bool ViewExtentChangedSuspended { get; private set; }
 
+        public EventMapFrame()
+        {
+            ViewExtentChangedSuspended = true;
+            SuspendExtentChanged();
+            base.Initialize();
+        }
+
+        public void DisableViewChanged(bool flag)
+        {
+            base.DisableIsViewChanged(flag);
+        }
+
         //public void DisplayReprojectionDialog()
         //{
 

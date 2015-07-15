@@ -67,17 +67,32 @@ namespace Go2It
 
         public Map CreateNewMap(String mapName, Color bgColor)
         {
-            var map = new Map(); // new map 
-            var mapframe = new EventMapFrame(); // evented map frame so we can disable visualextent events
-            mapframe.SuspendViewExtentChanged();  // suspend view-extents while map is not active
+
+            var mapframe = new EventMapFrame();
+            //{
+                
+           // }
+            //    ; // evented map frame so we can disable visualextent events
+            // mapframe.SuspendViewExtentChanged(); // suspend view-extents while map is not active
+
+
+            var map = new Map()
+            {
+                MapFrame = mapframe,
+                BackColor = bgColor,
+                Visible = true,
+                Dock = DockStyle.Fill
+            }; 
+
+
             // TODO: investigate this further (don't think they are applicable)
             // mapframe.SuspendChangeEvent();
             // mapframe.SuspendEvents();
 
-            map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
-            map.BackColor = bgColor;
-            map.Visible = true;  // set visibility to false if it is the _basemap
-            map.Dock = DockStyle.Fill;
+            // map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
+            // map.BackColor = bgColor;
+            // map.Visible = true;
+            // map.Dock = DockStyle.Fill;
 
             return map;
         }
@@ -215,7 +230,6 @@ namespace Go2It
                 {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
             };
             SQLiteHelper.Insert(conn, "ProjectSettings", d);
-
             SQLiteHelper.ClearTable(conn, "GraphicSettings");
             var g = new Dictionary<string, string>
             {

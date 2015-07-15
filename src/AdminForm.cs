@@ -321,6 +321,10 @@ namespace Go2It
                 // if the idxType is in the temp dir, move it now
                 if (System.IO.Directory.Exists(src))
                 {
+                    if (System.IO.Directory.Exists(dst))
+                    {
+                        System.IO.Directory.Delete(dst, true);
+                    }
                     DirectoryCopy(src, dst, true);
                 }
             }
@@ -2307,17 +2311,6 @@ namespace Go2It
                     {
                         path = Path.Combine(TempIndexDir, "_indexes", keyValuePair.Key);
 
-                        // removed as the save event now moves them to the proper location
-                        //if (_projectManager.CurrentProjectFile.Length == 0)
-                        //{
-                        //     path = Path.Combine(TempIndexDir, "_indexes", keyValuePair.Key);
-                        //}
-                        //else
-                        //{
-                        //    var pName = Path.GetFileNameWithoutExtension(_projectManager.GetProjectShortName());
-                        //    path = Path.Combine(_projectManager.CurrentProjectDirectory, pName + "_indexes", keyValuePair.Key);
-                        //}
-
                         DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
                         Directory dir = FSDirectory.Open(di);
                         FileInfo[] fi = di.GetFiles();
@@ -2389,6 +2382,10 @@ namespace Go2It
                     _indexQueue.TryGetValue(item, out idx);
                     if (idx != null)
                     {
+                        if (_savedIndexes.ContainsKey(item))
+                        {
+                            _savedIndexes.Remove(item);
+                        }
                         _savedIndexes.Add(item, idx);
                     }
                     _indexQueue.Remove(item);

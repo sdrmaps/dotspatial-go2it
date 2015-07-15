@@ -93,9 +93,25 @@ namespace DotSpatial.SDR.Plugins.Navigate
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             // watch for hotkeys activated via the mainform plugin
-            // TODO: readd in hotkey manager
-            // HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
+            HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
+        }
+
+        private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
+        {
+            var map = (Map) sender;
+            if (map != null)
+            {
+                var mapFrame = (EventMapFrame)map.MapFrame;
+                if (map.FunctionMode == FunctionMode.ZoomIn)
+                {
+                    mapFrame.DisableViewChanged(true);
+                }
+                else
+                {
+                    mapFrame.DisableViewChanged(false);
+                }
+            }
         }
 
         private void HotKeyManagerOnHotKeyEvent(string action)
@@ -127,13 +143,21 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (map == null) return;
 
             map.Layers.LayerSelected -= LayersOnLayerSelected;
-            // TODO: do we need this here
-            // map.FunctionModeChanged -= MapOnFunctionModeChanged;
 
             var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
 
+            if (map.FunctionMode == FunctionMode.ZoomIn)
+            {
+                mapFrame.DisableViewChanged(true);
+            }
+            else
+            {
+                mapFrame.DisableViewChanged(false);
+            }
+
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
+            map.FunctionModeChanged -= MapOnFunctionModeChanged;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -151,10 +175,20 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             map.Layers.LayerSelected += LayersOnLayerSelected;
 
-            var mapFrame = map.MapFrame as EventMapFrame;
+            var mapFrame = (EventMapFrame)map.MapFrame;
             if (mapFrame == null) return;
 
+            if (map.FunctionMode == FunctionMode.ZoomIn)
+            {
+                mapFrame.DisableViewChanged(true);
+            }
+            else
+            {
+                mapFrame.DisableViewChanged(false);
+            }
+
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
+            map.FunctionModeChanged += MapOnFunctionModeChanged;
 
             _zoomNext.Enabled = mapFrame.CanZoomToNext();
             _zoomPrevious.Enabled = mapFrame.CanZoomToPrevious();
@@ -172,6 +206,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 map.Layers.LayerSelected -= LayersOnLayerSelected;
                 mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             }
+
+
             base.Deactivate();
         }
 
