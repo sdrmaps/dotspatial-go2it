@@ -19,7 +19,7 @@ namespace Go2It
 
         private LoginForm _loginForm;
         private AdminForm _adminForm;
-        private AppManager _appManager { get; set; }
+        private AppManager AppManager { get; set; }
 
         private bool _adminUser;
         private readonly List<PermissionedActionItem> _listPermissionedItems = new List<PermissionedActionItem>();
@@ -34,7 +34,7 @@ namespace Go2It
         #region Public Methods
         public override void Activate()
         {
-            _appManager = App;
+            AppManager = App;
             // get the grid header control
             IHeaderControl header = App.HeaderControl;
             // add the file menu
@@ -127,7 +127,7 @@ namespace Go2It
 
         private void ShowAdminForm()
         {
-            _adminForm = new AdminForm(_appManager)
+            _adminForm = new AdminForm(AppManager)
             {
                 StartPosition = FormStartPosition.CenterScreen,
                 Owner = Shell as Form

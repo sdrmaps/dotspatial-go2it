@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using DotSpatial.Controls;
 
 namespace DotSpatial.SDR.Controls
@@ -24,6 +23,7 @@ namespace DotSpatial.SDR.Controls
             base.DisableIsViewChanged(flag);
         }
 
+        // TODO; need to further investigate this issue and how to best handle it
         //public void DisplayReprojectionDialog()
         //{
 
@@ -55,6 +55,5 @@ namespace DotSpatial.SDR.Controls
             ViewExtentChangedSuspended = false;
             ResumeExtentChanged();   
         }
-
     }
 }

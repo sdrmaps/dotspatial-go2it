@@ -112,9 +112,8 @@ namespace Go2It
 
         private void OpenExistingProject(string projectFileName)
         {
-            // setup wait cursor while project is opening
-            Cursor = Cursors.WaitCursor;
-            // open the project up using the default open routines
+            Cursor = Cursors.WaitCursor;  // wait cursor while project is opening
+            // try and open the project using the ProjectManager
             try
             {
                 var projectManager = (ProjectManager) _app.SerializationManager;
@@ -135,8 +134,7 @@ namespace Go2It
                 MessageBox.Show(String.Format(Resources.CouldNotReadAPortionMapFile, projectFileName), Resources.CouldNotReadAPortionMapFile,
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            // set the cursor back to default now
-            Cursor = Cursors.Default;
+            Cursor = Cursors.Default;  // cursor back to default on load completion
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -149,14 +147,15 @@ namespace Go2It
             {
                 if (File.Exists(recentFile))
                 {
-                    if (!existingRecentFiles.Contains(recentFile)) // add to list only if it does not exist
+                    // add to the list only if it does not already exist on the list
+                    if (!existingRecentFiles.Contains(recentFile))
                     {
                         existingRecentFiles.Add(recentFile);
                     }
                 }
             }
             SdrConfig.Settings.Instance.RecentProjectFiles.Clear();
-            foreach (string recentFile in existingRecentFiles)
+            foreach (var recentFile in existingRecentFiles)
             {
                 SdrConfig.Settings.Instance.RecentProjectFiles.Add(recentFile);
                 RecentProjectFiles.Add(new ProjectFileInfo(recentFile));

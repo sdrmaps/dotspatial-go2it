@@ -38,12 +38,12 @@ namespace Go2It
             DockPanelInfo dockInfo;
             var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
-            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
+            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
             if (!key.StartsWith("kMap_")) return;
+            if (_map == null) return;
 
             // remove active map tab binding
-            if (_map == null) return;
             _map.MouseMove -= map_MouseMove;
             _map.ProjectionChanged -= map_ProjectionChanged;
         }
@@ -53,9 +53,10 @@ namespace Go2It
             DockPanelInfo dockInfo;
             var dockControl = (DockingControl)sender;
             var key = dockablePanelEventArgs.ActivePanelKey;
-            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
+            if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
             if (!key.StartsWith("kMap_")) return;
+
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             if (_map == null) return;
 

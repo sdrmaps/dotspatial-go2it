@@ -33,11 +33,12 @@ namespace Go2It
             AppManager = new AppManager();
             // replace the default SerializationManager with our custom ProjectManager
             var projManager = new ProjectManager(AppManager);
-            AppManager.SerializationManager = (ProjectManager) projManager;
+            AppManager.SerializationManager = projManager;
 
             _shell = this;
             // load any extensions/plugins now
             AppManager.LoadExtensions();
+            // clear the progress handler
             AppManager.ProgressHandler.Progress("", 0, "");
         }
 

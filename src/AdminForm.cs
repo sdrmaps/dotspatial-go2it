@@ -49,8 +49,8 @@ namespace Go2It
 {
     public partial class AdminForm : Form
     {
-        [Import("Shell")]
-        internal ContainerControl Shell { get; set; }
+        // [Import("Shell")]
+        // internal ContainerControl Shell { get; set; }
 
         // name of the initial map tab, if no map tabs currently exist
         private const string MapTabDefaultCaption = "My Map";
@@ -100,26 +100,9 @@ namespace Go2It
         // track any indexes the user chooses to delete, for use on serializing event
         private readonly List<string> _deleteIndexes = new List<string>();
 
-        // index object for tracking and storing various layer/featureset index information
-        internal class IndexObject
-        {
-            public IFeatureSet FeatureSet { get; private set; }
-            public string LayerName { get; private set; }
-            public ProjectionInfo LayerProjection { get; set; }
-            public string IndexType { get; private set; }
-            public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
-            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, ProjectionInfo projectionInfo, string indexType)
-            {
-                FeatureSet = featureSet;
-                FieldLookup = fieldLookup;
-                LayerName = layerName;
-                LayerProjection = projectionInfo;
-                IndexType = indexType;
-            }
-        }
-
+        // temp directory for storage of unsaved project files and temp storage of indexes
         private static string _tempIdxPath = string.Empty;
-        private string TempIndexDir
+        private static string TempIndexDir
         {
             get { return _tempIdxPath; }
         }
@@ -173,6 +156,24 @@ namespace Go2It
             }
         }
 
+        // index object for tracking and storing various layer/featureset index information
+        internal class IndexObject
+        {
+            public IFeatureSet FeatureSet { get; private set; }
+            public string LayerName { get; private set; }
+            public ProjectionInfo LayerProjection { get; set; }
+            public string IndexType { get; private set; }
+            public List<KeyValuePair<string, string>> FieldLookup { get; private set; }
+            public IndexObject(IFeatureSet featureSet, List<KeyValuePair<string, string>> fieldLookup, string layerName, ProjectionInfo projectionInfo, string indexType)
+            {
+                FeatureSet = featureSet;
+                FieldLookup = fieldLookup;
+                LayerName = layerName;
+                LayerProjection = projectionInfo;
+                IndexType = indexType;
+            }
+        }
+
         public AdminForm(AppManager app)
         {
             InitializeComponent();
@@ -223,7 +224,7 @@ namespace Go2It
                 // set the active map index on the pull down menu
                 cmbActiveMapTab.SelectedIndex = cmbActiveMapTab.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption);
                 _layerLookup = _projectManager.GetLayerLookup;  // get the layer lookup for type assignment
-                AttachLegend((Map)_appManager.Map);  // assign the admin lefgend to the active map
+                AttachLegend((Map)_appManager.Map);  // assign the admin legend to the active map
                 PopulateIndexesToForm();
             }
 
@@ -405,23 +406,35 @@ namespace Go2It
 
         private void AdminFormClosed(object sender, FormClosedEventArgs formClosedEventArgs)
         {
-            // TODO: verify this all matches up properly
             // unbind all our events now
             adminLayerSplitter.Paint -= Splitter_Paint;
             _appManager.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
+            _appManager.DockManager.PanelHidden -= DockManagerOnPanelHidden;
             _projectManager.Serializing -= ProjectManagerOnSerializing;
-
-            // _adminLegend.OrderChanged -= AdminLegendOnOrderChanged;
-            // remove the legend from the control, otherwise leaves disposed object behind
-            // TODO: HUH
-            legendSplitter.Panel1.Controls.Remove(_adminLegend);
-            FormClosing -= AdminForm_Closing;
             _idxWorker.DoWork -= idx_DoWork;
             _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
+            FormClosing -= AdminForm_Closing;
             FormClosed -= AdminFormClosed;
-            
+            UnbindGraphicElementEvents();
+
+            legendSplitter.Panel1.Controls.Remove(_adminLegend);
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = false;
+
             _dockingControl.SelectPanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
+        }
+
+        private void UnbindGraphicElementEvents()
+        {
+            ptSymbolColorSlider.ValueChanged -= PtSymbolColorSliderOnValueChanged;
+            ptSymbolColor.Click -= PtSymbolColorOnClick;
+            ptSymbolSize.ValueChanged -= PtSymbolSizeOnValueChanged;
+            ptSymbolStyle.SelectedIndexChanged -= PtSymbolStyleOnSelectedIndexChanged;
+            lineSymbolBorderColor.Click -= LineSymbolBorderColorOnClick;
+            lineSymbolColorSlider.ValueChanged -= LineSymbolColorSliderOnValueChanged;
+            lineSymbolColor.Click -= LineSymbolColorOnClick;
+            lineSymbolSize.ValueChanged -= LineSymbolSizeOnValueChanged;
+            lineSymbolCap.SelectedIndexChanged -= LineSymbolCapOnSelectedIndexChanged;
+            lineSymbolStyle.SelectedIndexChanged -= LineSymbolStyleOnSelectedIndexChanged;
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
@@ -1292,7 +1305,6 @@ namespace Go2It
                     {
                         result = SaveProjectAs();
                     }
-
                     else
                     {
                         result = SaveProject(_projectManager.CurrentProjectFile);

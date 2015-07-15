@@ -17,13 +17,13 @@ namespace Go2It
         internal ContainerControl Shell { get; set; }
 
         /// <summary>
-        /// Gets or sets the ProjectManager (Replacement for SerializationManager)
+        /// Gets or sets the ProjectManager (SDR replacement for SerializationManager)
         /// </summary>
         private ProjectManager ProjectManager { get; set; }
 
-        // TODO: add the selections display message back to application
         private StartUpForm _startUpForm;
         private CoordinateDisplay _latLongDisplay;
+        // TODO: add the selections display message back to application
         // private SelectionsDisplay _selectionsDisplay;
 
         public override void Activate()
@@ -32,15 +32,14 @@ namespace Go2It
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             // setup new project save and open project serialization events
-            this.ProjectManager = (ProjectManager) App.SerializationManager;
-            this.ProjectManager.Deserializing += ProjectManagerOnDeserializing;
-            this.ProjectManager.Serializing += ProjectManagerOnSerializing;
+            ProjectManager = (ProjectManager) App.SerializationManager;
+            ProjectManager.Deserializing += ProjectManagerOnDeserializing;
+            ProjectManager.Serializing += ProjectManagerOnSerializing;
 
             // activate all available extensions now
             App.ExtensionsActivated += App_ExtensionsActivated;
            
-            // TODO: add back in
-            // create a selection status display panel
+            // TODO: create a selection status display panel
             // _selectionsDisplay = new SelectionsDisplay(App);
             
             // create a new lat/long display panel
@@ -52,7 +51,7 @@ namespace Go2It
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
         {
             // set shell window title
-            Shell.Text = string.Format("{0} - {1}", Resources.AppName, this.ProjectManager.GetProjectShortName());
+            Shell.Text = string.Format("{0} - {1}", Resources.AppName, ProjectManager.GetProjectShortName());
 
             if (App.Map.Projection != null)
             {
@@ -63,7 +62,7 @@ namespace Go2It
         private void ProjectManagerOnDeserializing(object sender, SerializingEventArgs serializingEventArgs)
         {
             // set shell window title
-            Shell.Text = string.Format("{0} - {1}", Resources.AppName, this.ProjectManager.GetProjectShortName());
+            Shell.Text = string.Format("{0} - {1}", Resources.AppName, ProjectManager.GetProjectShortName());
 
             if (App.Map.Projection != null)
             {
@@ -82,8 +81,8 @@ namespace Go2It
             App.ExtensionsActivated -= App_ExtensionsActivated;
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
             App.DockManager.ActivePanelChanged -= DockManager_ActivePanelChanged;
-            this.ProjectManager.Deserializing -= ProjectManagerOnDeserializing;
-            this.ProjectManager.Serializing -= ProjectManagerOnSerializing;
+            ProjectManager.Deserializing -= ProjectManagerOnDeserializing;
+            ProjectManager.Serializing -= ProjectManagerOnSerializing;
             base.Deactivate();
         }
 
@@ -102,7 +101,7 @@ namespace Go2It
         void mainForm_Shown(object sender, EventArgs e)
         {
             // displays the initial startup dialog for projects
-            if (string.IsNullOrEmpty(App.SerializationManager.CurrentProjectFile))
+            if (string.IsNullOrEmpty(ProjectManager.CurrentProjectFile))
             {
                 ShowStartupScreen();
             }
@@ -110,22 +109,22 @@ namespace Go2It
             {
                 try
                 {
-                    // project is currently being opened, do not show toe startup form
+                    // project is currently being loaded (from double click or command line) - do not show the startup form
                     ProjectManagerOnDeserializing(null, null);
                 }
                 catch (IOException)
                 {
-                    MessageBox.Show(String.Format(Resources.CouldNotOpenMapFile, App.SerializationManager.CurrentProjectFile), Resources.CouldNotOpenMapFile,
+                    MessageBox.Show(String.Format(Resources.CouldNotOpenMapFile, ProjectManager.CurrentProjectFile), Resources.CouldNotOpenMapFile,
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (XmlException)
                 {
-                    MessageBox.Show(String.Format(Resources.CouldNotReadMapFile, App.SerializationManager.CurrentProjectFile), Resources.CouldNotReadMapFile,
+                    MessageBox.Show(String.Format(Resources.CouldNotReadMapFile, ProjectManager.CurrentProjectFile), Resources.CouldNotReadMapFile,
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (ArgumentException)
                 {
-                    MessageBox.Show(String.Format(Resources.CouldNotReadAPortionMapFile, App.SerializationManager.CurrentProjectFile), Resources.CouldNotReadAPortionMapFile,
+                    MessageBox.Show(String.Format(Resources.CouldNotReadAPortionMapFile, ProjectManager.CurrentProjectFile), Resources.CouldNotReadAPortionMapFile,
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -156,13 +155,11 @@ namespace Go2It
 
         void startUpForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // TODO: add this all back in
             // display the lat/long status panel
             _latLongDisplay.ShowCoordinates = true;
-            // display the selection status panel
-            // _selectionsDisplay.ShowSelectionStatus = false;  // sort of pointless
-            // set focus to the main application window
-            Shell.Focus();
+            // TODO: display the selection status panel
+            // _selectionsDisplay.ShowSelectionStatus = false;
+            Shell.Focus();  // set focus to the main application window
         }
 
         private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
@@ -172,30 +169,23 @@ namespace Go2It
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
-            // check if this is a maptab being deselected
             if (key.StartsWith("kMap_"))
             {
                 var map = (Map) dockInfo.DotSpatialDockPanel.InnerControl;
-                // remove the event binding on this map for functionmode changes
-                if (map != null)  // if there is a map then remove any binding
-                {
-                    map.FunctionModeChanged -= MapOnFunctionModeChanged;
-                }
-                // update the events of the mapframe
+                if (map == null) return;
+                // remove map functionmode change binding
+                map.FunctionModeChanged -= MapOnFunctionModeChanged;
+                // update the view changes/events of the mapframe
                 var mapFrame = map.MapFrame as EventMapFrame;
-                if (mapFrame != null)
-                {
-                    // check if viewextentchanges are active, suspend them if so
-                    if (!mapFrame.ViewExtentChangedSuspended)
-                    {
-                        // suspend any view changes while not the active tab
-                        mapFrame.SuspendViewExtentChanged();
-                        mapFrame.SuspendEvents();
-                    }
-                }
+                if (mapFrame == null) return;
+                // check if viewextentchanges are active and suspend them if so
+                if (mapFrame.ViewExtentChangedSuspended) return;
+                mapFrame.SuspendViewExtentChanged();
+                mapFrame.SuspendEvents();
             }
             else if (key.StartsWith("kPanel_"))
             {
+                // TODO: is this a solid solution??
                 if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive)
                 {
                     dockControl.CollapseToolPanel();
@@ -210,63 +200,62 @@ namespace Go2It
             DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
-            // if this is a map tab we need to set map active now and also assign events for watching mapfunctionmode
             if (key.StartsWith("kMap_"))
             {
-                // grab the new active map and key
-                var map = (Map) dockInfo.DotSpatialDockPanel.InnerControl;
-                var caption = dockInfo.DotSpatialDockPanel.Caption;
-                // set them as the active map key and caption
+                // update the new active map key and caption to settings
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = caption;
-                
-                // check if there was a previously set maptab
+                SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = dockInfo.DotSpatialDockPanel.Caption;
+
+                var map = (Map) dockInfo.DotSpatialDockPanel.InnerControl;
+                if (map == null) return;
+                // check the current map function mode and set it to the new map if it exists
                 if (App.Map != null)
                 {
                     map.FunctionMode = App.Map.FunctionMode;
                 }
-                else // this is a new map, load the active functionmode from user settings or default
+                else // no current map (this is a new map), instead load the active functionmode from usersettings/default
                 {
                     var funcMode = SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode;
                     FunctionMode fm;
                     Enum.TryParse(funcMode, true, out fm);
                     map.FunctionMode = fm;
                 }
+                // assign the functionmode changed event binding
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
-                // update the events of the mapframe
+
+                // update the view changes/events of the mapframe
                 var mapFrame = map.MapFrame as EventMapFrame;
                 if (mapFrame != null)
                 {
-                    // make sure that the viewextentchange event is set to active
+                    // check if viewextentchanges are suspended and activate them if so
                     if (mapFrame.ViewExtentChangedSuspended)
                     {
                         mapFrame.ResumeViewExtentChanged();
                         mapFrame.ResumeEvents();
                     }
                 }
-                // set the active map tab to the active application map now
-                App.Map = map;
+                App.Map = map;  // finally, set the active map tab to the active application map
                 App.Map.Invalidate();  // refresh the new active map
             }
             else if (key.StartsWith("kPanel_"))
             {
+                // TODO: investigate if this is really a good idea
                 if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive)
                 {
                     dockControl.CollapseToolPanel();
                 }
                 else
                 {
-                    // update the active function panel being displayed and show the panel
+                    // update the active function panel setting and extend/display the panel
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel = key;
-                    // extend the panel the appropriate height for display
                     dockControl.ExtendToolPanel(dockInfo.Height);
                 }
             }
         }
 
-        private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
+        private static void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
-            // update the user settings to reflect active functionmode
+            // save the active functionmode state (used to persist active functionmode between map panels)
             var map = sender as Map;
             if (map != null)
             {

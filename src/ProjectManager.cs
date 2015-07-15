@@ -29,8 +29,8 @@ namespace Go2It
         public AppManager App { get; private set; }
         public DockingControl Dock { get; private set; }
 
-        // lookup for any layer that may exist on any or multiple maptabs used to ease serialization of types below
-        // Populated with 'PopulateAllLayerLookup()' & used by CreateLayerDictionary()
+        // lookup for any layer that may exist on any or multiple maptabs (used to ease serialization of types below)
+        // Populated with: 'PopulateAllLayerLookup()' & used by CreateLayerDictionary()
         private readonly Dictionary<string, IMapLayer> _allLayersLookup = new Dictionary<string, IMapLayer>();
         
         // const variables for project layer types, used in the project settings dbase
@@ -67,33 +67,15 @@ namespace Go2It
 
         public Map CreateNewMap(String mapName, Color bgColor)
         {
-
+            // generate a new empty map frame to assign to the map
             var mapframe = new EventMapFrame();
-            //{
-                
-           // }
-            //    ; // evented map frame so we can disable visualextent events
-            // mapframe.SuspendViewExtentChanged(); // suspend view-extents while map is not active
-
-
-            var map = new Map()
+            var map = new Map
             {
                 MapFrame = mapframe,
                 BackColor = bgColor,
                 Visible = true,
                 Dock = DockStyle.Fill
             }; 
-
-
-            // TODO: investigate this further (don't think they are applicable)
-            // mapframe.SuspendChangeEvent();
-            // mapframe.SuspendEvents();
-
-            // map.MapFrame = mapframe;  // set the new evented mapframe to the map mapframe
-            // map.BackColor = bgColor;
-            // map.Visible = true;
-            // map.Dock = DockStyle.Fill;
-
             return map;
         }
 
@@ -109,12 +91,10 @@ namespace Go2It
             {
                 App.Map.ClearLayers();
             }
-            // clear any current project directory
+            // set the new project directory and reset all project settings preparing for load
             SetCurrentProjectDirectory(file);
-            // reset all project settings to default
             Go2ItProjectSettings.Instance.ResetProjectSettings();
-
-            // reset all dock controller map tabs and layerlookup dict
+            // reset or create a dockcontroller to handle the map tabs
             if (Dock == null)
             {
                 Dock = (DockingControl) App.DockManager;
@@ -123,8 +103,8 @@ namespace Go2It
             {
                 Dock.ResetLayout();
             }
-            IsDirty = false;  // and finally set to 'not dirty'
-            OnIsDirtyChanged(); // and fire off the dirty change event
+            IsDirty = false;  // and finally set project state to 'not dirty'
+            OnIsDirtyChanged(); // and then fire off the dirty changed event
         }
 
         /// <summary>
@@ -134,7 +114,7 @@ namespace Go2It
         {
             get
             {
-                return String.Format(SaveDialogFilterFormat, "ProjectFile");
+                return String.Format(SaveDialogFilterFormat, "Project File");
             }
         }
 
@@ -169,7 +149,9 @@ namespace Go2It
             }
             else
             {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(fileName));
+                var dn = Path.GetDirectoryName(fileName);
+                if (dn == null) return;
+                Directory.SetCurrentDirectory(dn);
                 CurrentProjectFile = fileName;
                 CurrentProjectDirectory = Path.GetDirectoryName(fileName);
             }
@@ -179,7 +161,7 @@ namespace Go2It
         {
             var graph = new object[] { map };
             var s = new XmlSerializer();
-            string xml = s.Serialize(graph);
+            var xml = s.Serialize(graph);
             return xml;
         }
 
@@ -194,7 +176,7 @@ namespace Go2It
 
         private void CreateProjectDatabase()
         {
-            // check for an existing sqlite file, if it exists then clear it now
+            // create a default project database if needed
             if (!SQLiteHelper.DatabaseExists(CurrentProjectFile))
             {
                 if (HasWriteAccessToFolder(CurrentProjectDirectory))
@@ -209,59 +191,12 @@ namespace Go2It
             }
         }
 
-        private void SaveProjectSettings()
-        {
-            // get the project settings db connection string
-            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
-            // set the layer type 
-            SQLiteHelper.ClearTable(conn, "ProjectSettings");
-            var d = new Dictionary<string, string>
-            {
-                {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
-                {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
-                {"map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
-                {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
-                {"search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging.ToString(CultureInfo.InvariantCulture)},
-                {"search_use_pretypes", Go2ItProjectSettings.Instance.SearchUsePretypes.ToString(CultureInfo.InvariantCulture)},
-                {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
-                {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
-            };
-            SQLiteHelper.Insert(conn, "ProjectSettings", d);
-            SQLiteHelper.ClearTable(conn, "GraphicSettings");
-            var g = new Dictionary<string, string>
-            {
-                {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
-                {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
-                {"line_color", Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
-                {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
-                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
-            };
-            SQLiteHelper.Insert(conn, "GraphicSettings", g);
-            // cycle and save all layer types to settings
-            SQLiteHelper.ClearTable(conn, "Layers");
-            SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.CityLimitsLayer, LayerTypeCityLimit, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.CellSectorsLayer, LayerTypeCellSector, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.EsnsLayer, LayerTypeEsn, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
-            SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
-        }
-
         private static void LoadLayerCollections(DataTable lyrTable)
         {
             foreach (DataRow row in lyrTable.Rows)
             {
                 string name = row["name"].ToString();
-                string lyrType = row["layerType"].ToString(); // unused
+                string lyrType = row["layerType"].ToString(); // currently unused
                 string projType = row["projectType"].ToString();
                 switch (projType)
                 {
@@ -296,14 +231,61 @@ namespace Go2It
             }
         }
 
+        private void SaveProjectSettings()
+        {
+            var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+
+            SQLiteHelper.ClearTable(conn, "ProjectSettings");
+            var d = new Dictionary<string, string>
+            {
+                {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
+                {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
+                {"map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
+                {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
+                {"search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging.ToString(CultureInfo.InvariantCulture)},
+                {"search_use_pretypes", Go2ItProjectSettings.Instance.SearchUsePretypes.ToString(CultureInfo.InvariantCulture)},
+                {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
+                {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
+                {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
+                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
+            };
+            SQLiteHelper.Insert(conn, "ProjectSettings", d);
+
+            SQLiteHelper.ClearTable(conn, "GraphicSettings");
+            var g = new Dictionary<string, string>
+            {
+                {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
+                {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
+                {"line_color", Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
+                {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
+                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
+            };
+            SQLiteHelper.Insert(conn, "GraphicSettings", g);
+
+            SQLiteHelper.ClearTable(conn, "Layers");
+            SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.RoadLayers, LayerTypeRoad, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.NotesLayer, LayerTypeNote, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.CityLimitsLayer, LayerTypeCityLimit, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.CellSectorsLayer, LayerTypeCellSector, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.EsnsLayer, LayerTypeEsn, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
+            SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
+        }
+
         private void LoadProjectSettings()
         {
-            // get the project settings db connection string
-            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
-            // setup all project level type lookups and keys
+            var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+            
             const string psQuery = "SELECT * FROM ProjectSettings";
             DataTable psTable = SQLiteHelper.GetDataTable(conn, psQuery);
             DataRow psR = psTable.Rows[0]; // there is only one row for project settings
+
             Go2ItProjectSettings.Instance.KeyLocationsProjectType = psR["keylocations_type"].ToString();
             Go2ItProjectSettings.Instance.AddressesProjectType = psR["addresses_type"].ToString();
             Go2ItProjectSettings.Instance.MapBgColor = Color.FromArgb(Convert.ToInt32(psR["map_bgcolor"].ToString()));
@@ -315,10 +297,11 @@ namespace Go2It
             Go2ItProjectSettings.Instance.SearchBufferDistance = int.Parse(psR["search_buffer_distance"].ToString());
             Go2ItProjectSettings.Instance.SearchZoomFactor = decimal.Parse(psR["search_zoom_factor"].ToString());
             Go2ItProjectSettings.Instance.SearchQueryParserLogging = bool.Parse(psR["search_query_logging"].ToString());
-            // configure all project level graphics settings
+
             const string gsQuery = "SELECT * FROM GraphicSettings";
             DataTable gsTable = SQLiteHelper.GetDataTable(conn, gsQuery);
             DataRow gsR = gsTable.Rows[0]; // there is only one row for graphics settings
+
             Go2ItProjectSettings.Instance.GraphicPointColor = Color.FromArgb(Convert.ToInt32(gsR["point_color"].ToString()));
             Go2ItProjectSettings.Instance.GraphicPointStyle = gsR["point_style"].ToString();
             Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(gsR["point_size"]);
@@ -327,8 +310,8 @@ namespace Go2It
             Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(gsR["line_size"]);
             Go2ItProjectSettings.Instance.GraphicLineStyle = gsR["line_style"].ToString();
             Go2ItProjectSettings.Instance.GraphicLineCap = gsR["line_cap"].ToString();
-            // assign all layers to their proper lookup 'type'
-            const string lyrQuery = "SELECT * FROM Layers";
+
+            const string lyrQuery = "SELECT * FROM Layers";  // assign all layers to their proper lookup 'type'
             DataTable lyrTable = SQLiteHelper.GetDataTable(conn, lyrQuery);
             LoadLayerCollections(lyrTable);
         }
@@ -347,7 +330,7 @@ namespace Go2It
         {
             if (layers == null) return string.Empty;
 
-            string txtLayers = string.Empty;
+            var txtLayers = string.Empty;
             foreach (IMapLayer mapLayer in layers)
             {
                 string layName;
@@ -383,24 +366,24 @@ namespace Go2It
 
         private void SaveMapTabs()
         {
-            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
-            // clear the existing maptabs saved to db
-            SQLiteHelper.ClearTable(conn, "MapTabs");
+            var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+            SQLiteHelper.ClearTable(conn, "MapTabs");  // clear any existing tabs saved
 
             DockingControl dc = Dock;
             foreach (var dpi in dc.DockPanelLookup)
             {
                 if (!dpi.Key.Trim().StartsWith("kMap")) continue;
-                var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
-                var xmlMap = CreateSerializedMap(map);
 
+                var map = (Map)dpi.Value.DotSpatialDockPanel.InnerControl;
+                if (map == null) continue;
                 var mapFrame = map.MapFrame as MapFrame;
                 if (mapFrame == null) continue;
 
+                var xmlMap = CreateSerializedMap(map);
                 IMapLayerCollection layers = map.Layers; // get the layers
                 string txtLayers = PopulateAllLayersLookup(layers);
 
-                // store it all to a dict for storage into the sqlite db
+                // store it all to a dict for storage in a sqlite db
                 var dd = new Dictionary<string, string>
                 {
                     {"lookup", dpi.Key},
@@ -418,6 +401,7 @@ namespace Go2It
 
         public new void SaveProject(string fileName)
         {
+            // TODO: are these actually functional??
             Contract.Requires(!String.IsNullOrEmpty(fileName), "fileName is null or empty.");
             Contract.Requires(App.Map != null);
 
@@ -436,7 +420,7 @@ namespace Go2It
             OnIsDirtyChanged();
             OnSerializing(new SerializingEventArgs());  // event for other plugins to listen for
 
-            App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
+            App.ProgressHandler.Progress(String.Empty, 0, String.Empty);  // clear the progress display
         }
 
 
@@ -449,13 +433,13 @@ namespace Go2It
             Dock.SelectPanel(Go2ItProjectSettings.Instance.ActiveMapViewKey);
             Dock.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
 
-            // TODO: investigate if we actually need this reset
             ResetMapProjection();
             App.Map.Invalidate();
         }
 
         public new void OpenProject(string fileName)
         {
+            // TODO: again further research here
             Contract.Requires(!String.IsNullOrEmpty(fileName), "fileName is null or empty.");
 
             SetCurrentProjectDirectory(fileName);
@@ -485,7 +469,7 @@ namespace Go2It
             OnIsDirtyChanged();
             OnDeserializing(new SerializingEventArgs());
 
-            App.ProgressHandler.Progress(String.Empty, 0, String.Empty);
+            App.ProgressHandler.Progress(String.Empty, 0, String.Empty);  // clear the progress display
         }
 
         private void AssignLayerSymbologies(IMapFrame mapFrame)
@@ -535,7 +519,7 @@ namespace Go2It
 
         private void LoadMapTabs()
         {
-            string conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
+            var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
 
             // snag all the maptab records from the db: deserialize and populate tabs
             const string tabsQuery = "SELECT * FROM MapTabs";
@@ -551,17 +535,20 @@ namespace Go2It
                 string txtViewExtent = row["viewextent"].ToString();
                 string zorder = row["zorder"].ToString();
                 string txtExtent = row["extent"].ToString();
-                string txtBounds = row["bounds"].ToString(); // unused
+                string txtBounds = row["bounds"].ToString();
 
                 Map map = LoadSerializedMap(txtMapXml, txtKey);
-                // properly parent the mapframe groups and assign symbology
-                if (map.MapFrame != null)
+                if (map != null)
                 {
-                    AssignParentGroups(map.MapFrame, map.MapFrame);
-                    AssignLayerSymbologies(map.MapFrame);
+                    // properly parent the mapframe groups and assign symbology
+                    if (map.MapFrame != null)
+                    {
+                        AssignParentGroups(map.MapFrame, map.MapFrame);
+                        AssignLayerSymbologies(map.MapFrame);
+                    }
+                    PopulateAllLayersLookup(map.Layers);
                 }
-                PopulateAllLayersLookup(map.Layers);
-
+                
                 // create new dockable panel to hold the new map
                 var dp = new DockablePanel(txtKey, txtCaption, map, DockStyle.Fill);
                 Dock.Add(dp);  // add the new tab view to the main form

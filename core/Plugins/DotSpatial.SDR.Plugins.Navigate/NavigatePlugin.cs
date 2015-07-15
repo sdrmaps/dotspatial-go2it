@@ -103,13 +103,18 @@ namespace DotSpatial.SDR.Plugins.Navigate
             if (map != null)
             {
                 var mapFrame = (EventMapFrame)map.MapFrame;
-                if (map.FunctionMode == FunctionMode.ZoomIn)
+                if (mapFrame != null)
                 {
-                    mapFrame.DisableViewChanged(true);
-                }
-                else
-                {
-                    mapFrame.DisableViewChanged(false);
+                    // basically these two tools also use view changes that should be view-extent changes
+                    // we need to disable to flag that prevents view changes from adding to the next/prev view stack
+                    if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
+                    {
+                        mapFrame.DisableViewChanged(true);
+                    }
+                    else
+                    {
+                        mapFrame.DisableViewChanged(false);
+                    }
                 }
             }
         }
@@ -132,9 +137,10 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
         {
-            DockPanelInfo dockInfo;
             var dockControl = (TabDockingControl)sender;
             var key = e.ActivePanelKey;
+
+            DockPanelInfo dockInfo;
             if (!dockControl.DockPanelLookup.TryGetValue(key, out dockInfo)) return;
 
             if (!key.StartsWith("kMap_")) return;
@@ -147,7 +153,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
 
-            if (map.FunctionMode == FunctionMode.ZoomIn)
+            if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
             {
                 mapFrame.DisableViewChanged(true);
             }
@@ -178,7 +184,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
             var mapFrame = (EventMapFrame)map.MapFrame;
             if (mapFrame == null) return;
 
-            if (map.FunctionMode == FunctionMode.ZoomIn)
+            if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
             {
                 mapFrame.DisableViewChanged(true);
             }
@@ -197,17 +203,21 @@ namespace DotSpatial.SDR.Plugins.Navigate
         public override void Deactivate()
         {
             App.HeaderControl.RemoveAll();
+            App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
+            App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
+
+            HotKeyManager.HotKeyEvent -= HotKeyManagerOnHotKeyEvent;
+
             var map = App.Map as Map;
+            if (map == null) return;
+
+            map.Layers.LayerSelected -= LayersOnLayerSelected;
+            map.FunctionModeChanged -= MapOnFunctionModeChanged;
+
             var mapFrame = App.Map.MapFrame as EventMapFrame;
+            if (mapFrame == null) return;
 
-            // TODO: hrmm what, verify this is doing what we want
-            if (mapFrame == null || map == null) return;
-            {
-                map.Layers.LayerSelected -= LayersOnLayerSelected;
-                mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
-            }
-
-
+            mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             base.Deactivate();
         }
 
