@@ -99,7 +99,7 @@
 //            {
 //                _userLegend.RootNodes.Clear();
 //            }
-            
+
 //            // update the active _map for the legend now
 //            _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
 
@@ -171,6 +171,6 @@
 //            {
 //                _map.Legend = _userLegend;
 //            }
-//         }
+//        }
 //    }
 //}

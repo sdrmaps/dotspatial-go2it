@@ -16,7 +16,7 @@
 //    {
 //        [Import("Shell")]
 //        internal ContainerControl Shell { get; set; }
-       
+
 //        private Map _map;
 //        private const string HomeMenuKey = DotSpatial.Controls.Header.HeaderControl.HomeRootItemKey;
 

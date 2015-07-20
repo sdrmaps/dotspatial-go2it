@@ -11,6 +11,7 @@ using System.Text;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
+using DotSpatial.Data;
 using DotSpatial.Extensions;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Serialization;
@@ -543,12 +544,28 @@ namespace Go2It
                     // properly parent the mapframe groups and assign symbology
                     if (map.MapFrame != null)
                     {
+                        // dont think this is needed anymore.
+                        //string er;
+                        //Extent eExt;
+                        //Extent.TryParse(txtExtent, out eExt, out er);
+                        //if (er == "Y")
+                        //{
+                        //    map.MapFrame.Extent.SetValues(eExt.MinX, eExt.MinY, eExt.MaxX, eExt.MaxY);
+                        //}
+                        //string vr;
+                        //Extent vExt;
+                        //Extent.TryParse(txtViewExtent, out vExt, out vr);
+                        //if (vr == "Y")
+                        //{
+                        //    map.MapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
+                        //}
                         AssignParentGroups(map.MapFrame, map.MapFrame);
                         AssignLayerSymbologies(map.MapFrame);
                     }
                     PopulateAllLayersLookup(map.Layers);
                 }
-                
+
+
                 // create new dockable panel to hold the new map
                 var dp = new DockablePanel(txtKey, txtCaption, map, DockStyle.Fill);
                 Dock.Add(dp);  // add the new tab view to the main form
