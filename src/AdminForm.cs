@@ -1795,6 +1795,15 @@ namespace Go2It
                 }
                 return table;
             }
+            if (layName == ApplyComboBoxSetting(cmbNotesLayer))
+            {
+                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\note_indexes.txt");
+                foreach (string key in file)
+                {
+                    table.Rows.Add(key, "");
+                }
+                return table;
+            }
             return null;
         }
 
@@ -1835,6 +1844,9 @@ namespace Go2It
                             break;
                         case "HydrantIndex":
                             lstExistingIndexes.Items.Add(tblName.Substring(13));
+                            break;
+                        case "NoteIndex":
+                            lstExistingIndexes.Items.Add(tblName.Substring(10));
                             break;
                     }
                 }
@@ -1877,6 +1889,10 @@ namespace Go2It
             if (layName == ApplyComboBoxSetting(cmbHydrantsLayer))
             {
                 return "HydrantIndex";
+            }
+            if (layName == ApplyComboBoxSetting(cmbNotesLayer))
+            {
+                return "NoteIndex";
             }
             return null;
         }
@@ -2513,10 +2529,10 @@ namespace Go2It
             return l;
         }
 
-        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl, List<string> hy)
+        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl, List<string> hy, List<string> nl)
         {
             cmbLayerIndex.Items.Clear();
-            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count + hy.Count);
+            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count + hy.Count + nl.Count);
             sels.AddRange(ad);
             sels.AddRange(rd);
             sels.AddRange(kl);
@@ -2525,6 +2541,7 @@ namespace Go2It
             sels.AddRange(es);
             sels.AddRange(pl);
             sels.AddRange(hy);
+            sels.AddRange(nl);
             cmbLayerIndex.Items.AddRange(sels.ToArray());
         }
 
@@ -2543,7 +2560,8 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2562,7 +2580,8 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2581,7 +2600,8 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2600,12 +2620,28 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
         private void cmbNotesLayer_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var cmb = (ComboBox)sender;
+            var nl = new List<string>();
+            if (cmb.SelectedItem.ToString().Length > 0)
+            {
+                nl.Add(cmb.SelectedItem.ToString());
+            }
+            var ad = AddLayersToIndex(chkAddressLayers);
+            var rd = AddLayersToIndex(chkRoadLayers);
+            var kl = AddLayersToIndex(chkKeyLocationsLayers);
+            var cl = AddLayersToIndex(cmbCityLimitLayer);
+            var cs = AddLayersToIndex(cmbCellSectorLayer);
+            var es = AddLayersToIndex(cmbESNLayer);
+            var pl = AddLayersToIndex(cmbParcelsLayer);
+            var hy = AddLayersToIndex(cmbHydrantsLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2624,7 +2660,8 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2643,7 +2680,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2662,7 +2700,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
@@ -2681,7 +2720,8 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
+            var nl = AddLayersToIndex(cmbNotesLayer);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
             _projectManager.IsDirty = true;
         }
 
