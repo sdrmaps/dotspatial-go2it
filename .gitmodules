@@ -1,0 +1,3 @@
+[submodule "core/DotSpatial"]
+	path = core/DotSpatial
+	url = https://git01.codeplex.com/dotspatial
