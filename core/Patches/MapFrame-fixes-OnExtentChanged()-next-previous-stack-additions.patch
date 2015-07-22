@@ -1,0 +1,81 @@
+From 269900c560d8f109702132817e49b3cbb812aada Mon Sep 17 00:00:00 2001
+From: Justin Penka <jpenka@gmail.com>
+Date: Wed, 22 Jul 2015 16:53:02 -0500
+Subject: [PATCH 2/2] fixed OnExtentChanged() to only add view-extent changes
+ to the next/prev extent change stack. Also added method to disable this
+ normal operation to allow view changes to be added to this same stack. This
+ is used in the case of the ZoomIn() tool. Due to its design when a point is
+ clicked as opposed to a box drawn a view change results. Disable normal
+ operation in this case and allow the view change to be added to the prev/next
+ stack.
+
+---
+ Trunk/DotSpatial.Controls/MapFrame.cs | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/Trunk/DotSpatial.Controls/MapFrame.cs b/Trunk/DotSpatial.Controls/MapFrame.cs
+index 6412838..c17d8d7 100644
+--- a/Trunk/DotSpatial.Controls/MapFrame.cs
++++ b/Trunk/DotSpatial.Controls/MapFrame.cs
+@@ -99,6 +99,13 @@ namespace DotSpatial.Controls
+         private readonly LimitedStack<Extent> _previousExtents = new LimitedStack<Extent>();
+         private LimitedStack<Extent> _nextExtents = new LimitedStack<Extent>();
+         private Extent _lastExtent;
++
++        // on extent change use to determine if a change is either a 'view-extent' change or a 'view' change
++        // only 'view-extent' changes should be added to the next/prev extent stack (_previousExtents/_nextExtents)
++        private bool _isViewChanged;
++        // disables the above flag to allow 'view' changes to be added to the next/prev extent stack
++        // used with the ZoomIn() tool when a point is clicked as opposed to a box drawn. (due to tool design)
++        private bool _allowViewChanged;
+         #endregion Private Variables
+ 
+         #region Constructors
+@@ -270,6 +277,19 @@ namespace DotSpatial.Controls
+         }
+ 
+         /// <summary>
++        /// When set to true allows 'view' changes to be added to the next/prev extent stack.
++        /// When set to false (normal operaion) only 'view-extent' changes are added to the 
++        /// next/prev extent stack. However, due to the design of the ZoomIn() tool when
++        /// a point is clicked instead of a box drawn a 'view' change results. Because we want
++        /// to add this extent to the next/prev stack we need to disable normal operations temporarily.
++        /// </summary>
++        /// <param name="flag">bool setting state of view-extent stack additions</param>
++        public void AllowViewChangesToViewExtentStack(bool flag)
++        {
++            _allowViewChanged = flag;
++        }
++
++        /// <summary>
+         /// This is not called during a resize, but rather after panning or zooming where the
+         /// view is used as a guide to update the extents.  This will also call ResetBuffer.
+         /// </summary>
+@@ -635,6 +655,11 @@ namespace DotSpatial.Controls
+                 // reset the flag for the next extents change
+                 _isZoomingNextOrPrevious = false;
+             }
++            else if (_isViewChanged)
++            {
++                // view extent changes should not be added to the prev/next view-extent stacks
++                _isViewChanged = false;
++            }
+             else
+             {
+                 // Add the last extent to the stack
+@@ -933,7 +958,11 @@ namespace DotSpatial.Controls
+             set
+             {
+                 if (_view == value) return;
+-
++                // Do not apply view changes to next/prev view-extent stack on OnExtentsChanged()
++                if (!_allowViewChanged)
++                {
++                    _isViewChanged = true;
++                }
+                 var h = ViewChanged;
+                 if (h != null)
+                 {
+-- 
+1.8.4.msysgit.0
+
