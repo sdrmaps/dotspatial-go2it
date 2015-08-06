@@ -178,6 +178,12 @@ namespace Go2It
 
             // assign all the admin form elements
             _appManager = app;
+
+            if (_appManager.Map.FunctionMode == FunctionMode.None)
+            {
+                _appManager.Map.Cursor = Cursors.Arrow;
+            }
+            
             _projectManager = (ProjectManager)app.SerializationManager;
             _dockingControl = (DockingControl) app.DockManager;
 

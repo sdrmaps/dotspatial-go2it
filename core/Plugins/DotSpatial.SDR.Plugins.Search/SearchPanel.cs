@@ -812,7 +812,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     val = val + doc.Get("Pre Directional").Trim() + " ";
                 }
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes)
                 {
                     if (doc.Get("Pre Type") != null)
                     {

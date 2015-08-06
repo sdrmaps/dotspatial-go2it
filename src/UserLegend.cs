@@ -113,12 +113,14 @@ namespace Go2It
 
         private void ToggleLegendTool_Click(object sender, EventArgs e)
         {
-            if (_userLegendForm == null)
+            if (App.Map == null) return;
+
+            if (_userLegendForm == null || _userLegendForm.IsDisposed)
+            {
                 _userLegendForm = new UserLegendForm();
-
-            if (_userLegend == null)
                 AttachLegend();
-
+            }
+            
             if (_userLegendForm.Visible == false)
             {
                 _userLegendForm.Show(Shell);
@@ -126,7 +128,7 @@ namespace Go2It
             }
             else
             {
-                _userLegendForm.Hide();
+                _userLegendForm.Close();
             }
         }
 
@@ -155,10 +157,7 @@ namespace Go2It
                 VerticalScrollEnabled = true
             };
             _userLegendForm.Controls.Add(_userLegend);
-            if (App.Map != null)
-            {
-                App.Map.Legend = _userLegend;
-            }
+            App.Map.Legend = _userLegend;
             App.Legend = _userLegend;
         }
     }

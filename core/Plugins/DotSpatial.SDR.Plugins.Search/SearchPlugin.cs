@@ -59,10 +59,10 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (_mapFunction == null)
             {
-                _mapFunction = new MapFunctionSearch(_searchPanel)
+                _mapFunction = new MapFunctionSearch(_searchPanel, App.SerializationManager.CurrentProjectFile)
                 {
                     // set this to allow us to perform map panel selections from inside MapFunctionSearch.cs
-                    TabDockingControl = App.DockManager as TabDockingControl
+                    TabDockingControl = App.DockManager as TabDockingControl,
                 };
                 _mapFunction.FunctionActivated += OnMapFunctionOnFunctionActivated;
             }
@@ -86,15 +86,21 @@ namespace DotSpatial.SDR.Plugins.Search
             var map = App.Map as Map;
             if (map == null) return;
 
+            if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive) return;
+
             if (key.StartsWith("kMap_"))
             {
                 // check if the search function exists for this map
                 AddSearchMapFunction();
+                // event binding to watch for function mode changes (to deactivate the tool)
+                map.FunctionModeChanged += MapOnFunctionModeChanged;
                 // validate this is an active toolpanel
-                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
                     if (_mapFunction != null)  // validate we have a map function
                     {
+                        App.Map.Cursor = Cursors.Arrow;
                         _isFunctionActive = true;
                         _mapFunction.Activate();
                     }
@@ -103,14 +109,32 @@ namespace DotSpatial.SDR.Plugins.Search
             else if (key == PluginKey)
             {
                 // check if this tool function panel is the active function or not
-                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
                     if (_mapFunction != null)  // validate we have a map function
                     {
+                        App.Map.Cursor = Cursors.Arrow;
                         _isFunctionActive = true;
                         _mapFunction.Activate();
                     }
                 }
+            }
+        }
+
+        private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
+        {
+            if (!_isFunctionActive) return;  // dont waste time if this is not the active tool
+
+            var map = sender as Map;
+            if (map == null) return;
+            if (_mapFunction == null) return;
+
+            if (map.FunctionMode != FunctionMode.None)
+            {
+                _isFunctionActive = false;
+                _mapFunction.Deactivate();
+                _searchPanel.DeactivateSearchModeButtons();
             }
         }
 
@@ -126,8 +150,12 @@ namespace DotSpatial.SDR.Plugins.Search
 
             if (key.StartsWith("kMap_"))
             {
+                // remove the event binding on this map (since its being hidden) on function mode changes
+                map.FunctionModeChanged -= MapOnFunctionModeChanged;
+
                 // lets look and see if this tool is currently the active tool and deactivate it if so
-                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
+                if (map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
                     // remove local map event binding if it exists here
                     if (_mapFunction != null)
@@ -140,7 +168,8 @@ namespace DotSpatial.SDR.Plugins.Search
             else if (key == PluginKey)
             {
                 // check if this tool function panel is the active function or not
-                if (SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
+                if (App.Map.FunctionMode == FunctionMode.None &&
+                    SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
                     // remove any local map binding if it exists
                     if (_mapFunction != null)
@@ -159,6 +188,7 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <param name="e"></param>
         private void SearchTool_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             // update the prefs for tracking the active tools modes and panels
             App.Map.FunctionMode = FunctionMode.None;
             App.DockManager.SelectPanel(PluginKey);

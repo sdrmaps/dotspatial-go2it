@@ -84,6 +84,8 @@ namespace DotSpatial.SDR.Plugins.Measure
             var map = App.Map as Map;
             if (map == null) return;
 
+            if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive) return;
+
             if (key.StartsWith("kMap_"))
             {
                 // check if the measurement function exists for this map
@@ -196,6 +198,7 @@ namespace DotSpatial.SDR.Plugins.Measure
         /// <param name="e"></param>
         private void MeasureTool_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
             // update the prefs for tracking the active tools modes and panels
             App.Map.FunctionMode = FunctionMode.None;
             App.DockManager.SelectPanel(PluginKey);

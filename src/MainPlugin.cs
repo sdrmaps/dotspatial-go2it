@@ -44,7 +44,8 @@ namespace Go2It
             
             // create a new lat/long display panel
             _latLongDisplay = new CoordinateDisplay(App);
-
+            // make sure the admin mode is set to false on startup
+            SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = false;
             base.Activate();
         }
 
@@ -185,7 +186,6 @@ namespace Go2It
             }
             else if (key.StartsWith("kPanel_"))
             {
-                // TODO: is this a solid solution??
                 if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive)
                 {
                     dockControl.CollapseToolPanel();
@@ -202,12 +202,13 @@ namespace Go2It
 
             if (key.StartsWith("kMap_"))
             {
+                var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+                if (map == null) return;
+
                 // update the new active map key and caption to settings
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey = key;
                 SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption = dockInfo.DotSpatialDockPanel.Caption;
 
-                var map = (Map) dockInfo.DotSpatialDockPanel.InnerControl;
-                if (map == null) return;
                 // check the current map function mode and set it to the new map if it exists
                 if (App.Map != null)
                 {
@@ -239,26 +240,34 @@ namespace Go2It
             }
             else if (key.StartsWith("kPanel_"))
             {
-                // TODO: investigate if this is really a good idea
                 if (SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive)
                 {
                     dockControl.CollapseToolPanel();
                 }
                 else
                 {
-                    // update the active function panel setting and extend/display the panel
+                    if (App.Map == null) return;
+                    // update the active function panel setting and extend/display the panel if needed
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel = key;
-                    dockControl.ExtendToolPanel(dockInfo.Height);
+                    if (App.Map.FunctionMode == FunctionMode.None)  // account for built in tools such as pan, zoomin, etc.
+                    {
+                        dockControl.ExtendToolPanel(dockInfo.Height);
+                    }
                 }
             }
         }
 
-        private static void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
+        private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
             // save the active functionmode state (used to persist active functionmode between map panels)
             var map = sender as Map;
             if (map != null)
             {
+                if (map.FunctionMode != FunctionMode.None)
+                {
+                    var dockControl = (DockingControl) App.DockManager;
+                    dockControl.CollapseToolPanel();
+                }
                 SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode = map.FunctionMode.ToString();
             }
         }

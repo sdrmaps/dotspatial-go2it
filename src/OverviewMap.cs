@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Drawing;
@@ -43,6 +44,10 @@ namespace Go2It
             ProjectManager = (ProjectManager)App.SerializationManager;
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
+            _marker = new FeatureSet(FeatureType.Line);
+            _markerLayer = new MapLineLayer(_marker) {Symbolizer = new LineSymbolizer(Color.Yellow, 2)};
+
             base.Activate();
         }
 
@@ -86,39 +91,36 @@ namespace Go2It
 
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
 
-            if (_overviewMapForm == null)
-            {
-                _overviewMapForm = new OverviewMapForm();
-                _overviewMapForm.ResizeEnd += OverviewMapFormOnResize;
-                // create the drawing layer for our overviewmap
-                _marker = new FeatureSet(FeatureType.Line);
-                _markerLayer = new MapLineLayer(_marker) {Symbolizer = new LineSymbolizer(Color.Yellow, 2)};
-            }
-
             Map overViewMap;
             if (!_thumbMaps.TryGetValue(key, out overViewMap))
             {
                 overViewMap = ProjectManager.CreateNewMap(key + "_thumb");
                 overViewMap.Layers.AddRange(map.Layers);
+                overViewMap.Dock = DockStyle.Fill;
                 _thumbMaps.Add(key, overViewMap);
             }
-
-            overViewMap.Dock = DockStyle.Fill;
-            overViewMap.Height = _overviewMapForm.Height;
-            overViewMap.Width = _overviewMapForm.Width;
-
-            _overviewMapForm.Controls.Clear();
             _overviewMap = overViewMap;
-            _overviewMap.MapFrame.DrawingLayers.Add(_markerLayer);
-            _overviewMapForm.Controls.Add(_overviewMap);
+
+            if (_overviewMapForm == null || _overviewMapForm.IsDisposed)
+            {
+                _overviewMapForm = new OverviewMapForm();
+                _overviewMapForm.ResizeEnd += OverviewMapFormOnResize;
+                _overviewMapForm.Closing += OverviewMapFormOnClosing;
+            }
+
+            if (_overviewMapForm.Visible)
+            {
+                AttachOverviewMap();
+                DrawViewExtentPolygon();
+            }
         }
 
         private void MapFrameOnViewExtentsChanged(object sender, ExtentArgs extentArgs)
         {
-            if (_overviewMapForm.Visible)  // make sure the overview form is visible
+            if (_overviewMapForm == null) return;
+            if (_overviewMapForm.Visible)
             {
                 DrawViewExtentPolygon();
-                _overviewMap.Invalidate();
             }
         }
 
@@ -149,9 +151,13 @@ namespace Go2It
 
         private void OverviewMapFormOnResize(object sender, EventArgs eventArgs)
         {
-            // zoom to max extent
-            var map = (Map)_overviewMapForm.Controls[0];
-            map.ZoomToMaxExtent();
+            if (_overviewMapForm == null) return;
+            if (_overviewMapForm.Visible) // make sure the overview form is visible
+            {
+                // zoom to max extent
+                var map = (Map) _overviewMapForm.Controls[0];
+                map.ZoomToMaxExtent();
+            }
         }
 
         public override void Deactivate()
@@ -171,19 +177,43 @@ namespace Go2It
             base.Deactivate();
         }
 
+        private void AttachOverviewMap()
+        {
+            _overviewMap.Height = _overviewMapForm.Height;
+            _overviewMap.Width = _overviewMapForm.Width;
+            _overviewMap.MapFrame.DrawingLayers.Add(_markerLayer);
+            _overviewMapForm.Controls.Clear();
+            _overviewMapForm.Controls.Add(_overviewMap);
+            _overviewMap.ZoomToMaxExtent();
+        }
+
         private void ToggleOverviewTool_Click(object sender, EventArgs e)
         {
+            if (App.Map == null) return;
+
+            if (_overviewMapForm == null || _overviewMapForm.IsDisposed)
+            {
+                _overviewMapForm = new OverviewMapForm();
+                _overviewMapForm.ResizeEnd += OverviewMapFormOnResize;
+                _overviewMapForm.Closing += OverviewMapFormOnClosing;
+            }
+            
             if (_overviewMapForm.Visible == false)
             {
+                AttachOverviewMap();
                 DrawViewExtentPolygon();
-                _overviewMap.Invalidate();
                 _overviewMapForm.Show(Shell);
                 _overviewMapForm.Focus();
             }
             else
             {
-                _overviewMapForm.Hide();
+                _overviewMapForm.Close();
             }
+        }
+
+        private void OverviewMapFormOnClosing(object sender, CancelEventArgs cancelEventArgs)
+        {
+            _overviewMapForm.Controls.Remove(_overviewMap);
         }
     }
 }

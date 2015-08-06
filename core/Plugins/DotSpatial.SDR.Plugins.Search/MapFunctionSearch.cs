@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Windows.Forms.VisualStyles;
 using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
@@ -41,8 +42,10 @@ namespace DotSpatial.SDR.Plugins.Search
     public class MapFunctionSearch : MapFunction
     {
         // overall tab docking control for selecting map and tool tabs
-        // (used to swap active map panels on searches) (this is set on init)
-        internal TabDockingControl TabDockingControl;
+        // as well as serialization manager to get project file info sqlite strings etc
+        // (used to swap active map panels on searches) (these are set on init)
+        internal TabDockingControl TabDockingControl { get; set; }
+        private readonly string _currentProjectFile;
 
         private SearchPanel _searchPanel;
         private readonly DataGridView _dataGridView; // dgv to populate our results of query to
@@ -71,8 +74,10 @@ namespace DotSpatial.SDR.Plugins.Search
         /// Creates a new instance of MapFunctionSearch, with panel
         /// </summary>
         /// <param name="sp">Search Panel</param>
-        public MapFunctionSearch(SearchPanel sp)
+        /// <param name="currentProjectFile">Project File Path</param>
+        public MapFunctionSearch(SearchPanel sp, string currentProjectFile)
         {
+            _currentProjectFile = currentProjectFile;
             _searchPanel = sp;
             _dataGridView = sp.DataGridDisplay;
             Configure();
@@ -802,7 +807,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private Dictionary<string, string> GetMapTabKeysContainingLayer(string lyrName)
         {
-            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            var conn = SQLiteHelper.GetSQLiteConnectionString(_currentProjectFile);
+
             const string sql = "SELECT layers, lookup, caption FROM MapTabs";
             DataTable mapTabsTable = SQLiteHelper.GetDataTable(conn, sql);
             var mapPanelsLookup = new Dictionary<string, string>();
@@ -848,7 +854,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private string[] GetColumnNames()
         {
-            var conn = SdrConfig.Settings.Instance.ProjectRepoConnectionString;
+            var conn = SQLiteHelper.GetSQLiteConnectionString(_currentProjectFile);
             var tblNames = SQLiteHelper.GetAllTableNames(conn);
             var sql = string.Empty;
 
@@ -885,8 +891,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public Directory GetLuceneIndexDirectory(string indexType)
         {
-            
-            var db = SQLiteHelper.GetSQLiteFileName(SdrConfig.Settings.Instance.ProjectRepoConnectionString);
+            var conn = SQLiteHelper.GetSQLiteConnectionString(_currentProjectFile);
+            var db = SQLiteHelper.GetSQLiteFileName(conn);
 
             var projectName = Path.GetFileNameWithoutExtension(db);
 
@@ -1177,7 +1183,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteScoredAddressQuery(string q)
         {
             // parse our input address into a valid streetaddress object
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -1196,7 +1202,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.SHOULD);
             }
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes)
             {
                 if (streetAddress.PreType != null)
                 {
@@ -1259,7 +1265,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteScoredRoadQuery(string q)
         {
             // parse our input road into a streetaddress object for analysis
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -1272,7 +1278,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.SHOULD);
             }
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes)
             {
                 if (streetAddress.PreType != null)
                 {
@@ -1322,7 +1328,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteExactRoadQuery(string q)
         {
             // parse our input address into a valid streetaddress object
-            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
+            StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -1335,7 +1341,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 fields.Add("Pre Directional");
                 occurs.Add(Occur.MUST);
             }
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes)
             {
                 if (streetAddress.PreType != null)
                 {
@@ -1386,7 +1392,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (q.Length <= 0) return null;
             // get the name of the street passed in so it is removed from results returned
-            var sa = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes);
+            var sa = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
             var docs = new List<ScoreDoc>();  // total docs for return
             ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
             // setup a spatial query to find all features that intersect with our results
@@ -1505,7 +1511,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     val = val + doc.Get("Pre Directional").Trim() + " ";
                 }
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes)
                 {
                     if (doc.Get("Pre Type") != null)
                     {
@@ -1535,7 +1541,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private void LogStreetAddressParsedQuery(string q, StreetAddress sa)
         {
             // only log if enabled
-            if (!SdrConfig.Project.Go2ItProjectSettings.Instance.EnableQueryParserLogging) return;
+            if (!SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging) return;
             var p = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\SDR\\" +
                     SdrConfig.Settings.Instance.ApplicationName;
             var d = new DirectoryInfo(p);
@@ -1556,7 +1562,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 {
                     sw.WriteLine("PreDir       : " + sa.Predirectional);
                 }
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.UsePretypes)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes)
                 {
                     if (sa.PreType != null)
                     {
