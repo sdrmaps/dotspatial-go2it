@@ -18,11 +18,6 @@ namespace DotSpatial.SDR.Controls
             base.Initialize();
         }
 
-        public void DisableViewChanged(bool flag)
-        {
-            // base.DisableIsViewChanged(flag);
-        }
-
         // TODO; need to further investigate this issue and how to best handle it
         //public void DisplayReprojectionDialog()
         //{

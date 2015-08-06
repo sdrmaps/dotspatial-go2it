@@ -106,14 +106,14 @@ namespace DotSpatial.SDR.Plugins.Navigate
                 if (mapFrame != null)
                 {
                     // basically these two tools also use view changes that should be view-extent changes
-                    // we need to disable to flag that prevents view changes from adding to the next/prev view stack
+                    // we need to disable the flag that prevents view changes from adding to the next/prev view stack
                     if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
                     {
-                        mapFrame.DisableViewChanged(true);
+                        mapFrame.AllowViewChangesToViewExtentStack(true);
                     }
                     else
                     {
-                        mapFrame.DisableViewChanged(false);
+                        mapFrame.AllowViewChangesToViewExtentStack(false);
                     }
                 }
             }
@@ -145,7 +145,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (!key.StartsWith("kMap_")) return;
 
-            var map = App.Map as Map;
+            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             if (map == null) return;
 
             map.Layers.LayerSelected -= LayersOnLayerSelected;
@@ -155,11 +155,11 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
             {
-                mapFrame.DisableViewChanged(true);
+                mapFrame.AllowViewChangesToViewExtentStack(true);
             }
             else
             {
-                mapFrame.DisableViewChanged(false);
+                mapFrame.AllowViewChangesToViewExtentStack(false);
             }
 
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
@@ -176,21 +176,21 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (!key.StartsWith("kMap_")) return;
 
-            var map = App.Map as Map;
+            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             if (map == null) return;
 
             map.Layers.LayerSelected += LayersOnLayerSelected;
 
-            var mapFrame = (EventMapFrame)map.MapFrame;
+            var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
 
             if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
             {
-                mapFrame.DisableViewChanged(true);
+                mapFrame.AllowViewChangesToViewExtentStack(true);
             }
             else
             {
-                mapFrame.DisableViewChanged(false);
+                mapFrame.AllowViewChangesToViewExtentStack(false);
             }
 
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
