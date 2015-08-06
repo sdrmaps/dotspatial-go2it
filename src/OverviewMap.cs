@@ -56,15 +56,17 @@ namespace Go2It
 
             if (!key.StartsWith("kMap_")) return;
 
-            // var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
-            var map = App.Map;
+            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             if (map == null) return;
 
             var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
 
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
-            _overviewMap.MapFrame.DrawingLayers.Remove(_markerLayer);
+            if (_overviewMap != null)
+            {
+                _overviewMap.MapFrame.DrawingLayers.Remove(_markerLayer);
+            }
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -90,8 +92,7 @@ namespace Go2It
                 _overviewMapForm.ResizeEnd += OverviewMapFormOnResize;
                 // create the drawing layer for our overviewmap
                 _marker = new FeatureSet(FeatureType.Line);
-                _markerLayer = new MapLineLayer(_marker);
-                _markerLayer.Symbolizer = new LineSymbolizer(Color.Yellow, 2);
+                _markerLayer = new MapLineLayer(_marker) {Symbolizer = new LineSymbolizer(Color.Yellow, 2)};
             }
 
             Map overViewMap;

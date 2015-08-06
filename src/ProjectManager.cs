@@ -559,6 +559,7 @@ namespace Go2It
                         {
                             map.MapFrame.ViewExtents.SetValues(vExt.MinX, vExt.MinY, vExt.MaxX, vExt.MaxY);
                         }
+                        // TODO: not sure if we need these??
                         AssignParentGroups(map.MapFrame, map.MapFrame);
                         AssignLayerSymbologies(map.MapFrame);
                     }

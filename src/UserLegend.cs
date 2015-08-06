@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -14,7 +15,6 @@ namespace Go2It
         [Import("Shell")]
         internal ContainerControl Shell { get; set; }
 
-        private Map _map;
         private RestrictedLegend _userLegend;
         private UserLegendForm _userLegendForm;
 
@@ -34,7 +34,6 @@ namespace Go2It
             // HotKeyManager.AddHotKey(new HotKey(Keys.F3, "Toggle Address Layers"), "Legend_Toggle_Address_Layers");
 
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
-
             // watch for hotkeys activated via the mainform plugin
             // HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
 
@@ -97,13 +96,12 @@ namespace Go2It
                 _userLegend.RootNodes.Clear();
             }
 
-            // update the active _map for the legend now
-            // _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+            // update the active map for the legend now
+            var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
 
-            _map = App.Map as Map;
-
-            if (_map == null) return;
-            _map.Legend = _userLegend;
+            if (map == null) return;
+            map.Legend = _userLegend;
+            App.Legend = _userLegend;
         }
 
         public override void Deactivate()
@@ -134,7 +132,7 @@ namespace Go2It
 
         private void AttachLegend()
         {
-            _userLegend = new RestrictedLegend
+            _userLegend = new RestrictedLegend()
             {
                 BackColor = System.Drawing.Color.White,
                 ControlRectangle = new System.Drawing.Rectangle(0, 0, 176, 128),
@@ -151,17 +149,17 @@ namespace Go2It
                 SelectionHighlight = System.Drawing.Color.FromArgb(215, 238, 252),
                 Size = new System.Drawing.Size(176, 128),
                 TabIndex = 0,
+                AllowDrop = false,
                 Text = @"Legend",
                 Dock = DockStyle.Fill,
                 VerticalScrollEnabled = true
             };
-
             _userLegendForm.Controls.Add(_userLegend);
-            // assign the legend to the active _map now
-            if (_map != null)
+            if (App.Map != null)
             {
-                _map.Legend = _userLegend;
+                App.Map.Legend = _userLegend;
             }
+            App.Legend = _userLegend;
         }
     }
 }

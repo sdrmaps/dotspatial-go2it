@@ -49,9 +49,6 @@ namespace Go2It
 {
     public partial class AdminForm : Form
     {
-        // [Import("Shell")]
-        // internal ContainerControl Shell { get; set; }
-
         // name of the initial map tab, if no map tabs currently exist
         private const string MapTabDefaultCaption = "My Map";
 
@@ -559,6 +556,7 @@ namespace Go2It
             if (dockInfo.DotSpatialDockPanel.Key.StartsWith("kMap_"))
             {
                 var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+                if (map == null) return;
                 map.Layers.LayerAdded -= LayersOnLayerAdded;
                 map.Layers.LayerRemoved -= LayersOnLayerRemoved;
             }
@@ -574,6 +572,7 @@ namespace Go2It
             {
                 var caption = dockInfo.DotSpatialDockPanel.Caption;
                 var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
+                if (map == null) return;
 
                 map.Layers.LayerAdded += LayersOnLayerAdded;
                 map.Layers.LayerRemoved += LayersOnLayerRemoved;
@@ -1278,6 +1277,7 @@ namespace Go2It
             // set the active map for the admin legend now
             if (map == null) return;  // verify the map even exists first tho
             map.Legend = _adminLegend;
+            _appManager.Legend = _adminLegend;
         }
 
         private void btnAddLayer_Click(object sender, EventArgs e)
