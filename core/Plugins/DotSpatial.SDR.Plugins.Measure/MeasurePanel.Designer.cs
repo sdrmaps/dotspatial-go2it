@@ -37,12 +37,12 @@
             this.lblMeasure = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.lblPartialValue = new System.Windows.Forms.TextBox();
-            this.lblTotalValue = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tsbDistance = new System.Windows.Forms.ToolStripButton();
             this.tsbArea = new System.Windows.Forms.ToolStripButton();
             this.tsbClear = new System.Windows.Forms.ToolStripButton();
+            this.lblPartialValue = new System.Windows.Forms.TextBox();
+            this.lblTotalValue = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -123,7 +123,7 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbDistance,
@@ -134,6 +134,48 @@
             this.toolStrip1.Size = new System.Drawing.Size(535, 48);
             this.toolStrip1.TabIndex = 10;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // tsbDistance
+            // 
+            this.tsbDistance.AutoSize = false;
+            this.tsbDistance.CheckOnClick = true;
+            this.tsbDistance.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.line_16;
+            this.tsbDistance.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDistance.Name = "tsbDistance";
+            this.tsbDistance.Size = new System.Drawing.Size(45, 45);
+            this.tsbDistance.Text = "Dist.";
+            this.tsbDistance.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tsbDistance.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbDistance.ToolTipText = "Measure Distance";
+            this.tsbDistance.Click += new System.EventHandler(this.DistanceButton_Click);
+            // 
+            // tsbArea
+            // 
+            this.tsbArea.AutoSize = false;
+            this.tsbArea.CheckOnClick = true;
+            this.tsbArea.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.area_16;
+            this.tsbArea.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbArea.Margin = new System.Windows.Forms.Padding(1, 1, 1, 2);
+            this.tsbArea.Name = "tsbArea";
+            this.tsbArea.Size = new System.Drawing.Size(45, 45);
+            this.tsbArea.Text = "Area";
+            this.tsbArea.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tsbArea.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbArea.ToolTipText = "Measure Area";
+            this.tsbArea.Click += new System.EventHandler(this.AreaButton_Click);
+            // 
+            // tsbClear
+            // 
+            this.tsbClear.AutoSize = false;
+            this.tsbClear.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.clear2_16;
+            this.tsbClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbClear.Name = "tsbClear";
+            this.tsbClear.Size = new System.Drawing.Size(45, 45);
+            this.tsbClear.Text = "Clear";
+            this.tsbClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tsbClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbClear.ToolTipText = "Clears the existing measurements";
+            this.tsbClear.Click += new System.EventHandler(this.tsbClear_Click);
             // 
             // lblPartialValue
             // 
@@ -179,48 +221,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(535, 88);
             this.tableLayoutPanel1.TabIndex = 22;
-            // 
-            // tsbDistance
-            // 
-            this.tsbDistance.AutoSize = false;
-            this.tsbDistance.CheckOnClick = true;
-            this.tsbDistance.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.line_16;
-            this.tsbDistance.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDistance.Name = "tsbDistance";
-            this.tsbDistance.Size = new System.Drawing.Size(45, 45);
-            this.tsbDistance.Text = "Dist.";
-            this.tsbDistance.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.tsbDistance.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbDistance.ToolTipText = "Measure Distance";
-            this.tsbDistance.Click += new System.EventHandler(this.DistanceButton_Click);
-            // 
-            // tsbArea
-            // 
-            this.tsbArea.AutoSize = false;
-            this.tsbArea.CheckOnClick = true;
-            this.tsbArea.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.area_16;
-            this.tsbArea.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbArea.Margin = new System.Windows.Forms.Padding(1, 1, 1, 2);
-            this.tsbArea.Name = "tsbArea";
-            this.tsbArea.Size = new System.Drawing.Size(45, 45);
-            this.tsbArea.Text = "Area";
-            this.tsbArea.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.tsbArea.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbArea.ToolTipText = "Measure Area";
-            this.tsbArea.Click += new System.EventHandler(this.AreaButton_Click);
-            // 
-            // tsbClear
-            // 
-            this.tsbClear.AutoSize = false;
-            this.tsbClear.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.clear2_16;
-            this.tsbClear.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbClear.Name = "tsbClear";
-            this.tsbClear.Size = new System.Drawing.Size(45, 45);
-            this.tsbClear.Text = "Clear";
-            this.tsbClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.tsbClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbClear.ToolTipText = "Clears the existing measurements";
-            this.tsbClear.Click += new System.EventHandler(this.tsbClear_Click);
             // 
             // MeasurePanel
             // 
