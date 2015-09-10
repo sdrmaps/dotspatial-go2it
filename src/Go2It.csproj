@@ -73,6 +73,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="DotSpatial.Positioning">
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Positioning.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Positioning.Design">
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Positioning.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Positioning.Forms">
+      <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Positioning.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="DotSpatial.Projections, Version=1.7.0.0, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\core\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Projections.dll</HintPath>

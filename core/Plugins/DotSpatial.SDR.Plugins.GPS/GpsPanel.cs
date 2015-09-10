@@ -11,6 +11,8 @@ namespace DotSpatial.SDR.Plugins.GPS
 {
     public sealed partial class GpsPanel : UserControl
     {
+        private DeviceDetectionStatus _detectionStatus;
+
         public GpsPanel()
         {
             InitializeComponent();
