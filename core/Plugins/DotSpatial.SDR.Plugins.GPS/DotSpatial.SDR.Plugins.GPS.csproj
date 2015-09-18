@@ -32,37 +32,48 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotSpatial.Controls">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Controls.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Data">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Data.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Data.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Extensions">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Extensions.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Extensions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Positioning">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Positioning.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Positioning.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Positioning.Design">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Positioning.Design.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Positioning.Design.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Positioning.Forms">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Positioning.Forms.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Positioning.Forms.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Projections">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Projections.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
       <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Symbology.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Topology">
-      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.Topology.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Trunk\bin\Debug\DotSpatial.Topology.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Configuration">
       <HintPath>..\..\..\Build\$(Configuration)\SDR.Configuration.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
+using DotSpatial.Positioning;
 using DotSpatial.SDR.Plugins.GPS.Properties;
 using SdrConfig = SDR.Configuration;
 
@@ -30,7 +31,7 @@ namespace DotSpatial.SDR.Plugins.GPS
         public override void Activate()
         {
             // add in the button controls for this plugin to the header
-            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Measure", GpsTool_Click)
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "GPS", GpsTool_Click)
             {
                 GroupCaption = "Gps_Setup",
                 ToolTipText = "Click to Configure GPS",
@@ -43,6 +44,24 @@ namespace DotSpatial.SDR.Plugins.GPS
             App.DockManager.Add(_dockPanel);
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
+
+
+            /* Hook into GPS.NET's device detection events.  These events will report on
+             * any GPS devices which have been found, along with any problems encountered and reasons
+             * why a particular device could NOT be detected.
+             */
+            //Devices.DeviceDetectionAttempted += Devices_DeviceDetectionAttempted;
+            //Devices.DeviceDetectionAttemptFailed += Devices_DeviceDetectionAttemptFailed;
+            //Devices.DeviceDetectionStarted += Devices_DeviceDetectionStarted;
+            //Devices.DeviceDetectionCompleted += Devices_DeviceDetectionCompleted;
+            //Devices.DeviceDetectionCanceled += Devices_DeviceDetectionCanceled;
+            //Devices.DeviceDetected += Devices_DeviceDetected;
+
+            /* Hook up event handlers for application-level and AppDomain-level exceptions so
+             * they can be reported to the user
+             */
+            //Application.ThreadException += Application_ThreadException;
+            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             base.Activate();
         }
@@ -75,7 +94,7 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void OnMapFunctionOnFunctionActivated(object sender, EventArgs args)
         {
-            // on activation of the function check the measurement mode button in use
+            // on activation of the function check status of devices and set buttons accordingly
             // _measurePanel.ActivateMeasurementModeButton();
         }
 
