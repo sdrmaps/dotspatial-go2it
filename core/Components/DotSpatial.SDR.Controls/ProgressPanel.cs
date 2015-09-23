@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Windows.Forms;
 
 namespace DotSpatial.SDR.Controls
 {

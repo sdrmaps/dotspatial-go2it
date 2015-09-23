@@ -7,6 +7,7 @@ using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
 using DotSpatial.Positioning;
+using System.Threading;
 using DotSpatial.SDR.Plugins.GPS.Properties;
 using SdrConfig = SDR.Configuration;
 
@@ -25,7 +26,7 @@ namespace DotSpatial.SDR.Plugins.GPS
         private GpsPanel _gpsPanel;
         private DockablePanel _dockPanel;
 
-        private bool _isFunctionActive;  // eliminate redundant calls when active or not
+        private bool _isFunctionActive;  // eliminate redundant calls when active or not (is gps doing anything)
         #endregion
 
         public override void Activate()
@@ -44,24 +45,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             App.DockManager.Add(_dockPanel);
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-
-
-            /* Hook into GPS.NET's device detection events.  These events will report on
-             * any GPS devices which have been found, along with any problems encountered and reasons
-             * why a particular device could NOT be detected.
-             */
-            //Devices.DeviceDetectionAttempted += Devices_DeviceDetectionAttempted;
-            //Devices.DeviceDetectionAttemptFailed += Devices_DeviceDetectionAttemptFailed;
-            //Devices.DeviceDetectionStarted += Devices_DeviceDetectionStarted;
-            //Devices.DeviceDetectionCompleted += Devices_DeviceDetectionCompleted;
-            //Devices.DeviceDetectionCanceled += Devices_DeviceDetectionCanceled;
-            //Devices.DeviceDetected += Devices_DeviceDetected;
-
-            /* Hook up event handlers for application-level and AppDomain-level exceptions so
-             * they can be reported to the user
-             */
-            //Application.ThreadException += Application_ThreadException;
-            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            // initialize the gps function
+            _mapFunction = new MapFunctionGps(_gpsPanel);
 
             base.Activate();
         }

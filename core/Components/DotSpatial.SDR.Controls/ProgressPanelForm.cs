@@ -21,7 +21,13 @@ namespace DotSpatial.SDR.Controls
         {
             InitializeComponent();
             loadingLabel.Text = label;
-            this.Text = label;
+            Text = label;
+        }
+
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
         private void LoadingForm_Load(object sender, EventArgs e)

@@ -1,15 +1,15 @@
 ﻿namespace DotSpatial.SDR.Plugins.GPS
 {
-    /// <summary>
-    /// DeviceDetectionStatuses
-    /// </summary>
-    public enum DeviceDetectionStatus
+    public enum DeviceStatus
     {
-        Attempted,
-        AttemptFailed,
-        Started,
-        Complete,
-        Canceled,
-        Detected
+        Unavailable,
+        Detecting,
+        Detected,
+        Connected,
+        Disconnected,
+        Paused,
+        FixLost,
+        ConnectionLost,
+        Exception,
     }
 }
