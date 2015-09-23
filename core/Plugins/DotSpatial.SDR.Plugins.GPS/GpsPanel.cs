@@ -194,20 +194,17 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void cmbName_SelectedIndexChanged(object sender, EventArgs e)
         {
+            txtConnType.Text = String.Empty;
+            txtStatus.Text = DeviceStatus.Unavailable.ToString();
             if (cmbName.Text.Length > 0)
             {
-                txtStatus.Text = DeviceStatus.Detected.ToString();
                 string outVal;
                 bool success = _gpsDevices.TryGetValue(cmbName.Text, out outVal);
                 if (success)
                 {
+                    txtStatus.Text = DeviceStatus.Detected.ToString();
                     txtConnType.Text = outVal;
                 }
-            }
-            else
-            {
-                txtStatus.Text = DeviceStatus.Unavailable.ToString();
-                txtConnType.Text = String.Empty;
             }
         }
         #endregion
@@ -223,6 +220,9 @@ namespace DotSpatial.SDR.Plugins.GPS
                     _progressPanel = null;
                 }
                 gpsDetectCancel.Text = @"Detect";
+                chkAllowSerial.Enabled = true;
+                chkAllowBluetooth.Enabled = true;
+
                 if (devices.Count > 0)
                 {
                     gpsStartStop.Enabled = true;
@@ -343,6 +343,11 @@ namespace DotSpatial.SDR.Plugins.GPS
             {
                 DeviceStatus = DeviceStatus.Disconnected;  // save user setting
                 txtStatus.Text = DeviceStatus.Disconnected.ToString();
+                txtDate.Text = string.Empty;
+                txtPosition.Text = string.Empty;
+                txtAltitude.Text = string.Empty;
+                txtSpeed.Text = string.Empty;
+                txtBearing.Text = string.Empty;
             }));
         }
 

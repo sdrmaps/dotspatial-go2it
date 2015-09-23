@@ -50,8 +50,8 @@
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.lblBaudRate = new System.Windows.Forms.Label();
             this.chkAllowSerial = new System.Windows.Forms.CheckBox();
-            this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
             this.txtConnType = new System.Windows.Forms.TextBox();
+            this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
             this.toolStrip1.SuspendLayout();
             this.lblConnType.SuspendLayout();
             this.SuspendLayout();
@@ -115,7 +115,7 @@
             this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.46996F));
             this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 174F));
             this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 154F));
-            this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
+            this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 131F));
             this.lblConnType.Controls.Add(this.lblDate, 0, 2);
             this.lblConnType.Controls.Add(this.lblPosition, 1, 2);
             this.lblConnType.Controls.Add(this.lblAltitude, 2, 2);
@@ -168,7 +168,7 @@
             // lblAltitude
             // 
             this.lblAltitude.AutoSize = true;
-            this.lblAltitude.Location = new System.Drawing.Point(283, 62);
+            this.lblAltitude.Location = new System.Drawing.Point(282, 62);
             this.lblAltitude.Name = "lblAltitude";
             this.lblAltitude.Size = new System.Drawing.Size(42, 13);
             this.lblAltitude.TabIndex = 6;
@@ -192,7 +192,7 @@
             // 
             // txtAltitude
             // 
-            this.txtAltitude.Location = new System.Drawing.Point(283, 91);
+            this.txtAltitude.Location = new System.Drawing.Point(282, 91);
             this.txtAltitude.Name = "txtAltitude";
             this.txtAltitude.ReadOnly = true;
             this.txtAltitude.Size = new System.Drawing.Size(100, 20);
@@ -200,7 +200,7 @@
             // 
             // txtSpeed
             // 
-            this.txtSpeed.Location = new System.Drawing.Point(457, 91);
+            this.txtSpeed.Location = new System.Drawing.Point(456, 91);
             this.txtSpeed.Name = "txtSpeed";
             this.txtSpeed.ReadOnly = true;
             this.txtSpeed.Size = new System.Drawing.Size(100, 20);
@@ -208,7 +208,7 @@
             // 
             // txtBearing
             // 
-            this.txtBearing.Location = new System.Drawing.Point(611, 91);
+            this.txtBearing.Location = new System.Drawing.Point(610, 91);
             this.txtBearing.Name = "txtBearing";
             this.txtBearing.ReadOnly = true;
             this.txtBearing.Size = new System.Drawing.Size(100, 20);
@@ -217,7 +217,7 @@
             // lblSpeed
             // 
             this.lblSpeed.AutoSize = true;
-            this.lblSpeed.Location = new System.Drawing.Point(457, 62);
+            this.lblSpeed.Location = new System.Drawing.Point(456, 62);
             this.lblSpeed.Name = "lblSpeed";
             this.lblSpeed.Size = new System.Drawing.Size(38, 13);
             this.lblSpeed.TabIndex = 8;
@@ -226,7 +226,7 @@
             // lblBearing
             // 
             this.lblBearing.AutoSize = true;
-            this.lblBearing.Location = new System.Drawing.Point(611, 62);
+            this.lblBearing.Location = new System.Drawing.Point(610, 62);
             this.lblBearing.Name = "lblBearing";
             this.lblBearing.Size = new System.Drawing.Size(43, 13);
             this.lblBearing.TabIndex = 7;
@@ -235,9 +235,7 @@
             // chkAllowBluetooth
             // 
             this.chkAllowBluetooth.AutoSize = true;
-            this.chkAllowBluetooth.Checked = true;
-            this.chkAllowBluetooth.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAllowBluetooth.Location = new System.Drawing.Point(611, 28);
+            this.chkAllowBluetooth.Location = new System.Drawing.Point(610, 28);
             this.chkAllowBluetooth.Name = "chkAllowBluetooth";
             this.chkAllowBluetooth.Size = new System.Drawing.Size(108, 17);
             this.chkAllowBluetooth.TabIndex = 19;
@@ -282,7 +280,7 @@
             // lblBaudRate
             // 
             this.lblBaudRate.AutoSize = true;
-            this.lblBaudRate.Location = new System.Drawing.Point(283, 0);
+            this.lblBaudRate.Location = new System.Drawing.Point(282, 0);
             this.lblBaudRate.Name = "lblBaudRate";
             this.lblBaudRate.Size = new System.Drawing.Size(88, 13);
             this.lblBaudRate.TabIndex = 3;
@@ -291,9 +289,7 @@
             // chkAllowSerial
             // 
             this.chkAllowSerial.AutoSize = true;
-            this.chkAllowSerial.Checked = true;
-            this.chkAllowSerial.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAllowSerial.Location = new System.Drawing.Point(457, 28);
+            this.chkAllowSerial.Location = new System.Drawing.Point(456, 28);
             this.chkAllowSerial.Name = "chkAllowSerial";
             this.chkAllowSerial.Size = new System.Drawing.Size(89, 17);
             this.chkAllowSerial.TabIndex = 18;
@@ -302,7 +298,7 @@
             // 
             // txtConnType
             // 
-            this.txtConnType.Location = new System.Drawing.Point(283, 28);
+            this.txtConnType.Location = new System.Drawing.Point(282, 28);
             this.txtConnType.Name = "txtConnType";
             this.txtConnType.ReadOnly = true;
             this.txtConnType.Size = new System.Drawing.Size(139, 20);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -81,20 +80,15 @@ namespace DotSpatial.SDR.Plugins.GPS
             _gpsPanel.BeginDetection += delegate
             {
                 _gpsDevices.Clear();
-                // grab the discover settings and assign before we begin the probe
+                // grab the discovery settings and assign them before we begin the probe
                 Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
                 Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
                 Devices.BeginDetection();
             };
             _gpsPanel.CancelDetection += delegate
             {
-                Debug.WriteLine("AAAA");
                 _gpsDevices.Clear();
-                Debug.WriteLine("ZZZZ");
                 Devices.CancelDetection(true);
-                Debug.WriteLine("JJJJ");
-                Devices.Undetect();
-                Debug.WriteLine("XXXX");
             };
             _gpsPanel.DeviceStart += delegate
             {
