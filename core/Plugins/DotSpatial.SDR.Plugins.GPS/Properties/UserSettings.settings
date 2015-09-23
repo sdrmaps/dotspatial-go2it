@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DotSpatial.SDR.Plugins.GPS.Properties" GeneratedClassName="UserSettings">
   <Profiles />
   <Settings>
-    <Setting Name="DeviceName" Type="System.String" Scope="User">
+    <Setting Name="DeviceName" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AllowSerial" Type="System.Boolean" Scope="User">

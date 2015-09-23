@@ -115,7 +115,7 @@
             this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.46996F));
             this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 174F));
             this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 154F));
-            this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 131F));
+            this.lblConnType.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
             this.lblConnType.Controls.Add(this.lblDate, 0, 2);
             this.lblConnType.Controls.Add(this.lblPosition, 1, 2);
             this.lblConnType.Controls.Add(this.lblAltitude, 2, 2);
@@ -159,7 +159,7 @@
             // lblPosition
             // 
             this.lblPosition.AutoSize = true;
-            this.lblPosition.Location = new System.Drawing.Point(144, 62);
+            this.lblPosition.Location = new System.Drawing.Point(143, 62);
             this.lblPosition.Name = "lblPosition";
             this.lblPosition.Size = new System.Drawing.Size(44, 13);
             this.lblPosition.TabIndex = 5;
@@ -168,7 +168,7 @@
             // lblAltitude
             // 
             this.lblAltitude.AutoSize = true;
-            this.lblAltitude.Location = new System.Drawing.Point(282, 62);
+            this.lblAltitude.Location = new System.Drawing.Point(281, 62);
             this.lblAltitude.Name = "lblAltitude";
             this.lblAltitude.Size = new System.Drawing.Size(42, 13);
             this.lblAltitude.TabIndex = 6;
@@ -179,45 +179,45 @@
             this.txtDate.Location = new System.Drawing.Point(3, 91);
             this.txtDate.Name = "txtDate";
             this.txtDate.ReadOnly = true;
-            this.txtDate.Size = new System.Drawing.Size(96, 20);
+            this.txtDate.Size = new System.Drawing.Size(134, 20);
             this.txtDate.TabIndex = 13;
             // 
             // txtPosition
             // 
-            this.txtPosition.Location = new System.Drawing.Point(144, 91);
+            this.txtPosition.Location = new System.Drawing.Point(143, 91);
             this.txtPosition.Name = "txtPosition";
             this.txtPosition.ReadOnly = true;
-            this.txtPosition.Size = new System.Drawing.Size(100, 20);
+            this.txtPosition.Size = new System.Drawing.Size(132, 20);
             this.txtPosition.TabIndex = 14;
             // 
             // txtAltitude
             // 
-            this.txtAltitude.Location = new System.Drawing.Point(282, 91);
+            this.txtAltitude.Location = new System.Drawing.Point(281, 91);
             this.txtAltitude.Name = "txtAltitude";
             this.txtAltitude.ReadOnly = true;
-            this.txtAltitude.Size = new System.Drawing.Size(100, 20);
+            this.txtAltitude.Size = new System.Drawing.Size(168, 20);
             this.txtAltitude.TabIndex = 15;
             // 
             // txtSpeed
             // 
-            this.txtSpeed.Location = new System.Drawing.Point(456, 91);
+            this.txtSpeed.Location = new System.Drawing.Point(455, 91);
             this.txtSpeed.Name = "txtSpeed";
             this.txtSpeed.ReadOnly = true;
-            this.txtSpeed.Size = new System.Drawing.Size(100, 20);
+            this.txtSpeed.Size = new System.Drawing.Size(148, 20);
             this.txtSpeed.TabIndex = 16;
             // 
             // txtBearing
             // 
-            this.txtBearing.Location = new System.Drawing.Point(610, 91);
+            this.txtBearing.Location = new System.Drawing.Point(609, 91);
             this.txtBearing.Name = "txtBearing";
             this.txtBearing.ReadOnly = true;
-            this.txtBearing.Size = new System.Drawing.Size(100, 20);
+            this.txtBearing.Size = new System.Drawing.Size(127, 20);
             this.txtBearing.TabIndex = 17;
             // 
             // lblSpeed
             // 
             this.lblSpeed.AutoSize = true;
-            this.lblSpeed.Location = new System.Drawing.Point(456, 62);
+            this.lblSpeed.Location = new System.Drawing.Point(455, 62);
             this.lblSpeed.Name = "lblSpeed";
             this.lblSpeed.Size = new System.Drawing.Size(38, 13);
             this.lblSpeed.TabIndex = 8;
@@ -226,7 +226,7 @@
             // lblBearing
             // 
             this.lblBearing.AutoSize = true;
-            this.lblBearing.Location = new System.Drawing.Point(610, 62);
+            this.lblBearing.Location = new System.Drawing.Point(609, 62);
             this.lblBearing.Name = "lblBearing";
             this.lblBearing.Size = new System.Drawing.Size(43, 13);
             this.lblBearing.TabIndex = 7;
@@ -235,7 +235,7 @@
             // chkAllowBluetooth
             // 
             this.chkAllowBluetooth.AutoSize = true;
-            this.chkAllowBluetooth.Location = new System.Drawing.Point(610, 28);
+            this.chkAllowBluetooth.Location = new System.Drawing.Point(609, 28);
             this.chkAllowBluetooth.Name = "chkAllowBluetooth";
             this.chkAllowBluetooth.Size = new System.Drawing.Size(108, 17);
             this.chkAllowBluetooth.TabIndex = 19;
@@ -247,7 +247,7 @@
             this.cmbName.FormattingEnabled = true;
             this.cmbName.Location = new System.Drawing.Point(3, 28);
             this.cmbName.Name = "cmbName";
-            this.cmbName.Size = new System.Drawing.Size(135, 21);
+            this.cmbName.Size = new System.Drawing.Size(134, 21);
             this.cmbName.TabIndex = 20;
             this.cmbName.SelectedIndexChanged += new System.EventHandler(this.cmbName_SelectedIndexChanged);
             // 
@@ -263,7 +263,7 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(144, 0);
+            this.lblStatus.Location = new System.Drawing.Point(143, 0);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(37, 13);
             this.lblStatus.TabIndex = 2;
@@ -271,7 +271,7 @@
             // 
             // txtStatus
             // 
-            this.txtStatus.Location = new System.Drawing.Point(144, 28);
+            this.txtStatus.Location = new System.Drawing.Point(143, 28);
             this.txtStatus.Name = "txtStatus";
             this.txtStatus.ReadOnly = true;
             this.txtStatus.Size = new System.Drawing.Size(120, 20);
@@ -280,7 +280,7 @@
             // lblBaudRate
             // 
             this.lblBaudRate.AutoSize = true;
-            this.lblBaudRate.Location = new System.Drawing.Point(282, 0);
+            this.lblBaudRate.Location = new System.Drawing.Point(281, 0);
             this.lblBaudRate.Name = "lblBaudRate";
             this.lblBaudRate.Size = new System.Drawing.Size(88, 13);
             this.lblBaudRate.TabIndex = 3;
@@ -289,7 +289,7 @@
             // chkAllowSerial
             // 
             this.chkAllowSerial.AutoSize = true;
-            this.chkAllowSerial.Location = new System.Drawing.Point(456, 28);
+            this.chkAllowSerial.Location = new System.Drawing.Point(455, 28);
             this.chkAllowSerial.Name = "chkAllowSerial";
             this.chkAllowSerial.Size = new System.Drawing.Size(89, 17);
             this.chkAllowSerial.TabIndex = 18;
@@ -298,7 +298,7 @@
             // 
             // txtConnType
             // 
-            this.txtConnType.Location = new System.Drawing.Point(282, 28);
+            this.txtConnType.Location = new System.Drawing.Point(281, 28);
             this.txtConnType.Name = "txtConnType";
             this.txtConnType.ReadOnly = true;
             this.txtConnType.Size = new System.Drawing.Size(139, 20);

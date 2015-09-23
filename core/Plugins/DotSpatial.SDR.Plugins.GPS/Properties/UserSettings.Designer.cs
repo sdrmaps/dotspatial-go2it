@@ -26,6 +26,7 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string DeviceName {
             get {
                 return ((string)(this["DeviceName"]));

@@ -13,6 +13,7 @@ namespace DotSpatial.SDR.Plugins.GPS
         private readonly GpsPanel _gpsPanel;
         private readonly NmeaInterpreter _nmeaInterpreter;
         private readonly Dictionary<Device, string> _gpsDevices;
+        private bool _isAutoStart;
 
         #region Constructors
 
@@ -31,15 +32,22 @@ namespace DotSpatial.SDR.Plugins.GPS
             HandleDetectionEvents();
             HandleNmeaEvents();
             HandleGpsPanelEvents();
-            ConfigureSettings();
+            ConfigureActivateGps();
         }
 
-        private void ConfigureSettings()
+        private void ConfigureActivateGps()
         {
             Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
             Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
-            // TODO: in here we check the state and run a detect and start if we can
-
+            // check the status of the connection last run
+            var devStatus = UserSettings.Default.DeviceStatus;
+            if (devStatus == DeviceStatus.Connected.ToString() ||
+                devStatus == DeviceStatus.Paused.ToString() ||
+                devStatus == DeviceStatus.Detected.ToString())
+                {
+                    _isAutoStart = true;
+                    Devices.BeginDetection();
+                }
         }
 
         private void HandleDetectionEvents()
@@ -53,7 +61,7 @@ namespace DotSpatial.SDR.Plugins.GPS
         /// </summary>
         private void HandleNmeaEvents()
         {
-            // TODO: break these out into localized methods for adding map function calls for display
+            // TODO: break these out into localized methods for adding map function calls for display as needed
             _nmeaInterpreter.BearingChanged += delegate(object sender, AzimuthEventArgs args) { _gpsPanel.NmeaBearingChanged(sender, args); };
             _nmeaInterpreter.AltitudeChanged += delegate(object sender, DistanceEventArgs args) { _gpsPanel.NmeaAltitudeChanged(sender, args); };
             _nmeaInterpreter.SpeedChanged += delegate(object sender, SpeedEventArgs args) { _gpsPanel.NmeaSpeedChanged(sender, args); };
@@ -80,7 +88,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             _gpsPanel.BeginDetection += delegate
             {
                 _gpsDevices.Clear();
-                // grab the discovery settings and assign them before we begin the probe
                 Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
                 Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
                 Devices.BeginDetection();
@@ -92,19 +99,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             };
             _gpsPanel.DeviceStart += delegate
             {
-                try
-                {
-                    foreach (KeyValuePair<Device, string> kvPair in _gpsDevices)
-                    {
-                        if (kvPair.Key.Name != _gpsPanel.DeviceName) continue;
-                        _nmeaInterpreter.Start(kvPair.Key);
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, @"Connection to GPS failed");
-                }
+                TryStart(_gpsPanel.DeviceName);
             };
         }
 
@@ -126,9 +121,31 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
         }
 
+        private void TryStart(string deviceName)
+        {
+            try
+            {
+                foreach (KeyValuePair<Device, string> kvPair in _gpsDevices)
+                {
+                    if (kvPair.Key.Name != deviceName) continue;
+                    _nmeaInterpreter.Start(kvPair.Key);
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Connection to GPS failed");
+            }
+        }
+
         private void DevicesOnDeviceDetectionCompleted(object sender, EventArgs eventArgs)
         {
             _gpsPanel.DetectionCompleted(_gpsDevices);
+            if (_isAutoStart)
+            {
+                _isAutoStart = false;
+                TryStart(UserSettings.Default.DeviceName);
+            }
         }
         #endregion
     }

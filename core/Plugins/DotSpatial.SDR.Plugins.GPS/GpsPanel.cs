@@ -11,13 +11,15 @@ namespace DotSpatial.SDR.Plugins.GPS
     public sealed partial class GpsPanel : UserControl
     {
         private ProgressPanel _progressPanel;  // progress panel displayed on device detection
-        private readonly Dictionary<string, string> _gpsDevices;  // lookup for deviceName/connectionType
+        private readonly Dictionary<string, string> _detectedDevices;  // lookup for deviceName/connectionType
 
         #region Constructors
         public GpsPanel()
         {
             InitializeComponent();
-            _gpsDevices = new Dictionary<string, string>();
+            _detectedDevices = new Dictionary<string, string>();
+            chkAllowSerial.Checked = UserSettings.Default.AllowSerial;
+            chkAllowBluetooth.Checked = UserSettings.Default.AllowBluetooth;
         }
         #endregion
 
@@ -119,7 +121,7 @@ namespace DotSpatial.SDR.Plugins.GPS
         #region Form Events
         private void gpsDetectCancel_Click(object sender, EventArgs e)
         {
-            _gpsDevices.Clear();
+            _detectedDevices.Clear();
             cmbName.Items.Clear();
             cmbName.Text = string.Empty;
             txtConnType.Text = string.Empty;
@@ -160,20 +162,10 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             if (gpsStartStop.Text == @"Start")
             {
-                gpsStartStop.Text = @"Stop";
-                gpsDetectCancel.Enabled = false;
-                gpsPauseResume.Enabled = true;
-                DeviceName = cmbName.Text;  // save user setting
-                DeviceConnection = txtConnType.Text;  // save user setting
-                cmbName.Enabled = false;
                 DeviceStart(sender, e);
             }
             else
             {
-                gpsStartStop.Text = @"Start";
-                gpsDetectCancel.Enabled = true;
-                gpsPauseResume.Enabled = false;
-                cmbName.Enabled = true;
                 DeviceStop(sender, e);
             }
         }
@@ -182,12 +174,10 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             if (gpsPauseResume.Text == @"Pause")
             {
-                gpsPauseResume.Text = @"Resume";
                 DevicePause(sender, e);
             }
             else
             {
-                gpsPauseResume.Text = @"Pause";
                 DeviceResume(sender, e);
             }
         }
@@ -199,7 +189,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             if (cmbName.Text.Length > 0)
             {
                 string outVal;
-                bool success = _gpsDevices.TryGetValue(cmbName.Text, out outVal);
+                bool success = _detectedDevices.TryGetValue(cmbName.Text, out outVal);
                 if (success)
                 {
                     txtStatus.Text = DeviceStatus.Detected.ToString();
@@ -229,10 +219,10 @@ namespace DotSpatial.SDR.Plugins.GPS
                     DeviceStatus = DeviceStatus.Detected;  // save user setting
                     foreach (KeyValuePair<Device, string> kvPair in devices)
                     {
-                        _gpsDevices.Add(kvPair.Key.Name, kvPair.Value);
+                        _detectedDevices.Add(kvPair.Key.Name, kvPair.Value);
                         cmbName.Items.Add(kvPair.Key.Name);
                     }
-                    cmbName.SelectedIndex = 0;
+                    cmbName.SelectedIndex = cmbName.Items.IndexOf(UserSettings.Default.DeviceName);
                 }
                 else
                 {
@@ -255,6 +245,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
+                gpsPauseResume.Text = @"Resume";
+
                 DeviceStatus = DeviceStatus.Paused;  // save user setting
                 txtStatus.Text = DeviceStatus.ToString();
             }));
@@ -264,6 +256,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
+                gpsPauseResume.Text = @"Pause";
+
                 DeviceStatus = DeviceStatus.Connected;  // save user setting
                 txtStatus.Text = DeviceStatus.ToString();
             }));
@@ -332,6 +326,14 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
+                gpsStartStop.Text = @"Stop";
+                gpsDetectCancel.Enabled = false;
+                gpsPauseResume.Enabled = true;
+                cmbName.Enabled = false;
+                DeviceName = cmbName.Text;  // save user setting
+                DeviceConnection = txtConnType.Text;  // save user setting
+
+
                 DeviceStatus = DeviceStatus.Connected;  // save user setting
                 txtStatus.Text = DeviceStatus.Connected.ToString();
             }));
@@ -341,8 +343,14 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
+                gpsStartStop.Text = @"Start";
+                gpsDetectCancel.Enabled = true;
+                gpsPauseResume.Enabled = false;
+                cmbName.Enabled = true;
+
                 DeviceStatus = DeviceStatus.Disconnected;  // save user setting
                 txtStatus.Text = DeviceStatus.Disconnected.ToString();
+
                 txtDate.Text = string.Empty;
                 txtPosition.Text = string.Empty;
                 txtAltitude.Text = string.Empty;
