@@ -246,7 +246,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             BeginInvoke(new MethodInvoker(delegate
             {
                 gpsPauseResume.Text = @"Resume";
-
                 DeviceStatus = DeviceStatus.Paused;  // save user setting
                 txtStatus.Text = DeviceStatus.ToString();
             }));
@@ -257,7 +256,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             BeginInvoke(new MethodInvoker(delegate
             {
                 gpsPauseResume.Text = @"Pause";
-
                 DeviceStatus = DeviceStatus.Connected;  // save user setting
                 txtStatus.Text = DeviceStatus.ToString();
             }));
@@ -332,8 +330,6 @@ namespace DotSpatial.SDR.Plugins.GPS
                 cmbName.Enabled = false;
                 DeviceName = cmbName.Text;  // save user setting
                 DeviceConnection = txtConnType.Text;  // save user setting
-
-
                 DeviceStatus = DeviceStatus.Connected;  // save user setting
                 txtStatus.Text = DeviceStatus.Connected.ToString();
             }));
@@ -344,13 +340,12 @@ namespace DotSpatial.SDR.Plugins.GPS
             BeginInvoke(new MethodInvoker(delegate
             {
                 gpsStartStop.Text = @"Start";
+                gpsPauseResume.Text = @"Pause";
                 gpsDetectCancel.Enabled = true;
                 gpsPauseResume.Enabled = false;
                 cmbName.Enabled = true;
-
                 DeviceStatus = DeviceStatus.Disconnected;  // save user setting
                 txtStatus.Text = DeviceStatus.Disconnected.ToString();
-
                 txtDate.Text = string.Empty;
                 txtPosition.Text = string.Empty;
                 txtAltitude.Text = string.Empty;

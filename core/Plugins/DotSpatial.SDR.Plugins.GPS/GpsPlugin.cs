@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
-using DotSpatial.Positioning;
-using System.Threading;
 using DotSpatial.SDR.Plugins.GPS.Properties;
 using SdrConfig = SDR.Configuration;
 
@@ -45,7 +40,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             App.DockManager.Add(_dockPanel);
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-            // initialize the gps function
+            // initialize the gps function and check if it should start 
             _mapFunction = new MapFunctionGps(_gpsPanel);
 
             base.Activate();
@@ -75,12 +70,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             //    App.Map.MapFunctions.Add(_mapFunction);
             //}
             //_mapFunction.Map = App.Map;
-        }
-
-        private void OnMapFunctionOnFunctionActivated(object sender, EventArgs args)
-        {
-            // on activation of the function check status of devices and set buttons accordingly
-            // _measurePanel.ActivateMeasurementModeButton();
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
@@ -204,6 +193,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             // update the prefs for tracking the active tools modes and panels
             App.Map.FunctionMode = FunctionMode.None;
             App.DockManager.SelectPanel(PluginKey);
+
+            MessageBox.Show(_mapFunction.IsGpsActive().ToString());
         }
 
     }

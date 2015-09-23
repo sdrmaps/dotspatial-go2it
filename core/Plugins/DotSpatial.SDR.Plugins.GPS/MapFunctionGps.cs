@@ -61,7 +61,6 @@ namespace DotSpatial.SDR.Plugins.GPS
         /// </summary>
         private void HandleNmeaEvents()
         {
-            // TODO: break these out into localized methods for adding map function calls for display as needed
             _nmeaInterpreter.BearingChanged += delegate(object sender, AzimuthEventArgs args) { _gpsPanel.NmeaBearingChanged(sender, args); };
             _nmeaInterpreter.AltitudeChanged += delegate(object sender, DistanceEventArgs args) { _gpsPanel.NmeaAltitudeChanged(sender, args); };
             _nmeaInterpreter.SpeedChanged += delegate(object sender, SpeedEventArgs args) { _gpsPanel.NmeaSpeedChanged(sender, args); };
@@ -141,11 +140,16 @@ namespace DotSpatial.SDR.Plugins.GPS
         private void DevicesOnDeviceDetectionCompleted(object sender, EventArgs eventArgs)
         {
             _gpsPanel.DetectionCompleted(_gpsDevices);
-            if (_isAutoStart)
+            if (_isAutoStart)  // only fired on startup if the previous run had an active GPS session
             {
                 _isAutoStart = false;
                 TryStart(UserSettings.Default.DeviceName);
             }
+        }
+
+        public bool IsGpsActive()
+        {
+            return _nmeaInterpreter.IsRunning;
         }
         #endregion
     }

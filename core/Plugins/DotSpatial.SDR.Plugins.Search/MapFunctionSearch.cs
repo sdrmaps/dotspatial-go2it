@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 using System.Text.RegularExpressions;
-using System.Windows.Forms.VisualStyles;
 using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
@@ -517,7 +516,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 //  Symbol = new CharacterSymbol()
                 // _pointGraphicsLayer.Symbolizer.Symbols.Add();
 
-
+                // TODO: what in the hell was i doing in here??
                 var ccc = Map.MapFrame.DrawingLayers.Count;
                 var zzz = Map.MapFrame.Layers.Count;
                 var zxz = Map.MapFrame.LayerCount;

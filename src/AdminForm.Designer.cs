@@ -1018,7 +1018,7 @@
             // lblBufDist
             // 
             this.lblBufDist.AutoSize = true;
-            this.lblBufDist.Location = new System.Drawing.Point(535, 487);
+            this.lblBufDist.Location = new System.Drawing.Point(472, 494);
             this.lblBufDist.Name = "lblBufDist";
             this.lblBufDist.Size = new System.Drawing.Size(117, 13);
             this.lblBufDist.TabIndex = 42;
