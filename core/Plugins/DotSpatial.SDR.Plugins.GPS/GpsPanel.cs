@@ -11,13 +11,13 @@ namespace DotSpatial.SDR.Plugins.GPS
     public sealed partial class GpsPanel : UserControl
     {
         private ProgressPanel _progressPanel;  // progress panel displayed on device detection
-        private Dictionary<string, string> _deviceDict;  // lookup for holding device name/connection type
+        private readonly Dictionary<string, string> _gpsDevices;  // lookup for deviceName/connectionType
 
         #region Constructors
         public GpsPanel()
         {
             InitializeComponent();
-            _deviceDict = new Dictionary<string, string>();
+            _gpsDevices = new Dictionary<string, string>();
         }
         #endregion
 
@@ -116,12 +116,13 @@ namespace DotSpatial.SDR.Plugins.GPS
         public event EventHandler DeviceResume;
         #endregion
 
+        #region Form Events
         private void gpsDetectCancel_Click(object sender, EventArgs e)
         {
-            // TODO: clear routine??>
-            _deviceDict.Clear();
+            _gpsDevices.Clear();
             cmbName.Items.Clear();
-
+            cmbName.Text = string.Empty;
+            txtConnType.Text = string.Empty;
             gpsStartStop.Enabled = false;
             gpsPauseResume.Enabled = false;
             if (gpsDetectCancel.Text == @"Detect")
@@ -191,7 +192,28 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
         }
 
-        public void DetectionCompleted(List<Device> devices)
+        private void cmbName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbName.Text.Length > 0)
+            {
+                txtStatus.Text = DeviceStatus.Detected.ToString();
+                string outVal;
+                bool success = _gpsDevices.TryGetValue(cmbName.Text, out outVal);
+                if (success)
+                {
+                    txtConnType.Text = outVal;
+                }
+            }
+            else
+            {
+                txtStatus.Text = DeviceStatus.Unavailable.ToString();
+                txtConnType.Text = String.Empty;
+            }
+        }
+        #endregion
+
+        #region Event Handlers
+        public void DetectionCompleted(Dictionary<Device, string> devices)
         {
             BeginInvoke(new MethodInvoker(delegate
             {
@@ -205,10 +227,10 @@ namespace DotSpatial.SDR.Plugins.GPS
                 {
                     gpsStartStop.Enabled = true;
                     DeviceStatus = DeviceStatus.Detected;  // save user setting
-                    foreach (var device in devices)
+                    foreach (KeyValuePair<Device, string> kvPair in devices)
                     {
-                        // _deviceDict.Add(device.Name.ToString(), device);
-                        cmbName.Items.Add(device.Name);
+                        _gpsDevices.Add(kvPair.Key.Name, kvPair.Value);
+                        cmbName.Items.Add(kvPair.Key.Name);
                     }
                     cmbName.SelectedIndex = 0;
                 }
@@ -331,11 +353,6 @@ namespace DotSpatial.SDR.Plugins.GPS
                 txtPosition.Text = args.Position.ToString();
             }));
         }
-
-        private void cmbName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbName.Text.Length > 0) txtStatus.Text = DeviceStatus.Detected.ToString();
-            else txtStatus.Text = DeviceStatus.Unavailable.ToString();
-        }
+        #endregion
     }
 }

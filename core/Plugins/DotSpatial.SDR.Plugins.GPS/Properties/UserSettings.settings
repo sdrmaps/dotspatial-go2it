@@ -15,7 +15,7 @@
       <Value Profile="(Default)">Unavailable</Value>
     </Setting>
     <Setting Name="DeviceType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Serial</Value>
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

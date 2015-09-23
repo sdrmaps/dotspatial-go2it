@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Positioning;
@@ -39,12 +41,10 @@ namespace DotSpatial.SDR.Plugins.GPS
             Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
             // TODO: in here we check the state and run a detect and start if we can
 
-
         }
 
         private void HandleDetectionEvents()
         {
-            Devices.DeviceDetectionCanceled += DevicesOnDeviceDetectionCanceled;
             Devices.DeviceDetectionCompleted += DevicesOnDeviceDetectionCompleted;
             Devices.DeviceDetected += DevicesOnDeviceDetected;
         }
@@ -75,59 +75,61 @@ namespace DotSpatial.SDR.Plugins.GPS
         /// </summary>
         private void HandleGpsPanelEvents()
         {
-            _gpsPanel.BeginDetection += delegate(object sender, EventArgs args)
+            _gpsPanel.DeviceStop += delegate { _nmeaInterpreter.Stop(); };
+            _gpsPanel.DevicePause += delegate { _nmeaInterpreter.Pause(); };
+            _gpsPanel.DeviceResume += delegate { _nmeaInterpreter.Resume(); };
+            _gpsPanel.BeginDetection += delegate
             {
+                _gpsDevices.Clear();
+                // grab the discover settings and assign before we begin the probe
+                Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
+                Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
                 Devices.BeginDetection();
             };
-            _gpsPanel.CancelDetection += delegate(object sender, EventArgs args)
+            _gpsPanel.CancelDetection += delegate
             {
-                // TODO: investigate the pause here
-                Devices.CancelDetection();
+                Debug.WriteLine("AAAA");
+                _gpsDevices.Clear();
+                Debug.WriteLine("ZZZZ");
+                Devices.CancelDetection(true);
+                Debug.WriteLine("JJJJ");
                 Devices.Undetect();
+                Debug.WriteLine("XXXX");
             };
-            _gpsPanel.DeviceStart += delegate(object sender, EventArgs args)
+            _gpsPanel.DeviceStart += delegate
             {
                 try
                 {
-                    foreach (Device gpsDevice in _gpsDevices)
+                    foreach (KeyValuePair<Device, string> kvPair in _gpsDevices)
                     {
-                        if (gpsDevice.Name != _gpsPanel.DeviceName) continue;
-                        _nmeaInterpreter.Start(gpsDevice);
+                        if (kvPair.Key.Name != _gpsPanel.DeviceName) continue;
+                        _nmeaInterpreter.Start(kvPair.Key);
                         break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Failed to connect with GPS");
+                    MessageBox.Show(ex.Message, @"Connection to GPS failed");
                 }
             };
-            _gpsPanel.DeviceStop += delegate(object sender, EventArgs args)
-            {
-                _nmeaInterpreter.Stop();
-            };
-            _gpsPanel.DevicePause += delegate(object sender, EventArgs args)
-            {
-                _nmeaInterpreter.Pause();
-            };
-            _gpsPanel.DeviceResume += delegate(object sender, EventArgs args)
-            {
-                _nmeaInterpreter.Resume();
-            };
-        }
-
-        private void DevicesOnDeviceDetectionCanceled(object sender, EventArgs eventArgs)
-        {
-            _gpsDevices.Clear();
         }
 
         private void DevicesOnDeviceDetected(object sender, DeviceEventArgs deviceEventArgs)
         {
+            var flag = false;
             var device = (Device) sender;
             var btDevices = Devices.BluetoothDevices;
+            if (btDevices.Any(btDevice => btDevice.Equals(device)))
+            {
+                _gpsDevices.Add(device, "Bluetooth");
+                flag = true;
+            }
+            if (flag) return;
             var sDevices = Devices.SerialDevices;
-
-
-            // _gpsDevices.Add((Device)sender);
+            if (sDevices.Any(sDevice => sDevice.Equals(device)))
+            {
+                _gpsDevices.Add(device, "Serial");
+            }
         }
 
         private void DevicesOnDeviceDetectionCompleted(object sender, EventArgs eventArgs)

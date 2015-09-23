@@ -73,7 +73,7 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Serial")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string DeviceType {
             get {
                 return ((string)(this["DeviceType"]));
