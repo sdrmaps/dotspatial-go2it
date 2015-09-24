@@ -34,7 +34,6 @@
             this.gpsPauseResume = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lblDate = new System.Windows.Forms.Label();
-            this.lblPosition = new System.Windows.Forms.Label();
             this.lblAltitude = new System.Windows.Forms.Label();
             this.txtDate = new System.Windows.Forms.TextBox();
             this.txtPosition = new System.Windows.Forms.TextBox();
@@ -51,7 +50,13 @@
             this.chkAllowSerial = new System.Windows.Forms.CheckBox();
             this.txtConnType = new System.Windows.Forms.TextBox();
             this.lblBaudRate = new System.Windows.Forms.Label();
+            this.lblPosition = new System.Windows.Forms.Label();
             this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
+            this.clock1 = new DotSpatial.Positioning.Forms.Clock();
+            this.satelliteViewer1 = new DotSpatial.Positioning.Forms.SatelliteViewer();
+            this.altimeter1 = new DotSpatial.Positioning.Forms.Altimeter();
+            this.speedometer1 = new DotSpatial.Positioning.Forms.Speedometer();
+            this.compass1 = new DotSpatial.Positioning.Forms.Compass();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -67,7 +72,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 48);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(739, 48);
+            this.toolStrip1.Size = new System.Drawing.Size(594, 48);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -135,6 +140,11 @@
             this.tableLayoutPanel1.Controls.Add(this.txtConnType, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.lblBaudRate, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblPosition, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.clock1, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.satelliteViewer1, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.altimeter1, 2, 4);
+            this.tableLayoutPanel1.Controls.Add(this.speedometer1, 3, 4);
+            this.tableLayoutPanel1.Controls.Add(this.compass1, 4, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 48);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -144,100 +154,84 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(739, 219);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(594, 224);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // lblDate
             // 
             this.lblDate.AutoSize = true;
             this.lblDate.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDate.Location = new System.Drawing.Point(3, 65);
-            this.lblDate.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblDate.Location = new System.Drawing.Point(3, 52);
+            this.lblDate.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblDate.Name = "lblDate";
-            this.lblDate.Size = new System.Drawing.Size(141, 13);
+            this.lblDate.Size = new System.Drawing.Size(112, 13);
             this.lblDate.TabIndex = 4;
             this.lblDate.Text = "Date";
-            // 
-            // lblPosition
-            // 
-            this.lblPosition.AutoSize = true;
-            this.lblPosition.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblPosition.Location = new System.Drawing.Point(150, 65);
-            this.lblPosition.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
-            this.lblPosition.Name = "lblPosition";
-            this.lblPosition.Size = new System.Drawing.Size(141, 13);
-            this.lblPosition.TabIndex = 5;
-            this.lblPosition.Text = "Position";
             // 
             // lblAltitude
             // 
             this.lblAltitude.AutoSize = true;
             this.lblAltitude.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblAltitude.Location = new System.Drawing.Point(297, 65);
-            this.lblAltitude.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblAltitude.Location = new System.Drawing.Point(239, 52);
+            this.lblAltitude.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblAltitude.Name = "lblAltitude";
-            this.lblAltitude.Size = new System.Drawing.Size(141, 13);
+            this.lblAltitude.Size = new System.Drawing.Size(112, 13);
             this.lblAltitude.TabIndex = 6;
             this.lblAltitude.Text = "Altitude";
             // 
             // txtDate
             // 
             this.txtDate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDate.Location = new System.Drawing.Point(3, 86);
-            this.txtDate.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtDate.Location = new System.Drawing.Point(3, 68);
             this.txtDate.Name = "txtDate";
             this.txtDate.ReadOnly = true;
-            this.txtDate.Size = new System.Drawing.Size(141, 20);
+            this.txtDate.Size = new System.Drawing.Size(112, 20);
             this.txtDate.TabIndex = 13;
             // 
             // txtPosition
             // 
             this.txtPosition.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPosition.Location = new System.Drawing.Point(150, 86);
-            this.txtPosition.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtPosition.Location = new System.Drawing.Point(121, 68);
             this.txtPosition.Name = "txtPosition";
             this.txtPosition.ReadOnly = true;
-            this.txtPosition.Size = new System.Drawing.Size(141, 20);
+            this.txtPosition.Size = new System.Drawing.Size(112, 20);
             this.txtPosition.TabIndex = 14;
             // 
             // txtAltitude
             // 
             this.txtAltitude.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAltitude.Location = new System.Drawing.Point(297, 86);
-            this.txtAltitude.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtAltitude.Location = new System.Drawing.Point(239, 68);
             this.txtAltitude.Name = "txtAltitude";
             this.txtAltitude.ReadOnly = true;
-            this.txtAltitude.Size = new System.Drawing.Size(141, 20);
+            this.txtAltitude.Size = new System.Drawing.Size(112, 20);
             this.txtAltitude.TabIndex = 15;
             // 
             // txtSpeed
             // 
             this.txtSpeed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSpeed.Location = new System.Drawing.Point(444, 86);
-            this.txtSpeed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtSpeed.Location = new System.Drawing.Point(357, 68);
             this.txtSpeed.Name = "txtSpeed";
             this.txtSpeed.ReadOnly = true;
-            this.txtSpeed.Size = new System.Drawing.Size(141, 20);
+            this.txtSpeed.Size = new System.Drawing.Size(112, 20);
             this.txtSpeed.TabIndex = 16;
             // 
             // txtBearing
             // 
             this.txtBearing.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtBearing.Location = new System.Drawing.Point(591, 86);
-            this.txtBearing.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtBearing.Location = new System.Drawing.Point(475, 68);
             this.txtBearing.Name = "txtBearing";
             this.txtBearing.ReadOnly = true;
-            this.txtBearing.Size = new System.Drawing.Size(145, 20);
+            this.txtBearing.Size = new System.Drawing.Size(116, 20);
             this.txtBearing.TabIndex = 17;
             // 
             // lblSpeed
             // 
             this.lblSpeed.AutoSize = true;
             this.lblSpeed.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSpeed.Location = new System.Drawing.Point(444, 65);
-            this.lblSpeed.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblSpeed.Location = new System.Drawing.Point(357, 52);
+            this.lblSpeed.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblSpeed.Name = "lblSpeed";
-            this.lblSpeed.Size = new System.Drawing.Size(141, 13);
+            this.lblSpeed.Size = new System.Drawing.Size(112, 13);
             this.lblSpeed.TabIndex = 8;
             this.lblSpeed.Text = "Speed";
             // 
@@ -245,10 +239,10 @@
             // 
             this.lblBearing.AutoSize = true;
             this.lblBearing.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblBearing.Location = new System.Drawing.Point(591, 65);
-            this.lblBearing.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblBearing.Location = new System.Drawing.Point(475, 52);
+            this.lblBearing.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblBearing.Name = "lblBearing";
-            this.lblBearing.Size = new System.Drawing.Size(145, 13);
+            this.lblBearing.Size = new System.Drawing.Size(116, 13);
             this.lblBearing.TabIndex = 7;
             this.lblBearing.Text = "Bearing";
             // 
@@ -256,10 +250,10 @@
             // 
             this.chkAllowBluetooth.AutoSize = true;
             this.chkAllowBluetooth.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkAllowBluetooth.Location = new System.Drawing.Point(591, 33);
-            this.chkAllowBluetooth.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.chkAllowBluetooth.Location = new System.Drawing.Point(477, 24);
+            this.chkAllowBluetooth.Margin = new System.Windows.Forms.Padding(5, 5, 3, 3);
             this.chkAllowBluetooth.Name = "chkAllowBluetooth";
-            this.chkAllowBluetooth.Size = new System.Drawing.Size(145, 17);
+            this.chkAllowBluetooth.Size = new System.Drawing.Size(114, 17);
             this.chkAllowBluetooth.TabIndex = 19;
             this.chkAllowBluetooth.Text = "Accept Bluetooth";
             this.chkAllowBluetooth.UseVisualStyleBackColor = true;
@@ -268,10 +262,9 @@
             // 
             this.cmbName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cmbName.FormattingEnabled = true;
-            this.cmbName.Location = new System.Drawing.Point(3, 31);
-            this.cmbName.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.cmbName.Location = new System.Drawing.Point(3, 22);
             this.cmbName.Name = "cmbName";
-            this.cmbName.Size = new System.Drawing.Size(141, 21);
+            this.cmbName.Size = new System.Drawing.Size(112, 21);
             this.cmbName.TabIndex = 20;
             this.cmbName.SelectedIndexChanged += new System.EventHandler(this.cmbName_SelectedIndexChanged);
             // 
@@ -279,10 +272,10 @@
             // 
             this.lblName.AutoSize = true;
             this.lblName.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblName.Location = new System.Drawing.Point(3, 10);
-            this.lblName.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblName.Location = new System.Drawing.Point(3, 6);
+            this.lblName.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(141, 13);
+            this.lblName.Size = new System.Drawing.Size(112, 13);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "Name";
             // 
@@ -290,31 +283,30 @@
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatus.Location = new System.Drawing.Point(150, 10);
-            this.lblStatus.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblStatus.Location = new System.Drawing.Point(121, 6);
+            this.lblStatus.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(141, 13);
+            this.lblStatus.Size = new System.Drawing.Size(112, 13);
             this.lblStatus.TabIndex = 2;
             this.lblStatus.Text = "Status";
             // 
             // txtStatus
             // 
             this.txtStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtStatus.Location = new System.Drawing.Point(150, 31);
-            this.txtStatus.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtStatus.Location = new System.Drawing.Point(121, 22);
             this.txtStatus.Name = "txtStatus";
             this.txtStatus.ReadOnly = true;
-            this.txtStatus.Size = new System.Drawing.Size(141, 20);
+            this.txtStatus.Size = new System.Drawing.Size(112, 20);
             this.txtStatus.TabIndex = 11;
             // 
             // chkAllowSerial
             // 
             this.chkAllowSerial.AutoSize = true;
             this.chkAllowSerial.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkAllowSerial.Location = new System.Drawing.Point(444, 33);
-            this.chkAllowSerial.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+            this.chkAllowSerial.Location = new System.Drawing.Point(359, 24);
+            this.chkAllowSerial.Margin = new System.Windows.Forms.Padding(5, 5, 3, 3);
             this.chkAllowSerial.Name = "chkAllowSerial";
-            this.chkAllowSerial.Size = new System.Drawing.Size(141, 17);
+            this.chkAllowSerial.Size = new System.Drawing.Size(110, 17);
             this.chkAllowSerial.TabIndex = 18;
             this.chkAllowSerial.Text = "Accept Serial";
             this.chkAllowSerial.UseVisualStyleBackColor = true;
@@ -322,23 +314,131 @@
             // txtConnType
             // 
             this.txtConnType.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtConnType.Location = new System.Drawing.Point(297, 31);
-            this.txtConnType.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.txtConnType.Location = new System.Drawing.Point(239, 22);
             this.txtConnType.Name = "txtConnType";
             this.txtConnType.ReadOnly = true;
-            this.txtConnType.Size = new System.Drawing.Size(141, 20);
+            this.txtConnType.Size = new System.Drawing.Size(112, 20);
             this.txtConnType.TabIndex = 21;
             // 
             // lblBaudRate
             // 
             this.lblBaudRate.AutoSize = true;
             this.lblBaudRate.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblBaudRate.Location = new System.Drawing.Point(297, 10);
-            this.lblBaudRate.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
+            this.lblBaudRate.Location = new System.Drawing.Point(239, 6);
+            this.lblBaudRate.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
             this.lblBaudRate.Name = "lblBaudRate";
-            this.lblBaudRate.Size = new System.Drawing.Size(141, 13);
+            this.lblBaudRate.Size = new System.Drawing.Size(112, 13);
             this.lblBaudRate.TabIndex = 3;
             this.lblBaudRate.Text = "Connection Type";
+            // 
+            // lblPosition
+            // 
+            this.lblPosition.AutoSize = true;
+            this.lblPosition.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblPosition.Location = new System.Drawing.Point(121, 52);
+            this.lblPosition.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            this.lblPosition.Name = "lblPosition";
+            this.lblPosition.Size = new System.Drawing.Size(112, 13);
+            this.lblPosition.TabIndex = 5;
+            this.lblPosition.Text = "Position";
+            // 
+            // clock1
+            // 
+            this.clock1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.clock1.CenterR = 0F;
+            this.clock1.DisplayMode = DotSpatial.Positioning.Forms.ClockDisplayMode.Manual;
+            this.clock1.Height = 102;
+            this.clock1.IsPaintingOnSeparateThread = true;
+            this.clock1.Location = new System.Drawing.Point(8, 99);
+            this.clock1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 3);
+            this.clock1.MaximumR = 100F;
+            this.clock1.Name = "clock1";
+            this.clock1.Origin = new DotSpatial.Positioning.Azimuth(0D);
+            this.clock1.Rotation = new DotSpatial.Positioning.Angle(0D);
+            this.clock1.Size = new System.Drawing.Size(102, 102);
+            this.clock1.TabIndex = 22;
+            this.clock1.Text = "clock1";
+            this.clock1.UpdateInterval = System.TimeSpan.Parse("00:00:00.1000000");
+            this.clock1.Value = new System.DateTime(2015, 9, 24, 13, 7, 42, 243);
+            this.clock1.ValueColor = System.Drawing.Color.Black;
+            this.clock1.Width = 102;
+            // 
+            // satelliteViewer1
+            // 
+            this.satelliteViewer1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.satelliteViewer1.Bearing = new DotSpatial.Positioning.Azimuth(0D);
+            this.satelliteViewer1.CenterR = 0F;
+            this.satelliteViewer1.DirectionLabelInterval = new DotSpatial.Positioning.Angle(45D);
+            this.satelliteViewer1.FixColor = System.Drawing.Color.LightGreen;
+            this.satelliteViewer1.Height = 102;
+            this.satelliteViewer1.IsPaintingOnSeparateThread = true;
+            this.satelliteViewer1.Location = new System.Drawing.Point(126, 99);
+            this.satelliteViewer1.MajorTickInterval = new DotSpatial.Positioning.Angle(15D);
+            this.satelliteViewer1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 3);
+            this.satelliteViewer1.MaximumR = 90F;
+            this.satelliteViewer1.MinorTickInterval = new DotSpatial.Positioning.Angle(2D);
+            this.satelliteViewer1.Name = "satelliteViewer1";
+            this.satelliteViewer1.Size = new System.Drawing.Size(102, 102);
+            this.satelliteViewer1.TabIndex = 23;
+            this.satelliteViewer1.Text = "satelliteViewer1";
+            this.satelliteViewer1.Width = 102;
+            // 
+            // altimeter1
+            // 
+            this.altimeter1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.altimeter1.CenterR = 0F;
+            this.altimeter1.Height = 102;
+            this.altimeter1.IsPaintingOnSeparateThread = true;
+            this.altimeter1.Location = new System.Drawing.Point(244, 99);
+            this.altimeter1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 3);
+            this.altimeter1.MaximumR = 100F;
+            this.altimeter1.Name = "altimeter1";
+            this.altimeter1.Origin = new DotSpatial.Positioning.Azimuth(0D);
+            this.altimeter1.Rotation = new DotSpatial.Positioning.Angle(0D);
+            this.altimeter1.Size = new System.Drawing.Size(102, 102);
+            this.altimeter1.TabIndex = 24;
+            this.altimeter1.Text = "altimeter1";
+            this.altimeter1.Width = 102;
+            // 
+            // speedometer1
+            // 
+            this.speedometer1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.speedometer1.CenterR = 0F;
+            this.speedometer1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.speedometer1.Height = 102;
+            this.speedometer1.IsPaintingOnSeparateThread = true;
+            this.speedometer1.Location = new System.Drawing.Point(362, 99);
+            this.speedometer1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 3);
+            this.speedometer1.MaximumAngle = new DotSpatial.Positioning.Angle(320D);
+            this.speedometer1.MaximumR = 100F;
+            this.speedometer1.MinimumAngle = new DotSpatial.Positioning.Angle(40D);
+            this.speedometer1.Name = "speedometer1";
+            this.speedometer1.Size = new System.Drawing.Size(102, 102);
+            this.speedometer1.TabIndex = 25;
+            this.speedometer1.Text = "speedometer1";
+            this.speedometer1.Width = 102;
+            // 
+            // compass1
+            // 
+            this.compass1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.compass1.AngleLabelInterval = new DotSpatial.Positioning.Angle(30D);
+            this.compass1.CenterR = 0F;
+            this.compass1.DirectionLabelInterval = new DotSpatial.Positioning.Angle(45D);
+            this.compass1.Height = 102;
+            this.compass1.IsPaintingOnSeparateThread = true;
+            this.compass1.Location = new System.Drawing.Point(480, 99);
+            this.compass1.MajorTickInterval = new DotSpatial.Positioning.Angle(15D);
+            this.compass1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 3);
+            this.compass1.MaximumR = 100F;
+            this.compass1.MinorTickInterval = new DotSpatial.Positioning.Angle(2D);
+            this.compass1.Name = "compass1";
+            this.compass1.Origin = new DotSpatial.Positioning.Azimuth(0D);
+            this.compass1.Rotation = new DotSpatial.Positioning.Angle(0D);
+            this.compass1.Size = new System.Drawing.Size(106, 102);
+            this.compass1.TabIndex = 26;
+            this.compass1.Text = "compass1";
+            this.compass1.Value = new DotSpatial.Positioning.Azimuth(0D);
+            this.compass1.Width = 106;
             // 
             // GpsPanel
             // 
@@ -347,7 +447,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "GpsPanel";
-            this.Size = new System.Drawing.Size(739, 267);
+            this.Size = new System.Drawing.Size(594, 272);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -383,5 +483,10 @@
         private Positioning.NmeaInterpreter nmeaInterpreter;
         private System.Windows.Forms.ComboBox cmbName;
         private System.Windows.Forms.TextBox txtConnType;
+        private Positioning.Forms.Clock clock1;
+        private Positioning.Forms.SatelliteViewer satelliteViewer1;
+        private Positioning.Forms.Altimeter altimeter1;
+        private Positioning.Forms.Speedometer speedometer1;
+        private Positioning.Forms.Compass compass1;
     }
 }

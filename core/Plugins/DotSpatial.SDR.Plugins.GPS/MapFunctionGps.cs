@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.Controls;
-using DotSpatial.Data;
 using DotSpatial.Positioning;
 using DotSpatial.SDR.Plugins.GPS.Properties;
 
@@ -82,6 +81,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             {
                 // TODO: right here is where we staret with drawing the points to map
                 _gpsPanel.NmeaPositionChanged(sender, args);
+                PlotGpsPointToMap(sender, args);
             };
             _nmeaInterpreter.Started += delegate(object sender, EventArgs args) { _gpsPanel.NmeaStarted(sender, args); };
             _nmeaInterpreter.Stopped += delegate(object sender, EventArgs args) { _gpsPanel.NmeaStopped(sender, args); };
@@ -91,6 +91,15 @@ namespace DotSpatial.SDR.Plugins.GPS
             _nmeaInterpreter.ConnectionLost += delegate(object sender, ExceptionEventArgs args) { _gpsPanel.NmeaConnectionLost(sender, args); };
             _nmeaInterpreter.Paused += delegate(object sender, EventArgs args) { _gpsPanel.NmeaPaused(sender, args); };
             _nmeaInterpreter.Resumed += delegate(object sender, EventArgs args) { _gpsPanel.NmeaResumed(sender, args); };
+        }
+
+        private void PlotGpsPointToMap(object sender, PositionEventArgs args)
+        {
+            // TODO: snag an interval
+            // also keep an array for the count
+            // use drawing layer?
+            // assign symbology on admin panel
+            
         }
 
         /// <summary>
