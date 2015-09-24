@@ -79,12 +79,12 @@
             this.searchEsn,
             this.searchKeyLocations,
             this.searchAll,
-            this.searchParcels,
-            this.searchCellSector});
+            this.searchCellSector,
+            this.searchParcels});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 45);
+            this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 48);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(717, 45);
+            this.toolStrip1.Size = new System.Drawing.Size(717, 48);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -94,7 +94,7 @@
             this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.address_search_16;
             this.searchAdds.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchAdds.Name = "searchAdds";
-            this.searchAdds.Size = new System.Drawing.Size(53, 42);
+            this.searchAdds.Size = new System.Drawing.Size(53, 45);
             this.searchAdds.Text = "Address";
             this.searchAdds.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchAdds.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -106,7 +106,7 @@
             this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.name_search_16;
             this.searchName.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchName.Name = "searchName";
-            this.searchName.Size = new System.Drawing.Size(43, 42);
+            this.searchName.Size = new System.Drawing.Size(43, 45);
             this.searchName.Text = "Name";
             this.searchName.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchName.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -118,7 +118,7 @@
             this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.phone_search_16;
             this.searchPhone.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchPhone.Name = "searchPhone";
-            this.searchPhone.Size = new System.Drawing.Size(45, 42);
+            this.searchPhone.Size = new System.Drawing.Size(45, 45);
             this.searchPhone.Text = "Phone";
             this.searchPhone.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchPhone.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -130,7 +130,7 @@
             this.searchHydrant.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.hydrant_16;
             this.searchHydrant.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchHydrant.Name = "searchHydrant";
-            this.searchHydrant.Size = new System.Drawing.Size(54, 42);
+            this.searchHydrant.Size = new System.Drawing.Size(54, 45);
             this.searchHydrant.Text = "Hydrant";
             this.searchHydrant.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchHydrant.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -142,7 +142,7 @@
             this.searchClear.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.clear_16;
             this.searchClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchClear.Name = "searchClear";
-            this.searchClear.Size = new System.Drawing.Size(38, 42);
+            this.searchClear.Size = new System.Drawing.Size(38, 45);
             this.searchClear.Text = "Clear";
             this.searchClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -154,7 +154,7 @@
             this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.road_search_16;
             this.searchRoad.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchRoad.Name = "searchRoad";
-            this.searchRoad.Size = new System.Drawing.Size(38, 42);
+            this.searchRoad.Size = new System.Drawing.Size(38, 45);
             this.searchRoad.Text = "Road";
             this.searchRoad.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchRoad.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -165,7 +165,7 @@
             this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.intersection_search_16;
             this.searchIntersection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchIntersection.Name = "searchIntersection";
-            this.searchIntersection.Size = new System.Drawing.Size(73, 42);
+            this.searchIntersection.Size = new System.Drawing.Size(73, 45);
             this.searchIntersection.Text = "Intersection";
             this.searchIntersection.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchIntersection.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -176,8 +176,9 @@
             this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchCity.Name = "searchCity";
-            this.searchCity.Size = new System.Drawing.Size(32, 42);
+            this.searchCity.Size = new System.Drawing.Size(32, 45);
             this.searchCity.Text = "City";
+            this.searchCity.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchCity.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchCity.Click += new System.EventHandler(this.searchCity_Click);
             // 
@@ -186,8 +187,9 @@
             this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchEsn.Name = "searchEsn";
-            this.searchEsn.Size = new System.Drawing.Size(32, 42);
+            this.searchEsn.Size = new System.Drawing.Size(32, 45);
             this.searchEsn.Text = "ESN";
+            this.searchEsn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchEsn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchEsn.Click += new System.EventHandler(this.searchEsn_Click);
             // 
@@ -196,7 +198,7 @@
             this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.keylocations_search_16;
             this.searchKeyLocations.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchKeyLocations.Name = "searchKeyLocations";
-            this.searchKeyLocations.Size = new System.Drawing.Size(84, 42);
+            this.searchKeyLocations.Size = new System.Drawing.Size(84, 45);
             this.searchKeyLocations.Text = "Key Locations";
             this.searchKeyLocations.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchKeyLocations.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -207,7 +209,7 @@
             this.searchAll.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchAll.Name = "searchAll";
-            this.searchAll.Size = new System.Drawing.Size(58, 42);
+            this.searchAll.Size = new System.Drawing.Size(58, 45);
             this.searchAll.Text = "All Fields";
             this.searchAll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchAll.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -219,8 +221,9 @@
             this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchParcels.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchParcels.Name = "searchParcels";
-            this.searchParcels.Size = new System.Drawing.Size(48, 42);
+            this.searchParcels.Size = new System.Drawing.Size(48, 45);
             this.searchParcels.Text = "Parcels";
+            this.searchParcels.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchParcels.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchParcels.Click += new System.EventHandler(this.searchParcels_Click);
             // 
@@ -229,8 +232,9 @@
             this.searchCellSector.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchCellSector.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchCellSector.Name = "searchCellSector";
-            this.searchCellSector.Size = new System.Drawing.Size(72, 42);
+            this.searchCellSector.Size = new System.Drawing.Size(72, 45);
             this.searchCellSector.Text = "Cell Sectors";
+            this.searchCellSector.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchCellSector.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchCellSector.Click += new System.EventHandler(this.searchCellSector_Click);
             // 
@@ -242,12 +246,12 @@
             this.searchLayoutPanel.Controls.Add(this.btnSearch, 1, 0);
             this.searchLayoutPanel.Controls.Add(this.searchDGV, 0, 1);
             this.searchLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchLayoutPanel.Location = new System.Drawing.Point(0, 45);
+            this.searchLayoutPanel.Location = new System.Drawing.Point(0, 48);
             this.searchLayoutPanel.Name = "searchLayoutPanel";
             this.searchLayoutPanel.RowCount = 2;
             this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
             this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchLayoutPanel.Size = new System.Drawing.Size(717, 173);
+            this.searchLayoutPanel.Size = new System.Drawing.Size(717, 170);
             this.searchLayoutPanel.TabIndex = 3;
             // 
             // searchDGV
@@ -269,7 +273,7 @@
             this.searchDGV.ReadOnly = true;
             this.searchDGV.RowHeadersVisible = false;
             this.searchDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.searchDGV.Size = new System.Drawing.Size(711, 133);
+            this.searchDGV.Size = new System.Drawing.Size(711, 130);
             this.searchDGV.TabIndex = 2;
             this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
             // 

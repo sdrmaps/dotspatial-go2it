@@ -78,7 +78,11 @@ namespace DotSpatial.SDR.Plugins.GPS
             _nmeaInterpreter.AltitudeChanged += delegate(object sender, DistanceEventArgs args) { _gpsPanel.NmeaAltitudeChanged(sender, args); };
             _nmeaInterpreter.SpeedChanged += delegate(object sender, SpeedEventArgs args) { _gpsPanel.NmeaSpeedChanged(sender, args); };
             _nmeaInterpreter.DateTimeChanged += delegate(object sender, DateTimeEventArgs args) { _gpsPanel.NmeaDateTimeChanged(sender, args); };
-            _nmeaInterpreter.PositionChanged += delegate(object sender, PositionEventArgs args) { _gpsPanel.NmeaPositionChanged(sender, args); };
+            _nmeaInterpreter.PositionChanged += delegate(object sender, PositionEventArgs args)
+            {
+                // TODO: right here is where we staret with drawing the points to map
+                _gpsPanel.NmeaPositionChanged(sender, args);
+            };
             _nmeaInterpreter.Started += delegate(object sender, EventArgs args) { _gpsPanel.NmeaStarted(sender, args); };
             _nmeaInterpreter.Stopped += delegate(object sender, EventArgs args) { _gpsPanel.NmeaStopped(sender, args); };
             _nmeaInterpreter.ExceptionOccurred += delegate(object sender, ExceptionEventArgs args) { _gpsPanel.NmeaExceptionOccured(sender, args); };
