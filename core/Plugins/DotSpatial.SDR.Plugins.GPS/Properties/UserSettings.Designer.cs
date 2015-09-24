@@ -26,7 +26,6 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string DeviceName {
             get {
                 return ((string)(this["DeviceName"]));
@@ -39,6 +38,7 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AllowSerial {
             get {
                 return ((bool)(this["AllowSerial"]));
@@ -51,6 +51,7 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AllowBluetooth {
             get {
                 return ((bool)(this["AllowBluetooth"]));
@@ -69,18 +70,6 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
             }
             set {
                 this["DeviceStatus"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DeviceType {
-            get {
-                return ((string)(this["DeviceType"]));
-            }
-            set {
-                this["DeviceType"] = value;
             }
         }
     }

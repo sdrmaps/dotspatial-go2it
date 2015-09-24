@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using DotSpatial.Data;
 using DotSpatial.Positioning;
 using DotSpatial.SDR.Plugins.GPS.Properties;
 
@@ -10,10 +11,14 @@ namespace DotSpatial.SDR.Plugins.GPS
 {
     public class MapFunctionGps : MapFunction
     {
-        private readonly GpsPanel _gpsPanel;
+        private GpsPanel _gpsPanel;
         private readonly NmeaInterpreter _nmeaInterpreter;
         private readonly Dictionary<Device, string> _gpsDevices;
         private bool _isAutoStart;
+
+        // drawing layers used by this tool
+        // private FeatureSet _pointGraphics;
+        // private MapPointLayer _pointGraphicsLayer;
 
         #region Constructors
 
@@ -23,6 +28,11 @@ namespace DotSpatial.SDR.Plugins.GPS
             _gpsDevices = new Dictionary<Device, string>();
             _nmeaInterpreter = new NmeaInterpreter { AllowAutomaticReconnection = true };
             Configure();
+        }
+
+        public bool IsGpsActive()
+        {
+            return _nmeaInterpreter.IsRunning;
         }
 
         private void Configure()
@@ -45,7 +55,10 @@ namespace DotSpatial.SDR.Plugins.GPS
                 devStatus == DeviceStatus.Paused.ToString() ||
                 devStatus == DeviceStatus.Detected.ToString())
                 {
-                    _isAutoStart = true;
+                    if (devStatus != DeviceStatus.Detected.ToString())
+                    {
+                        _isAutoStart = true;
+                    }
                     Devices.BeginDetection();
                 }
         }
@@ -98,7 +111,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             };
             _gpsPanel.DeviceStart += delegate
             {
-                TryStart(_gpsPanel.DeviceName);
+                TryStart(UserSettings.Default.DeviceName);
             };
         }
 
@@ -147,9 +160,25 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
         }
 
-        public bool IsGpsActive()
+        protected override void OnActivate()
         {
-            return _nmeaInterpreter.IsRunning;
+            if (_gpsPanel == null || _gpsPanel.IsDisposed)
+            {
+                _gpsPanel = new GpsPanel();
+                HandleDetectionEvents();
+                HandleNmeaEvents();
+                HandleGpsPanelEvents();
+            }
+            _gpsPanel.Show();
+            base.OnActivate();
+        }
+
+        /// <summary>
+        /// Allows for new behavior during deactivation.
+        /// </summary>
+        protected override void OnDeactivate()
+        {
+            base.OnDeactivate();
         }
         #endregion
     }

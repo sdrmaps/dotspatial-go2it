@@ -18,13 +18,13 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             InitializeComponent();
             _detectedDevices = new Dictionary<string, string>();
-            chkAllowSerial.Checked = UserSettings.Default.AllowSerial;
-            chkAllowBluetooth.Checked = UserSettings.Default.AllowBluetooth;
+            chkAllowSerial.Checked = AllowSerial;
+            chkAllowBluetooth.Checked = AllowBluetooth;
         }
         #endregion
 
         #region Properties
-        public string DeviceName
+        private static string DeviceName
         {
             get
             {
@@ -37,7 +37,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
         }
 
-        public bool AllowSerial
+        private static bool AllowSerial
         {
             get
             {
@@ -50,7 +50,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
         }
 
-        public bool AllowBluetooth
+        private static bool AllowBluetooth
         {
             get
             {
@@ -63,17 +63,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
         }
 
-        public string DeviceConnection
-        {
-            get { return UserSettings.Default.DeviceType; }
-            set
-            {
-                UserSettings.Default.DeviceType = value;
-                UserSettings.Default.Save();
-            }
-        }
-
-        public DeviceStatus DeviceStatus
+        private static DeviceStatus DeviceStatus
         {
             get
             {
@@ -162,6 +152,7 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             if (gpsStartStop.Text == @"Start")
             {
+                
                 DeviceStart(sender, e);
             }
             else
@@ -222,13 +213,28 @@ namespace DotSpatial.SDR.Plugins.GPS
                         _detectedDevices.Add(kvPair.Key.Name, kvPair.Value);
                         cmbName.Items.Add(kvPair.Key.Name);
                     }
-                    cmbName.SelectedIndex = cmbName.Items.IndexOf(UserSettings.Default.DeviceName);
+                    if (devices.Count > 1)
+                    {
+                        if (DeviceName != string.Empty)
+                        {
+                            cmbName.SelectedIndex = cmbName.Items.IndexOf(DeviceName) != -1 ? cmbName.Items.IndexOf(DeviceName) : 0;
+                        }
+                        else
+                        {
+                            cmbName.SelectedIndex = 0;  // the saved setting is blank
+                        }
+                    }
+                    else
+                    {
+                        cmbName.SelectedIndex = 0;  // there is only one option to work with
+                    }
                 }
                 else
                 {
                     DeviceStatus = DeviceStatus.Unavailable;  // save user setting
                 }
                 txtStatus.Text = DeviceStatus.ToString();
+                DeviceName = cmbName.Text;
             }));
         }
 
@@ -328,8 +334,6 @@ namespace DotSpatial.SDR.Plugins.GPS
                 gpsDetectCancel.Enabled = false;
                 gpsPauseResume.Enabled = true;
                 cmbName.Enabled = false;
-                DeviceName = cmbName.Text;  // save user setting
-                DeviceConnection = txtConnType.Text;  // save user setting
                 DeviceStatus = DeviceStatus.Connected;  // save user setting
                 txtStatus.Text = DeviceStatus.Connected.ToString();
             }));

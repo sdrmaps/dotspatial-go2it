@@ -2,20 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DotSpatial.SDR.Plugins.GPS.Properties" GeneratedClassName="UserSettings">
   <Profiles />
   <Settings>
-    <Setting Name="DeviceName" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="DeviceName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AllowSerial" Type="System.Boolean" Scope="User">
+    <Setting Name="AllowSerial" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="AllowBluetooth" Type="System.Boolean" Scope="User">
+    <Setting Name="AllowBluetooth" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DeviceStatus" Type="System.String" Scope="User">
       <Value Profile="(Default)">Unavailable</Value>
-    </Setting>
-    <Setting Name="DeviceType" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
