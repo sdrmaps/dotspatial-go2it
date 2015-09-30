@@ -1002,18 +1002,18 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
-            //var gpsIntType = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType;
-            //if (gpsIntType == "Time")
-            //{
-            //    gpsSelectTime.Checked = true;
-            //    gpsIntervalTime.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
-            //}
-            //else
-            //{
-            //    gpsSelectCount.Checked = true;
-            //    gpsIntervalCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
-            //}
-
+            var gpsIntType = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType;
+            if (gpsIntType == "Time")
+            {
+                gpsSelectTime.Checked = true;
+                gpsIntervalTime.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
+            }
+            else
+            {
+                gpsSelectCount.Checked = true;
+                gpsIntervalCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
+            }
+            gpsDisplayPointCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount;
             chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes;
             chkEnableQueryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
@@ -1497,6 +1497,17 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor = ptGpsColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle = ApplyComboBoxSetting(ptGpsStyle);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize = Convert.ToInt32(ptGpsSize.Text);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount = Convert.ToInt32(gpsDisplayPointCount.Text);
+            if (gpsSelectCount.Checked)
+            {
+                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType = "Count";
+                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue = Convert.ToInt32(gpsIntervalCount.Text);
+            }
+            else
+            {
+                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType = "Time";
+                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue = Convert.ToInt32(gpsIntervalTime.Text);
+            }
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -2877,11 +2888,8 @@ namespace Go2It
         {
             if (gpsSelectCount.Checked)
             {
-                gpsIntervalCount.Enabled = false;
-            }
-            else
-            {
                 gpsIntervalCount.Enabled = true;
+                gpsIntervalTime.Enabled = false;
             }
         }
 
@@ -2889,11 +2897,8 @@ namespace Go2It
         {
             if (gpsSelectTime.Checked)
             {
-                gpsIntervalTime.Enabled = false;
-            }
-            else
-            {
-                gpsIntervalCount.Enabled = true;
+                gpsIntervalTime.Enabled = true;
+                gpsIntervalCount.Enabled = false;
             }
         }
     }

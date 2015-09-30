@@ -249,7 +249,10 @@ namespace Go2It
                 {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
                 {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
                 {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)}
+                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)},
+                {"gps_display_count", Go2ItProjectSettings.Instance.GpsDisplayCount.ToString(CultureInfo.InvariantCulture)},
+                {"gps_interval_type", Go2ItProjectSettings.Instance.GpsIntervalType.ToString(CultureInfo.InvariantCulture)},
+                {"gps_interval_value", Go2ItProjectSettings.Instance.GpsIntervalValue.ToString(CultureInfo.InvariantCulture)},
             };
             SQLiteHelper.Insert(conn, "ProjectSettings", d);
 
@@ -263,7 +266,10 @@ namespace Go2It
                 {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
                 {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
-                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle}
+                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle},
+                {"gps_color", Go2ItProjectSettings.Instance.GpsPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                {"gps_style", Go2ItProjectSettings.Instance.GpsPointStyle},
+                {"gps_size", Go2ItProjectSettings.Instance.GpsPointSize.ToString(CultureInfo.InvariantCulture)},
             };
             SQLiteHelper.Insert(conn, "GraphicSettings", g);
 
@@ -298,6 +304,9 @@ namespace Go2It
             Go2ItProjectSettings.Instance.SearchBufferDistance = int.Parse(psR["search_buffer_distance"].ToString());
             Go2ItProjectSettings.Instance.SearchZoomFactor = decimal.Parse(psR["search_zoom_factor"].ToString());
             Go2ItProjectSettings.Instance.SearchQueryParserLogging = bool.Parse(psR["search_query_logging"].ToString());
+            Go2ItProjectSettings.Instance.GpsDisplayCount = int.Parse(psR["gps_display_count"].ToString());
+            Go2ItProjectSettings.Instance.GpsIntervalType = psR["gps_interval_type"].ToString();
+            Go2ItProjectSettings.Instance.GpsIntervalValue= int.Parse(psR["gps_interval_value"].ToString());
 
             const string gsQuery = "SELECT * FROM GraphicSettings";
             DataTable gsTable = SQLiteHelper.GetDataTable(conn, gsQuery);
@@ -306,6 +315,9 @@ namespace Go2It
             Go2ItProjectSettings.Instance.GraphicPointColor = Color.FromArgb(Convert.ToInt32(gsR["point_color"].ToString()));
             Go2ItProjectSettings.Instance.GraphicPointStyle = gsR["point_style"].ToString();
             Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(gsR["point_size"]);
+            Go2ItProjectSettings.Instance.GpsPointColor = Color.FromArgb(Convert.ToInt32(gsR["gps_color"].ToString()));
+            Go2ItProjectSettings.Instance.GpsPointStyle = gsR["gps_style"].ToString();
+            Go2ItProjectSettings.Instance.GpsPointSize = Convert.ToInt32(gsR["gps_size"]);
             Go2ItProjectSettings.Instance.GraphicLineBorderColor = Color.FromArgb(Convert.ToInt32(gsR["line_border_color"].ToString()));
             Go2ItProjectSettings.Instance.GraphicLineColor = Color.FromArgb(Convert.ToInt32(gsR["line_color"].ToString()));
             Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(gsR["line_size"]);
