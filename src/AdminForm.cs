@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -178,11 +179,6 @@ namespace Go2It
 
             // assign all the admin form elements
             _appManager = app;
-
-            if (_appManager.Map.FunctionMode == FunctionMode.None)
-            {
-                _appManager.Map.Cursor = Cursors.Arrow;
-            }
             
             _projectManager = (ProjectManager)app.SerializationManager;
             _dockingControl = (DockingControl) app.DockManager;
@@ -223,6 +219,10 @@ namespace Go2It
             }
             else
             {
+                if (_appManager.Map.FunctionMode == FunctionMode.None)
+                {
+                    _appManager.Map.Cursor = Cursors.Arrow;
+                }
                 PopulateMapViews();  // add all the map views to the pull down menu
                 // set the active map index on the pull down menu
                 cmbActiveMapTab.SelectedIndex = cmbActiveMapTab.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption);
@@ -428,6 +428,10 @@ namespace Go2It
 
         private void UnbindGraphicElementEvents()
         {
+            ptGpsColorSlider.ValueChanged -= PtGpsColorSliderOnValueChanged;
+            ptGpsColor.Click -= PtGpsColorOnClick;
+            ptGpsSize.ValueChanged -= PtGpsSizeOnValueChanged;
+            ptGpsStyle.SelectedIndexChanged -= PtGpsStyleOnSelectedIndexChanged;
             ptSymbolColorSlider.ValueChanged -= PtSymbolColorSliderOnValueChanged;
             ptSymbolColor.Click -= PtSymbolColorOnClick;
             ptSymbolSize.ValueChanged -= PtSymbolSizeOnValueChanged;
@@ -607,37 +611,82 @@ namespace Go2It
             }
         }
 
-        private void UpdateGraphics(Map map)
+        private void UpdateLineGraphics(Map map)
         {
-            switch (map.MapFrame.DrawingLayers[0].GetType().Name)
+            // parse out line shape styles
+            LineCap lineCap;
+            Enum.TryParse(lineSymbolCap.SelectedItem.ToString(), true, out lineCap);
+            DashStyle lineStyle;
+            Enum.TryParse(lineSymbolStyle.SelectedItem.ToString(), true, out lineStyle);
+            var lLyr = map.MapFrame.DrawingLayers[0] as MapLineLayer;
+            if (lLyr != null)
             {
-                case "MapPointLayer":
-                    PointShape ptShape;  // parse out point shape style
-                    Enum.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
-                    var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
-                    if (pLyr != null)
-                    {
-                        pLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor,
-                            ptShape, Convert.ToInt32(ptSymbolSize.Text));
-                    }
-                    break;
-                case "MapLineLayer":
-                    // parse out line shape styles
-                    LineCap lineCap;
-                    Enum.TryParse(lineSymbolCap.SelectedItem.ToString(), true, out lineCap);
-                    DashStyle lineStyle;
-                    Enum.TryParse(lineSymbolStyle.SelectedItem.ToString(), true, out lineStyle);
-                    var lLyr = map.MapFrame.DrawingLayers[0] as MapLineLayer;
-                    if (lLyr != null)
-                    {
-                        lLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor,
-                            lineSymbolBorderColor.BackColor, Convert.ToInt32(lineSymbolSize.Text),
-                            lineStyle, lineCap);
-                    }
-                    break;
+                lLyr.Symbolizer = new LineSymbolizer(lineSymbolColor.BackColor,
+                    lineSymbolBorderColor.BackColor, Convert.ToInt32(lineSymbolSize.Text),
+                    lineStyle, lineCap);
             }
             map.BackColor = mapBGColorPanel.BackColor;
             map.MapFrame.Invalidate();
+        }
+
+        private void UpdatePointGraphics(Map map)
+        {
+            PointShape ptShape;  // parse out point shape style
+            Enum.TryParse(ptSymbolStyle.SelectedItem.ToString(), true, out ptShape);
+            var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
+            if (pLyr != null)
+            {
+                pLyr.Symbolizer = new PointSymbolizer(ptSymbolColor.BackColor,
+                    ptShape, Convert.ToInt32(ptSymbolSize.Text));
+            }
+            map.BackColor = mapBGColorPanel.BackColor;
+            map.MapFrame.Invalidate();
+        }
+
+        private void UpdateGpsGraphics(Map map)
+        {
+            PointShape ptShape;  // parse out point shape style
+            Enum.TryParse(ptGpsStyle.SelectedItem.ToString(), true, out ptShape);
+            var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
+            if (pLyr != null)
+            {
+                pLyr.Symbolizer = new PointSymbolizer(ptGpsColor.BackColor,
+                    ptShape, Convert.ToInt32(ptGpsSize.Text));
+            }
+            map.BackColor = mapBGColorPanel.BackColor;
+            map.MapFrame.Invalidate();
+        }
+
+
+        private void DrawGpsPointGraphics()
+        {
+            Map gpsMap;
+            if (ptGpsGraphic.Controls.Count != 0)
+            {
+                gpsMap = ptGpsGraphic.Controls[0] as Map;
+                UpdateGpsGraphics(gpsMap);
+            }
+            else
+            {
+                gpsMap = new Map
+                {
+                    ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
+                    FunctionMode = FunctionMode.None,
+                };
+                gpsMap.MapFunctions.Clear(); // clear all built in map functions (nav/zoom/etc)
+                ptGpsGraphic.Controls.Add(gpsMap);
+
+                var ftSet = new FeatureSet(FeatureType.Point);
+                var ftLyr = new MapPointLayer(ftSet);
+                gpsMap.MapFrame.DrawingLayers.Add(ftLyr);
+
+                // get the center of the control panel (location to render point)
+                var y = ((ptGpsGraphic.Bottom - ptGpsGraphic.Top) / 2) - 1;
+                var x = ((ptGpsGraphic.Right - ptGpsGraphic.Left) / 2) - 1;
+                var c = gpsMap.PixelToProj(new Point(x, y));
+                ftSet.AddFeature(new DotSpatial.Topology.Point(c));
+            }
+            UpdateGpsGraphics(gpsMap);
         }
 
         private void DrawPointGraphics()
@@ -646,8 +695,8 @@ namespace Go2It
             if (ptSymbolGraphic.Controls.Count != 0)
             {
                 ptMap = ptSymbolGraphic.Controls[0] as Map;
-                UpdateGraphics(ptMap);
-            }
+                UpdatePointGraphics(ptMap);
+            } 
             else
             {
                 ptMap = new Map
@@ -668,7 +717,7 @@ namespace Go2It
                 var c = ptMap.PixelToProj(new Point(x, y));
                 ftSet.AddFeature(new DotSpatial.Topology.Point(c));
             }
-            UpdateGraphics(ptMap);
+            UpdatePointGraphics(ptMap);
         }
 
         private void DrawLineGraphics()
@@ -705,31 +754,44 @@ namespace Go2It
                 lineFt.Coordinates.Add(sc);
                 lineFt.Coordinates.Add(ec);
             }
-            UpdateGraphics(lineMap);
+            UpdateLineGraphics(lineMap);
         }
 
         private void PopulateGraphicsToForm()
         {
             // point symbology for graphics rendering
             Color pColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor;
+            Color gpsColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor;
             ptSymbolColorSlider.Value = pColor.GetOpacity();
+            ptGpsColorSlider.Value = gpsColor.GetOpacity();
             ptSymbolColorSlider.MaximumColor = Color.FromArgb(255, pColor.R, pColor.G, pColor.B);
+            ptGpsColorSlider.MaximumColor = Color.FromArgb(255, gpsColor.R, gpsColor.G, gpsColor.B);
             ptSymbolColorSlider.ValueChanged += PtSymbolColorSliderOnValueChanged;
+            ptGpsColorSlider.ValueChanged += PtGpsColorSliderOnValueChanged;
             ptSymbolColor.BackColor = pColor;
+            ptGpsColor.BackColor = gpsColor;
             ptSymbolColor.Click += PtSymbolColorOnClick;
+            ptGpsColor.Click += PtGpsColorOnClick;
             ptSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize;
+            ptGpsSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize;
             ptSymbolSize.ValueChanged += PtSymbolSizeOnValueChanged;
+            ptGpsSize.ValueChanged += PtGpsSizeOnValueChanged;
             foreach (PointShape ptShape in Enum.GetValues(typeof(PointShape)))
             {
                 if (ptShape.ToString().ToUpper() != "UNDEFINED")
                 {
                     ptSymbolStyle.Items.Add(ptShape.ToString());
+                    ptGpsStyle.Items.Add(ptShape.ToString());
                 }
             }
             var idx = ptSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle);
             ptSymbolStyle.SelectedIndex = idx;
             ptSymbolStyle.SelectedIndexChanged += PtSymbolStyleOnSelectedIndexChanged;
+            idx = ptGpsStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle);
+            ptGpsStyle.SelectedIndex = idx;
+            ptGpsStyle.SelectedIndexChanged += PtGpsStyleOnSelectedIndexChanged;
             DrawPointGraphics();
+            DrawGpsPointGraphics();
 
             // line symbology for graphics rendering
             lineSymbolBorderColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor;
@@ -763,6 +825,44 @@ namespace Go2It
             lineSymbolStyle.SelectedIndex = idx;
             lineSymbolStyle.SelectedIndexChanged += LineSymbolStyleOnSelectedIndexChanged;
             DrawLineGraphics();
+        }
+
+        private void PtGpsStyleOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            DrawGpsPointGraphics();
+            _projectManager.IsDirty = true;
+        }
+
+        private void PtGpsSizeOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            DrawGpsPointGraphics();
+            _projectManager.IsDirty = true;
+        }
+
+        private void PtGpsColorOnClick(object sender, EventArgs eventArgs)
+        {
+            var oColor = ptGpsColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+
+            // update the slider max color value for display
+            ptGpsColorSlider.MaximumColor = Color.FromArgb(255, dlg.Color.R, dlg.Color.G, dlg.Color.B);
+            // update the color and map display with new color accounting for alpha
+            int alpha = Convert.ToInt32(ptGpsColorSlider.Value * 255);
+            ptGpsColor.BackColor = Color.FromArgb(alpha, dlg.Color.R, dlg.Color.G, dlg.Color.B);
+            if (oColor != ptGpsColor.BackColor)
+            {
+                _projectManager.IsDirty = true;
+            }
+            DrawGpsPointGraphics();
+        }
+
+        private void PtGpsColorSliderOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            int alpha = Convert.ToInt32(ptGpsColorSlider.Value * 255);
+            ptGpsColor.BackColor = Color.FromArgb(alpha, ptGpsColor.BackColor.R, ptGpsColor.BackColor.G, ptGpsColor.BackColor.B);
+            DrawGpsPointGraphics();
+            _projectManager.IsDirty = true;
         }
 
         private void LineSymbolColorSliderOnValueChanged(object sender, EventArgs eventArgs)
@@ -902,6 +1002,18 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
+            //var gpsIntType = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType;
+            //if (gpsIntType == "Time")
+            //{
+            //    gpsSelectTime.Checked = true;
+            //    gpsIntervalTime.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
+            //}
+            //else
+            //{
+            //    gpsSelectCount.Checked = true;
+            //    gpsIntervalCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
+            //}
+
             chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes;
             chkEnableQueryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
@@ -1381,6 +1493,10 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(lineSymbolSize.Text);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = ApplyComboBoxSetting(lineSymbolStyle);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = ApplyComboBoxSetting(lineSymbolCap);
+            // set the gps symbology styles
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor = ptGpsColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle = ApplyComboBoxSetting(ptGpsStyle);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize = Convert.ToInt32(ptGpsSize.Text);
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -1610,6 +1726,7 @@ namespace Go2It
             // update the graphic render display to show new map bg color
             DrawLineGraphics();
             DrawPointGraphics();
+            DrawGpsPointGraphics();
         }
 
         private void btnUsersAddUpdate_Click(object sender, EventArgs e)
@@ -2754,6 +2871,30 @@ namespace Go2It
                 HotKeyManager.AddHotKey(new HotKey(keys, cellCmd.Value.ToString()), cellCmd.Tag.ToString());
             }
             HotKeyManager.SaveHotKeys();
+        }
+
+        private void gpsSelectCount_CheckedChanged(object sender, EventArgs e)
+        {
+            if (gpsSelectCount.Checked)
+            {
+                gpsIntervalCount.Enabled = false;
+            }
+            else
+            {
+                gpsIntervalCount.Enabled = true;
+            }
+        }
+
+        private void gpsSelectTime_CheckedChanged(object sender, EventArgs e)
+        {
+            if (gpsSelectTime.Checked)
+            {
+                gpsIntervalTime.Enabled = false;
+            }
+            else
+            {
+                gpsIntervalCount.Enabled = true;
+            }
         }
     }
 }

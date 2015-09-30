@@ -56,6 +56,12 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal)0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
             Properties.ProjectSettings.Default.SearchQueryParserLogging = false;
+            Properties.ProjectSettings.Default.GpsPointColor = Color.Red;
+            Properties.ProjectSettings.Default.GpsPointSize = 16;
+            Properties.ProjectSettings.Default.GpsPointStyle = "Rectangle";
+            Properties.ProjectSettings.Default.GpsDisplayCount = 5;
+            Properties.ProjectSettings.Default.GpsIntervalType = "Time";
+            Properties.ProjectSettings.Default.GpsIntervalValue = 20;
         }
 
         /// <summary>
@@ -272,6 +278,42 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.GraphicPointSize = value; }
             get { return Properties.ProjectSettings.Default.GraphicPointSize; }
+        }
+
+        public Color GpsPointColor
+        {
+            set { Properties.ProjectSettings.Default.GpsPointColor = value; }
+            get { return Properties.ProjectSettings.Default.GpsPointColor; }
+        }
+
+        public string GpsPointStyle
+        {
+            set { Properties.ProjectSettings.Default.GpsPointStyle = value; }
+            get { return Properties.ProjectSettings.Default.GpsPointStyle; }
+        }
+
+        public int GpsPointSize
+        {
+            set { Properties.ProjectSettings.Default.GpsPointSize = value; }
+            get { return Properties.ProjectSettings.Default.GpsPointSize; }
+        }
+
+        public int GpsDisplayCount
+        {
+            set { Properties.ProjectSettings.Default.GpsDisplayCount = value; }
+            get { return Properties.ProjectSettings.Default.GpsDisplayCount; }
+        }
+
+        public int GpsIntervalValue
+        {
+            set { Properties.ProjectSettings.Default.GpsIntervalValue= value; }
+            get { return Properties.ProjectSettings.Default.GpsIntervalValue; }
+        }
+
+        public string GpsIntervalType
+        {
+            set { Properties.ProjectSettings.Default.GpsIntervalType = value; }
+            get { return Properties.ProjectSettings.Default.GpsIntervalType; }
         }
 
         public Color GraphicLineColor

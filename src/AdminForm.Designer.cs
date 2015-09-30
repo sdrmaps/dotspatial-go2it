@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
             this.adminTab_LayerManagement = new System.Windows.Forms.TabPage();
@@ -97,6 +97,15 @@
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.adminTab_SymbologySettings = new System.Windows.Forms.TabPage();
+            this.ptGpsSize = new System.Windows.Forms.NumericUpDown();
+            this.ptGpsStyle = new System.Windows.Forms.ComboBox();
+            this.ptGpsColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
+            this.ptGpsColor = new System.Windows.Forms.Panel();
+            this.ptGpsGraphic = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.gpsDisplayPointCount = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.gpsIntervalCount = new System.Windows.Forms.NumericUpDown();
             this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
             this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
             this.lblHydrantDist = new System.Windows.Forms.Label();
@@ -119,6 +128,10 @@
             this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.gpsIntervalTime = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.gpsSelectTime = new System.Windows.Forms.RadioButton();
+            this.gpsSelectCount = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -137,12 +150,16 @@
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
             this.adminTab_SymbologySettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptGpsSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gpsDisplayPointCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalTime)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -159,7 +176,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(605, 786);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(617, 786);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // adminTab_Control
@@ -175,7 +192,7 @@
             this.adminTab_Control.Name = "adminTab_Control";
             this.adminTab_Control.Padding = new System.Drawing.Point(0, 0);
             this.adminTab_Control.SelectedIndex = 0;
-            this.adminTab_Control.Size = new System.Drawing.Size(605, 751);
+            this.adminTab_Control.Size = new System.Drawing.Size(617, 751);
             this.adminTab_Control.TabIndex = 8;
             // 
             // adminTab_LayerManagement
@@ -185,7 +202,7 @@
             this.adminTab_LayerManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_LayerManagement.Margin = new System.Windows.Forms.Padding(0);
             this.adminTab_LayerManagement.Name = "adminTab_LayerManagement";
-            this.adminTab_LayerManagement.Size = new System.Drawing.Size(597, 725);
+            this.adminTab_LayerManagement.Size = new System.Drawing.Size(609, 725);
             this.adminTab_LayerManagement.TabIndex = 0;
             this.adminTab_LayerManagement.Text = "Map Configuration";
             // 
@@ -234,8 +251,8 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbNotesLayer);
             this.adminLayerSplitter.Panel2.Margin = new System.Windows.Forms.Padding(3);
             this.adminLayerSplitter.Panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.adminLayerSplitter.Size = new System.Drawing.Size(597, 725);
-            this.adminLayerSplitter.SplitterDistance = 192;
+            this.adminLayerSplitter.Size = new System.Drawing.Size(609, 725);
+            this.adminLayerSplitter.SplitterDistance = 195;
             this.adminLayerSplitter.SplitterWidth = 10;
             this.adminLayerSplitter.TabIndex = 8;
             this.adminLayerSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.adminLayerSplitter_SplitterMoved);
@@ -260,7 +277,7 @@
             this.legendSplitter.Panel2.BackColor = System.Drawing.Color.Transparent;
             this.legendSplitter.Panel2.Controls.Add(this.legendButtonTable);
             this.legendSplitter.Panel2MinSize = 33;
-            this.legendSplitter.Size = new System.Drawing.Size(190, 723);
+            this.legendSplitter.Size = new System.Drawing.Size(193, 723);
             this.legendSplitter.SplitterDistance = 689;
             this.legendSplitter.SplitterWidth = 1;
             this.legendSplitter.TabIndex = 0;
@@ -279,17 +296,17 @@
             this.legendButtonTable.RowCount = 1;
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.legendButtonTable.Size = new System.Drawing.Size(190, 33);
+            this.legendButtonTable.Size = new System.Drawing.Size(193, 33);
             this.legendButtonTable.TabIndex = 0;
             // 
             // btnRemoveLayer
             // 
             this.btnRemoveLayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRemoveLayer.Location = new System.Drawing.Point(98, 3);
+            this.btnRemoveLayer.Location = new System.Drawing.Point(99, 3);
             this.btnRemoveLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnRemoveLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnRemoveLayer.Name = "btnRemoveLayer";
-            this.btnRemoveLayer.Size = new System.Drawing.Size(89, 27);
+            this.btnRemoveLayer.Size = new System.Drawing.Size(91, 27);
             this.btnRemoveLayer.TabIndex = 1;
             this.btnRemoveLayer.Text = "Remove";
             this.btnRemoveLayer.UseVisualStyleBackColor = true;
@@ -302,7 +319,7 @@
             this.btnAddLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnAddLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(89, 27);
+            this.btnAddLayer.Size = new System.Drawing.Size(90, 27);
             this.btnAddLayer.TabIndex = 2;
             this.btnAddLayer.Text = "Add";
             this.btnAddLayer.UseVisualStyleBackColor = true;
@@ -613,7 +630,7 @@
             this.adminTab_ProgramManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_ProgramManagement.Name = "adminTab_ProgramManagement";
             this.adminTab_ProgramManagement.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(597, 725);
+            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(609, 725);
             this.adminTab_ProgramManagement.TabIndex = 3;
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
@@ -633,35 +650,35 @@
             this.dgvHotKeys.AllowUserToAddRows = false;
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle14;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
@@ -761,7 +778,7 @@
             this.adminTab_SearchProperties.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SearchProperties.Name = "adminTab_SearchProperties";
             this.adminTab_SearchProperties.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SearchProperties.Size = new System.Drawing.Size(597, 725);
+            this.adminTab_SearchProperties.Size = new System.Drawing.Size(609, 725);
             this.adminTab_SearchProperties.TabIndex = 4;
             this.adminTab_SearchProperties.Text = "Layer Search Properties";
             this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
@@ -827,35 +844,35 @@
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.AllowUserToDeleteRows = false;
             this.dgvLayerIndex.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle17;
             this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
@@ -901,6 +918,19 @@
             // 
             // adminTab_SymbologySettings
             // 
+            this.adminTab_SymbologySettings.Controls.Add(this.gpsSelectCount);
+            this.adminTab_SymbologySettings.Controls.Add(this.gpsSelectTime);
+            this.adminTab_SymbologySettings.Controls.Add(this.label6);
+            this.adminTab_SymbologySettings.Controls.Add(this.gpsIntervalTime);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsSize);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsStyle);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsColorSlider);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsColor);
+            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsGraphic);
+            this.adminTab_SymbologySettings.Controls.Add(this.label5);
+            this.adminTab_SymbologySettings.Controls.Add(this.gpsDisplayPointCount);
+            this.adminTab_SymbologySettings.Controls.Add(this.label4);
+            this.adminTab_SymbologySettings.Controls.Add(this.gpsIntervalCount);
             this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolColorSlider);
             this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolColorSlider);
             this.adminTab_SymbologySettings.Controls.Add(this.lblHydrantDist);
@@ -924,10 +954,108 @@
             this.adminTab_SymbologySettings.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SymbologySettings.Name = "adminTab_SymbologySettings";
             this.adminTab_SymbologySettings.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SymbologySettings.Size = new System.Drawing.Size(597, 725);
+            this.adminTab_SymbologySettings.Size = new System.Drawing.Size(609, 725);
             this.adminTab_SymbologySettings.TabIndex = 5;
             this.adminTab_SymbologySettings.Text = "Project Settings";
             this.adminTab_SymbologySettings.UseVisualStyleBackColor = true;
+            // 
+            // ptGpsSize
+            // 
+            this.ptGpsSize.Location = new System.Drawing.Point(480, 152);
+            this.ptGpsSize.Name = "ptGpsSize";
+            this.ptGpsSize.Size = new System.Drawing.Size(72, 20);
+            this.ptGpsSize.TabIndex = 54;
+            // 
+            // ptGpsStyle
+            // 
+            this.ptGpsStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ptGpsStyle.FormattingEnabled = true;
+            this.ptGpsStyle.Location = new System.Drawing.Point(269, 152);
+            this.ptGpsStyle.Name = "ptGpsStyle";
+            this.ptGpsStyle.Size = new System.Drawing.Size(205, 21);
+            this.ptGpsStyle.TabIndex = 53;
+            // 
+            // ptGpsColorSlider
+            // 
+            this.ptGpsColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ptGpsColorSlider.ColorButton = null;
+            this.ptGpsColorSlider.FlipRamp = false;
+            this.ptGpsColorSlider.FlipText = false;
+            this.ptGpsColorSlider.InvertRamp = false;
+            this.ptGpsColorSlider.Location = new System.Drawing.Point(133, 153);
+            this.ptGpsColorSlider.Maximum = 1D;
+            this.ptGpsColorSlider.MaximumColor = System.Drawing.Color.Green;
+            this.ptGpsColorSlider.Minimum = 0D;
+            this.ptGpsColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.ptGpsColorSlider.Name = "ptGpsColorSlider";
+            this.ptGpsColorSlider.NumberFormat = "#%";
+            this.ptGpsColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.ptGpsColorSlider.RampRadius = 10F;
+            this.ptGpsColorSlider.RampText = null;
+            this.ptGpsColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ptGpsColorSlider.RampTextBehindRamp = false;
+            this.ptGpsColorSlider.RampTextColor = System.Drawing.Color.Black;
+            this.ptGpsColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ptGpsColorSlider.ShowMaximum = false;
+            this.ptGpsColorSlider.ShowMinimum = false;
+            this.ptGpsColorSlider.ShowTicks = true;
+            this.ptGpsColorSlider.ShowValue = true;
+            this.ptGpsColorSlider.Size = new System.Drawing.Size(122, 23);
+            this.ptGpsColorSlider.SliderColor = System.Drawing.Color.Blue;
+            this.ptGpsColorSlider.SliderRadius = 4F;
+            this.ptGpsColorSlider.TabIndex = 52;
+            this.ptGpsColorSlider.Text = "rampSlider1";
+            this.ptGpsColorSlider.TickColor = System.Drawing.Color.DarkGray;
+            this.ptGpsColorSlider.TickSpacing = 5F;
+            this.ptGpsColorSlider.Value = 1D;
+            // 
+            // ptGpsColor
+            // 
+            this.ptGpsColor.Location = new System.Drawing.Point(101, 152);
+            this.ptGpsColor.Name = "ptGpsColor";
+            this.ptGpsColor.Size = new System.Drawing.Size(22, 24);
+            this.ptGpsColor.TabIndex = 31;
+            // 
+            // ptGpsGraphic
+            // 
+            this.ptGpsGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptGpsGraphic.Location = new System.Drawing.Point(43, 131);
+            this.ptGpsGraphic.Margin = new System.Windows.Forms.Padding(0);
+            this.ptGpsGraphic.Name = "ptGpsGraphic";
+            this.ptGpsGraphic.Size = new System.Drawing.Size(45, 45);
+            this.ptGpsGraphic.TabIndex = 28;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(152, 66);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(124, 13);
+            this.label5.TabIndex = 51;
+            this.label5.Text = "GPS Display Point Count";
+            // 
+            // gpsDisplayPointCount
+            // 
+            this.gpsDisplayPointCount.Location = new System.Drawing.Point(156, 82);
+            this.gpsDisplayPointCount.Name = "gpsDisplayPointCount";
+            this.gpsDisplayPointCount.Size = new System.Drawing.Size(120, 20);
+            this.gpsDisplayPointCount.TabIndex = 50;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(459, 80);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(98, 13);
+            this.label4.TabIndex = 49;
+            this.label4.Text = "GPS Interval Count";
+            // 
+            // gpsIntervalCount
+            // 
+            this.gpsIntervalCount.Location = new System.Drawing.Point(460, 96);
+            this.gpsIntervalCount.Name = "gpsIntervalCount";
+            this.gpsIntervalCount.Size = new System.Drawing.Size(102, 20);
+            this.gpsIntervalCount.TabIndex = 48;
             // 
             // ptSymbolColorSlider
             // 
@@ -1047,7 +1175,7 @@
             // 
             // searchBufferDistance
             // 
-            this.searchBufferDistance.Location = new System.Drawing.Point(514, 519);
+            this.searchBufferDistance.Location = new System.Drawing.Point(460, 528);
             this.searchBufferDistance.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -1097,7 +1225,7 @@
             // 
             this.lineSymbolSize.Location = new System.Drawing.Point(555, 332);
             this.lineSymbolSize.Name = "lineSymbolSize";
-            this.lineSymbolSize.Size = new System.Drawing.Size(78, 20);
+            this.lineSymbolSize.Size = new System.Drawing.Size(46, 20);
             this.lineSymbolSize.TabIndex = 34;
             // 
             // lineSymbolStyle
@@ -1160,7 +1288,7 @@
             // 
             this.btnSplitSave.AutoSize = true;
             this.btnSplitSave.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnSplitSave.Location = new System.Drawing.Point(516, 754);
+            this.btnSplitSave.Location = new System.Drawing.Point(528, 754);
             this.btnSplitSave.MaximumSize = new System.Drawing.Size(85, 28);
             this.btnSplitSave.MinimumSize = new System.Drawing.Size(85, 23);
             this.btnSplitSave.Name = "btnSplitSave";
@@ -1173,7 +1301,7 @@
             // btnCancel
             // 
             this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(435, 754);
+            this.btnCancel.Location = new System.Drawing.Point(447, 754);
             this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
             this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
             this.btnCancel.Name = "btnCancel";
@@ -1183,11 +1311,49 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // gpsIntervalTime
+            // 
+            this.gpsIntervalTime.Location = new System.Drawing.Point(462, 48);
+            this.gpsIntervalTime.Name = "gpsIntervalTime";
+            this.gpsIntervalTime.Size = new System.Drawing.Size(102, 20);
+            this.gpsIntervalTime.TabIndex = 55;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(464, 32);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(93, 13);
+            this.label6.TabIndex = 56;
+            this.label6.Text = "GPS Interval Time";
+            // 
+            // gpsSelectTime
+            // 
+            this.gpsSelectTime.AutoSize = true;
+            this.gpsSelectTime.Location = new System.Drawing.Point(440, 50);
+            this.gpsSelectTime.Name = "gpsSelectTime";
+            this.gpsSelectTime.Size = new System.Drawing.Size(14, 13);
+            this.gpsSelectTime.TabIndex = 57;
+            this.gpsSelectTime.TabStop = true;
+            this.gpsSelectTime.UseVisualStyleBackColor = true;
+            this.gpsSelectTime.CheckedChanged += new System.EventHandler(this.gpsSelectTime_CheckedChanged);
+            // 
+            // gpsSelectCount
+            // 
+            this.gpsSelectCount.AutoSize = true;
+            this.gpsSelectCount.Location = new System.Drawing.Point(440, 98);
+            this.gpsSelectCount.Name = "gpsSelectCount";
+            this.gpsSelectCount.Size = new System.Drawing.Size(14, 13);
+            this.gpsSelectCount.TabIndex = 58;
+            this.gpsSelectCount.TabStop = true;
+            this.gpsSelectCount.UseVisualStyleBackColor = true;
+            this.gpsSelectCount.CheckedChanged += new System.EventHandler(this.gpsSelectCount_CheckedChanged);
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 786);
+            this.ClientSize = new System.Drawing.Size(617, 786);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "AdminForm";
             this.Text = "Go2It Administration";
@@ -1216,12 +1382,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.adminTab_SymbologySettings.ResumeLayout(false);
             this.adminTab_SymbologySettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptGpsSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gpsDisplayPointCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalTime)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1313,6 +1483,19 @@
         private System.Windows.Forms.Label lblHydrantCount;
         private DotSpatial.Symbology.Forms.RampSlider lineSymbolColorSlider;
         private DotSpatial.Symbology.Forms.RampSlider ptSymbolColorSlider;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown gpsDisplayPointCount;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown gpsIntervalCount;
+        private System.Windows.Forms.NumericUpDown ptGpsSize;
+        private System.Windows.Forms.ComboBox ptGpsStyle;
+        private DotSpatial.Symbology.Forms.RampSlider ptGpsColorSlider;
+        private System.Windows.Forms.Panel ptGpsColor;
+        private System.Windows.Forms.Panel ptGpsGraphic;
+        private System.Windows.Forms.RadioButton gpsSelectCount;
+        private System.Windows.Forms.RadioButton gpsSelectTime;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown gpsIntervalTime;
 
     }
 }

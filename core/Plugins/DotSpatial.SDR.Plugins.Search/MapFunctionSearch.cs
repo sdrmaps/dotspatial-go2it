@@ -853,6 +853,10 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private string[] GetColumnNames()
         {
+            if (_currentProjectFile.Length == 0)
+            {
+                return new string[0];
+            }
             var conn = SQLiteHelper.GetSQLiteConnectionString(_currentProjectFile);
             var tblNames = SQLiteHelper.GetAllTableNames(conn);
             var sql = string.Empty;
@@ -890,6 +894,11 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public Directory GetLuceneIndexDirectory(string indexType)
         {
+            if (_currentProjectFile.Length == 0)
+            {
+                return null;
+            }
+
             var conn = SQLiteHelper.GetSQLiteConnectionString(_currentProjectFile);
             var db = SQLiteHelper.GetSQLiteFileName(conn);
 

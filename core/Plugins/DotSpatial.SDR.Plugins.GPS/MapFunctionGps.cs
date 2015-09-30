@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using DotSpatial.Data;
 using DotSpatial.Positioning;
+using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.GPS.Properties;
+using DotSpatial.Symbology;
+using DotSpatial.Topology;
+using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.GPS
 {
@@ -16,8 +21,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         private bool _isAutoStart;
 
         // drawing layers used by this tool
-        // private FeatureSet _pointGraphics;
-        // private MapPointLayer _pointGraphicsLayer;
+        private FeatureSet _pointGraphics;
+        private MapPointLayer _pointGraphicsLayer;
 
         #region Constructors
 
@@ -79,7 +84,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             _nmeaInterpreter.DateTimeChanged += delegate(object sender, DateTimeEventArgs args) { _gpsPanel.NmeaDateTimeChanged(sender, args); };
             _nmeaInterpreter.PositionChanged += delegate(object sender, PositionEventArgs args)
             {
-                // TODO: right here is where we staret with drawing the points to map
                 _gpsPanel.NmeaPositionChanged(sender, args);
                 PlotGpsPointToMap(sender, args);
             };
@@ -93,13 +97,49 @@ namespace DotSpatial.SDR.Plugins.GPS
             _nmeaInterpreter.Resumed += delegate(object sender, EventArgs args) { _gpsPanel.NmeaResumed(sender, args); };
         }
 
+        private Coordinate ConvertLatLonToMap(double lon, double lat)
+        {
+            if (Map.Projection.ToProj4String() != KnownCoordinateSystems.Geographic.World.WGS1984.ToProj4String())
+            {
+                double[] xy = new double[2];
+                xy[0] = lon;
+                xy[1] = lat;
+                Reproject.ReprojectPoints(
+                    xy, new double[1], KnownCoordinateSystems.Geographic.World.WGS1984, Map.Projection, 0, 1);
+                return new Coordinate(xy[0], xy[1]);
+            }
+            return new Coordinate(lon, lat);
+        }
+
         private void PlotGpsPointToMap(object sender, PositionEventArgs args)
         {
-            // TODO: snag an interval
-            // also keep an array for the count
-            // use drawing layer?
-            // assign symbology on admin panel
-            
+            // TODO: some sort of check based om interval or count
+            if (this.Map != null)
+            {
+                if (!double.IsNaN(args.Position.Latitude.DecimalDegrees))
+                {
+                    Coordinate c = ConvertLatLonToMap(args.Position.Longitude.DecimalDegrees,
+                        args.Position.Latitude.DecimalDegrees);
+
+                    if (_pointGraphicsLayer == null)
+                    {
+                        _pointGraphics = new FeatureSet(FeatureType.Point);
+                        _pointGraphicsLayer = new MapPointLayer(_pointGraphics);
+                        Symbology.PointShape pointShape = new Symbology.PointShape();
+                        Symbology.PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle, true, out pointShape);
+
+                        _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
+                            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor,
+                            pointShape,
+                            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize);
+
+                        Map.MapFrame.DrawingLayers.Add(_pointGraphicsLayer);
+                    }
+                    var point = new Point(c);
+                    _pointGraphics.AddFeature(point);
+                    // Map.ViewExtents = point.Envelope.ToExtent();
+                }
+            }
         }
 
         /// <summary>
