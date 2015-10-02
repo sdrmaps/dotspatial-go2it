@@ -93,6 +93,7 @@
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
     <Compile Include="DeviceStatus.cs" />
+    <Compile Include="GpsDisplayQueue.cs" />
     <Compile Include="GpsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

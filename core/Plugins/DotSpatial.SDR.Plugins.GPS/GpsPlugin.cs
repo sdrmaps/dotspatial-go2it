@@ -70,7 +70,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             _mapFunction.Map = App.Map;
         }
 
-
         private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
             if (!_isFunctionActive) return;  // dont waste time if this is not the active tool
@@ -179,6 +178,5 @@ namespace DotSpatial.SDR.Plugins.GPS
             App.Map.FunctionMode = FunctionMode.None;
             App.DockManager.SelectPanel(PluginKey);
         }
-
     }
 }

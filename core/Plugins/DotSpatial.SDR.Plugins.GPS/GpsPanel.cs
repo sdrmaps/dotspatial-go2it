@@ -152,7 +152,6 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             if (gpsStartStop.Text == @"Start")
             {
-                
                 DeviceStart(sender, e);
             }
             else

@@ -102,7 +102,7 @@
       <Value Profile="(Default)">Time</Value>
     </Setting>
     <Setting Name="GpsIntervalValue" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">20</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="GpsDisplayCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
