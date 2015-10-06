@@ -8,8 +8,8 @@
     <ProjectGuid>{93C9C779-903D-491F-AA1F-5BE25E4F5188}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DotSpatial.SDR.Plugins.AliServer</RootNamespace>
-    <AssemblyName>DotSpatial.SDR.Plugins.AliServer</AssemblyName>
+    <RootNamespace>DotSpatial.SDR.Plugins.ALI</RootNamespace>
+    <AssemblyName>DotSpatial.SDR.Plugins.ALI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -91,9 +91,46 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
-    <Compile Include="AliServerPlugin.cs" />
-    <Compile Include="MapFunctionAliServer.cs" />
+    <Compile Include="AliMode.cs" />
+    <Compile Include="AliPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AliPanel.Designer.cs">
+      <DependentUpon>AliPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AliPlugin.cs" />
+    <Compile Include="MapFunctionAli.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\UserSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>UserSettings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AliPanel.resx">
+      <DependentUpon>AliPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Resources\info_16.png" />
+    <None Include="Properties\UserSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>UserSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -3,45 +3,46 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
-using DotSpatial.SDR.Plugins.GPS.Properties;
+using DotSpatial.SDR.Plugins.ALI.Properties;
 using SdrConfig = SDR.Configuration;
 
-namespace DotSpatial.SDR.Plugins.GPS
+namespace DotSpatial.SDR.Plugins.ALI
 {
-    public class GpsPlugin : Extension
+    public class AliPlugin : Extension
     {
         #region Constants and Fields
-
+        
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
 
-        private const string PluginKey = "kPanel_Gps";
-        private const string PluginCaption = "Global Positioning System (GPS) Interface";
+        private const string PluginKey = "kPanel_Ali";
+        private const string PluginCaption = "Automatic Location Information (ALI) Interface";
 
-        private MapFunctionGps _mapFunction;
-        private GpsPanel _gpsPanel;
+        private MapFunctionAli _mapFunction;
+        private AliPanel _aliPanel;
         private DockablePanel _dockPanel;
 
-        private bool _isFunctionActive;  // flag to eliminate redundant calls on hide/show,functionmode change
+        private bool _isFunctionActive;  // eliminate redundant calls on hide/show/mode change
         #endregion
 
         public override void Activate()
         {
             // add in the button controls for this plugin to the header
-            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "GPS", GpsTool_Click)
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "ALI", AliTool_Click)
             {
-                GroupCaption = "Gps_Setup",
-                ToolTipText = "Click to Configure GPS",
+                GroupCaption = "Ali_Interface",
+                ToolTipText = "Click to Connect with ALI",
                 SmallImage = Resources.info_16,
                 LargeImage = Resources.info_32
             });
-            // generate the gps interface display panel and add it to the tool panel
-            _gpsPanel = new GpsPanel();
-            _dockPanel = new DockablePanel(PluginKey, PluginCaption, _gpsPanel, DockStyle.Fill);
+            // generate the ali interface display panel and add it to the tool panel
+            _aliPanel = new AliPanel();
+            _dockPanel = new DockablePanel(PluginKey, PluginCaption, _aliPanel, DockStyle.Fill);
             App.DockManager.Add(_dockPanel);
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-            // initialize the gps function and check if it should/can start 
-            _mapFunction = new MapFunctionGps(_gpsPanel);
+
+            // initialize the ali function and check if it should/can run
+            _mapFunction = new MapFunctionAli(_aliPanel);
 
             base.Activate();
         }
@@ -57,11 +58,14 @@ namespace DotSpatial.SDR.Plugins.GPS
             base.Deactivate();
         }
 
-        private void AddGpsMapFunction()
+        private void AddAliMapFunction()
         {
             if (_mapFunction == null)
             {
-                _mapFunction = new MapFunctionGps(_gpsPanel);
+                _mapFunction = new MapFunctionAli(_aliPanel);
+                // TODO: not sure we need this on this function yet
+                // handle the functionactivated event, and fire button toggle for visual display
+                // _mapFunction.FunctionActivated += OnMapFunctionOnFunctionActivated;
             }
             if (!App.Map.MapFunctions.Contains(_mapFunction))
             {
@@ -69,6 +73,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
             _mapFunction.Map = App.Map;
         }
+
 
         private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
@@ -97,8 +102,8 @@ namespace DotSpatial.SDR.Plugins.GPS
 
             if (key.StartsWith("kMap_"))
             {
-                // check that the GPS function exists for this map
-                AddGpsMapFunction();
+                // check if the ALI function exists for this map
+                AddAliMapFunction();
                 // event binding to watch for function mode changes (to deactivate the tool)
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
                 // check that this tool is the active tool of the map now
@@ -167,11 +172,11 @@ namespace DotSpatial.SDR.Plugins.GPS
         }
 
         /// <summary>
-        /// GPS Setup Tool
+        /// ALI Interface Display Tool
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GpsTool_Click(object sender, EventArgs e)
+        private void AliTool_Click(object sender, EventArgs e)
         {
             if (App.Map == null) return;
             // update the prefs for tracking the active tools modes and panels

@@ -23,7 +23,6 @@ namespace DotSpatial.SDR.Plugins.GPS
                 ListUpdated(this, e);
         }
 
-        // public Map Map { get; set; }
         public MapPointLayer GpsGraphicsLayer { get; private set; }
         public PointShape GpsPointShape { get; private set; }
         public int GpsPointSize { get; private set; }

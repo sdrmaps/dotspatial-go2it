@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.AliServer", "DotSpatial.SDR.Plugins.AliServer.csproj", "{93C9C779-903D-491F-AA1F-5BE25E4F5188}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.ALI", "DotSpatial.SDR.Plugins.ALI.csproj", "{93C9C779-903D-491F-AA1F-5BE25E4F5188}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

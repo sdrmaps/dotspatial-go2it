@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DotSpatial.SDR.Plugins.GPS")]
-[assembly: AssemblyDescription("Global Positioning System module.")]
+[assembly: AssemblyDescription("Global Positioning System (GPS) Interface.")]
 [assembly: AssemblyProduct("DotSpatial.SDR.Plugins.GPS")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
