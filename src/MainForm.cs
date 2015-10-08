@@ -26,7 +26,7 @@ namespace Go2It
         {
             InitializeComponent();
 
-            // load any custom set hotkeys from the app db | else hotkeys load from assemblies in extension load
+            // load any custom set hotkeys from the app db | else hotkeys load from assemblies on extension load
             HotKeyManager.LoadHotKeys();
 
             // create our application manager

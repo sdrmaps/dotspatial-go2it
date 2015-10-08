@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+// using SDR.Configuration.Plugins;
 
 namespace SDR.Configuration.Project
 {
@@ -53,7 +54,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.HydrantSearchCount = 3;
             Properties.ProjectSettings.Default.HydrantSearchDistance = 250;
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
-            Properties.ProjectSettings.Default.SearchZoomFactor = (decimal)0.05;
+            Properties.ProjectSettings.Default.SearchZoomFactor = (decimal) 0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
             Properties.ProjectSettings.Default.SearchQueryParserLogging = false;
             Properties.ProjectSettings.Default.GpsPointColor = Color.Red;
@@ -89,7 +90,7 @@ namespace SDR.Configuration.Project
         /// </summary>
         public void ClearAddressLayers()
         {
-            Properties.ProjectSettings.Default.AddressesLayers.Clear(); 
+            Properties.ProjectSettings.Default.AddressesLayers.Clear();
         }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace SDR.Configuration.Project
         /// </summary>
         public string ActiveMapViewCaption
         {
-            set { Properties.ProjectSettings.Default.ActiveMapViewCaption = value;  }
+            set { Properties.ProjectSettings.Default.ActiveMapViewCaption = value; }
             get { return Properties.ProjectSettings.Default.ActiveMapViewCaption; }
         }
 
@@ -171,7 +172,7 @@ namespace SDR.Configuration.Project
         /// </summary>
         public bool SearchUsePretypes
         {
-            set { Properties.ProjectSettings.Default.SearchUsePretypes =  value; }
+            set { Properties.ProjectSettings.Default.SearchUsePretypes = value; }
             get { return Properties.ProjectSettings.Default.SearchUsePretypes; }
         }
 
@@ -306,7 +307,7 @@ namespace SDR.Configuration.Project
 
         public int GpsIntervalValue
         {
-            set { Properties.ProjectSettings.Default.GpsIntervalValue= value; }
+            set { Properties.ProjectSettings.Default.GpsIntervalValue = value; }
             get { return Properties.ProjectSettings.Default.GpsIntervalValue; }
         }
 
@@ -369,5 +370,23 @@ namespace SDR.Configuration.Project
             set { Properties.ProjectSettings.Default.HydrantSearchDistance = value; }
             get { return Properties.ProjectSettings.Default.HydrantSearchDistance; }
         }
+
+        //    public AliSettings.
+        //    {
+        //        get
+        //        {
+        //            var funcMode = Properties.ProjectSettings.Default.AliMode;
+        //            if (funcMode.Length <= 0) return Properties.
+        //            SearchMode sm;
+        //            Enum.TryParse(funcMode, true, out sm);
+        //            return sm;
+        //        }
+        //        set
+        //        {
+        //            _searchMode = value;  // update the searchmode for local reference
+        //            UserSettings.Default.SearchMode = value.ToString();
+        //            UserSettings.Default.Save();
+        //        }
+        //}
     }
 }

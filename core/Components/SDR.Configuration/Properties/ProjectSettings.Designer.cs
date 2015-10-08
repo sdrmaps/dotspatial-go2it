@@ -433,5 +433,113 @@ namespace SDR.Configuration.Properties {
                 this["GpsDisplayCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Disabled")]
+        public string AliMode {
+            get {
+                return ((string)(this["AliMode"]));
+            }
+            set {
+                this["AliMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliSdrServerDbPath {
+            get {
+                return ((string)(this["AliSdrServerDbPath"]));
+            }
+            set {
+                this["AliSdrServerDbPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string AliSdrServerUdpHost {
+            get {
+                return ((string)(this["AliSdrServerUdpHost"]));
+            }
+            set {
+                this["AliSdrServerUdpHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("777")]
+        public int AliSdrServerUdpPort {
+            get {
+                return ((int)(this["AliSdrServerUdpPort"]));
+            }
+            set {
+                this["AliSdrServerUdpPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliGlobalCadLogPath {
+            get {
+                return ((string)(this["AliGlobalCadLogPath"]));
+            }
+            set {
+                this["AliGlobalCadLogPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliEnterpolDbConnString {
+            get {
+                return ((string)(this["AliEnterpolDbConnString"]));
+            }
+            set {
+                this["AliEnterpolDbConnString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliEnterpolTableName {
+            get {
+                return ((string)(this["AliEnterpolTableName"]));
+            }
+            set {
+                this["AliEnterpolTableName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliEnterpolDataSource {
+            get {
+                return ((string)(this["AliEnterpolDataSource"]));
+            }
+            set {
+                this["AliEnterpolDataSource"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliEnterpolInitialCatalog {
+            get {
+                return ((string)(this["AliEnterpolInitialCatalog"]));
+            }
+            set {
+                this["AliEnterpolInitialCatalog"] = value;
+            }
+        }
     }
 }
