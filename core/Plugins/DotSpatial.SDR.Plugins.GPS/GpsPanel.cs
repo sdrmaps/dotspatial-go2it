@@ -365,5 +365,15 @@ namespace DotSpatial.SDR.Plugins.GPS
             }));
         }
         #endregion
+
+        private void chkAllowSerial_CheckedChanged(object sender, EventArgs e)
+        {
+            AllowSerial = chkAllowSerial.Checked;
+        }
+
+        private void chkAllowBluetooth_CheckedChanged(object sender, EventArgs e)
+        {
+            AllowBluetooth = chkAllowBluetooth.Checked;
+        }
     }
 }

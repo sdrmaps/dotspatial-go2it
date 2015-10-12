@@ -142,6 +142,29 @@ namespace DotSpatial.SDR.Plugins.GPS
                             SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount);
                         // refresh the map to display our updated gps trail
                         _displayQueue.ListUpdated += (o, eventArgs) => Map.Refresh();
+
+                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCountChanged +=
+                            delegate
+                            {
+                                _displayQueue.GpsPointDisplayCount = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount;
+                            };
+                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColorChanged +=
+                            delegate
+                            {
+                                _displayQueue.GpsNewPointColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor;
+                            };
+                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyleChanged +=
+                            delegate
+                            {
+                                PointShape ps;
+                                Enum.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle, true, out ps);
+                                _displayQueue.GpsPointShape = ps;
+                            };
+                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSizeChanged +=
+                            delegate
+                            {
+                                _displayQueue.GpsPointSize = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize;
+                            };
                     }
                     AddGpsTrail();
 
@@ -155,82 +178,23 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void HandleGpsInterval()
         {
+            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalTypeChanged +=
+                (sender, args) => HandleGpsInterval();
+
             if (SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType == "Time")
             {
-                // var x = 0;
                 _intervalList = null;
                 if (_intervalTimer == null)
                 {
                     var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue * 1000;
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValueChanged +=
+                        delegate
+                        {
+                            _intervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue * 1000;
+                        };
                     _intervalTimer = new System.Timers.Timer(interval) {AutoReset = true};
                     _intervalTimer.Elapsed += delegate
                     {
-                        //Coordinate c;
-                        //if (x == 0)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.7706933635497, 38.5522903674234);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 1;
-                        //} else if (x == 1)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.8726879541062, 38.4296600995426);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 2;
-                        //}
-                        //else if (x == 2)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.9626670018764, 38.4311245065135);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 3;
-                        //}
-                        //else if (x == 3)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.9932267235186, 38.3757361815746);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 4;
-                        //}
-                        //else if (x == 4)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.988420264955, 38.3200394267571);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 5;
-                        //}
-                        //else if (x == 5)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.8275763803184, 38.2643511932708);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 6;
-                        //}
-                        //else if (x == 6)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.6570578991494, 38.2434835753578);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 7;
-                        //}
-                        //else if (x == 7)
-                        //{
-                        //    c = new Coordinate(-91.4536760339984, 38.4635902563424);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 8;
-                        //}
-                        //else if (x == 8)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.4463916490751, 38.5425772422996);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 9;
-                        //}
-                        //else if (x == 9)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.7809807223508, 38.4952805378045);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 10;
-                        //}
-                        //else if (x == 10)
-                        //{
-                        //    c = ConvertLatLonToMap(-91.7953149244726, 38.4178068208833);
-                        //    _latestGpsPoint = new Point(c);
-                        //    x = 11;
-                        //}
                         _displayQueue.Enqueue(_latestGpsPoint);
                     };
                     _intervalTimer.Enabled = true;

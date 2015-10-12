@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
@@ -32,7 +33,7 @@ using SDR.Common;
 using SDR.Common.UserMessage;
 using Spatial4n.Core.Context.Nts;
 using Version = Lucene.Net.Util.Version;
-using Directory = Lucene.Net.Store.Directory;
+using LDirectory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
 using DotSpatial.Data;
 using DotSpatial.Controls.Docking;
@@ -40,6 +41,7 @@ using DotSpatial.Controls;
 using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
+using Directory = System.IO.Directory;
 using IGeometry = DotSpatial.Topology.IGeometry;
 using ILog = SDR.Common.logging.ILog;
 using Point = System.Drawing.Point;
@@ -2474,7 +2476,7 @@ namespace Go2It
                         path = Path.Combine(TempIndexDir, "_indexes", keyValuePair.Key);
 
                         DirectoryInfo di = System.IO.Directory.CreateDirectory(path);
-                        Directory dir = FSDirectory.Open(di);
+                        LDirectory dir = FSDirectory.Open(di);
                         FileInfo[] fi = di.GetFiles();
 
                         // single indexwriter is thread safe so lets use it in parallel
@@ -2899,6 +2901,42 @@ namespace Go2It
             {
                 gpsIntervalTime.Enabled = true;
                 gpsIntervalCount.Enabled = false;
+            }
+        }
+
+        private void cmbAliMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAliInterfaceDbPathBrowse_Click(object sender, EventArgs e)
+        {
+            //FolderBrowserDialog fbd = new FolderBrowserDialog();
+            //FileDialog fd = new OpenFileDialog();
+
+            //DialogResult result = fd.ShowDialog();
+            //if (result == DialogResult.OK)
+            //{
+            //    //
+            //    // The user selected a folder and pressed the OK button.
+            //    // We print the number of files found.
+            //    //
+            //    //string[] files =  Directory.GetFiles(fd.FileName);
+            //    //MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
+            //}
+
+        }
+
+        private void btnAliGlobalCadLogPathBrowse_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAliValidate_Click(object sender, EventArgs e)
+        {
+            if (cmbAliMode.Text != @"Disabled")
+            {
+                // then go ahead and do the test
             }
         }
     }

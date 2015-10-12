@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-// using SDR.Configuration.Plugins;
+﻿using System;
+using System.Drawing;
 
 namespace SDR.Configuration.Project
 {
@@ -281,42 +281,6 @@ namespace SDR.Configuration.Project
             get { return Properties.ProjectSettings.Default.GraphicPointSize; }
         }
 
-        public Color GpsPointColor
-        {
-            set { Properties.ProjectSettings.Default.GpsPointColor = value; }
-            get { return Properties.ProjectSettings.Default.GpsPointColor; }
-        }
-
-        public string GpsPointStyle
-        {
-            set { Properties.ProjectSettings.Default.GpsPointStyle = value; }
-            get { return Properties.ProjectSettings.Default.GpsPointStyle; }
-        }
-
-        public int GpsPointSize
-        {
-            set { Properties.ProjectSettings.Default.GpsPointSize = value; }
-            get { return Properties.ProjectSettings.Default.GpsPointSize; }
-        }
-
-        public int GpsDisplayCount
-        {
-            set { Properties.ProjectSettings.Default.GpsDisplayCount = value; }
-            get { return Properties.ProjectSettings.Default.GpsDisplayCount; }
-        }
-
-        public int GpsIntervalValue
-        {
-            set { Properties.ProjectSettings.Default.GpsIntervalValue = value; }
-            get { return Properties.ProjectSettings.Default.GpsIntervalValue; }
-        }
-
-        public string GpsIntervalType
-        {
-            set { Properties.ProjectSettings.Default.GpsIntervalType = value; }
-            get { return Properties.ProjectSettings.Default.GpsIntervalType; }
-        }
-
         public Color GraphicLineColor
         {
             set { Properties.ProjectSettings.Default.GraphicLineColor = value; }
@@ -371,22 +335,312 @@ namespace SDR.Configuration.Project
             get { return Properties.ProjectSettings.Default.HydrantSearchDistance; }
         }
 
-        //    public AliSettings.
-        //    {
-        //        get
-        //        {
-        //            var funcMode = Properties.ProjectSettings.Default.AliMode;
-        //            if (funcMode.Length <= 0) return Properties.
-        //            SearchMode sm;
-        //            Enum.TryParse(funcMode, true, out sm);
-        //            return sm;
-        //        }
-        //        set
-        //        {
-        //            _searchMode = value;  // update the searchmode for local reference
-        //            UserSettings.Default.SearchMode = value.ToString();
-        //            UserSettings.Default.Save();
-        //        }
-        //}
+        public event EventHandler GpsDisplayCountChanged;
+        public int GpsDisplayCount
+        {
+            get { return Properties.ProjectSettings.Default.GpsDisplayCount; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.GpsDisplayCount != value)
+                {
+                    Properties.ProjectSettings.Default.GpsDisplayCount = value;
+                    OnGpsDisplayCountChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnGpsDisplayCountChanged(EventArgs e)
+        {
+            if (GpsDisplayCountChanged != null)
+                GpsDisplayCountChanged(this, e);
+        }
+
+        public event EventHandler GpsPointColorChanged;
+        public Color GpsPointColor
+        {
+            get { return Properties.ProjectSettings.Default.GpsPointColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.GpsPointColor != value)
+                {
+                    Properties.ProjectSettings.Default.GpsPointColor = value;
+                    OnGpsPointColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnGpsPointColorChanged(EventArgs e)
+        {
+            if (GpsPointColorChanged != null)
+                GpsPointColorChanged(this, e);
+        }
+
+        public event EventHandler GpsPointStyleChanged;
+        public string GpsPointStyle
+        {
+            get { return Properties.ProjectSettings.Default.GpsPointStyle; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.GpsPointStyle != value)
+                {
+                    Properties.ProjectSettings.Default.GpsPointStyle = value;
+                    OnGpsPointStyleChanged(EventArgs.Empty);
+                }
+            }
+
+        }
+        protected virtual void OnGpsPointStyleChanged(EventArgs e)
+        {
+            if (GpsPointStyleChanged != null)
+                GpsPointStyleChanged(this, e);
+        }
+
+        public event EventHandler GpsPointSizeChanged;
+        public int GpsPointSize
+        {
+            get { return Properties.ProjectSettings.Default.GpsPointSize; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.GpsPointSize != value)
+                {
+                    Properties.ProjectSettings.Default.GpsPointSize = value;
+                    OnGpsPointSizeChanged(EventArgs.Empty);
+                }
+            }
+
+        }
+        protected virtual void OnGpsPointSizeChanged(EventArgs e)
+        {
+            if (GpsPointSizeChanged != null)
+                GpsPointSizeChanged(this, e);
+        }
+
+        public event EventHandler GpsIntervalValueChanged;
+        public int GpsIntervalValue
+        {
+            get { return Properties.ProjectSettings.Default.GpsIntervalValue; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.GpsIntervalValue != value)
+                {
+                    Properties.ProjectSettings.Default.GpsIntervalValue = value;
+                    OnGpsIntervalValueChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnGpsIntervalValueChanged(EventArgs e)
+        {
+            if (GpsIntervalValueChanged != null)
+                GpsIntervalValueChanged(this, e);
+        }
+
+        public event EventHandler GpsIntervalTypeChanged;
+        public string GpsIntervalType
+        {
+            get { return Properties.ProjectSettings.Default.GpsIntervalType; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.GpsIntervalType != value)
+                {
+                    Properties.ProjectSettings.Default.GpsIntervalType = value;
+                    OnGpsIntervalTypeChanged(EventArgs.Empty);
+                }
+            }
+
+        }
+        protected virtual void OnGpsIntervalTypeChanged(EventArgs e)
+        {
+            if (GpsIntervalTypeChanged != null)
+                GpsIntervalTypeChanged(this, e);
+        }
+
+        public event EventHandler AliModeChanged;
+        public string AliMode
+        {
+            get {
+                return Properties.ProjectSettings.Default.AliMode; 
+            }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliMode != value)
+                {
+                    Properties.ProjectSettings.Default.AliMode = value;
+                    OnAliModeChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliModeChanged(EventArgs e)
+        {
+            if (AliModeChanged != null)
+                AliModeChanged(this, e);
+        }
+
+        public event EventHandler AliSdrServerDbPathChanged;
+        public string AliSdrServerDbPath
+        {
+            get { return Properties.ProjectSettings.Default.AliSdrServerDbPath; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliSdrServerDbPath != value)
+                {
+                    Properties.ProjectSettings.Default.AliSdrServerDbPath = value;
+                    OnAliSdrServerDbPathChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliSdrServerDbPathChanged(EventArgs e)
+        {
+            if (AliSdrServerDbPathChanged != null)
+                AliSdrServerDbPathChanged(this, e);
+        }
+
+        public event EventHandler AliSdrServerUdpHostChanged;
+        public string AliSdrServerUdpHost
+        {
+            get { return Properties.ProjectSettings.Default.AliSdrServerUdpHost; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliSdrServerUdpHost != value)
+                {
+                    Properties.ProjectSettings.Default.AliSdrServerUdpHost = value;
+                    OnAliSdrServeUdpHostChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliSdrServeUdpHostChanged(EventArgs e)
+        {
+            if (AliSdrServerUdpHostChanged != null)
+                AliSdrServerUdpHostChanged(this, e);
+        }
+
+        public event EventHandler AliSdrServerUdpPortChanged;
+        public int AliSdrServerUdpPort
+        {
+            get { return Properties.ProjectSettings.Default.AliSdrServerUdpPort; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliSdrServerUdpPort != value)
+                {
+                    Properties.ProjectSettings.Default.AliSdrServerUdpPort = value;
+                    OnAliSdrServeUdpPortChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliSdrServeUdpPortChanged(EventArgs e)
+        {
+            if (AliSdrServerUdpPortChanged != null)
+                AliSdrServerUdpPortChanged(this, e);
+        }
+
+        public event EventHandler AliGlobalCadLogPathChanged;
+        public string AliGlobalCadLogPath
+        {
+            get { return Properties.ProjectSettings.Default.AliGlobalCadLogPath; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliGlobalCadLogPath != value)
+                {
+                    Properties.ProjectSettings.Default.AliGlobalCadLogPath = value;
+                    OnAliGlobalCadLogPathChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliGlobalCadLogPathChanged(EventArgs e)
+        {
+            if (AliGlobalCadLogPathChanged != null)
+                AliGlobalCadLogPathChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolDbConnectionStringChanged;
+        public string AliEnterpolConnectionString
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolDbConnString; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolDbConnString != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolDbConnString = value;
+                    OnAliEnterpolConnectionStringChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliEnterpolConnectionStringChanged(EventArgs e)
+        {
+            if (AliEnterpolDbConnectionStringChanged != null)
+                AliEnterpolDbConnectionStringChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolTableNameChanged;
+        public string AliEnterpolTableName
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolTableName; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolTableName != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolTableName = value;
+                    OnAliEnterpolTableNameChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliEnterpolTableNameChanged(EventArgs e)
+        {
+            if (AliEnterpolTableNameChanged != null)
+                AliEnterpolTableNameChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolDataSourceChanged;
+        public string AliEnterpolDataSource
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolDataSource; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolDataSource != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolDataSource = value;
+                    OnAliEnterpolDataSourceChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliEnterpolDataSourceChanged(EventArgs e)
+        {
+            if (AliEnterpolDataSourceChanged != null)
+                AliEnterpolDataSourceChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolInitialCatalogChanged;
+        public string AliEnterpolInitialCatalog
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolInitialCatalog; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolInitialCatalog != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = value;
+                    OnAliEnterpolInitialCatalogChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliEnterpolInitialCatalogChanged(EventArgs e)
+        {
+            if (AliEnterpolInitialCatalogChanged != null)
+                AliEnterpolInitialCatalogChanged(this, e);
+        }
     }
 }

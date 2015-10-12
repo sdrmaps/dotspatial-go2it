@@ -24,10 +24,10 @@ namespace DotSpatial.SDR.Plugins.GPS
         }
 
         public MapPointLayer GpsGraphicsLayer { get; private set; }
-        public PointShape GpsPointShape { get; private set; }
-        public int GpsPointSize { get; private set; }
-        public Color GpsNewPointColor { get; private set; }
-        public int GpsPointDisplayCount { get; private set; }
+        public PointShape GpsPointShape { get; set; }
+        public int GpsPointSize { get; set; }
+        public Color GpsNewPointColor { get; set; }
+        public int GpsPointDisplayCount { get; set; }
 
         private readonly FeatureSymbolizer[] _fsArray;
         private readonly FeatureSet _pointGraphics;
@@ -75,11 +75,9 @@ namespace DotSpatial.SDR.Plugins.GPS
             base.Enqueue(p);
             var ftArray = base.ToArray();
             Array.Reverse(ftArray);  // reverse to move newest values to front of array
-            // Debug.WriteLine("==++==-------==++==--------==++==");
             _pointGraphics.Features.Clear();
             for (int i = 0; i <= ftArray.Length - 1; i++)
             {
-                // Debug.WriteLine(ftArray[i].ToString());
                 var point = ftArray[i] as Topology.Point;
                 _pointGraphics.AddFeature(point);
                 GpsGraphicsLayer.SetShapeSymbolizer(i, _fsArray[i]);

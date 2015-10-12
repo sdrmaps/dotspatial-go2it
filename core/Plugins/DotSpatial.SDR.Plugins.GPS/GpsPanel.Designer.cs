@@ -51,12 +51,12 @@
             this.txtConnType = new System.Windows.Forms.TextBox();
             this.lblBaudRate = new System.Windows.Forms.Label();
             this.lblPosition = new System.Windows.Forms.Label();
-            this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
             this.clock1 = new DotSpatial.Positioning.Forms.Clock();
             this.satelliteViewer1 = new DotSpatial.Positioning.Forms.SatelliteViewer();
             this.altimeter1 = new DotSpatial.Positioning.Forms.Altimeter();
             this.speedometer1 = new DotSpatial.Positioning.Forms.Speedometer();
             this.compass1 = new DotSpatial.Positioning.Forms.Compass();
+            this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -257,6 +257,7 @@
             this.chkAllowBluetooth.TabIndex = 19;
             this.chkAllowBluetooth.Text = "Accept Bluetooth";
             this.chkAllowBluetooth.UseVisualStyleBackColor = true;
+            this.chkAllowBluetooth.CheckedChanged += new System.EventHandler(this.chkAllowBluetooth_CheckedChanged);
             // 
             // cmbName
             // 
@@ -310,6 +311,7 @@
             this.chkAllowSerial.TabIndex = 18;
             this.chkAllowSerial.Text = "Accept Serial";
             this.chkAllowSerial.UseVisualStyleBackColor = true;
+            this.chkAllowSerial.CheckedChanged += new System.EventHandler(this.chkAllowSerial_CheckedChanged);
             // 
             // txtConnType
             // 
