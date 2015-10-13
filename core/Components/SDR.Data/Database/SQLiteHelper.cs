@@ -298,7 +298,7 @@ namespace SDR.Data.Database
         public static string GetSQLiteConnectionString(string dbFileName)
         {
             if (String.IsNullOrEmpty(dbFileName))
-                throw new ArgumentException("dbFileName is null or empty.", "dbFileName");
+                throw new ArgumentException("dbFileName is null or empty.", dbFileName);
 
             var conn = new SQLiteConnectionStringBuilder { DataSource = dbFileName, Version = 3, FailIfMissing = true };
             conn.Add("Compress", true);
