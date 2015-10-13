@@ -541,5 +541,17 @@ namespace SDR.Configuration.Properties {
                 this["AliEnterpolInitialCatalog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliGlobalCadArchivePath {
+            get {
+                return ((string)(this["AliGlobalCadArchivePath"]));
+            }
+            set {
+                this["AliGlobalCadArchivePath"] = value;
+            }
+        }
     }
 }

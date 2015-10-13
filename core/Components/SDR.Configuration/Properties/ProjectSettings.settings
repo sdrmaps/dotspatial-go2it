@@ -134,5 +134,8 @@
     <Setting Name="AliEnterpolInitialCatalog" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="AliGlobalCadArchivePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

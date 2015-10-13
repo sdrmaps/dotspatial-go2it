@@ -69,6 +69,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = string.Empty;
             Properties.ProjectSettings.Default.AliEnterpolTableName = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadLogPath = string.Empty;
+            Properties.ProjectSettings.Default.AliGlobalCadArchivePath = string.Empty;
             Properties.ProjectSettings.Default.AliSdrServerDbPath = string.Empty;
             Properties.ProjectSettings.Default.AliSdrServerUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliSdrServerUdpPort = 777;
@@ -566,6 +567,27 @@ namespace SDR.Configuration.Project
         {
             if (AliGlobalCadLogPathChanged != null)
                 AliGlobalCadLogPathChanged(this, e);
+        }
+
+        public event EventHandler AliGlobalCadArchivePathChanged;
+        public string AliGlobalCadArchivePath
+        {
+            get { return Properties.ProjectSettings.Default.AliGlobalCadArchivePath; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliGlobalCadArchivePath != value)
+                {
+                    Properties.ProjectSettings.Default.AliGlobalCadArchivePath = value;
+                    OnAliGlobalCadArchivePathChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliGlobalCadArchivePathChanged(EventArgs e)
+        {
+            if (AliGlobalCadArchivePathChanged != null)
+                AliGlobalCadArchivePathChanged(this, e);
         }
 
         public event EventHandler AliEnterpolDbConnectionStringChanged;
