@@ -22,9 +22,41 @@ namespace DotSpatial.SDR.Plugins.ALI
         private DockablePanel _dockPanel;
 
         private bool _isFunctionActive;  // eliminate redundant calls on hide/show/mode change
+        private bool _plugInActivated;  // used to determine if the plugin has already been activated on mode changes
         #endregion
 
         public override void Activate()
+        {
+            // watch for the change of alimode to activate the plugin if needed
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
+            // plugin needs to determine if this project is setup with an ali interface
+            if (GetAliMode() != AliMode.Disabled)
+            {
+                ActivateAliPlugin();
+            }
+            base.Activate();
+        }
+
+        private void OnAliModeChanged(object sender, EventArgs eventArgs)
+        {
+            AliMode am = GetAliMode();
+            if (am != AliMode.Disabled)
+            {
+                if (!_plugInActivated)
+                {
+                    ActivateAliPlugin();   
+                }
+            }
+            else  // the ali interface has just been deactivated
+            {
+                if (_plugInActivated)  // it has previously been active remove it now
+                {
+                    DeactivateAliPlugin();
+                }
+            }
+        }
+
+        private void ActivateAliPlugin()
         {
             // add in the button controls for this plugin to the header
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "ALI", AliTool_Click)
@@ -32,7 +64,8 @@ namespace DotSpatial.SDR.Plugins.ALI
                 GroupCaption = "Ali_Interface",
                 ToolTipText = "Click to Connect with ALI",
                 SmallImage = Resources.info_16,
-                LargeImage = Resources.info_32
+                LargeImage = Resources.info_32,
+                Key = "Ali_Interface"
             });
             // generate the ali interface display panel and add it to the tool panel
             _aliPanel = new AliPanel();
@@ -43,18 +76,33 @@ namespace DotSpatial.SDR.Plugins.ALI
 
             // initialize the ali function and check if it should/can run
             _mapFunction = new MapFunctionAli(_aliPanel);
+            _plugInActivated = true;
+        }
 
-            base.Activate();
+        private void DeactivateAliPlugin()
+        {
+            App.HeaderControl.Remove("Ali_Interface");
+            App.DockManager.Remove(PluginKey);
+            App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
+            App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
+            _plugInActivated = false;
+        }
+
+        private static AliMode GetAliMode()
+        {
+            var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
+            if (aliMode.Length <= 0) return AliMode.Disabled;
+            AliMode am;
+            Enum.TryParse(aliMode, true, out am);
+            return am;
         }
 
         public override void Deactivate()
         {
-            App.HeaderControl.RemoveAll();
-            App.DockManager.Remove(PluginKey);
-
-            App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
-            App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
-
+            if (_plugInActivated)
+            {
+                DeactivateAliPlugin();
+            }
             base.Deactivate();
         }
 
@@ -63,8 +111,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             if (_mapFunction == null)
             {
                 _mapFunction = new MapFunctionAli(_aliPanel);
-                // TODO: not sure we need this on this function yet
-                // handle the functionactivated event, and fire button toggle for visual display
+                // TODO:
+                // handle the functionactivated event, and adapt display accordingly
                 // _mapFunction.FunctionActivated += OnMapFunctionOnFunctionActivated;
             }
             if (!App.Map.MapFunctions.Contains(_mapFunction))

@@ -3,8 +3,10 @@
     public enum AliMode
     {
         Disabled,
-        SdrAliServer,
-        GlobalCad,
-        Interpol,
+        Sdraliserver,
+        Globalcad,
+        Enterpol,
     }
+
+
 }
