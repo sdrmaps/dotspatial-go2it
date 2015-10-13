@@ -259,6 +259,7 @@ namespace Go2It
                 {"ali_enterpol_connstring", Go2ItProjectSettings.Instance.AliEnterpolConnectionString.ToString(CultureInfo.InvariantCulture)},
                 {"ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource.ToString(CultureInfo.InvariantCulture)},
                 {"ali_global_logpath", Go2ItProjectSettings.Instance.AliGlobalCadLogPath.ToString(CultureInfo.InvariantCulture)},
+                {"ali_global_archivepath", Go2ItProjectSettings.Instance.AliGlobalCadArchivePath.ToString(CultureInfo.InvariantCulture)},
                 {"ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort.ToString(CultureInfo.InvariantCulture)},
                 {"ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
                 {"ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
@@ -294,44 +295,85 @@ namespace Go2It
             SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
         }
 
+        private static string AttachSetting(string key, string setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            return r[key].ToString();
+        }
+
+        private static Color AttachSetting(string key, Color setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            return Color.FromArgb((Convert.ToInt32(r[key].ToString())));
+        }
+
+        private static bool AttachSetting(string key, bool setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            return bool.Parse(r[key].ToString());
+        }
+
+        private static int AttachSetting(string key, int setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            return int.Parse(r[key].ToString());
+        }
+
+        private static decimal AttachSetting(string key, decimal setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            return decimal.Parse(r[key].ToString());
+        }
+
         private void LoadProjectSettings()
         {
             var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
             
             const string psQuery = "SELECT * FROM ProjectSettings";
-            DataTable psTable = SQLiteHelper.GetDataTable(conn, psQuery);
-            DataRow psR = psTable.Rows[0]; // there is only one row for project settings
-
-            Go2ItProjectSettings.Instance.KeyLocationsProjectType = psR["keylocations_type"].ToString();
-            Go2ItProjectSettings.Instance.AddressesProjectType = psR["addresses_type"].ToString();
-            Go2ItProjectSettings.Instance.MapBgColor = Color.FromArgb(Convert.ToInt32(psR["map_bgcolor"].ToString()));
-            Go2ItProjectSettings.Instance.ActiveMapViewKey = psR["active_map_key"].ToString();
-            Go2ItProjectSettings.Instance.ActiveMapViewCaption = psR["active_map_caption"].ToString();
-            Go2ItProjectSettings.Instance.SearchUsePretypes = bool.Parse(psR["search_use_pretypes"].ToString());
-            Go2ItProjectSettings.Instance.HydrantSearchCount = int.Parse(psR["search_hydrant_count"].ToString());
-            Go2ItProjectSettings.Instance.HydrantSearchDistance = int.Parse(psR["search_hydrant_distance"].ToString());
-            Go2ItProjectSettings.Instance.SearchBufferDistance = int.Parse(psR["search_buffer_distance"].ToString());
-            Go2ItProjectSettings.Instance.SearchZoomFactor = decimal.Parse(psR["search_zoom_factor"].ToString());
-            Go2ItProjectSettings.Instance.SearchQueryParserLogging = bool.Parse(psR["search_query_logging"].ToString());
-            Go2ItProjectSettings.Instance.GpsDisplayCount = int.Parse(psR["gps_display_count"].ToString());
-            Go2ItProjectSettings.Instance.GpsIntervalType = psR["gps_interval_type"].ToString();
-            Go2ItProjectSettings.Instance.GpsIntervalValue= int.Parse(psR["gps_interval_value"].ToString());
-
+            DataTable p = SQLiteHelper.GetDataTable(conn, psQuery);
+            Go2ItProjectSettings.Instance.KeyLocationsProjectType = AttachSetting("keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType, p);
+            Go2ItProjectSettings.Instance.AddressesProjectType = AttachSetting("addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType, p);
+            Go2ItProjectSettings.Instance.MapBgColor = AttachSetting("map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor, p);
+            Go2ItProjectSettings.Instance.ActiveMapViewKey = AttachSetting("active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey, p);
+            Go2ItProjectSettings.Instance.ActiveMapViewCaption = AttachSetting("active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption, p);
+            Go2ItProjectSettings.Instance.SearchUsePretypes = AttachSetting("search_use_pretypes", Go2ItProjectSettings.Instance.SearchUsePretypes, p);
+            Go2ItProjectSettings.Instance.HydrantSearchCount = AttachSetting("search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount, p);
+            Go2ItProjectSettings.Instance.HydrantSearchDistance = AttachSetting("search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance, p);
+            Go2ItProjectSettings.Instance.SearchBufferDistance = AttachSetting("search_buffer_distance", Go2ItProjectSettings.Instance.SearchBufferDistance, p);
+            Go2ItProjectSettings.Instance.SearchZoomFactor = AttachSetting("search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor, p);
+            Go2ItProjectSettings.Instance.SearchQueryParserLogging = AttachSetting("search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging, p);
+            Go2ItProjectSettings.Instance.GpsDisplayCount = AttachSetting("gps_display_count", Go2ItProjectSettings.Instance.GpsDisplayCount,p);
+            Go2ItProjectSettings.Instance.GpsIntervalType = AttachSetting("gps_interval_type", Go2ItProjectSettings.Instance.GpsIntervalType, p);
+            Go2ItProjectSettings.Instance.GpsIntervalValue = AttachSetting("gps_interval_value", Go2ItProjectSettings.Instance.GpsIntervalValue,p);
+            Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
+            Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = AttachSetting("ali_enterpol_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog, p);
+            Go2ItProjectSettings.Instance.AliEnterpolTableName = AttachSetting("ali_enterpol_tablename", Go2ItProjectSettings.Instance.AliEnterpolTableName, p);
+            Go2ItProjectSettings.Instance.AliEnterpolDataSource = AttachSetting("ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource, p);
+            Go2ItProjectSettings.Instance.AliEnterpolConnectionString = AttachSetting("ali_enterpol_connstring", Go2ItProjectSettings.Instance.AliEnterpolConnectionString, p);
+            Go2ItProjectSettings.Instance.AliGlobalCadLogPath = AttachSetting("ali_global_logpath", Go2ItProjectSettings.Instance.AliGlobalCadLogPath, p);
+            Go2ItProjectSettings.Instance.AliGlobalCadArchivePath = AttachSetting("ali_global_archivepath", Go2ItProjectSettings.Instance.AliGlobalCadArchivePath, p);
+            Go2ItProjectSettings.Instance.AliSdrServerDbPath = AttachSetting("ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath, p);
+            Go2ItProjectSettings.Instance.AliSdrServerUdpHost = AttachSetting("ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost, p);
+            Go2ItProjectSettings.Instance.AliSdrServerUdpPort = AttachSetting("ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort, p);
+                
             const string gsQuery = "SELECT * FROM GraphicSettings";
-            DataTable gsTable = SQLiteHelper.GetDataTable(conn, gsQuery);
-            DataRow gsR = gsTable.Rows[0]; // there is only one row for graphics settings
-
-            Go2ItProjectSettings.Instance.GraphicPointColor = Color.FromArgb(Convert.ToInt32(gsR["point_color"].ToString()));
-            Go2ItProjectSettings.Instance.GraphicPointStyle = gsR["point_style"].ToString();
-            Go2ItProjectSettings.Instance.GraphicPointSize = Convert.ToInt32(gsR["point_size"]);
-            Go2ItProjectSettings.Instance.GpsPointColor = Color.FromArgb(Convert.ToInt32(gsR["gps_color"].ToString()));
-            Go2ItProjectSettings.Instance.GpsPointStyle = gsR["gps_style"].ToString();
-            Go2ItProjectSettings.Instance.GpsPointSize = Convert.ToInt32(gsR["gps_size"]);
-            Go2ItProjectSettings.Instance.GraphicLineBorderColor = Color.FromArgb(Convert.ToInt32(gsR["line_border_color"].ToString()));
-            Go2ItProjectSettings.Instance.GraphicLineColor = Color.FromArgb(Convert.ToInt32(gsR["line_color"].ToString()));
-            Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(gsR["line_size"]);
-            Go2ItProjectSettings.Instance.GraphicLineStyle = gsR["line_style"].ToString();
-            Go2ItProjectSettings.Instance.GraphicLineCap = gsR["line_cap"].ToString();
+            DataTable g = SQLiteHelper.GetDataTable(conn, gsQuery);
+            Go2ItProjectSettings.Instance.GraphicPointColor = AttachSetting("point_color", Go2ItProjectSettings.Instance.GraphicPointColor, g);
+            Go2ItProjectSettings.Instance.GraphicPointStyle = AttachSetting("point_style", Go2ItProjectSettings.Instance.GraphicPointStyle, g);
+            Go2ItProjectSettings.Instance.GraphicPointSize = AttachSetting("point_size",Go2ItProjectSettings.Instance.GraphicPointSize,g);
+            Go2ItProjectSettings.Instance.GpsPointColor = AttachSetting("gps_color",Go2ItProjectSettings.Instance.GpsPointColor,g);
+            Go2ItProjectSettings.Instance.GpsPointStyle = AttachSetting("gps_style", Go2ItProjectSettings.Instance.GpsPointStyle, g);
+            Go2ItProjectSettings.Instance.GpsPointSize = AttachSetting("gps_size",Go2ItProjectSettings.Instance.GpsPointSize ,g);
+            Go2ItProjectSettings.Instance.GraphicLineBorderColor = AttachSetting("line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor, g);
+            Go2ItProjectSettings.Instance.GraphicLineColor = AttachSetting("line_color", Go2ItProjectSettings.Instance.GraphicLineColor, g);
+            Go2ItProjectSettings.Instance.GraphicLineSize = AttachSetting("line_size", Go2ItProjectSettings.Instance.GraphicLineSize, g);
+            Go2ItProjectSettings.Instance.GraphicLineStyle = AttachSetting("line_style", Go2ItProjectSettings.Instance.GraphicLineStyle, g);
+            Go2ItProjectSettings.Instance.GraphicLineCap = AttachSetting("line_cap", Go2ItProjectSettings.Instance.GraphicLineCap, g);
 
             const string lyrQuery = "SELECT * FROM Layers";  // assign all layers to their proper lookup 'type'
             DataTable lyrTable = SQLiteHelper.GetDataTable(conn, lyrQuery);
@@ -586,7 +628,6 @@ namespace Go2It
                     }
                     PopulateAllLayersLookup(map.Layers);
                 }
-
 
                 // create new dockable panel to hold the new map
                 var dp = new DockablePanel(txtKey, txtCaption, map, DockStyle.Fill);
