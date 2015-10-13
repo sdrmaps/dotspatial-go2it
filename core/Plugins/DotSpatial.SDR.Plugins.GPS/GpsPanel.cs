@@ -230,6 +230,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 }
                 else
                 {
+                    gpsStartStop.Enabled = false;
                     DeviceStatus = DeviceStatus.Unavailable;  // save user setting
                 }
                 txtStatus.Text = DeviceStatus.ToString();
