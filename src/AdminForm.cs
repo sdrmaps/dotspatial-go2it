@@ -1024,6 +1024,7 @@ namespace Go2It
             txtAliEnterpolInitialCatalog.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog;
             txtAliEnterpolTableName.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
             txtAliGlobalCadLogPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath;
+            txtAliGlobalCadArchivePath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
             txtAliInterfaceDbPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath;
             txtAliInterfaceUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost;
             numAliInterfaceUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort;
@@ -1549,6 +1550,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource = txtAliEnterpolDataSource.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolConnectionString = txtAliEnterpolConnString.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath = txtAliGlobalCadLogPath.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath = txtAliGlobalCadArchivePath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort =Convert.ToInt32(numAliInterfaceUdpPort.Value);

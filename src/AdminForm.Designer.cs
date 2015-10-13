@@ -153,8 +153,9 @@
             this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
             this.lineSymbolGraphic = new System.Windows.Forms.Panel();
             this.ptSymbolGraphic = new System.Windows.Forms.Panel();
-            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
+            this.txtAliGlobalCadArchivePath = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -1082,6 +1083,7 @@
             // 
             // pnlAliGlobalCad
             // 
+            this.pnlAliGlobalCad.Controls.Add(this.txtAliGlobalCadArchivePath);
             this.pnlAliGlobalCad.Controls.Add(this.label14);
             this.pnlAliGlobalCad.Controls.Add(this.btnAliGlobalCadLogPathBrowse);
             this.pnlAliGlobalCad.Controls.Add(this.txtAliGlobalCadLogPath);
@@ -1565,6 +1567,19 @@
             this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
             this.ptSymbolGraphic.TabIndex = 27;
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(447, 754);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -1579,18 +1594,12 @@
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
             // 
-            // btnCancel
+            // txtAliGlobalCadArchivePath
             // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(447, 754);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.txtAliGlobalCadArchivePath.Location = new System.Drawing.Point(88, 50);
+            this.txtAliGlobalCadArchivePath.Name = "txtAliGlobalCadArchivePath";
+            this.txtAliGlobalCadArchivePath.Size = new System.Drawing.Size(201, 20);
+            this.txtAliGlobalCadArchivePath.TabIndex = 3;
             // 
             // AdminForm
             // 
@@ -1769,6 +1778,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox txtAliGlobalCadArchivePath;
 
     }
 }
