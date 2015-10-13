@@ -253,6 +253,15 @@ namespace Go2It
                 {"gps_display_count", Go2ItProjectSettings.Instance.GpsDisplayCount.ToString(CultureInfo.InvariantCulture)},
                 {"gps_interval_type", Go2ItProjectSettings.Instance.GpsIntervalType.ToString(CultureInfo.InvariantCulture)},
                 {"gps_interval_value", Go2ItProjectSettings.Instance.GpsIntervalValue.ToString(CultureInfo.InvariantCulture)},
+                {"ali_mode", Go2ItProjectSettings.Instance.AliMode.ToString(CultureInfo.InvariantCulture)},
+                {"ali_enterpol_tablename", Go2ItProjectSettings.Instance.AliEnterpolTableName.ToString(CultureInfo.InvariantCulture)},
+                {"ali_enterpol_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog.ToString(CultureInfo.InvariantCulture)},
+                {"ali_enterpol_connstring", Go2ItProjectSettings.Instance.AliEnterpolConnectionString.ToString(CultureInfo.InvariantCulture)},
+                {"ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource.ToString(CultureInfo.InvariantCulture)},
+                {"ali_global_logpath", Go2ItProjectSettings.Instance.AliGlobalCadLogPath.ToString(CultureInfo.InvariantCulture)},
+                {"ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort.ToString(CultureInfo.InvariantCulture)},
+                {"ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
+                {"ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
             };
             SQLiteHelper.Insert(conn, "ProjectSettings", d);
 
