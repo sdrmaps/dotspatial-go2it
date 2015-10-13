@@ -146,6 +146,10 @@
       <HintPath>..\build\$(Configuration)\SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SDR.Network, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\build\$(Configuration)\SDR.Network.dll</HintPath>
+    </Reference>
     <Reference Include="Spatial4n.Core.NTS, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\references\Spatial4n.Core.NTS.dll</HintPath>

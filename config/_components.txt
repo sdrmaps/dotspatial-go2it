@@ -7,6 +7,7 @@
 ;
 SDR.Data
 SDR.Authentication
+SDR.Network
 SDR.Configuration
 DotSpatial.SDR.Controls
 SDR.Common
