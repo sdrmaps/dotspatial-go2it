@@ -60,6 +60,15 @@ namespace Go2It
         // name of the initial map tab, if no map tabs currently exist
         private const string MapTabDefaultCaption = "My Map";
 
+        // all available ali interfaces, the key is for display and the value matches the alimodes enum in ali plugin
+        private readonly Dictionary<string, string> _aliInterfaces = new Dictionary<string, string>
+        {
+            { "Disabled", "Disabled" },
+            { "SDR AliServer", "Sdraliserver" },
+            { "GlobalCAD Log", "Globalcad" },
+            { "Enterpol Database", "Enterpol" }
+        };
+
         // admin form controls
         private Legend _adminLegend;
         private readonly AppManager _appManager;
@@ -178,6 +187,7 @@ namespace Go2It
                 IndexType = indexType;
             }
         }
+
 
         public AdminForm(AppManager app)
         {
@@ -1017,10 +1027,11 @@ namespace Go2It
             txtAliInterfaceDbPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath;
             txtAliInterfaceUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost;
             numAliInterfaceUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort;
-            cmbAliMode.Items.Add("Disabled");
-            cmbAliMode.Items.Add("SDR AliServer");
-            cmbAliMode.Items.Add("GlobalCAD Log");
-            cmbAliMode.Items.Add("Enterpol Database");
+            // populate all the ali interfaces to the combobox
+            foreach (var aliInterface in _aliInterfaces)
+            {
+                cmbAliMode.Items.Add(aliInterface.Key);
+            }
             var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
             cmbAliMode.SelectedIndex = cmbAliMode.Items.IndexOf(aliMode);
             var gpsIntType = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType;
@@ -1530,7 +1541,9 @@ namespace Go2It
                 SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue = Convert.ToInt32(gpsIntervalTime.Text);
             }
             // setup ali interface configuration
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode = ApplyComboBoxSetting(cmbAliMode);
+            string aliValue;
+            _aliInterfaces.TryGetValue(cmbAliMode.SelectedItem.ToString(), out aliValue);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode = aliValue;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource = txtAliEnterpolDataSource.Text;
