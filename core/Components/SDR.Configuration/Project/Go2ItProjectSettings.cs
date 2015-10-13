@@ -63,6 +63,15 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GpsDisplayCount = 5;
             Properties.ProjectSettings.Default.GpsIntervalType = "Time";
             Properties.ProjectSettings.Default.GpsIntervalValue = 20;
+            Properties.ProjectSettings.Default.AliMode = "Disabled";
+            Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
+            Properties.ProjectSettings.Default.AliEnterpolDbConnString = string.Empty;
+            Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = string.Empty;
+            Properties.ProjectSettings.Default.AliEnterpolTableName = string.Empty;
+            Properties.ProjectSettings.Default.AliGlobalCadLogPath = string.Empty;
+            Properties.ProjectSettings.Default.AliSdrServerDbPath = string.Empty;
+            Properties.ProjectSettings.Default.AliSdrServerUdpHost = "127.0.0.1";
+            Properties.ProjectSettings.Default.AliSdrServerUdpPort = 777;
         }
 
         /// <summary>
