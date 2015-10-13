@@ -2,7 +2,8 @@
 {
     public enum AliMode
     {
-        AliInterface,
+        Disabled,
+        SdrAliServer,
         GlobalCad,
         Interpol,
     }
