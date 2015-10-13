@@ -4,11 +4,15 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -31,6 +35,7 @@ using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Store;
 using SDR.Common;
 using SDR.Common.UserMessage;
+using SDR.Network;
 using Spatial4n.Core.Context.Nts;
 using Version = Lucene.Net.Util.Version;
 using LDirectory = Lucene.Net.Store.Directory;
@@ -1004,6 +1009,20 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
+            txtAliEnterpolConnString.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolConnectionString;
+            txtAliEnterpolDataSource.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource;
+            txtAliEnterpolInitialCatalog.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog;
+            txtAliEnterpolTableName.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
+            txtAliGlobalCadLogPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath;
+            txtAliInterfaceDbPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath;
+            txtAliInterfaceUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost;
+            numAliInterfaceUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort;
+            cmbAliMode.Items.Add("Disabled");
+            cmbAliMode.Items.Add("SDR AliServer");
+            cmbAliMode.Items.Add("GlobalCAD Log");
+            cmbAliMode.Items.Add("Enterpol Database");
+            var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
+            cmbAliMode.SelectedIndex = cmbAliMode.Items.IndexOf(aliMode);
             var gpsIntType = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType;
             if (gpsIntType == "Time")
             {
@@ -1510,6 +1529,16 @@ namespace Go2It
                 SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType = "Time";
                 SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue = Convert.ToInt32(gpsIntervalTime.Text);
             }
+            // setup ali interface configuration
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode = ApplyComboBoxSetting(cmbAliMode);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource = txtAliEnterpolDataSource.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolConnectionString = txtAliEnterpolConnString.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath = txtAliGlobalCadLogPath.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort =Convert.ToInt32(numAliInterfaceUdpPort.Value);
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -1533,6 +1562,7 @@ namespace Go2It
             try
             {
                 // TODO: add validation back in, perhaps improve them as well
+                // TODO: also validate the ali interface before closing as well
                 // validate all required fields are set
                 /*var msg = VerifyRequiredSettings();
                 if (msg.Length > 0)
@@ -2603,7 +2633,7 @@ namespace Go2It
             if (txtViewName.Text.Length <= 0)
             {
                 // TODO; allow the messagebox to send a name back
-                MessageBox.Show("Please assign a name to the new map view");
+                MessageBox.Show(@"Please assign a name to the new map view");
                 return;
             }
             _isCreatingNewView = true;  // prevent the cmbBox pulldown from performing circular panel selection
@@ -2906,38 +2936,107 @@ namespace Go2It
 
         private void cmbAliMode_SelectedIndexChanged(object sender, EventArgs e)
         {
+            pnlAliEnterpol.Visible = false;
+            pnlAliGlobalCad.Visible = false;
+            pnlAliSdrAliServer.Visible = false;
 
+            switch (cmbAliMode.Text)
+            {
+                case "GlobalCAD Log":
+                    pnlAliGlobalCad.Visible = true;
+                    return;
+                case "SDR AliServer":
+                    pnlAliSdrAliServer.Visible = true;
+                    return;
+                case "Enterpol Database":
+                    pnlAliEnterpol.Visible = true;
+                    return;
+                default: // disabled
+                    return;
+            }
         }
 
         private void btnAliInterfaceDbPathBrowse_Click(object sender, EventArgs e)
         {
-            //FolderBrowserDialog fbd = new FolderBrowserDialog();
-            //FileDialog fd = new OpenFileDialog();
-
-            //DialogResult result = fd.ShowDialog();
-            //if (result == DialogResult.OK)
-            //{
-            //    //
-            //    // The user selected a folder and pressed the OK button.
-            //    // We print the number of files found.
-            //    //
-            //    //string[] files =  Directory.GetFiles(fd.FileName);
-            //    //MessageBox.Show("Files found: " + files.Length.ToString(), "Message");
-            //}
-
+            FileDialog fd = new OpenFileDialog();
+            fd.Filter = "MDB Databases|*.mdb";
+            fd.CheckFileExists = true;
+            DialogResult r = fd.ShowDialog();
+            if (r == DialogResult.OK)
+            {
+                txtAliInterfaceDbPath.Text = fd.FileName;
+            }
         }
 
         private void btnAliGlobalCadLogPathBrowse_Click(object sender, EventArgs e)
         {
-
+            FileDialog fd = new OpenFileDialog();
+            fd.Filter = @"Log Files (*.log)";
+            fd.CheckFileExists = true;
+            DialogResult r = fd.ShowDialog();
+            if (r == DialogResult.OK)
+            {
+                txtAliGlobalCadLogPath.Text = fd.FileName;
+            }
         }
 
         private void btnAliValidate_Click(object sender, EventArgs e)
         {
-            if (cmbAliMode.Text != @"Disabled")
+            switch (cmbAliMode.Text)
             {
-                // then go ahead and do the test
+                case "GlobalCAD Log":
+                    MessageBox.Show("Not Implemented Yet");
+                    return;
+                case "SDR AliServer":
+                    if (ValidateSdrServerInput(
+                        txtAliInterfaceDbPath.Text,
+                        txtAliInterfaceUdpHost.Text,
+                        Convert.ToInt32(numAliInterfaceUdpPort.Value)))
+                    {
+                        MessageBox.Show(@"Valid Settings");
+                    }
+                    return;
+                case "Enterpol Database":
+                    MessageBox.Show("Not Implemented Yet");
+                    return;
+                default: // disabled
+                    return;
             }
+        }
+
+        private bool ValidateSdrServerInput(string mdbPath, string udpHost, int udpPort)
+        {
+            if (mdbPath.Length == 0)
+            {
+                MessageBox.Show(@"AliServer .MDB path value is null");
+                return false;
+            }
+            if (!MdbHelper.DatabaseExists(mdbPath))
+            {
+                MessageBox.Show(@"AliServer database does not exist at location: " + mdbPath);
+                return false;
+            }
+            var conn = MdbHelper.GetMdbConnectionString(mdbPath);
+            if (!MdbHelper.TableExists(conn, "IncomingALI"))
+            {
+                MessageBox.Show(@"AliServer database is missing table 'IncomingALI'");
+                return false;
+            }
+            if (udpHost.Length == 0)
+            {
+                MessageBox.Show(@"AliServer UDP host value is null");
+                return false;
+            }
+            // validate the aliserver is at this location and listening
+            var client = new AliServerClient(txtAliInterfaceUdpHost.Text.ToString(), Convert.ToInt32(numAliInterfaceUdpPort.Value));
+            if (!client.Ping())
+            {
+                MessageBox.Show(@"AliServer is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
+                client.Close();
+                return false;
+            }
+            client.Close();
+            return true;
         }
     }
 }
