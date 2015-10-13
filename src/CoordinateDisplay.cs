@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
 using DotSpatial.Projections;
-using DotSpatial.Projections.Transforms;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Topology;
 
