@@ -188,7 +188,6 @@ namespace Go2It
             }
         }
 
-
         public AdminForm(AppManager app)
         {
             InitializeComponent();

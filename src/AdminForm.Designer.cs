@@ -108,6 +108,8 @@
             this.txtAliEnterpolTableName = new System.Windows.Forms.TextBox();
             this.txtAliEnterpolConnString = new System.Windows.Forms.TextBox();
             this.pnlAliGlobalCad = new System.Windows.Forms.Panel();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtAliGlobalCadArchivePath = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.btnAliGlobalCadLogPathBrowse = new System.Windows.Forms.Button();
             this.txtAliGlobalCadLogPath = new System.Windows.Forms.TextBox();
@@ -153,9 +155,8 @@
             this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
             this.lineSymbolGraphic = new System.Windows.Forms.Panel();
             this.ptSymbolGraphic = new System.Windows.Forms.Panel();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
-            this.txtAliGlobalCadArchivePath = new System.Windows.Forms.TextBox();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -1083,6 +1084,7 @@
             // 
             // pnlAliGlobalCad
             // 
+            this.pnlAliGlobalCad.Controls.Add(this.label15);
             this.pnlAliGlobalCad.Controls.Add(this.txtAliGlobalCadArchivePath);
             this.pnlAliGlobalCad.Controls.Add(this.label14);
             this.pnlAliGlobalCad.Controls.Add(this.btnAliGlobalCadLogPathBrowse);
@@ -1091,6 +1093,22 @@
             this.pnlAliGlobalCad.Name = "pnlAliGlobalCad";
             this.pnlAliGlobalCad.Size = new System.Drawing.Size(379, 80);
             this.pnlAliGlobalCad.TabIndex = 61;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(9, 53);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(87, 13);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "Archive Location";
+            // 
+            // txtAliGlobalCadArchivePath
+            // 
+            this.txtAliGlobalCadArchivePath.Location = new System.Drawing.Point(102, 50);
+            this.txtAliGlobalCadArchivePath.Name = "txtAliGlobalCadArchivePath";
+            this.txtAliGlobalCadArchivePath.Size = new System.Drawing.Size(201, 20);
+            this.txtAliGlobalCadArchivePath.TabIndex = 3;
             // 
             // label14
             // 
@@ -1567,19 +1585,6 @@
             this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
             this.ptSymbolGraphic.TabIndex = 27;
             // 
-            // btnCancel
-            // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(447, 754);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
             // btnSplitSave
             // 
             this.btnSplitSave.AutoSize = true;
@@ -1594,12 +1599,18 @@
             this.btnSplitSave.UseVisualStyleBackColor = true;
             this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
             // 
-            // txtAliGlobalCadArchivePath
+            // btnCancel
             // 
-            this.txtAliGlobalCadArchivePath.Location = new System.Drawing.Point(88, 50);
-            this.txtAliGlobalCadArchivePath.Name = "txtAliGlobalCadArchivePath";
-            this.txtAliGlobalCadArchivePath.Size = new System.Drawing.Size(201, 20);
-            this.txtAliGlobalCadArchivePath.TabIndex = 3;
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(447, 754);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AdminForm
             // 
@@ -1779,6 +1790,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox txtAliGlobalCadArchivePath;
+        private System.Windows.Forms.Label label15;
 
     }
 }
