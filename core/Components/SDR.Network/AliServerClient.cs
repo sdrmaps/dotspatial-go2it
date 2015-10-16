@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -10,6 +11,7 @@ namespace SDR.Network
     public class AliServerClient
     {
         public event PacketReceievedEventHandler PacketReceieved;
+
         protected virtual void OnPacketReceieved(AliServerDataPacket packet)
         {
             if (PacketReceieved != null)
@@ -201,7 +203,7 @@ namespace SDR.Network
 
             OnPacketReceieved(receiveMsg);
 
-            // setup a new listtener and start the process anew
+            // setup a new listener and start the process anew
             var state = new UdpState(_udpClient, _endPoint);
             _udpClient.BeginReceive(OnMessageReceieved, state);
         }
