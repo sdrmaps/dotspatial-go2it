@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DotSpatial.SDR.Plugins.ALI.Properties" GeneratedClassName="UserSettings">
-  <Profiles />
-  <Settings>
-    <Setting Name="AliMode" Type="System.String" Scope="User">
-      <Value Profile="(Default)">AliInterface</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>

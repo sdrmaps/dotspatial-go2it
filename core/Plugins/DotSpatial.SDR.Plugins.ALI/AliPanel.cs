@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using DotSpatial.SDR.Plugins.ALI.Properties;
+using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.ALI
 {
@@ -16,42 +17,48 @@ namespace DotSpatial.SDR.Plugins.ALI
         public AliPanel()
         {
             InitializeComponent();
-            // TODO: setup the basic panel defaults
         }
         #endregion
 
         #region Properties
-        //private static AliMode AliMode
-        //{
-        //    get
-        //    {
-        //        var funcMode = UserSettings.Default.AliMode;
-        //        if (funcMode.Length <= 0) return AliMode.Disabled;
-        //        AliMode am;
-        //        Enum.TryParse(funcMode, true, out am);
-        //        return am;
-        //    }
-        //    set
-        //    {
-        //        UserSettings.Default.AliMode = value.ToString();
-        //        UserSettings.Default.Save();
-        //    }
-        //}
+
+        /// <summary>
+        /// Gets the datagridview for record display
+        /// </summary>
+        public DataGridView DataGridDisplay
+        {
+            get { return aliDGV; }
+        }
+
+        #endregion
+
+        #region Methods 
+
+        public void ShowGlobalCadInterface()
+        {
+            aliDGV.Columns[1].Visible = true;  // display the combo dropdown box
+        }
+
+        public void ShowStandardInterface()
+        {
+            aliDGV.Columns[1].Visible = false; // show just the datagridview
+        }
         #endregion
 
         #region Events
-        ///// <summary>
-        ///// Occurs when a new location has been received
-        ///// </summary>
-        //public event EventHandler LocationReceived;
+
         #endregion
 
         #region FormEvents
+
         // TODO: handle all form events
+
         #endregion
 
         #region Event Handlers
+
         // TODO: add all event handlers
+
         #endregion
     }
 }

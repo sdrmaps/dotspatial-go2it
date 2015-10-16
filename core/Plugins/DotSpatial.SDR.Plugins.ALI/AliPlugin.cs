@@ -21,39 +21,38 @@ namespace DotSpatial.SDR.Plugins.ALI
         private AliPanel _aliPanel;
         private DockablePanel _dockPanel;
 
-        private bool _isFunctionActive;  // eliminate redundant calls on hide/show/mode change
-        private bool _plugInActivated;  // used to determine if the plugin has already been activated on mode changes
+        private bool _isFunctionActive;  // eliminate redundant calls on hide/show/functionmode changes
+        private bool _plugInActivated;  // flag to determine if the plugin has already been activated on ali mode changes
+        #endregion
+
+        #region Properties
+        public static AliMode CurrentAliMode
+        {
+            get
+            {
+                var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
+                if (aliMode.Length <= 0) return AliMode.Disabled;
+                AliMode am;
+                Enum.TryParse(aliMode, true, out am);
+                return am;
+            }
+        }
         #endregion
 
         public override void Activate()
         {
-            // watch for the change of alimode to activate the plugin if needed
+            // watch for the change of alimode to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
-            // plugin needs to determine if this project is setup with an ali interface
-            if (GetAliMode() != AliMode.Disabled)
+            // determine if the plugin is currently activated or not
+            if (CurrentAliMode != AliMode.Disabled)
             {
-                ActivateAliPlugin();
+                ActivateAliPlugin();  // go ahead and activate the plugin now
+            }
+            if (_mapFunction != null)
+            {
+                _mapFunction.ConfigureAliClient(CurrentAliMode);  // configure the ali client for mode type
             }
             base.Activate();
-        }
-
-        private void OnAliModeChanged(object sender, EventArgs eventArgs)
-        {
-            AliMode am = GetAliMode();
-            if (am != AliMode.Disabled)
-            {
-                if (!_plugInActivated)
-                {
-                    ActivateAliPlugin();   
-                }
-            }
-            else  // the ali interface has just been deactivated
-            {
-                if (_plugInActivated)  // it has previously been active remove it now
-                {
-                    DeactivateAliPlugin();
-                }
-            }
         }
 
         private void ActivateAliPlugin()
@@ -65,40 +64,23 @@ namespace DotSpatial.SDR.Plugins.ALI
                 ToolTipText = "Click to Connect with ALI",
                 SmallImage = Resources.info_16,
                 LargeImage = Resources.info_32,
-                Key = "Ali_Interface"
+                Key = PluginKey,
             });
             // generate the ali interface display panel and add it to the tool panel
             _aliPanel = new AliPanel();
             _dockPanel = new DockablePanel(PluginKey, PluginCaption, _aliPanel, DockStyle.Fill);
             App.DockManager.Add(_dockPanel);
+            // plugin wide events
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
-
-            // initialize the ali function and check if it should/can run
+            // initialize the full map ali function now
             _mapFunction = new MapFunctionAli(_aliPanel);
-            _plugInActivated = true;
-        }
-
-        private void DeactivateAliPlugin()
-        {
-            App.HeaderControl.Remove("Ali_Interface");
-            App.DockManager.Remove(PluginKey);
-            App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
-            App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
-            _plugInActivated = false;
-        }
-
-        private static AliMode GetAliMode()
-        {
-            var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
-            if (aliMode.Length <= 0) return AliMode.Disabled;
-            AliMode am;
-            Enum.TryParse(aliMode, true, out am);
-            return am;
+            _plugInActivated = true;  // set the status of the plugin to active
         }
 
         public override void Deactivate()
         {
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
             if (_plugInActivated)
             {
                 DeactivateAliPlugin();
@@ -106,14 +88,45 @@ namespace DotSpatial.SDR.Plugins.ALI
             base.Deactivate();
         }
 
+        private void DeactivateAliPlugin()
+        {
+            App.HeaderControl.Remove(PluginKey);
+            App.DockManager.Remove(PluginKey);
+
+            App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
+            App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
+
+            // TODO: investigate if we need to set the _isFunctionActive flag here or if the events handle it
+            _plugInActivated = false;  // set our status flag back to false
+        }
+
+        private void OnAliModeChanged(object sender, EventArgs eventArgs)
+        {
+            if (CurrentAliMode != AliMode.Disabled)
+            {
+                if (!_plugInActivated)  // check if it has already been activated
+                {
+                    ActivateAliPlugin();  // activate the ali plugin now
+                }
+                if (_mapFunction != null)
+                {
+                    _mapFunction.ConfigureAliClient(CurrentAliMode);  // configure the ali client for mode type
+                }
+            }
+            else  // ali interface mode has been set to disabled
+            {
+                if (_plugInActivated)  // check if it has ever been activated previous to this mode change
+                {
+                    DeactivateAliPlugin();  // go ahead and deactivate the plugin now
+                }
+            }
+        }
+
         private void AddAliMapFunction()
         {
             if (_mapFunction == null)
             {
                 _mapFunction = new MapFunctionAli(_aliPanel);
-                // TODO:
-                // handle the functionactivated event, and adapt display accordingly
-                // _mapFunction.FunctionActivated += OnMapFunctionOnFunctionActivated;
             }
             if (!App.Map.MapFunctions.Contains(_mapFunction))
             {
@@ -121,7 +134,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             _mapFunction.Map = App.Map;
         }
-
 
         private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
@@ -140,7 +152,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
-            if (_isFunctionActive) return;  // no need to do anything if this already the active tool
+            if (_isFunctionActive) return; // no need to do anything if this already the active tool
 
             var key = e.ActivePanelKey;
             var map = App.Map as Map;
@@ -160,6 +172,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 {
                     if (_mapFunction != null)
                     {
+                        App.Map.Cursor = Cursors.Arrow;
                         _isFunctionActive = true;
                         _mapFunction.Activate();
                     }
@@ -171,8 +184,9 @@ namespace DotSpatial.SDR.Plugins.ALI
                 if (App.Map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
                 {
-                    if (_mapFunction != null)  // validate we have a map function
+                    if (_mapFunction != null) // validate we have a map function
                     {
+                        App.Map.Cursor = Cursors.Arrow;
                         _isFunctionActive = true;
                         _mapFunction.Activate();
                     }
