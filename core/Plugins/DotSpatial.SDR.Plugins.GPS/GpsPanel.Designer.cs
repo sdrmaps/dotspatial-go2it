@@ -32,6 +32,7 @@
             this.gpsDetectCancel = new System.Windows.Forms.ToolStripButton();
             this.gpsStartStop = new System.Windows.Forms.ToolStripButton();
             this.gpsPauseResume = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lblDate = new System.Windows.Forms.Label();
             this.lblAltitude = new System.Windows.Forms.Label();
@@ -68,7 +69,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gpsDetectCancel,
             this.gpsStartStop,
-            this.gpsPauseResume});
+            this.gpsPauseResume,
+            this.toolStripSeparator1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 48);
             this.toolStrip1.Name = "toolStrip1";
@@ -112,6 +114,11 @@
             this.gpsPauseResume.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.gpsPauseResume.ToolTipText = "Pause/Resume GPS Feed";
             this.gpsPauseResume.Click += new System.EventHandler(this.gpsPauseResume_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 48);
             // 
             // tableLayoutPanel1
             // 
@@ -490,5 +497,6 @@
         private Positioning.Forms.Altimeter altimeter1;
         private Positioning.Forms.Speedometer speedometer1;
         private Positioning.Forms.Compass compass1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

@@ -32,7 +32,8 @@ namespace DotSpatial.SDR.Plugins.GPS
                 GroupCaption = "Gps_Setup",
                 ToolTipText = "Click to Configure GPS",
                 SmallImage = Resources.info_16,
-                LargeImage = Resources.info_32
+                LargeImage = Resources.info_32,
+                Key = PluginKey,
             });
             // generate the gps interface display panel and add it to the tool panel
             _gpsPanel = new GpsPanel();
@@ -48,7 +49,7 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         public override void Deactivate()
         {
-            App.HeaderControl.RemoveAll();
+            App.HeaderControl.Remove(PluginKey);
             App.DockManager.Remove(PluginKey);
 
             App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
@@ -107,6 +108,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 {
                     if (_mapFunction != null)
                     {
+                        App.Map.Cursor = Cursors.Arrow;
                         _isFunctionActive = true;
                         _mapFunction.Activate();
                     }
@@ -120,6 +122,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 {
                     if (_mapFunction != null)  // validate we have a map function
                     {
+                        App.Map.Cursor = Cursors.Arrow;
                         _isFunctionActive = true;
                         _mapFunction.Activate();
                     }

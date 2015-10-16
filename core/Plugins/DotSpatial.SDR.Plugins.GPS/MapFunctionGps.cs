@@ -30,10 +30,17 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         public MapFunctionGps(GpsPanel gp)
         {
+            Name = "MapFunctionGps";
+            YieldStyle = YieldStyles.AlwaysOn;
+
             _gpsPanel = gp;
             _gpsDevices = new Dictionary<Device, string>();
             _nmeaInterpreter = new NmeaInterpreter { AllowAutomaticReconnection = true };
-            Configure();
+
+            HandleDetectionEvents();
+            HandleNmeaEvents();
+            HandleGpsPanelEvents();
+            SetupActivateGps();
         }
 
         public bool IsGpsActive()
@@ -41,17 +48,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             return _nmeaInterpreter.IsRunning;
         }
 
-        private void Configure()
-        {
-            Name = "MapFunctionGps";
-            YieldStyle = YieldStyles.AlwaysOn;
-            HandleDetectionEvents();
-            HandleNmeaEvents();
-            HandleGpsPanelEvents();
-            ConfigureActivateGps();
-        }
-
-        private void ConfigureActivateGps()
+        private void SetupActivateGps()
         {
             Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
             Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
