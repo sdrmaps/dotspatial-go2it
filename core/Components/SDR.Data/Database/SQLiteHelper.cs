@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace SDR.Data.Database
 {
@@ -272,6 +270,7 @@ namespace SDR.Data.Database
                 cnn.Open();
                 var rows = cnn.GetSchema("Tables").Select(string.Format("Table_Name = '{0}'", table));
                 var tableExists = (rows.Length > 0);
+                cnn.Close();
                 return tableExists;
             }
             catch
@@ -280,6 +279,38 @@ namespace SDR.Data.Database
             }
         }
 
+        public static bool ColumnExists(string conn, string table, string column)
+        {
+            try
+            {
+                var cnn = new SQLiteConnection(conn);
+                cnn.Open();
+                // get db schema for columns
+                DataTable columns = cnn.GetSchema("Columns");
+                bool exists = columns.Select("COLUMN_NAME='" + column +"' AND TABLE_NAME='" + table + "'").Length != 0;
+                cnn.Close();
+                return exists;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool CreateColumn(string conn, string table, string columnName, string columnType)
+        {
+            try
+            {
+                string sql = "ALTER TABLE " + table + " ADD COLUMN " + columnName + " " + columnType;
+                ExecuteNonQuery(conn, sql);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+        
         /// <summary>
         /// To get the SQLite database path given the SQLite connection string
         /// </summary>
@@ -304,54 +335,6 @@ namespace SDR.Data.Database
             conn.Add("Compress", true);
 
             return conn.ConnectionString;
-        }
-
-        /// <summary>
-        /// Create the default .SQLITE database in the user-specified path
-        /// </summary>
-        /// <returns>true if database was created, false otherwise</returns>
-        public static Boolean CreateSQLiteDatabase(string dbPath, string dbTemplate)
-        {
-            if (String.IsNullOrEmpty(dbPath))
-            {
-                throw new ArgumentException("dbPath is null or empty.", "dbPath");
-            }
-            var asm = Assembly.GetCallingAssembly();
-            //to create the default.sqlite database file
-            try
-            {
-                using (Stream input = asm.GetManifestResourceStream(dbTemplate))
-                {
-                    using (Stream output = File.Create(dbPath))
-                    {
-                        CopyStream(input, output);
-                    }
-                }
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                Debug.WriteLine("Error creating the database " + dbPath +
-                    ". Please check your write permissions. " + ex.Message);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error creating the default database " + dbPath +
-                    ". Error details: " + ex.Message);
-                return false;
-            }
-            return File.Exists(dbPath);
-        }
-
-        private static void CopyStream(Stream input, Stream output)
-        {
-            var buffer = new byte[8192];
-
-            int bytesRead;
-            while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, bytesRead);
-            }
         }
 
         /// <summary>
