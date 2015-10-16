@@ -5,10 +5,10 @@
 ; the order of compilation is important be sure to move lower 
 ; level to higher level for compilation order
 ;
-SDR.Data
 SDR.Authentication
-SDR.Network
 SDR.Configuration
+SDR.Network
+SDR.Data
 DotSpatial.SDR.Controls
 SDR.Common
 DotSpatial.SDR.Plugins.Measure
