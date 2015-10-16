@@ -59,32 +59,16 @@ namespace DotSpatial.SDR.Plugins.Measure
         /// <param name="mp"></param>
         public MapFunctionMeasure(MeasurePanel mp)
         {
-            _measurePanel = mp;
-            Configure();
-        }
+            Name = "MapFunctionMeasure";
+            YieldStyle = YieldStyles.LeftButton | YieldStyles.RightButton;
 
-        /// <summary>
-        /// Creates a new instance of MapMeasureFunction, with panel, and
-        /// the Map that this function should be applied to.
-        /// </summary>
-        /// <param name="mp"></param>
-        /// <param name="map"></param>
-        public MapFunctionMeasure(MeasurePanel mp, IMap map)
-            : base(map)
-        {
             _measurePanel = mp;
-            Configure();
-        }
-
-        private void Configure()
-        {
             _areaMode = (_measurePanel.MeasureMode == MeasureMode.Area);
             _previousParts = new List<List<Coordinate>>();
-            YieldStyle = YieldStyles.LeftButton | YieldStyles.RightButton;
-            HandleMeasurePanelEvents();
-            Name = "MapFunctionMeasure";
-        }
 
+            HandleMeasurePanelEvents();
+        }
+        
         private void HandleMeasurePanelEvents()
         {
             _measurePanel.MeasureModeChanged += MeasurePanel_MeasureModeChanged;

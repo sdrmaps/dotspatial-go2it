@@ -32,7 +32,8 @@ namespace DotSpatial.SDR.Plugins.Measure
                 GroupCaption = "Measure_Area_Distance",
                 ToolTipText = "Click to Measure Area and Distance",
                 SmallImage = Resources.measure2_16,
-                LargeImage = Resources.measure2_32
+                LargeImage = Resources.measure2_32,
+                Key = PluginKey
             });
             // generate the measurement tool display panel and add it to the tool panel
             _measurePanel = new MeasurePanel();
@@ -46,7 +47,7 @@ namespace DotSpatial.SDR.Plugins.Measure
 
         public override void Deactivate()
         {
-            App.HeaderControl.RemoveAll();
+            App.HeaderControl.Remove(PluginKey);
             App.DockManager.Remove(PluginKey);
 
             App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;

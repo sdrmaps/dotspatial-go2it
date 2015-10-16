@@ -76,19 +76,16 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <param name="currentProjectFile">Project File Path</param>
         public MapFunctionSearch(SearchPanel sp, string currentProjectFile)
         {
+            Name = "MapFunctionSearch";
+            YieldStyle = YieldStyles.AlwaysOn;
+
             _currentProjectFile = currentProjectFile;
             _searchPanel = sp;
             _dataGridView = sp.DataGridDisplay;
-            Configure();
+
+            HandleSearchPanelEvents();
             SetSearchVariables();
             SetupIndexReaderWriter(_indexType);
-        }
-
-        private void Configure()
-        {
-            YieldStyle = YieldStyles.AlwaysOn;
-            HandleSearchPanelEvents();
-            Name = "MapFunctionSearch";
         }
 
         private void HandleSearchPanelEvents()
