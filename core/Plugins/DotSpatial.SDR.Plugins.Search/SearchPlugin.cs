@@ -32,7 +32,8 @@ namespace DotSpatial.SDR.Plugins.Search
                 GroupCaption = "Search",
                 ToolTipText = "Search for Attributes and Features",
                 SmallImage = Resources.search_16,
-                LargeImage = Resources.search_32
+                LargeImage = Resources.search_32,
+                Key = PluginKey
             });
             // generate the search tool display panel and add to tool panel
             _searchPanel = new SearchPanel();
@@ -46,7 +47,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public override void Deactivate()
         {
-            App.HeaderControl.RemoveAll();
+            App.HeaderControl.Remove(PluginKey);
             App.DockManager.Remove(PluginKey);
 
             App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
@@ -138,13 +139,13 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
-        private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs dockablePanelEventArgs)
+        private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
         {
             if (!_isFunctionActive) return;  // dont waste time if this is not the active tool
 
             _searchPanel.ClearSearches();
 
-            var key = dockablePanelEventArgs.ActivePanelKey;
+            var key = e.ActivePanelKey;
             var map = App.Map as Map;
             if (map == null) return;
 

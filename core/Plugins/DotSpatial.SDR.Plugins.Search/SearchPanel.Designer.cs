@@ -42,8 +42,8 @@
             this.searchEsn = new System.Windows.Forms.ToolStripButton();
             this.searchKeyLocations = new System.Windows.Forms.ToolStripButton();
             this.searchAll = new System.Windows.Forms.ToolStripButton();
-            this.searchParcels = new System.Windows.Forms.ToolStripButton();
             this.searchCellSector = new System.Windows.Forms.ToolStripButton();
+            this.searchParcels = new System.Windows.Forms.ToolStripButton();
             this.searchLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.searchDGV = new System.Windows.Forms.DataGridView();
             this.toolStrip1.SuspendLayout();
@@ -162,6 +162,7 @@
             // 
             // searchIntersection
             // 
+            this.searchIntersection.CheckOnClick = true;
             this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.intersection_search_16;
             this.searchIntersection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchIntersection.Name = "searchIntersection";
@@ -173,6 +174,7 @@
             // 
             // searchCity
             // 
+            this.searchCity.CheckOnClick = true;
             this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchCity.Name = "searchCity";
@@ -184,6 +186,7 @@
             // 
             // searchEsn
             // 
+            this.searchEsn.CheckOnClick = true;
             this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchEsn.Name = "searchEsn";
@@ -195,6 +198,7 @@
             // 
             // searchKeyLocations
             // 
+            this.searchKeyLocations.CheckOnClick = true;
             this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.keylocations_search_16;
             this.searchKeyLocations.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchKeyLocations.Name = "searchKeyLocations";
@@ -206,6 +210,7 @@
             // 
             // searchAll
             // 
+            this.searchAll.CheckOnClick = true;
             this.searchAll.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchAll.Name = "searchAll";
@@ -216,19 +221,9 @@
             this.searchAll.Visible = false;
             this.searchAll.Click += new System.EventHandler(this.searchAll_Click);
             // 
-            // searchParcels
-            // 
-            this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
-            this.searchParcels.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchParcels.Name = "searchParcels";
-            this.searchParcels.Size = new System.Drawing.Size(48, 45);
-            this.searchParcels.Text = "Parcels";
-            this.searchParcels.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.searchParcels.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchParcels.Click += new System.EventHandler(this.searchParcels_Click);
-            // 
             // searchCellSector
             // 
+            this.searchCellSector.CheckOnClick = true;
             this.searchCellSector.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
             this.searchCellSector.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchCellSector.Name = "searchCellSector";
@@ -237,6 +232,18 @@
             this.searchCellSector.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchCellSector.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.searchCellSector.Click += new System.EventHandler(this.searchCellSector_Click);
+            // 
+            // searchParcels
+            // 
+            this.searchParcels.CheckOnClick = true;
+            this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchParcels.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchParcels.Name = "searchParcels";
+            this.searchParcels.Size = new System.Drawing.Size(48, 45);
+            this.searchParcels.Text = "Parcels";
+            this.searchParcels.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.searchParcels.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.searchParcels.Click += new System.EventHandler(this.searchParcels_Click);
             // 
             // searchLayoutPanel
             // 
