@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -232,56 +234,77 @@ namespace Go2It
             }
         }
 
+        private string ValidateColumn(string conn, string table, string colName, string colType)
+        {
+            if (!SQLiteHelper.ColumnExists(conn, table, colName))
+            {
+                SQLiteHelper.CreateColumn(conn, table, colName, colType);
+            }
+            return colName;
+        }
+
         private void SaveProjectSettings()
         {
             var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
 
-            SQLiteHelper.ClearTable(conn, "ProjectSettings");
             var d = new Dictionary<string, string>
             {
-                {"addresses_type", Go2ItProjectSettings.Instance.AddressesProjectType},
-                {"keylocations_type", Go2ItProjectSettings.Instance.KeyLocationsProjectType},
-                {"map_bgcolor", Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"active_map_key", Go2ItProjectSettings.Instance.ActiveMapViewKey},
-                {"active_map_caption", Go2ItProjectSettings.Instance.ActiveMapViewCaption},
-                {"search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging.ToString(CultureInfo.InvariantCulture)},
-                {"search_use_pretypes", Go2ItProjectSettings.Instance.SearchUsePretypes.ToString(CultureInfo.InvariantCulture)},
-                {"search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
-                {"search_buffer_distance",Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_count", Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
-                {"search_hydrant_distance", Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)},
-                {"gps_display_count", Go2ItProjectSettings.Instance.GpsDisplayCount.ToString(CultureInfo.InvariantCulture)},
-                {"gps_interval_type", Go2ItProjectSettings.Instance.GpsIntervalType.ToString(CultureInfo.InvariantCulture)},
-                {"gps_interval_value", Go2ItProjectSettings.Instance.GpsIntervalValue.ToString(CultureInfo.InvariantCulture)},
-                {"ali_mode", Go2ItProjectSettings.Instance.AliMode.ToString(CultureInfo.InvariantCulture)},
-                {"ali_enterpol_tablename", Go2ItProjectSettings.Instance.AliEnterpolTableName.ToString(CultureInfo.InvariantCulture)},
-                {"ali_enterpol_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog.ToString(CultureInfo.InvariantCulture)},
-                {"ali_enterpol_connstring", Go2ItProjectSettings.Instance.AliEnterpolConnectionString.ToString(CultureInfo.InvariantCulture)},
-                {"ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource.ToString(CultureInfo.InvariantCulture)},
-                {"ali_global_logpath", Go2ItProjectSettings.Instance.AliGlobalCadLogPath.ToString(CultureInfo.InvariantCulture)},
-                {"ali_global_archivepath", Go2ItProjectSettings.Instance.AliGlobalCadArchivePath.ToString(CultureInfo.InvariantCulture)},
-                {"ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort.ToString(CultureInfo.InvariantCulture)},
-                {"ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
-                {"ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "addresses_type", "TEXT"), Go2ItProjectSettings.Instance.AddressesProjectType},
+                { ValidateColumn(conn, "ProjectSettings", "keylocations_type", "TEXT"), Go2ItProjectSettings.Instance.KeyLocationsProjectType},
+                { ValidateColumn(conn, "ProjectSettings", "map_bgcolor", "TEXT"), Go2ItProjectSettings.Instance.MapBgColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "active_map_key", "TEXT"), Go2ItProjectSettings.Instance.ActiveMapViewKey},
+                { ValidateColumn(conn, "ProjectSettings", "active_map_caption", "TEXT"), Go2ItProjectSettings.Instance.ActiveMapViewCaption},
+                { ValidateColumn(conn, "ProjectSettings", "search_query_logging", "TEXT"), Go2ItProjectSettings.Instance.SearchQueryParserLogging.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "search_use_pretypes", "TEXT"), Go2ItProjectSettings.Instance.SearchUsePretypes.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "search_zoom_factor", "NUMERIC"), Go2ItProjectSettings.Instance.SearchZoomFactor.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "search_buffer_distance", "NUMERIC"), Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "search_hydrant_count", "NUMERIC"), Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "search_hydrant_distance", "NUMERIC"), Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "gps_display_count", "NUMERIC"), Go2ItProjectSettings.Instance.GpsDisplayCount.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "gps_interval_type", "TEXT"), Go2ItProjectSettings.Instance.GpsIntervalType.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "gps_interval_value", "NUMERIC"), Go2ItProjectSettings.Instance.GpsIntervalValue.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_mode", "TEXT"), Go2ItProjectSettings.Instance.AliMode.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_tablename", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolTableName.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_initcatalog", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_connstring", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolConnectionString.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_datasource", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolDataSource.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_global_logpath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadLogPath.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_global_archivepath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadArchivePath.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udpport", "NUMERIC"), Go2ItProjectSettings.Instance.AliSdrServerUdpPort.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udphost", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_dbpath", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
             };
-            SQLiteHelper.Insert(conn, "ProjectSettings", d);
+            if (SQLiteHelper.ExecuteScalar(conn, "SELECT * FROM ProjectSettings limit 1").Length == 0)
+            {
+                SQLiteHelper.Insert(conn, "ProjectSettings", d);
+            }
+            else
+            {
+                SQLiteHelper.Update(conn, "ProjectSettings", d, "key=1");
+            }
 
-            SQLiteHelper.ClearTable(conn, "GraphicSettings");
             var g = new Dictionary<string, string>
             {
-                {"point_color", Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"point_style", Go2ItProjectSettings.Instance.GraphicPointStyle},
-                {"point_size", Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
-                {"line_color", Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"line_size", Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
-                {"line_cap", Go2ItProjectSettings.Instance.GraphicLineCap},
-                {"line_style", Go2ItProjectSettings.Instance.GraphicLineStyle},
-                {"gps_color", Go2ItProjectSettings.Instance.GpsPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                {"gps_style", Go2ItProjectSettings.Instance.GpsPointStyle},
-                {"gps_size", Go2ItProjectSettings.Instance.GpsPointSize.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "point_color", "TEXT"), Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "point_style", "TEXT"), Go2ItProjectSettings.Instance.GraphicPointStyle},
+                { ValidateColumn(conn, "GraphicSettings", "point_size", "NUMERIC"), Go2ItProjectSettings.Instance.GraphicPointSize.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "line_color", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "line_border_color", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "line_size", "NUMERIC"), Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "line_cap", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineCap},
+                { ValidateColumn(conn, "GraphicSettings", "line_style", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineStyle},
+                { ValidateColumn(conn, "GraphicSettings", "gps_color", "TEXT"), Go2ItProjectSettings.Instance.GpsPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "gps_style", "TEXT"), Go2ItProjectSettings.Instance.GpsPointStyle},
+                { ValidateColumn(conn, "GraphicSettings", "gps_size", "NUMERIC"), Go2ItProjectSettings.Instance.GpsPointSize.ToString(CultureInfo.InvariantCulture)},
             };
-            SQLiteHelper.Insert(conn, "GraphicSettings", g);
+            if (SQLiteHelper.ExecuteScalar(conn, "SELECT * FROM GraphicSettings limit 1").Length == 0)
+            {
+                SQLiteHelper.Insert(conn, "GraphicSettings", g);
+            }
+            else
+            {
+                SQLiteHelper.Update(conn, "GraphicSettings", g, "key=1");
+            }
 
             SQLiteHelper.ClearTable(conn, "Layers");
             SaveLayerCollection(Go2ItProjectSettings.Instance.AddressLayers, LayerTypeAddress, conn);
@@ -667,8 +690,35 @@ namespace Go2It
         /// <returns>true if database was created, false otherwise</returns>
         public static Boolean CreateNewDatabase(string dbPath)
         {
-            // to create the default.sqlite database file using the SQLiteHelper method
-            return SQLiteHelper.CreateSQLiteDatabase(dbPath, "Go2It.Resources.defaultDatabase.sqlite");
+            // copy the default database to the target location
+            if (String.IsNullOrEmpty(dbPath))
+            {
+                throw new ArgumentException(@"dbPath is null or empty.", dbPath);
+            }
+            //to create the default.sqlite database file
+            try
+            {
+                var asm = Assembly.GetCallingAssembly();
+                var dirName = Path.GetDirectoryName(asm.Location);
+                if (dirName != null)
+                {
+                    var p = dirName.ToString(CultureInfo.InvariantCulture) + "\\Resources\\defaultDatabase.sqlite";
+                    File.Copy(p, dbPath);
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Debug.WriteLine("Error creating the database " + dbPath +
+                    ". Please check your write permissions. " + ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error creating the default database " + dbPath +
+                    ". Error details: " + ex.Message);
+                return false;
+            }
+            return File.Exists(dbPath);
         }
 
         private static bool HasWriteAccessToFolder(string folderPath)
