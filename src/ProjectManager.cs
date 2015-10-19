@@ -246,7 +246,6 @@ namespace Go2It
         private void SaveProjectSettings()
         {
             var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
-
             var d = new Dictionary<string, string>
             {
                 { ValidateColumn(conn, "ProjectSettings", "addresses_type", "TEXT"), Go2ItProjectSettings.Instance.AddressesProjectType},
@@ -274,13 +273,14 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udphost", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_dbpath", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
             };
-            if (SQLiteHelper.ExecuteScalar(conn, "SELECT * FROM ProjectSettings limit 1").Length == 0)
+            var k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM ProjectSettings limit 1");
+            if (k.Length == 0)
             {
                 SQLiteHelper.Insert(conn, "ProjectSettings", d);
             }
             else
             {
-                SQLiteHelper.Update(conn, "ProjectSettings", d, "key=1");
+                SQLiteHelper.Update(conn, "ProjectSettings", d, "key=" + k.ToString());
             }
 
             var g = new Dictionary<string, string>
@@ -297,13 +297,14 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "gps_style", "TEXT"), Go2ItProjectSettings.Instance.GpsPointStyle},
                 { ValidateColumn(conn, "GraphicSettings", "gps_size", "NUMERIC"), Go2ItProjectSettings.Instance.GpsPointSize.ToString(CultureInfo.InvariantCulture)},
             };
-            if (SQLiteHelper.ExecuteScalar(conn, "SELECT * FROM GraphicSettings limit 1").Length == 0)
+            k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM GraphicSettings limit 1");
+            if (k.Length == 0)
             {
                 SQLiteHelper.Insert(conn, "GraphicSettings", g);
             }
             else
             {
-                SQLiteHelper.Update(conn, "GraphicSettings", g, "key=1");
+                SQLiteHelper.Update(conn, "GraphicSettings", g, "key=" + k.ToString());
             }
 
             SQLiteHelper.ClearTable(conn, "Layers");
