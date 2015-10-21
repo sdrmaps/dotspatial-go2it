@@ -2,21 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
@@ -27,7 +20,6 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
-using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 using Lucene.Net.Spatial;
 using Lucene.Net.Spatial.Prefix;
@@ -46,9 +38,7 @@ using DotSpatial.Controls;
 using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
-using Directory = System.IO.Directory;
 using IGeometry = DotSpatial.Topology.IGeometry;
-using ILog = SDR.Common.logging.ILog;
 using Point = System.Drawing.Point;
 using PointShape = DotSpatial.Symbology.PointShape;
 using SdrConfig = SDR.Configuration;
@@ -76,9 +66,9 @@ namespace Go2It
         private readonly ProjectManager _projectManager;
 
         // internal lookup names used by lucene to get feature from the dataset also stores ft shape (normalized)
-        private const string FID = "FID";
-        private const string LYRNAME = "LYRNAME";
-        private const string GEOSHAPE = "GEOSHAPE";
+        private const string Fid = "FID";
+        private const string Lyrname = "LYRNAME";
+        private const string Geoshape = "GEOSHAPE";
 
         // bool to prevent circular tab selection when adding a new map view tab
         private bool _isCreatingNewView;
@@ -139,7 +129,7 @@ namespace Go2It
             {
                 // attempt to get a list of security permissions from the folder. 
                 // this will raise an exception if the path is read only or does not have access to view the permissions.
-                System.Security.AccessControl.DirectorySecurity ds = System.IO.Directory.GetAccessControl(folderPath);
+                System.IO.Directory.GetAccessControl(folderPath);
                 return true;
             }
             catch (UnauthorizedAccessException)
@@ -444,10 +434,6 @@ namespace Go2It
 
         private void UnbindGraphicElementEvents()
         {
-            ptGpsColorSlider.ValueChanged -= PtGpsColorSliderOnValueChanged;
-            ptGpsColor.Click -= PtGpsColorOnClick;
-            ptGpsSize.ValueChanged -= PtGpsSizeOnValueChanged;
-            ptGpsStyle.SelectedIndexChanged -= PtGpsStyleOnSelectedIndexChanged;
             ptSymbolColorSlider.ValueChanged -= PtSymbolColorSliderOnValueChanged;
             ptSymbolColor.Click -= PtSymbolColorOnClick;
             ptSymbolSize.ValueChanged -= PtSymbolSizeOnValueChanged;
@@ -659,52 +645,6 @@ namespace Go2It
             map.MapFrame.Invalidate();
         }
 
-        private void UpdateGpsGraphics(Map map)
-        {
-            PointShape ptShape;  // parse out point shape style
-            Enum.TryParse(ptGpsStyle.SelectedItem.ToString(), true, out ptShape);
-            var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
-            if (pLyr != null)
-            {
-                pLyr.Symbolizer = new PointSymbolizer(ptGpsColor.BackColor,
-                    ptShape, Convert.ToInt32(ptGpsSize.Text));
-            }
-            map.BackColor = mapBGColorPanel.BackColor;
-            map.MapFrame.Invalidate();
-        }
-
-
-        private void DrawGpsPointGraphics()
-        {
-            Map gpsMap;
-            if (ptGpsGraphic.Controls.Count != 0)
-            {
-                gpsMap = ptGpsGraphic.Controls[0] as Map;
-                UpdateGpsGraphics(gpsMap);
-            }
-            else
-            {
-                gpsMap = new Map
-                {
-                    ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
-                    FunctionMode = FunctionMode.None,
-                };
-                gpsMap.MapFunctions.Clear(); // clear all built in map functions (nav/zoom/etc)
-                ptGpsGraphic.Controls.Add(gpsMap);
-
-                var ftSet = new FeatureSet(FeatureType.Point);
-                var ftLyr = new MapPointLayer(ftSet);
-                gpsMap.MapFrame.DrawingLayers.Add(ftLyr);
-
-                // get the center of the control panel (location to render point)
-                var y = ((ptGpsGraphic.Bottom - ptGpsGraphic.Top) / 2) - 1;
-                var x = ((ptGpsGraphic.Right - ptGpsGraphic.Left) / 2) - 1;
-                var c = gpsMap.PixelToProj(new Point(x, y));
-                ftSet.AddFeature(new DotSpatial.Topology.Point(c));
-            }
-            UpdateGpsGraphics(gpsMap);
-        }
-
         private void DrawPointGraphics()
         {
             Map ptMap;  // check for a map first
@@ -777,37 +717,24 @@ namespace Go2It
         {
             // point symbology for graphics rendering
             Color pColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor;
-            Color gpsColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor;
             ptSymbolColorSlider.Value = pColor.GetOpacity();
-            ptGpsColorSlider.Value = gpsColor.GetOpacity();
             ptSymbolColorSlider.MaximumColor = Color.FromArgb(255, pColor.R, pColor.G, pColor.B);
-            ptGpsColorSlider.MaximumColor = Color.FromArgb(255, gpsColor.R, gpsColor.G, gpsColor.B);
             ptSymbolColorSlider.ValueChanged += PtSymbolColorSliderOnValueChanged;
-            ptGpsColorSlider.ValueChanged += PtGpsColorSliderOnValueChanged;
             ptSymbolColor.BackColor = pColor;
-            ptGpsColor.BackColor = gpsColor;
             ptSymbolColor.Click += PtSymbolColorOnClick;
-            ptGpsColor.Click += PtGpsColorOnClick;
             ptSymbolSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize;
-            ptGpsSize.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize;
             ptSymbolSize.ValueChanged += PtSymbolSizeOnValueChanged;
-            ptGpsSize.ValueChanged += PtGpsSizeOnValueChanged;
             foreach (PointShape ptShape in Enum.GetValues(typeof(PointShape)))
             {
                 if (ptShape.ToString().ToUpper() != "UNDEFINED")
                 {
                     ptSymbolStyle.Items.Add(ptShape.ToString());
-                    ptGpsStyle.Items.Add(ptShape.ToString());
                 }
             }
             var idx = ptSymbolStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle);
             ptSymbolStyle.SelectedIndex = idx;
             ptSymbolStyle.SelectedIndexChanged += PtSymbolStyleOnSelectedIndexChanged;
-            idx = ptGpsStyle.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle);
-            ptGpsStyle.SelectedIndex = idx;
-            ptGpsStyle.SelectedIndexChanged += PtGpsStyleOnSelectedIndexChanged;
             DrawPointGraphics();
-            DrawGpsPointGraphics();
 
             // line symbology for graphics rendering
             lineSymbolBorderColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor;
@@ -843,44 +770,7 @@ namespace Go2It
             DrawLineGraphics();
         }
 
-        private void PtGpsStyleOnSelectedIndexChanged(object sender, EventArgs eventArgs)
-        {
-            DrawGpsPointGraphics();
-            _projectManager.IsDirty = true;
-        }
-
-        private void PtGpsSizeOnValueChanged(object sender, EventArgs eventArgs)
-        {
-            DrawGpsPointGraphics();
-            _projectManager.IsDirty = true;
-        }
-
-        private void PtGpsColorOnClick(object sender, EventArgs eventArgs)
-        {
-            var oColor = ptGpsColor.BackColor;
-            var dlg = new ColorDialog();
-            if (dlg.ShowDialog() != DialogResult.OK) return;
-
-            // update the slider max color value for display
-            ptGpsColorSlider.MaximumColor = Color.FromArgb(255, dlg.Color.R, dlg.Color.G, dlg.Color.B);
-            // update the color and map display with new color accounting for alpha
-            int alpha = Convert.ToInt32(ptGpsColorSlider.Value * 255);
-            ptGpsColor.BackColor = Color.FromArgb(alpha, dlg.Color.R, dlg.Color.G, dlg.Color.B);
-            if (oColor != ptGpsColor.BackColor)
-            {
-                _projectManager.IsDirty = true;
-            }
-            DrawGpsPointGraphics();
-        }
-
-        private void PtGpsColorSliderOnValueChanged(object sender, EventArgs eventArgs)
-        {
-            int alpha = Convert.ToInt32(ptGpsColorSlider.Value * 255);
-            ptGpsColor.BackColor = Color.FromArgb(alpha, ptGpsColor.BackColor.R, ptGpsColor.BackColor.G, ptGpsColor.BackColor.B);
-            DrawGpsPointGraphics();
-            _projectManager.IsDirty = true;
-        }
-
+ 
         private void LineSymbolColorSliderOnValueChanged(object sender, EventArgs eventArgs)
         {
             int alpha = Convert.ToInt32(lineSymbolColorSlider.Value * 255);
@@ -1034,18 +924,6 @@ namespace Go2It
             }
             var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
             cmbAliMode.SelectedIndex = cmbAliMode.Items.IndexOf(aliMode);
-            var gpsIntType = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType;
-            if (gpsIntType == "Time")
-            {
-                gpsSelectTime.Checked = true;
-                gpsIntervalTime.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
-            }
-            else
-            {
-                gpsSelectCount.Checked = true;
-                gpsIntervalCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue;
-            }
-            gpsDisplayPointCount.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount;
             chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes;
             chkEnableQueryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
@@ -1473,7 +1351,7 @@ namespace Go2It
                 }
             else
             {
-                MessageBox.Show(@"Layer Indexing Operation is running, please wait or cancel to process");
+                MessageBox.Show(@"Layer Indexing Operation is running, please wait or cancel to continue");
             }
         }
 
@@ -1525,21 +1403,6 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(lineSymbolSize.Text);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = ApplyComboBoxSetting(lineSymbolStyle);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = ApplyComboBoxSetting(lineSymbolCap);
-            // set the gps symbology styles
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor = ptGpsColor.BackColor;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle = ApplyComboBoxSetting(ptGpsStyle);
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize = Convert.ToInt32(ptGpsSize.Text);
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount = Convert.ToInt32(gpsDisplayPointCount.Text);
-            if (gpsSelectCount.Checked)
-            {
-                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType = "Count";
-                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue = Convert.ToInt32(gpsIntervalCount.Text);
-            }
-            else
-            {
-                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType = "Time";
-                SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue = Convert.ToInt32(gpsIntervalTime.Text);
-            }
             // setup ali interface configuration
             string aliValue;
             _aliInterfaces.TryGetValue(cmbAliMode.SelectedItem.ToString(), out aliValue);
@@ -1783,7 +1646,6 @@ namespace Go2It
             // update the graphic render display to show new map bg color
             DrawLineGraphics();
             DrawPointGraphics();
-            DrawGpsPointGraphics();
         }
 
         private void btnUsersAddUpdate_Click(object sender, EventArgs e)
@@ -2430,8 +2292,8 @@ namespace Go2It
                     // snatch the row affiliated with this shape-range
                     DataRow dr = fs.DataTable.Rows[shapeRange.RecordNumber - 1];
                     // add standardized lookup fields for each record
-                    doc.Add(new Field(FID, dr[FID].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-                    doc.Add(new Field(LYRNAME, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.Add(new Field(Fid, dr[Fid].ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                    doc.Add(new Field(Lyrname, o.LayerName, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
                     // TODO: currently the polygon indexing seems to have issues (diff between esri and opengeo defs)
                     // TODO: investigate and come up with a solution for self-intersecting bullshit
@@ -2447,7 +2309,7 @@ namespace Go2It
 
                         // create our strategy for spatial indexing using NTS context
                         var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
-                        SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
+                        SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), Geoshape);
                         try // the esri and ogc defs regarding polygons seem to differ and cause issues here
                         {
                             Spatial4n.Core.Shapes.Shape wktShp = ctx.ReadShape(wkt);
@@ -2460,10 +2322,10 @@ namespace Go2It
                         }
                         catch (Exception ex)
                         {
-                            LogGeometryIndexError(o.LayerName, dr[FID].ToString(), shp, wkt, ex);
+                            LogGeometryIndexError(o.LayerName, dr[Fid].ToString(), shp, wkt, ex);
                             var msg = AppContext.Instance.Get<IUserMessage>();
                             msg.Error(
-                                "Error creating index :: FeatureClass: " + o.LayerName + " FeatureID: " + dr[FID], ex);
+                                "Error creating index :: FeatureClass: " + o.LayerName + " FeatureID: " + dr[Fid], ex);
                         }
                     }
                     // handle all other non-spatial field lookups
@@ -2533,11 +2395,11 @@ namespace Go2It
                         Parallel.ForEach(documents, delegate(Document document, ParallelLoopState state)
                         {
                             // check if this document already exists in the index
-                            var fid = document.GetField(FID).StringValue;
-                            var lyr = document.GetField(LYRNAME).StringValue;
+                            var fid = document.GetField(Fid).StringValue;
+                            var lyr = document.GetField(Lyrname).StringValue;
 
-                            Query qfid = new TermQuery(new Term(FID, fid));
-                            Query qlyr = new TermQuery(new Term(LYRNAME, lyr));
+                            Query qfid = new TermQuery(new Term(Fid, fid));
+                            Query qlyr = new TermQuery(new Term(Lyrname, lyr));
 
                             var query = new BooleanQuery { { qfid, Occur.MUST }, { qlyr, Occur.MUST } };
 
@@ -2930,24 +2792,6 @@ namespace Go2It
             HotKeyManager.SaveHotKeys();
         }
 
-        private void gpsSelectCount_CheckedChanged(object sender, EventArgs e)
-        {
-            if (gpsSelectCount.Checked)
-            {
-                gpsIntervalCount.Enabled = true;
-                gpsIntervalTime.Enabled = false;
-            }
-        }
-
-        private void gpsSelectTime_CheckedChanged(object sender, EventArgs e)
-        {
-            if (gpsSelectTime.Checked)
-            {
-                gpsIntervalTime.Enabled = true;
-                gpsIntervalCount.Enabled = false;
-            }
-        }
-
         private void cmbAliMode_SelectedIndexChanged(object sender, EventArgs e)
         {
             pnlAliEnterpol.Visible = false;
@@ -2973,7 +2817,7 @@ namespace Go2It
         private void btnAliInterfaceDbPathBrowse_Click(object sender, EventArgs e)
         {
             FileDialog fd = new OpenFileDialog();
-            fd.Filter = "MDB Databases|*.mdb";
+            fd.Filter = @"MDB Databases|*.mdb";
             fd.CheckFileExists = true;
             DialogResult r = fd.ShowDialog();
             if (r == DialogResult.OK)

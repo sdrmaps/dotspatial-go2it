@@ -122,19 +122,6 @@
             this.btnAliInterfaceDbPathBrowse = new System.Windows.Forms.Button();
             this.txtAliInterfaceDbPath = new System.Windows.Forms.TextBox();
             this.cmbAliMode = new System.Windows.Forms.ComboBox();
-            this.gpsSelectCount = new System.Windows.Forms.RadioButton();
-            this.gpsSelectTime = new System.Windows.Forms.RadioButton();
-            this.label6 = new System.Windows.Forms.Label();
-            this.gpsIntervalTime = new System.Windows.Forms.NumericUpDown();
-            this.ptGpsSize = new System.Windows.Forms.NumericUpDown();
-            this.ptGpsStyle = new System.Windows.Forms.ComboBox();
-            this.ptGpsColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
-            this.ptGpsColor = new System.Windows.Forms.Panel();
-            this.ptGpsGraphic = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.gpsDisplayPointCount = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.gpsIntervalCount = new System.Windows.Forms.NumericUpDown();
             this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
             this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
             this.lblHydrantDist = new System.Windows.Forms.Label();
@@ -179,10 +166,6 @@
             this.pnlAliGlobalCad.SuspendLayout();
             this.pnlAliSdrAliServer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptGpsSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gpsDisplayPointCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
@@ -952,19 +935,6 @@
             this.adminTab_SymbologySettings.Controls.Add(this.pnlAliGlobalCad);
             this.adminTab_SymbologySettings.Controls.Add(this.pnlAliSdrAliServer);
             this.adminTab_SymbologySettings.Controls.Add(this.cmbAliMode);
-            this.adminTab_SymbologySettings.Controls.Add(this.gpsSelectCount);
-            this.adminTab_SymbologySettings.Controls.Add(this.gpsSelectTime);
-            this.adminTab_SymbologySettings.Controls.Add(this.label6);
-            this.adminTab_SymbologySettings.Controls.Add(this.gpsIntervalTime);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsSize);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsStyle);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsColorSlider);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsColor);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptGpsGraphic);
-            this.adminTab_SymbologySettings.Controls.Add(this.label5);
-            this.adminTab_SymbologySettings.Controls.Add(this.gpsDisplayPointCount);
-            this.adminTab_SymbologySettings.Controls.Add(this.label4);
-            this.adminTab_SymbologySettings.Controls.Add(this.gpsIntervalCount);
             this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolColorSlider);
             this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolColorSlider);
             this.adminTab_SymbologySettings.Controls.Add(this.lblHydrantDist);
@@ -995,7 +965,7 @@
             // 
             // btnAliValidate
             // 
-            this.btnAliValidate.Location = new System.Drawing.Point(127, 442);
+            this.btnAliValidate.Location = new System.Drawing.Point(129, 289);
             this.btnAliValidate.Name = "btnAliValidate";
             this.btnAliValidate.Size = new System.Drawing.Size(75, 23);
             this.btnAliValidate.TabIndex = 63;
@@ -1013,7 +983,7 @@
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolDataSource);
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolTableName);
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolConnString);
-            this.pnlAliEnterpol.Location = new System.Drawing.Point(208, 582);
+            this.pnlAliEnterpol.Location = new System.Drawing.Point(210, 429);
             this.pnlAliEnterpol.Name = "pnlAliEnterpol";
             this.pnlAliEnterpol.Size = new System.Drawing.Size(379, 119);
             this.pnlAliEnterpol.TabIndex = 62;
@@ -1089,7 +1059,7 @@
             this.pnlAliGlobalCad.Controls.Add(this.label14);
             this.pnlAliGlobalCad.Controls.Add(this.btnAliGlobalCadLogPathBrowse);
             this.pnlAliGlobalCad.Controls.Add(this.txtAliGlobalCadLogPath);
-            this.pnlAliGlobalCad.Location = new System.Drawing.Point(208, 496);
+            this.pnlAliGlobalCad.Location = new System.Drawing.Point(210, 343);
             this.pnlAliGlobalCad.Name = "pnlAliGlobalCad";
             this.pnlAliGlobalCad.Size = new System.Drawing.Size(379, 80);
             this.pnlAliGlobalCad.TabIndex = 61;
@@ -1145,7 +1115,7 @@
             this.pnlAliSdrAliServer.Controls.Add(this.txtAliInterfaceUdpHost);
             this.pnlAliSdrAliServer.Controls.Add(this.btnAliInterfaceDbPathBrowse);
             this.pnlAliSdrAliServer.Controls.Add(this.txtAliInterfaceDbPath);
-            this.pnlAliSdrAliServer.Location = new System.Drawing.Point(208, 407);
+            this.pnlAliSdrAliServer.Location = new System.Drawing.Point(210, 254);
             this.pnlAliSdrAliServer.Name = "pnlAliSdrAliServer";
             this.pnlAliSdrAliServer.Size = new System.Drawing.Size(375, 83);
             this.pnlAliSdrAliServer.TabIndex = 60;
@@ -1216,147 +1186,11 @@
             // cmbAliMode
             // 
             this.cmbAliMode.FormattingEnabled = true;
-            this.cmbAliMode.Location = new System.Drawing.Point(27, 415);
+            this.cmbAliMode.Location = new System.Drawing.Point(29, 262);
             this.cmbAliMode.Name = "cmbAliMode";
             this.cmbAliMode.Size = new System.Drawing.Size(175, 21);
             this.cmbAliMode.TabIndex = 59;
             this.cmbAliMode.SelectedIndexChanged += new System.EventHandler(this.cmbAliMode_SelectedIndexChanged);
-            // 
-            // gpsSelectCount
-            // 
-            this.gpsSelectCount.AutoSize = true;
-            this.gpsSelectCount.Location = new System.Drawing.Point(173, 80);
-            this.gpsSelectCount.Name = "gpsSelectCount";
-            this.gpsSelectCount.Size = new System.Drawing.Size(14, 13);
-            this.gpsSelectCount.TabIndex = 58;
-            this.gpsSelectCount.TabStop = true;
-            this.gpsSelectCount.UseVisualStyleBackColor = true;
-            this.gpsSelectCount.CheckedChanged += new System.EventHandler(this.gpsSelectCount_CheckedChanged);
-            // 
-            // gpsSelectTime
-            // 
-            this.gpsSelectTime.AutoSize = true;
-            this.gpsSelectTime.Location = new System.Drawing.Point(173, 32);
-            this.gpsSelectTime.Name = "gpsSelectTime";
-            this.gpsSelectTime.Size = new System.Drawing.Size(14, 13);
-            this.gpsSelectTime.TabIndex = 57;
-            this.gpsSelectTime.TabStop = true;
-            this.gpsSelectTime.UseVisualStyleBackColor = true;
-            this.gpsSelectTime.CheckedChanged += new System.EventHandler(this.gpsSelectTime_CheckedChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(197, 14);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(93, 13);
-            this.label6.TabIndex = 56;
-            this.label6.Text = "GPS Interval Time";
-            // 
-            // gpsIntervalTime
-            // 
-            this.gpsIntervalTime.Location = new System.Drawing.Point(195, 30);
-            this.gpsIntervalTime.Name = "gpsIntervalTime";
-            this.gpsIntervalTime.Size = new System.Drawing.Size(102, 20);
-            this.gpsIntervalTime.TabIndex = 55;
-            // 
-            // ptGpsSize
-            // 
-            this.ptGpsSize.Location = new System.Drawing.Point(469, 123);
-            this.ptGpsSize.Name = "ptGpsSize";
-            this.ptGpsSize.Size = new System.Drawing.Size(72, 20);
-            this.ptGpsSize.TabIndex = 54;
-            // 
-            // ptGpsStyle
-            // 
-            this.ptGpsStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ptGpsStyle.FormattingEnabled = true;
-            this.ptGpsStyle.Location = new System.Drawing.Point(258, 123);
-            this.ptGpsStyle.Name = "ptGpsStyle";
-            this.ptGpsStyle.Size = new System.Drawing.Size(205, 21);
-            this.ptGpsStyle.TabIndex = 53;
-            // 
-            // ptGpsColorSlider
-            // 
-            this.ptGpsColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ptGpsColorSlider.ColorButton = null;
-            this.ptGpsColorSlider.FlipRamp = false;
-            this.ptGpsColorSlider.FlipText = false;
-            this.ptGpsColorSlider.InvertRamp = false;
-            this.ptGpsColorSlider.Location = new System.Drawing.Point(122, 124);
-            this.ptGpsColorSlider.Maximum = 1D;
-            this.ptGpsColorSlider.MaximumColor = System.Drawing.Color.Green;
-            this.ptGpsColorSlider.Minimum = 0D;
-            this.ptGpsColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ptGpsColorSlider.Name = "ptGpsColorSlider";
-            this.ptGpsColorSlider.NumberFormat = "#%";
-            this.ptGpsColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.ptGpsColorSlider.RampRadius = 10F;
-            this.ptGpsColorSlider.RampText = null;
-            this.ptGpsColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ptGpsColorSlider.RampTextBehindRamp = false;
-            this.ptGpsColorSlider.RampTextColor = System.Drawing.Color.Black;
-            this.ptGpsColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ptGpsColorSlider.ShowMaximum = false;
-            this.ptGpsColorSlider.ShowMinimum = false;
-            this.ptGpsColorSlider.ShowTicks = true;
-            this.ptGpsColorSlider.ShowValue = true;
-            this.ptGpsColorSlider.Size = new System.Drawing.Size(122, 23);
-            this.ptGpsColorSlider.SliderColor = System.Drawing.Color.Blue;
-            this.ptGpsColorSlider.SliderRadius = 4F;
-            this.ptGpsColorSlider.TabIndex = 52;
-            this.ptGpsColorSlider.Text = "rampSlider1";
-            this.ptGpsColorSlider.TickColor = System.Drawing.Color.DarkGray;
-            this.ptGpsColorSlider.TickSpacing = 5F;
-            this.ptGpsColorSlider.Value = 1D;
-            // 
-            // ptGpsColor
-            // 
-            this.ptGpsColor.Location = new System.Drawing.Point(90, 123);
-            this.ptGpsColor.Name = "ptGpsColor";
-            this.ptGpsColor.Size = new System.Drawing.Size(22, 24);
-            this.ptGpsColor.TabIndex = 31;
-            // 
-            // ptGpsGraphic
-            // 
-            this.ptGpsGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptGpsGraphic.Location = new System.Drawing.Point(32, 102);
-            this.ptGpsGraphic.Margin = new System.Windows.Forms.Padding(0);
-            this.ptGpsGraphic.Name = "ptGpsGraphic";
-            this.ptGpsGraphic.Size = new System.Drawing.Size(45, 45);
-            this.ptGpsGraphic.TabIndex = 28;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(26, 32);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(124, 13);
-            this.label5.TabIndex = 51;
-            this.label5.Text = "GPS Display Point Count";
-            // 
-            // gpsDisplayPointCount
-            // 
-            this.gpsDisplayPointCount.Location = new System.Drawing.Point(30, 48);
-            this.gpsDisplayPointCount.Name = "gpsDisplayPointCount";
-            this.gpsDisplayPointCount.Size = new System.Drawing.Size(120, 20);
-            this.gpsDisplayPointCount.TabIndex = 50;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(192, 62);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(98, 13);
-            this.label4.TabIndex = 49;
-            this.label4.Text = "GPS Interval Count";
-            // 
-            // gpsIntervalCount
-            // 
-            this.gpsIntervalCount.Location = new System.Drawing.Point(193, 78);
-            this.gpsIntervalCount.Name = "gpsIntervalCount";
-            this.gpsIntervalCount.Size = new System.Drawing.Size(102, 20);
-            this.gpsIntervalCount.TabIndex = 48;
             // 
             // ptSymbolColorSlider
             // 
@@ -1365,7 +1199,7 @@
             this.ptSymbolColorSlider.FlipRamp = false;
             this.ptSymbolColorSlider.FlipText = false;
             this.ptSymbolColorSlider.InvertRamp = false;
-            this.ptSymbolColorSlider.Location = new System.Drawing.Point(146, 188);
+            this.ptSymbolColorSlider.Location = new System.Drawing.Point(148, 35);
             this.ptSymbolColorSlider.Maximum = 1D;
             this.ptSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
             this.ptSymbolColorSlider.Minimum = 0D;
@@ -1399,7 +1233,7 @@
             this.lineSymbolColorSlider.FlipRamp = false;
             this.lineSymbolColorSlider.FlipText = false;
             this.lineSymbolColorSlider.InvertRamp = false;
-            this.lineSymbolColorSlider.Location = new System.Drawing.Point(146, 260);
+            this.lineSymbolColorSlider.Location = new System.Drawing.Point(148, 107);
             this.lineSymbolColorSlider.Maximum = 1D;
             this.lineSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
             this.lineSymbolColorSlider.Minimum = 0D;
@@ -1429,7 +1263,7 @@
             // lblHydrantDist
             // 
             this.lblHydrantDist.AutoSize = true;
-            this.lblHydrantDist.Location = new System.Drawing.Point(24, 349);
+            this.lblHydrantDist.Location = new System.Drawing.Point(26, 196);
             this.lblHydrantDist.Name = "lblHydrantDist";
             this.lblHydrantDist.Size = new System.Drawing.Size(89, 13);
             this.lblHydrantDist.TabIndex = 44;
@@ -1438,7 +1272,7 @@
             // lblZoomFactor
             // 
             this.lblZoomFactor.AutoSize = true;
-            this.lblZoomFactor.Location = new System.Drawing.Point(120, 349);
+            this.lblZoomFactor.Location = new System.Drawing.Point(122, 196);
             this.lblZoomFactor.Name = "lblZoomFactor";
             this.lblZoomFactor.Size = new System.Drawing.Size(67, 13);
             this.lblZoomFactor.TabIndex = 43;
@@ -1447,7 +1281,7 @@
             // lblBufDist
             // 
             this.lblBufDist.AutoSize = true;
-            this.lblBufDist.Location = new System.Drawing.Point(286, 349);
+            this.lblBufDist.Location = new System.Drawing.Point(288, 196);
             this.lblBufDist.Name = "lblBufDist";
             this.lblBufDist.Size = new System.Drawing.Size(117, 13);
             this.lblBufDist.TabIndex = 42;
@@ -1456,7 +1290,7 @@
             // lblHydrantCount
             // 
             this.lblHydrantCount.AutoSize = true;
-            this.lblHydrantCount.Location = new System.Drawing.Point(205, 349);
+            this.lblHydrantCount.Location = new System.Drawing.Point(207, 196);
             this.lblHydrantCount.Name = "lblHydrantCount";
             this.lblHydrantCount.Size = new System.Drawing.Size(75, 13);
             this.lblHydrantCount.TabIndex = 41;
@@ -1464,7 +1298,7 @@
             // 
             // searchHydrantDistance
             // 
-            this.searchHydrantDistance.Location = new System.Drawing.Point(27, 368);
+            this.searchHydrantDistance.Location = new System.Drawing.Point(29, 215);
             this.searchHydrantDistance.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -1476,7 +1310,7 @@
             // 
             // searchBufferDistance
             // 
-            this.searchBufferDistance.Location = new System.Drawing.Point(294, 365);
+            this.searchBufferDistance.Location = new System.Drawing.Point(296, 212);
             this.searchBufferDistance.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -1494,21 +1328,21 @@
             0,
             0,
             131072});
-            this.searchZoomFactor.Location = new System.Drawing.Point(121, 365);
+            this.searchZoomFactor.Location = new System.Drawing.Point(123, 212);
             this.searchZoomFactor.Name = "searchZoomFactor";
             this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
             this.searchZoomFactor.TabIndex = 38;
             // 
             // searchHydrantCount
             // 
-            this.searchHydrantCount.Location = new System.Drawing.Point(208, 365);
+            this.searchHydrantCount.Location = new System.Drawing.Point(210, 212);
             this.searchHydrantCount.Name = "searchHydrantCount";
             this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
             this.searchHydrantCount.TabIndex = 37;
             // 
             // lineSymbolBorderColor
             // 
-            this.lineSymbolBorderColor.Location = new System.Drawing.Point(91, 293);
+            this.lineSymbolBorderColor.Location = new System.Drawing.Point(93, 140);
             this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
             this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
             this.lineSymbolBorderColor.TabIndex = 36;
@@ -1517,14 +1351,14 @@
             // 
             this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lineSymbolCap.FormattingEnabled = true;
-            this.lineSymbolCap.Location = new System.Drawing.Point(146, 293);
+            this.lineSymbolCap.Location = new System.Drawing.Point(148, 140);
             this.lineSymbolCap.Name = "lineSymbolCap";
             this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
             this.lineSymbolCap.TabIndex = 35;
             // 
             // lineSymbolSize
             // 
-            this.lineSymbolSize.Location = new System.Drawing.Point(545, 263);
+            this.lineSymbolSize.Location = new System.Drawing.Point(547, 110);
             this.lineSymbolSize.Name = "lineSymbolSize";
             this.lineSymbolSize.Size = new System.Drawing.Size(46, 20);
             this.lineSymbolSize.TabIndex = 34;
@@ -1533,28 +1367,28 @@
             // 
             this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.lineSymbolStyle.FormattingEnabled = true;
-            this.lineSymbolStyle.Location = new System.Drawing.Point(295, 262);
+            this.lineSymbolStyle.Location = new System.Drawing.Point(297, 109);
             this.lineSymbolStyle.Name = "lineSymbolStyle";
             this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
             this.lineSymbolStyle.TabIndex = 33;
             // 
             // lineSymbolColor
             // 
-            this.lineSymbolColor.Location = new System.Drawing.Point(91, 247);
+            this.lineSymbolColor.Location = new System.Drawing.Point(93, 94);
             this.lineSymbolColor.Name = "lineSymbolColor";
             this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
             this.lineSymbolColor.TabIndex = 32;
             // 
             // ptSymbolSize
             // 
-            this.ptSymbolSize.Location = new System.Drawing.Point(489, 188);
+            this.ptSymbolSize.Location = new System.Drawing.Point(491, 35);
             this.ptSymbolSize.Name = "ptSymbolSize";
             this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
             this.ptSymbolSize.TabIndex = 31;
             // 
             // ptSymbolColor
             // 
-            this.ptSymbolColor.Location = new System.Drawing.Point(118, 188);
+            this.ptSymbolColor.Location = new System.Drawing.Point(120, 35);
             this.ptSymbolColor.Name = "ptSymbolColor";
             this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
             this.ptSymbolColor.TabIndex = 30;
@@ -1563,7 +1397,7 @@
             // 
             this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ptSymbolStyle.FormattingEnabled = true;
-            this.ptSymbolStyle.Location = new System.Drawing.Point(278, 188);
+            this.ptSymbolStyle.Location = new System.Drawing.Point(280, 35);
             this.ptSymbolStyle.Name = "ptSymbolStyle";
             this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
             this.ptSymbolStyle.TabIndex = 29;
@@ -1571,7 +1405,7 @@
             // lineSymbolGraphic
             // 
             this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lineSymbolGraphic.Location = new System.Drawing.Point(33, 238);
+            this.lineSymbolGraphic.Location = new System.Drawing.Point(35, 85);
             this.lineSymbolGraphic.Name = "lineSymbolGraphic";
             this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
             this.lineSymbolGraphic.TabIndex = 28;
@@ -1579,7 +1413,7 @@
             // ptSymbolGraphic
             // 
             this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptSymbolGraphic.Location = new System.Drawing.Point(33, 168);
+            this.ptSymbolGraphic.Location = new System.Drawing.Point(35, 15);
             this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
             this.ptSymbolGraphic.Name = "ptSymbolGraphic";
             this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
@@ -1652,10 +1486,6 @@
             this.pnlAliSdrAliServer.ResumeLayout(false);
             this.pnlAliSdrAliServer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptGpsSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gpsDisplayPointCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gpsIntervalCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
@@ -1753,19 +1583,6 @@
         private System.Windows.Forms.Label lblHydrantCount;
         private DotSpatial.Symbology.Forms.RampSlider lineSymbolColorSlider;
         private DotSpatial.Symbology.Forms.RampSlider ptSymbolColorSlider;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown gpsDisplayPointCount;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown gpsIntervalCount;
-        private System.Windows.Forms.NumericUpDown ptGpsSize;
-        private System.Windows.Forms.ComboBox ptGpsStyle;
-        private DotSpatial.Symbology.Forms.RampSlider ptGpsColorSlider;
-        private System.Windows.Forms.Panel ptGpsColor;
-        private System.Windows.Forms.Panel ptGpsGraphic;
-        private System.Windows.Forms.RadioButton gpsSelectCount;
-        private System.Windows.Forms.RadioButton gpsSelectTime;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown gpsIntervalTime;
         private System.Windows.Forms.Panel pnlAliEnterpol;
         private System.Windows.Forms.TextBox txtAliEnterpolInitialCatalog;
         private System.Windows.Forms.TextBox txtAliEnterpolDataSource;

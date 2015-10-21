@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Windows.Forms;
 using DotSpatial.Positioning;
 using DotSpatial.SDR.Controls;
-using DotSpatial.SDR.Plugins.GPS.Properties;
 
 namespace DotSpatial.SDR.Plugins.GPS
 {
@@ -18,66 +17,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             InitializeComponent();
             _detectedDevices = new Dictionary<string, string>();
-            chkAllowSerial.Checked = AllowSerial;
-            chkAllowBluetooth.Checked = AllowBluetooth;
-        }
-        #endregion
-
-        #region Properties
-        private static string DeviceName
-        {
-            get
-            {
-                return UserSettings.Default.DeviceName;
-            }
-            set
-            {
-                UserSettings.Default.DeviceName = value;
-                UserSettings.Default.Save();
-            }
-        }
-
-        private static bool AllowSerial
-        {
-            get
-            {
-                return UserSettings.Default.AllowSerial;
-            }
-            set
-            {
-                UserSettings.Default.AllowSerial = value;
-                UserSettings.Default.Save();
-            }
-        }
-
-        private static bool AllowBluetooth
-        {
-            get
-            {
-                return UserSettings.Default.AllowBluetooth;
-            }
-            set
-            {
-                UserSettings.Default.AllowBluetooth = value;
-                UserSettings.Default.Save();
-            }
-        }
-
-        private static DeviceStatus DeviceStatus
-        {
-            get
-            {
-                var funcMode = UserSettings.Default.DeviceStatus;
-                if (funcMode.Length <= 0) return DeviceStatus.Unavailable;
-                DeviceStatus ds;
-                Enum.TryParse(funcMode, true, out ds);
-                return ds;
-            }
-            set
-            {
-                UserSettings.Default.DeviceStatus = value.ToString();
-                UserSettings.Default.Save();
-            }
+            chkAllowSerial.Checked = PluginSettings.Instance.AllowSerial;
+            chkAllowBluetooth.Checked = PluginSettings.Instance.AllowBluetooth;
         }
         #endregion
 
@@ -120,8 +61,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             if (gpsDetectCancel.Text == @"Detect")
             {
                 gpsDetectCancel.Text = @"Cancel";
-                AllowBluetooth = chkAllowBluetooth.Checked; // save user setting
-                AllowSerial = chkAllowSerial.Checked; // save user setting
+                PluginSettings.Instance.AllowBluetooth = chkAllowBluetooth.Checked; // save user setting
+                PluginSettings.Instance.AllowSerial = chkAllowSerial.Checked; // save user setting
                 chkAllowSerial.Enabled = false;
                 chkAllowBluetooth.Enabled = false;
                 if (_progressPanel == null)
@@ -129,7 +70,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                     _progressPanel = new ProgressPanel();
                     _progressPanel.StartProgress("Detecting Devices...");
                 }
-                DeviceStatus = DeviceStatus.Detecting;  // save user setting
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Detecting;  // save user setting
                 BeginDetection(sender, e);
             }
             else
@@ -142,10 +83,10 @@ namespace DotSpatial.SDR.Plugins.GPS
                     _progressPanel.StopProgress();
                     _progressPanel = null;
                 }
-                DeviceStatus = DeviceStatus.Unavailable;  // save user setting
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Unavailable;  // save user setting
                 CancelDetection(sender, e);
             }
-            txtStatus.Text = DeviceStatus.ToString();
+            txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
         }
 
         private void gpsStartStop_Click(object sender, EventArgs e)
@@ -206,7 +147,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 if (devices.Count > 0)
                 {
                     gpsStartStop.Enabled = true;
-                    DeviceStatus = DeviceStatus.Detected;  // save user setting
+                    PluginSettings.Instance.DeviceStatus = DeviceStatus.Detected;  // save user setting
                     foreach (KeyValuePair<Device, string> kvPair in devices)
                     {
                         _detectedDevices.Add(kvPair.Key.Name, kvPair.Value);
@@ -214,9 +155,9 @@ namespace DotSpatial.SDR.Plugins.GPS
                     }
                     if (devices.Count > 1)
                     {
-                        if (DeviceName != string.Empty)
+                        if (PluginSettings.Instance.DeviceName != string.Empty)
                         {
-                            cmbName.SelectedIndex = cmbName.Items.IndexOf(DeviceName) != -1 ? cmbName.Items.IndexOf(DeviceName) : 0;
+                            cmbName.SelectedIndex = cmbName.Items.IndexOf(PluginSettings.Instance.DeviceName) != -1 ? cmbName.Items.IndexOf(PluginSettings.Instance.DeviceName) : 0;
                         }
                         else
                         {
@@ -231,10 +172,10 @@ namespace DotSpatial.SDR.Plugins.GPS
                 else
                 {
                     gpsStartStop.Enabled = false;
-                    DeviceStatus = DeviceStatus.Unavailable;  // save user setting
+                    PluginSettings.Instance.DeviceStatus = DeviceStatus.Unavailable;  // save user setting
                 }
-                txtStatus.Text = DeviceStatus.ToString();
-                DeviceName = cmbName.Text;
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceName = cmbName.Text;
             }));
         }
 
@@ -242,8 +183,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
-                DeviceStatus = DeviceStatus.Exception;  // save user setting
-                txtStatus.Text = DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Exception;  // save user setting
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
             }));
         }
 
@@ -252,8 +193,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             BeginInvoke(new MethodInvoker(delegate
             {
                 gpsPauseResume.Text = @"Resume";
-                DeviceStatus = DeviceStatus.Paused;  // save user setting
-                txtStatus.Text = DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Paused;  // save user setting
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
             }));
         }
 
@@ -262,8 +203,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             BeginInvoke(new MethodInvoker(delegate
             {
                 gpsPauseResume.Text = @"Pause";
-                DeviceStatus = DeviceStatus.Connected;  // save user setting
-                txtStatus.Text = DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Connected;  // save user setting
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
             }));
         }
 
@@ -271,8 +212,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
-                DeviceStatus = DeviceStatus.FixLost;  // save user setting
-                txtStatus.Text = DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.FixLost;  // save user setting
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
             }));
         }
 
@@ -280,8 +221,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
-                DeviceStatus = DeviceStatus.Connected;  // save user setting
-                txtStatus.Text = DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Connected;  // save user setting
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
             }));
         }
 
@@ -289,8 +230,8 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             BeginInvoke(new MethodInvoker(delegate
             {
-                DeviceStatus = DeviceStatus.ConnectionLost;  // save user setting
-                txtStatus.Text = DeviceStatus.ToString();
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.ConnectionLost;  // save user setting
+                txtStatus.Text = PluginSettings.Instance.DeviceStatus.ToString();
             }));
         }
 
@@ -334,7 +275,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 gpsDetectCancel.Enabled = false;
                 gpsPauseResume.Enabled = true;
                 cmbName.Enabled = false;
-                DeviceStatus = DeviceStatus.Connected;  // save user setting
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Connected;  // save user setting
                 txtStatus.Text = DeviceStatus.Connected.ToString();
             }));
         }
@@ -348,7 +289,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 gpsDetectCancel.Enabled = true;
                 gpsPauseResume.Enabled = false;
                 cmbName.Enabled = true;
-                DeviceStatus = DeviceStatus.Disconnected;  // save user setting
+                PluginSettings.Instance.DeviceStatus = DeviceStatus.Disconnected;  // save user setting
                 txtStatus.Text = DeviceStatus.Disconnected.ToString();
                 txtDate.Text = string.Empty;
                 txtPosition.Text = string.Empty;
@@ -369,12 +310,18 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void chkAllowSerial_CheckedChanged(object sender, EventArgs e)
         {
-            AllowSerial = chkAllowSerial.Checked;
+            PluginSettings.Instance.AllowSerial = chkAllowSerial.Checked;
         }
 
         private void chkAllowBluetooth_CheckedChanged(object sender, EventArgs e)
         {
-            AllowBluetooth = chkAllowBluetooth.Checked;
+            PluginSettings.Instance.AllowBluetooth = chkAllowBluetooth.Checked;
+        }
+
+        private void gpsSettings_Click(object sender, EventArgs e)
+        {
+            var settingsForm = new GpsDisplaySettings();
+            settingsForm.ShowDialog();
         }
     }
 }

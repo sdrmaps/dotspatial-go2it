@@ -27,9 +27,24 @@ namespace DotSpatial.SDR.Plugins.GPS
         public PointShape GpsPointShape { get; set; }
         public int GpsPointSize { get; set; }
         public Color GpsNewPointColor { get; set; }
-        public int GpsPointDisplayCount { get; set; }
 
-        private readonly FeatureSymbolizer[] _fsArray;
+        public int GpsPointDisplayCount
+        {
+            set
+            {
+                if (_fsArray == null)
+                {
+                    _fsArray = new FeatureSymbolizer[value];
+                }
+                else
+                {
+                    Array.Resize(ref _fsArray, value);
+                }
+            }
+            get { return _fsArray.Length; }
+        }
+
+        private FeatureSymbolizer[] _fsArray;
         private readonly FeatureSet _pointGraphics;
 
         public GpsDisplayQueue(PointShape pShape, int pSize, Color pColor, int pCount)
@@ -40,7 +55,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             GpsPointSize = pSize;
             GpsNewPointColor = pColor;
             GpsPointDisplayCount = pCount;
-            _fsArray = new FeatureSymbolizer[pCount];
             SetColorOpacityLevels();
         }
 

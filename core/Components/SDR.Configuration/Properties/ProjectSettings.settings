@@ -89,24 +89,6 @@
     <Setting Name="HydrantSearchDistance" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>
-    <Setting Name="GpsPointColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Red</Value>
-    </Setting>
-    <Setting Name="GpsPointStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Rectangle</Value>
-    </Setting>
-    <Setting Name="GpsPointSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">16</Value>
-    </Setting>
-    <Setting Name="GpsIntervalType" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Time</Value>
-    </Setting>
-    <Setting Name="GpsIntervalValue" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
-    <Setting Name="GpsDisplayCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
     <Setting Name="AliMode" Type="System.String" Scope="User">
       <Value Profile="(Default)">Disabled</Value>
     </Setting>

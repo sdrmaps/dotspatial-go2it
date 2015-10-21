@@ -14,5 +14,23 @@
     <Setting Name="DeviceStatus" Type="System.String" Scope="User">
       <Value Profile="(Default)">Unavailable</Value>
     </Setting>
+    <Setting Name="PointColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="PointSize" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="PointStyle" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Rectangle</Value>
+    </Setting>
+    <Setting Name="IntervalType" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Time</Value>
+    </Setting>
+    <Setting Name="IntervalValue" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="DisplayCount" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

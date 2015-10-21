@@ -57,12 +57,12 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal) 0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
             Properties.ProjectSettings.Default.SearchQueryParserLogging = false;
-            Properties.ProjectSettings.Default.GpsPointColor = Color.Red;
-            Properties.ProjectSettings.Default.GpsPointSize = 16;
-            Properties.ProjectSettings.Default.GpsPointStyle = "Rectangle";
-            Properties.ProjectSettings.Default.GpsDisplayCount = 5;
-            Properties.ProjectSettings.Default.GpsIntervalType = "Time";
-            Properties.ProjectSettings.Default.GpsIntervalValue = 20;
+            //Properties.ProjectSettings.Default.GpsPointColor = Color.Red;
+            //Properties.ProjectSettings.Default.GpsPointSize = 16;
+            //Properties.ProjectSettings.Default.GpsPointStyle = "Rectangle";
+            //Properties.ProjectSettings.Default.GpsDisplayCount = 5;
+            //Properties.ProjectSettings.Default.GpsIntervalType = "Time";
+            //Properties.ProjectSettings.Default.GpsIntervalValue = 20;
             Properties.ProjectSettings.Default.AliMode = "Disabled";
             Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
             Properties.ProjectSettings.Default.AliEnterpolDbConnString = string.Empty;
@@ -343,123 +343,6 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.HydrantSearchDistance = value; }
             get { return Properties.ProjectSettings.Default.HydrantSearchDistance; }
-        }
-
-        public event EventHandler GpsDisplayCountChanged;
-        public int GpsDisplayCount
-        {
-            get { return Properties.ProjectSettings.Default.GpsDisplayCount; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.GpsDisplayCount != value)
-                {
-                    Properties.ProjectSettings.Default.GpsDisplayCount = value;
-                    OnGpsDisplayCountChanged(EventArgs.Empty);
-                }
-            }
-        }
-        protected virtual void OnGpsDisplayCountChanged(EventArgs e)
-        {
-            if (GpsDisplayCountChanged != null)
-                GpsDisplayCountChanged(this, e);
-        }
-
-        public event EventHandler GpsPointColorChanged;
-        public Color GpsPointColor
-        {
-            get { return Properties.ProjectSettings.Default.GpsPointColor; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.GpsPointColor != value)
-                {
-                    Properties.ProjectSettings.Default.GpsPointColor = value;
-                    OnGpsPointColorChanged(EventArgs.Empty);
-                }
-            }
-        }
-        protected virtual void OnGpsPointColorChanged(EventArgs e)
-        {
-            if (GpsPointColorChanged != null)
-                GpsPointColorChanged(this, e);
-        }
-
-        public event EventHandler GpsPointStyleChanged;
-        public string GpsPointStyle
-        {
-            get { return Properties.ProjectSettings.Default.GpsPointStyle; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.GpsPointStyle != value)
-                {
-                    Properties.ProjectSettings.Default.GpsPointStyle = value;
-                    OnGpsPointStyleChanged(EventArgs.Empty);
-                }
-            }
-
-        }
-        protected virtual void OnGpsPointStyleChanged(EventArgs e)
-        {
-            if (GpsPointStyleChanged != null)
-                GpsPointStyleChanged(this, e);
-        }
-
-        public event EventHandler GpsPointSizeChanged;
-        public int GpsPointSize
-        {
-            get { return Properties.ProjectSettings.Default.GpsPointSize; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.GpsPointSize != value)
-                {
-                    Properties.ProjectSettings.Default.GpsPointSize = value;
-                    OnGpsPointSizeChanged(EventArgs.Empty);
-                }
-            }
-
-        }
-        protected virtual void OnGpsPointSizeChanged(EventArgs e)
-        {
-            if (GpsPointSizeChanged != null)
-                GpsPointSizeChanged(this, e);
-        }
-
-        public event EventHandler GpsIntervalValueChanged;
-        public int GpsIntervalValue
-        {
-            get { return Properties.ProjectSettings.Default.GpsIntervalValue; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.GpsIntervalValue != value)
-                {
-                    Properties.ProjectSettings.Default.GpsIntervalValue = value;
-                    OnGpsIntervalValueChanged(EventArgs.Empty);
-                }
-            }
-        }
-        protected virtual void OnGpsIntervalValueChanged(EventArgs e)
-        {
-            if (GpsIntervalValueChanged != null)
-                GpsIntervalValueChanged(this, e);
-        }
-
-        public event EventHandler GpsIntervalTypeChanged;
-        public string GpsIntervalType
-        {
-            get { return Properties.ProjectSettings.Default.GpsIntervalType; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.GpsIntervalType != value)
-                {
-                    Properties.ProjectSettings.Default.GpsIntervalType = value;
-                    OnGpsIntervalTypeChanged(EventArgs.Empty);
-                }
-            }
-
-        }
-        protected virtual void OnGpsIntervalTypeChanged(EventArgs e)
-        {
-            if (GpsIntervalTypeChanged != null)
-                GpsIntervalTypeChanged(this, e);
         }
 
         public event EventHandler AliModeChanged;

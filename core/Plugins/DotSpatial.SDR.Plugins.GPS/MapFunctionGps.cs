@@ -50,10 +50,10 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void SetupActivateGps()
         {
-            Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
-            Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
+            Devices.AllowBluetoothConnections = PluginSettings.Instance.AllowBluetooth;
+            Devices.AllowSerialConnections = PluginSettings.Instance.AllowSerial;
             // check the status of the connection last run
-            var devStatus = UserSettings.Default.DeviceStatus;
+            var devStatus = PluginSettings.Instance.DeviceStatus.ToString();
             if (devStatus == DeviceStatus.Connected.ToString() ||
                 devStatus == DeviceStatus.Paused.ToString() ||
                 devStatus == DeviceStatus.Detected.ToString())
@@ -126,41 +126,42 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             if (Map != null)
             {
-                if (!double.IsNaN(args.Position.Latitude.DecimalDegrees))
+                if (!double.IsNaN(args.Position.Latitude.DecimalDegrees) && !double.IsNaN(args.Position.Longitude.DecimalDegrees))
                 {
                     if (_displayQueue == null)
                     {
                         PointShape pointShape;
-                        Enum.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle, true, out pointShape);
+                        Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out pointShape);
                         _displayQueue = new GpsDisplayQueue(
                             pointShape,
-                            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize,
-                            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor,
-                            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount);
+                            PluginSettings.Instance.GpsPointSize,
+                            PluginSettings.Instance.GpsPointColor,
+                            PluginSettings.Instance.GpsDisplayCount);
+
                         // refresh the map to display our updated gps trail
                         _displayQueue.ListUpdated += (o, eventArgs) => Map.Refresh();
 
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCountChanged +=
+                        PluginSettings.Instance.GpsDisplayCountChanged +=
                             delegate
                             {
-                                _displayQueue.GpsPointDisplayCount = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsDisplayCount;
+                                _displayQueue.GpsPointDisplayCount = PluginSettings.Instance.GpsDisplayCount;
                             };
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColorChanged +=
+                        PluginSettings.Instance.GpsPointColorChanged +=
                             delegate
                             {
-                                _displayQueue.GpsNewPointColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointColor;
+                                _displayQueue.GpsNewPointColor = PluginSettings.Instance.GpsPointColor;
                             };
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyleChanged +=
+                        PluginSettings.Instance.GpsPointStyleChanged +=
                             delegate
                             {
                                 PointShape ps;
-                                Enum.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointStyle, true, out ps);
+                                Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out ps);
                                 _displayQueue.GpsPointShape = ps;
                             };
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSizeChanged +=
+                        PluginSettings.Instance.GpsPointSizeChanged +=
                             delegate
                             {
-                                _displayQueue.GpsPointSize = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsPointSize;
+                                _displayQueue.GpsPointSize = PluginSettings.Instance.GpsPointSize;
                             };
                     }
                     AddGpsTrail();
@@ -175,20 +176,19 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void HandleGpsInterval()
         {
-            SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalTypeChanged +=
-                (sender, args) => HandleGpsInterval();
+            PluginSettings.Instance.GpsIntervalTypeChanged += (sender, args) => HandleGpsInterval();
 
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalType == "Time")
+            if (PluginSettings.Instance.GpsIntervalType == "Time")
             {
-                _intervalList = null;
+                if (_intervalList != null)
+                {
+                    _intervalList = null;
+                    PluginSettings.Instance.GpsIntervalValueChanged -= InstanceOnGpsIntervalValueChanged;
+                }
                 if (_intervalTimer == null)
                 {
-                    var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue * 1000;
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValueChanged +=
-                        delegate
-                        {
-                            _intervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue * 1000;
-                        };
+                    var interval = PluginSettings.Instance.GpsIntervalValue * 1000;
+                    PluginSettings.Instance.GpsIntervalValueChanged += InstanceOnGpsIntervalValueChanged;
                     _intervalTimer = new System.Timers.Timer(interval) {AutoReset = true};
                     _intervalTimer.Elapsed += delegate
                     {
@@ -199,11 +199,17 @@ namespace DotSpatial.SDR.Plugins.GPS
             }
             else
             {
-                _intervalTimer = null;
-                var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.GpsIntervalValue - 1;
+                if (_intervalTimer != null)
+                {
+                    _intervalTimer.Enabled = false;
+                    _intervalTimer = null;
+                    PluginSettings.Instance.GpsIntervalValueChanged -= InstanceOnGpsIntervalValueChanged;
+                }
+                var interval = PluginSettings.Instance.GpsIntervalValue - 1;
                 if (_intervalList == null)
                 {
                     _intervalList = new ArrayList(interval);
+                    PluginSettings.Instance.GpsIntervalValueChanged += InstanceOnGpsIntervalValueChanged;
                 }
                 if (_intervalList.Count == interval)
                 {
@@ -213,6 +219,24 @@ namespace DotSpatial.SDR.Plugins.GPS
                 else
                 {
                     _intervalList.Add(_latestGpsPoint);
+                }
+            }
+        }
+
+        private void InstanceOnGpsIntervalValueChanged(object sender, EventArgs eventArgs)
+        {
+            if (PluginSettings.Instance.GpsIntervalType == "Time")
+            {
+                if (_intervalTimer != null)
+                {
+                    _intervalTimer.Interval = PluginSettings.Instance.GpsIntervalValue * 1000;
+                }
+            }
+            else
+            {
+                if (_intervalList != null)
+                {
+                    _intervalList.Capacity = PluginSettings.Instance.GpsIntervalValue - 1;
                 }
             }
         }
@@ -227,8 +251,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             _gpsPanel.BeginDetection += delegate
             {
                 _gpsDevices.Clear();
-                Devices.AllowBluetoothConnections = UserSettings.Default.AllowBluetooth;
-                Devices.AllowSerialConnections = UserSettings.Default.AllowSerial;
+                Devices.AllowBluetoothConnections = PluginSettings.Instance.AllowBluetooth;
+                Devices.AllowSerialConnections = PluginSettings.Instance.AllowSerial;
                 Devices.BeginDetection();
             };
             _gpsPanel.CancelDetection += delegate
@@ -238,7 +262,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             };
             _gpsPanel.DeviceStart += delegate
             {
-                TryStart(UserSettings.Default.DeviceName);
+                TryStart(PluginSettings.Instance.DeviceName);
             };
             _gpsPanel.DeviceStop += delegate
             {
@@ -292,7 +316,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             if (_isAutoStart)  // only fired on startup if the previous run had an active GPS session
             {
                 _isAutoStart = false;
-                TryStart(UserSettings.Default.DeviceName);
+                TryStart(PluginSettings.Instance.DeviceName);
             }
         }
 

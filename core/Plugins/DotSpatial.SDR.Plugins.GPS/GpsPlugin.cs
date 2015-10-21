@@ -43,7 +43,6 @@ namespace DotSpatial.SDR.Plugins.GPS
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
             // initialize the gps function and check if it should/can start 
             _mapFunction = new MapFunctionGps(_gpsPanel);
-
             base.Activate();
         }
 

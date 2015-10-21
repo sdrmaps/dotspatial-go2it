@@ -259,9 +259,6 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "search_buffer_distance", "NUMERIC"), Go2ItProjectSettings.Instance.SearchBufferDistance.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "search_hydrant_count", "NUMERIC"), Go2ItProjectSettings.Instance.HydrantSearchCount.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "search_hydrant_distance", "NUMERIC"), Go2ItProjectSettings.Instance.HydrantSearchDistance.ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "ProjectSettings", "gps_display_count", "NUMERIC"), Go2ItProjectSettings.Instance.GpsDisplayCount.ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "ProjectSettings", "gps_interval_type", "TEXT"), Go2ItProjectSettings.Instance.GpsIntervalType.ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "ProjectSettings", "gps_interval_value", "NUMERIC"), Go2ItProjectSettings.Instance.GpsIntervalValue.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_mode", "TEXT"), Go2ItProjectSettings.Instance.AliMode.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_tablename", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolTableName.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_initcatalog", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog.ToString(CultureInfo.InvariantCulture)},
@@ -293,9 +290,6 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "line_size", "NUMERIC"), Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "line_cap", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineCap},
                 { ValidateColumn(conn, "GraphicSettings", "line_style", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineStyle},
-                { ValidateColumn(conn, "GraphicSettings", "gps_color", "TEXT"), Go2ItProjectSettings.Instance.GpsPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "GraphicSettings", "gps_style", "TEXT"), Go2ItProjectSettings.Instance.GpsPointStyle},
-                { ValidateColumn(conn, "GraphicSettings", "gps_size", "NUMERIC"), Go2ItProjectSettings.Instance.GpsPointSize.ToString(CultureInfo.InvariantCulture)},
             };
             k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM GraphicSettings limit 1");
             if (k.Length == 0)
@@ -371,9 +365,6 @@ namespace Go2It
             Go2ItProjectSettings.Instance.SearchBufferDistance = AttachSetting("search_buffer_distance", Go2ItProjectSettings.Instance.SearchBufferDistance, p);
             Go2ItProjectSettings.Instance.SearchZoomFactor = AttachSetting("search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor, p);
             Go2ItProjectSettings.Instance.SearchQueryParserLogging = AttachSetting("search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging, p);
-            Go2ItProjectSettings.Instance.GpsDisplayCount = AttachSetting("gps_display_count", Go2ItProjectSettings.Instance.GpsDisplayCount,p);
-            Go2ItProjectSettings.Instance.GpsIntervalType = AttachSetting("gps_interval_type", Go2ItProjectSettings.Instance.GpsIntervalType, p);
-            Go2ItProjectSettings.Instance.GpsIntervalValue = AttachSetting("gps_interval_value", Go2ItProjectSettings.Instance.GpsIntervalValue,p);
             Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
             Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = AttachSetting("ali_enterpol_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog, p);
             Go2ItProjectSettings.Instance.AliEnterpolTableName = AttachSetting("ali_enterpol_tablename", Go2ItProjectSettings.Instance.AliEnterpolTableName, p);
@@ -390,9 +381,6 @@ namespace Go2It
             Go2ItProjectSettings.Instance.GraphicPointColor = AttachSetting("point_color", Go2ItProjectSettings.Instance.GraphicPointColor, g);
             Go2ItProjectSettings.Instance.GraphicPointStyle = AttachSetting("point_style", Go2ItProjectSettings.Instance.GraphicPointStyle, g);
             Go2ItProjectSettings.Instance.GraphicPointSize = AttachSetting("point_size",Go2ItProjectSettings.Instance.GraphicPointSize,g);
-            Go2ItProjectSettings.Instance.GpsPointColor = AttachSetting("gps_color",Go2ItProjectSettings.Instance.GpsPointColor,g);
-            Go2ItProjectSettings.Instance.GpsPointStyle = AttachSetting("gps_style", Go2ItProjectSettings.Instance.GpsPointStyle, g);
-            Go2ItProjectSettings.Instance.GpsPointSize = AttachSetting("gps_size",Go2ItProjectSettings.Instance.GpsPointSize ,g);
             Go2ItProjectSettings.Instance.GraphicLineBorderColor = AttachSetting("line_border_color", Go2ItProjectSettings.Instance.GraphicLineBorderColor, g);
             Go2ItProjectSettings.Instance.GraphicLineColor = AttachSetting("line_color", Go2ItProjectSettings.Instance.GraphicLineColor, g);
             Go2ItProjectSettings.Instance.GraphicLineSize = AttachSetting("line_size", Go2ItProjectSettings.Instance.GraphicLineSize, g);
