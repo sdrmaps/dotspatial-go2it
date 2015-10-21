@@ -5,26 +5,11 @@
     <Setting Name="GridHeaderColumnCount" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
-    <Setting Name="AddressIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="RoadIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="ActiveFunctionMode" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">None</Value>
     </Setting>
     <Setting Name="ActiveFunctionPanel" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">kPanel_Measure</Value>
-    </Setting>
-    <Setting Name="KeyLocationIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="CellSectorIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ParcelIndexColumnOrder" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AdminModeActive" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

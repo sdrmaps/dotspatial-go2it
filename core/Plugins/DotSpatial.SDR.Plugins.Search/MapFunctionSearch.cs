@@ -112,7 +112,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void SetSearchVariables()
         {
-            switch (_searchPanel.SearchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
                     _indexType = "AddressIndex";
@@ -217,31 +217,31 @@ namespace DotSpatial.SDR.Plugins.Search
                 var i = GetColumnDisplayIndex(col.Name, _dataGridView);
                 newOrder.Add(col.Name, i.ToString(CultureInfo.InvariantCulture));
             }
-            switch (_searchPanel.SearchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
-                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Intersection:
-                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.RoadIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Name:
-                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Phone:
-                    SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.AddressIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Road:
-                    SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.RoadIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Key_Locations:
-                    SdrConfig.User.Go2ItUserSettings.Instance.KeyLocationIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.KeyLocationIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Parcel:
-                    SdrConfig.User.Go2ItUserSettings.Instance.ParcelIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.ParcelIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Cell_Sector:
-                    SdrConfig.User.Go2ItUserSettings.Instance.CellSectorIndexColumnOrder = newOrder;
+                    PluginSettings.Instance.CellSectorIndexColumnOrder = newOrder;
                     break;
             }
         }
@@ -281,7 +281,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (_searchPanel.SearchQuery.Length <= 0) return;
             var q = _searchPanel.SearchQuery;
             // if its an intersection and there are two terms do a location zoom, otherwise find intersections
-            if (_searchPanel.SearchMode == SearchMode.Intersection)
+            if (PluginSettings.Instance.SearchMode == SearchMode.Intersection)
             {
                 if (_searchPanel.SearchQuery.Length <= 1) return;  // only the | is present (blank search)
                 var arr = q.Split('|');
@@ -291,8 +291,8 @@ namespace DotSpatial.SDR.Plugins.Search
                     return;
                 } // else look for intersections on this feature and populate combos and dgv
                 q = arr[0];
-            } 
-            else if (_searchPanel.SearchMode == SearchMode.City || _searchPanel.SearchMode == SearchMode.Esn)
+            }
+            else if (PluginSettings.Instance.SearchMode == SearchMode.City || PluginSettings.Instance.SearchMode == SearchMode.Esn)
             {
                 // all other queries require a lucene query and populate combos and datagridview
                 _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
@@ -574,7 +574,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 Shape = dgvr.Cells[shpIdx].Value.ToString()
             };
 
-            switch (_searchPanel.SearchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Intersection:
                     if (_searchPanel.SearchQuery.Length <= 0) return;
@@ -673,7 +673,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private IEnumerable<ScoreDoc> ExecuteLuceneQuery(string sq)
         {
             ScoreDoc[] hits = null;
-            switch (_searchPanel.SearchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
                     hits = ExecuteScoredAddressQuery(sq);
@@ -823,24 +823,24 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private Dictionary<string, string> GetIndexColumnsOrder()
         {
-            switch (_searchPanel.SearchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                    return PluginSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Intersection:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+                    return PluginSettings.Instance.RoadIndexColumnOrder;
                 case SearchMode.Name:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                    return PluginSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Phone:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.AddressIndexColumnOrder;
+                    return PluginSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Road:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.RoadIndexColumnOrder;
+                    return PluginSettings.Instance.RoadIndexColumnOrder;
                 case SearchMode.Key_Locations:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.KeyLocationIndexColumnOrder;
+                    return PluginSettings.Instance.KeyLocationIndexColumnOrder;
                 case SearchMode.Parcel:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.ParcelIndexColumnOrder;
+                    return PluginSettings.Instance.ParcelIndexColumnOrder;
                 case SearchMode.Cell_Sector:
-                    return SdrConfig.User.Go2ItUserSettings.Instance.CellSectorIndexColumnOrder;
+                    return PluginSettings.Instance.CellSectorIndexColumnOrder;
                 case SearchMode.All:
                     // TODO:
                     return null;
@@ -1491,7 +1491,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private void FormatQueryResults(IEnumerable<ScoreDoc> hits)
         {
             if (hits == null) return;
-            switch (_searchPanel.SearchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Intersection:
                     FormatQueryResultsForDataGridView(hits);

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
-using DotSpatial.SDR.Plugins.Search.Properties;
 using Lucene.Net.Search;
 using SDR.Common;
 using SDR.Common.logging;
@@ -16,7 +15,6 @@ namespace DotSpatial.SDR.Plugins.Search
     {
         #region Private Variables
 
-        private SearchMode _searchMode;
         private TableLayoutPanel _addressPanel;
         private TableLayoutPanel _roadPanel;
         private TableLayoutPanel _intersectionPanel;
@@ -29,7 +27,6 @@ namespace DotSpatial.SDR.Plugins.Search
         public SearchPanel()
         {
             InitializeComponent();
-            _searchMode = SearchMode;  // pull active search mode from user settings or default
             SearchQuery = string.Empty;
             CreateQueryPanels();
             _intersectedFeatures = new EventedArrayList();
@@ -51,28 +48,6 @@ namespace DotSpatial.SDR.Plugins.Search
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets or sets which type of search to perfrom
-        /// </summary>
-        public SearchMode SearchMode
-        {
-            get
-            {
-                var funcMode = UserSettings.Default.SearchMode;
-                if (funcMode.Length <= 0) return SearchMode.Address;
-                SearchMode sm;
-                Enum.TryParse(funcMode, true, out sm);
-                return sm;
-            }
-            set
-            {
-                _searchMode = value;  // update the searchmode for local reference
-                UserSettings.Default.SearchMode = value.ToString();
-                UserSettings.Default.Save();
-            }
-        }
-
         /// <summary>
         /// Gets or sets the datagrid view for query display
         /// </summary>
@@ -100,7 +75,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public void ActivateSearchModeButton()
         {
-            switch (_searchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
                     ActivateAddressSearch();
@@ -225,7 +200,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            switch (_searchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
@@ -290,9 +265,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchParcels_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Parcel)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Parcel)
             {
-                SearchMode = SearchMode.Parcel;
+                PluginSettings.Instance.SearchMode = SearchMode.Parcel;
                 OnSearchModeChanged();
                 ActivateParcelSearch();
             }
@@ -323,9 +298,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchCellSector_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Cell_Sector)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Cell_Sector)
             {
-                SearchMode = SearchMode.Cell_Sector;
+                PluginSettings.Instance.SearchMode = SearchMode.Cell_Sector;
                 OnSearchModeChanged();
                 ActivateCellSectorSearch();
             }
@@ -357,9 +332,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchCity_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.City)
+            if (PluginSettings.Instance.SearchMode != SearchMode.City)
             {
-                SearchMode = SearchMode.City;
+                PluginSettings.Instance.SearchMode = SearchMode.City;
                 OnSearchModeChanged();
                 ActivateCitySearch();
             }
@@ -391,9 +366,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchEsn_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Esn)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Esn)
             {
-                SearchMode = SearchMode.Esn;
+                PluginSettings.Instance.SearchMode = SearchMode.Esn;
                 OnSearchModeChanged();
                 ActivateEsnSearch();
             }
@@ -424,9 +399,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchName_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Name)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Name)
             {
-                SearchMode = SearchMode.Name;
+                PluginSettings.Instance.SearchMode = SearchMode.Name;
                 OnSearchModeChanged();
                 ActivateNameSearch();
             }
@@ -457,9 +432,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchPhone_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Phone)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Phone)
             {
-                SearchMode = SearchMode.Phone;
+                PluginSettings.Instance.SearchMode = SearchMode.Phone;
                 OnSearchModeChanged();
                 ActivatePhoneSearch();
             }
@@ -491,9 +466,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchRoad_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Road)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Road)
             {
-                SearchMode = SearchMode.Road;
+                PluginSettings.Instance.SearchMode = SearchMode.Road;
                 OnSearchModeChanged();
                 ActivateRoadSearch();
             }
@@ -524,9 +499,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchAdds_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Address)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Address)
             {
-                SearchMode = SearchMode.Address;
+                PluginSettings.Instance.SearchMode = SearchMode.Address;
                 OnSearchModeChanged();
                 ActivateAddressSearch();
             }
@@ -557,9 +532,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchKeyLocations_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Key_Locations)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Key_Locations)
             {
-                SearchMode = SearchMode.Key_Locations;
+                PluginSettings.Instance.SearchMode = SearchMode.Key_Locations;
                 OnSearchModeChanged();
                 ActivateKeyLocationsSearch();
             }
@@ -590,9 +565,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchAll_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.All)
+            if (PluginSettings.Instance.SearchMode != SearchMode.All)
             {
-                SearchMode = SearchMode.All;
+                PluginSettings.Instance.SearchMode = SearchMode.All;
                 OnSearchModeChanged();
                 ActivateAllFieldsSearch();
             }
@@ -625,9 +600,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchIntersection_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (_searchMode != SearchMode.Intersection)
+            if (PluginSettings.Instance.SearchMode != SearchMode.Intersection)
             {
-                SearchMode = SearchMode.Intersection;
+                PluginSettings.Instance.SearchMode = SearchMode.Intersection;
                 OnSearchModeChanged();
                 ActivateIntersectionSearch();
             }
@@ -646,7 +621,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private void OnSearchModeChanged()
         {
             // set the buttton label with proper text value
-            btnSearch.Text = _searchMode == SearchMode.Intersection ? @"Locate" : @"Search";
+            btnSearch.Text = PluginSettings.Instance.SearchMode == SearchMode.Intersection ? @"Locate" : @"Search";
             if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
         }
 
@@ -870,7 +845,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (!scoreDocs.Any()) return;
             // snag the combobox of the search mode
             var cmb = new ComboBox();
-            switch (_searchMode)
+            switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Road:
                     cmb = _roadPanel.Controls["cmbRoadSearch"] as ComboBox;
@@ -888,11 +863,11 @@ namespace DotSpatial.SDR.Plugins.Search
             if (cmb == null) return;
             cmb.Items.Clear();
             // populate the combo box based in the searchmode type
-            if (_searchMode == SearchMode.Road || _searchMode == SearchMode.Intersection)
+            if (PluginSettings.Instance.SearchMode == SearchMode.Road || PluginSettings.Instance.SearchMode == SearchMode.Intersection)
             {
                 PopulateRoadsToCombo(ref cmb, scoreDocs);
             }
-            else if (_searchMode == SearchMode.City || _searchMode == SearchMode.Esn)
+            else if (PluginSettings.Instance.SearchMode == SearchMode.City || PluginSettings.Instance.SearchMode == SearchMode.Esn)
             {
                 PopulateBoundariesToCombo(ref cmb, scoreDocs);
             }

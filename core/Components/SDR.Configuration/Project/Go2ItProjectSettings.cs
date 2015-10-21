@@ -57,12 +57,6 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal) 0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
             Properties.ProjectSettings.Default.SearchQueryParserLogging = false;
-            //Properties.ProjectSettings.Default.GpsPointColor = Color.Red;
-            //Properties.ProjectSettings.Default.GpsPointSize = 16;
-            //Properties.ProjectSettings.Default.GpsPointStyle = "Rectangle";
-            //Properties.ProjectSettings.Default.GpsDisplayCount = 5;
-            //Properties.ProjectSettings.Default.GpsIntervalType = "Time";
-            //Properties.ProjectSettings.Default.GpsIntervalValue = 20;
             Properties.ProjectSettings.Default.AliMode = "Disabled";
             Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
             Properties.ProjectSettings.Default.AliEnterpolDbConnString = string.Empty;

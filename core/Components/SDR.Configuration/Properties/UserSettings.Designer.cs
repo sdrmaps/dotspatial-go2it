@@ -38,32 +38,6 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string AddressIndexColumnOrder {
-            get {
-                return ((string)(this["AddressIndexColumnOrder"]));
-            }
-            set {
-                this["AddressIndexColumnOrder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string RoadIndexColumnOrder {
-            get {
-                return ((string)(this["RoadIndexColumnOrder"]));
-            }
-            set {
-                this["RoadIndexColumnOrder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("None")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string ActiveFunctionMode {
@@ -85,45 +59,6 @@ namespace SDR.Configuration.Properties {
             }
             set {
                 this["ActiveFunctionPanel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string KeyLocationIndexColumnOrder {
-            get {
-                return ((string)(this["KeyLocationIndexColumnOrder"]));
-            }
-            set {
-                this["KeyLocationIndexColumnOrder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string CellSectorIndexColumnOrder {
-            get {
-                return ((string)(this["CellSectorIndexColumnOrder"]));
-            }
-            set {
-                this["CellSectorIndexColumnOrder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string ParcelIndexColumnOrder {
-            get {
-                return ((string)(this["ParcelIndexColumnOrder"]));
-            }
-            set {
-                this["ParcelIndexColumnOrder"] = value;
             }
         }
         
