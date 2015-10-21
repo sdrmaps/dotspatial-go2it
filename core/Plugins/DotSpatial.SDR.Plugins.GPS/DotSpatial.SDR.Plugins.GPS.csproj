@@ -69,6 +69,7 @@
     </Reference>
     <Reference Include="DotSpatial.Symbology.Forms">
       <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Symbology.Forms.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Topology">
       <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Topology.dll</HintPath>
