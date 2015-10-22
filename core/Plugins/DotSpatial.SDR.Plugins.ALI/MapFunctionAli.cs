@@ -78,9 +78,13 @@ namespace DotSpatial.SDR.Plugins.ALI
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPathChanged += InstanceOnAliSdrServerDbPathChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
+
             _aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
+            //TODO we may need to run the rebind process on db change? trap for bad db connection as well
+            
             const string sql = "SELECT * FROM " + SdrAliServerTableName;
             BindDataGridView(_aliServerDbConnString, sql);
+
             _aliPanel.ShowStandardInterface();
         }
 

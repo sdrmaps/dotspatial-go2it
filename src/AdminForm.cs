@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -47,17 +48,19 @@ namespace Go2It
 {
     public partial class AdminForm : Form
     {
-        // name of the initial map tab, if no map tabs currently exist
-        private const string MapTabDefaultCaption = "My Map";
-
-        // all available ali interfaces, the key is for display and the value matches the alimodes enum in ali plugin
+        // TODO: refactor so this can be pulled directly from the enums in the [DotSpatial.SDR.Plugins.ALI] assembly
+        //  key: all ali interfaces enums as string from [DotSpatial.SDR.Plugins.ALI]
+        //  value: prettified name label for general display purposes
         private readonly Dictionary<string, string> _aliInterfaces = new Dictionary<string, string>
         {
             { "Disabled", "Disabled" },
-            { "SDR AliServer", "Sdraliserver" },
-            { "GlobalCAD Log", "Globalcad" },
-            { "Enterpol Database", "Enterpol" }
+            { "Sdraliserver", "SDR AliServer" },
+            { "Globalcad", "GlobalCAD Log" },
+            { "Enterpol", "Enterpol Database" }
         };
+
+        // name of the initial map tab, if no map tabs currently exist
+        private const string MapTabDefaultCaption = "My Map";
 
         // admin form controls
         private Legend _adminLegend;
@@ -920,10 +923,14 @@ namespace Go2It
             // populate all the ali interfaces to the combobox
             foreach (var aliInterface in _aliInterfaces)
             {
-                cmbAliMode.Items.Add(aliInterface.Key);
+                cmbAliMode.Items.Add(aliInterface.Value);
             }
+            // use the alimode lookup dict to display a user friendly name
             var aliMode = SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode;
-            cmbAliMode.SelectedIndex = cmbAliMode.Items.IndexOf(aliMode);
+            string aliOut;
+            _aliInterfaces.TryGetValue(aliMode, out aliOut);
+            cmbAliMode.SelectedIndex = cmbAliMode.Items.IndexOf(aliOut ?? "Disabled");  // if we fail then just disable the damn thing
+
             chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes;
             chkEnableQueryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
@@ -1404,9 +1411,6 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = ApplyComboBoxSetting(lineSymbolStyle);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = ApplyComboBoxSetting(lineSymbolCap);
             // setup ali interface configuration
-            string aliValue;
-            _aliInterfaces.TryGetValue(cmbAliMode.SelectedItem.ToString(), out aliValue);
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode = aliValue;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource = txtAliEnterpolDataSource.Text;
@@ -1416,6 +1420,11 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort =Convert.ToInt32(numAliInterfaceUdpPort.Value);
+            string aliValue;  // swap key and value positions to use the friendly label as a lookup key for the enum string value
+            var swapDict = _aliInterfaces.ToDictionary(e => e.Value, e => e.Key);
+            swapDict.TryGetValue(cmbAliMode.SelectedItem.ToString(), out aliValue);
+            // must be last ali value set - it fires off a change event
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode = aliValue;
         }
 
         private static StringCollection ApplyCheckBoxSetting(CheckedListBox chk)
@@ -2842,6 +2851,7 @@ namespace Go2It
         {
             switch (cmbAliMode.Text)
             {
+                // use the user friendly names from the combobox for the switch
                 case "GlobalCAD Log":
                     MessageBox.Show("Not Implemented Yet");
                     return;

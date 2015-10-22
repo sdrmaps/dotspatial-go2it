@@ -32,24 +32,25 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tsbAliLocate = new System.Windows.Forms.ToolStripButton();
             this.tsbAliUpdate = new System.Windows.Forms.ToolStripButton();
-            this.aliTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.aliDGV = new System.Windows.Forms.DataGridView();
-            this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
             this.lblCommLog = new System.Windows.Forms.Label();
+            this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
+            this.aliDGV = new System.Windows.Forms.DataGridView();
+            this.aliTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1.SuspendLayout();
-            this.aliTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).BeginInit();
+            this.aliTableLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
             // 
+            this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbAliLocate,
             this.tsbAliUpdate});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(847, 48);
+            this.toolStrip1.Size = new System.Drawing.Size(675, 48);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -77,11 +78,40 @@
             this.tsbAliUpdate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.tsbAliUpdate.ToolTipText = "Update Record Display";
             // 
+            // lblCommLog
+            // 
+            this.lblCommLog.AutoSize = true;
+            this.lblCommLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblCommLog.Location = new System.Drawing.Point(468, 0);
+            this.lblCommLog.Name = "lblCommLog";
+            this.lblCommLog.Size = new System.Drawing.Size(204, 13);
+            this.lblCommLog.TabIndex = 2;
+            this.lblCommLog.Text = "Active Comm Log";
+            // 
+            // cmbAliCommLog
+            // 
+            this.cmbAliCommLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmbAliCommLog.FormattingEnabled = true;
+            this.cmbAliCommLog.Location = new System.Drawing.Point(468, 16);
+            this.cmbAliCommLog.Name = "cmbAliCommLog";
+            this.cmbAliCommLog.Size = new System.Drawing.Size(204, 21);
+            this.cmbAliCommLog.TabIndex = 1;
+            // 
+            // aliDGV
+            // 
+            this.aliDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.aliDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.aliDGV.Location = new System.Drawing.Point(3, 3);
+            this.aliDGV.Name = "aliDGV";
+            this.aliTableLayoutPanel.SetRowSpan(this.aliDGV, 2);
+            this.aliDGV.Size = new System.Drawing.Size(459, 128);
+            this.aliDGV.TabIndex = 0;
+            // 
             // aliTableLayoutPanel
             // 
             this.aliTableLayoutPanel.ColumnCount = 2;
-            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.32468F));
-            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.67533F));
+            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.aliTableLayoutPanel.Controls.Add(this.aliDGV, 0, 0);
             this.aliTableLayoutPanel.Controls.Add(this.cmbAliCommLog, 1, 1);
             this.aliTableLayoutPanel.Controls.Add(this.lblCommLog, 1, 0);
@@ -91,37 +121,8 @@
             this.aliTableLayoutPanel.RowCount = 2;
             this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.aliTableLayoutPanel.Size = new System.Drawing.Size(847, 134);
+            this.aliTableLayoutPanel.Size = new System.Drawing.Size(675, 134);
             this.aliTableLayoutPanel.TabIndex = 1;
-            // 
-            // aliDGV
-            // 
-            this.aliDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.aliDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.aliDGV.Location = new System.Drawing.Point(3, 3);
-            this.aliDGV.Name = "aliDGV";
-            this.aliTableLayoutPanel.SetRowSpan(this.aliDGV, 2);
-            this.aliDGV.Size = new System.Drawing.Size(631, 128);
-            this.aliDGV.TabIndex = 0;
-            // 
-            // cmbAliCommLog
-            // 
-            this.cmbAliCommLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmbAliCommLog.FormattingEnabled = true;
-            this.cmbAliCommLog.Location = new System.Drawing.Point(640, 16);
-            this.cmbAliCommLog.Name = "cmbAliCommLog";
-            this.cmbAliCommLog.Size = new System.Drawing.Size(204, 21);
-            this.cmbAliCommLog.TabIndex = 1;
-            // 
-            // lblCommLog
-            // 
-            this.lblCommLog.AutoSize = true;
-            this.lblCommLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblCommLog.Location = new System.Drawing.Point(640, 0);
-            this.lblCommLog.Name = "lblCommLog";
-            this.lblCommLog.Size = new System.Drawing.Size(204, 13);
-            this.lblCommLog.TabIndex = 2;
-            this.lblCommLog.Text = "Active Comm Log";
             // 
             // AliPanel
             // 
@@ -130,12 +131,12 @@
             this.Controls.Add(this.aliTableLayoutPanel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "AliPanel";
-            this.Size = new System.Drawing.Size(847, 182);
+            this.Size = new System.Drawing.Size(675, 182);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).EndInit();
             this.aliTableLayoutPanel.ResumeLayout(false);
             this.aliTableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,9 +147,9 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbAliLocate;
         private System.Windows.Forms.ToolStripButton tsbAliUpdate;
-        private System.Windows.Forms.TableLayoutPanel aliTableLayoutPanel;
-        private System.Windows.Forms.DataGridView aliDGV;
-        private System.Windows.Forms.ComboBox cmbAliCommLog;
         private System.Windows.Forms.Label lblCommLog;
+        private System.Windows.Forms.ComboBox cmbAliCommLog;
+        private System.Windows.Forms.DataGridView aliDGV;
+        private System.Windows.Forms.TableLayoutPanel aliTableLayoutPanel;
     }
 }

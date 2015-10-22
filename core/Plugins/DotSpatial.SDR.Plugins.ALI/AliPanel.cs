@@ -36,12 +36,17 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public void ShowGlobalCadInterface()
         {
-            aliDGV.Columns[1].Visible = true;  // display the combo dropdown box
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 100;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
         }
 
         public void ShowStandardInterface()
         {
-            aliDGV.Columns[1].Visible = false; // show just the datagridview
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 100;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 0;
         }
         #endregion
 

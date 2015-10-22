@@ -22,7 +22,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         private DockablePanel _dockPanel;
 
         private bool _isFunctionActive;  // eliminate redundant calls on hide/show/functionmode changes
-        private bool _plugInActivated;  // flag to determine if the plugin has already been activated on ali mode changes
+        private bool _isPluginActive;  // flag to determine if the plugin has already been activated on ali mode changes
         #endregion
 
         #region Properties
@@ -75,13 +75,13 @@ namespace DotSpatial.SDR.Plugins.ALI
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
             // initialize the full map ali function now
             _mapFunction = new MapFunctionAli(_aliPanel);
-            _plugInActivated = true;  // set the status of the plugin to active
+            _isPluginActive = true;  // set the status of the plugin to active
         }
 
         public override void Deactivate()
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
-            if (_plugInActivated)
+            if (_isPluginActive)
             {
                 DeactivateAliPlugin();
             }
@@ -97,14 +97,14 @@ namespace DotSpatial.SDR.Plugins.ALI
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
 
             // TODO: investigate if we need to set the _isFunctionActive flag here or if the events handle it
-            _plugInActivated = false;  // set our status flag back to false
+            _isPluginActive = false;  // set our status flag back to false
         }
 
         private void OnAliModeChanged(object sender, EventArgs eventArgs)
         {
             if (CurrentAliMode != AliMode.Disabled)
             {
-                if (!_plugInActivated)  // check if it has already been activated
+                if (!_isPluginActive)  // check if it has already been activated
                 {
                     ActivateAliPlugin();  // activate the ali plugin now
                 }
@@ -115,7 +115,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             else  // ali interface mode has been set to disabled
             {
-                if (_plugInActivated)  // check if it has ever been activated previous to this mode change
+                if (_isPluginActive)  // check if it has ever been activated previous to this mode change
                 {
                     DeactivateAliPlugin();  // go ahead and deactivate the plugin now
                 }

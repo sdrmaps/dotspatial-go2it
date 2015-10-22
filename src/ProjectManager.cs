@@ -365,7 +365,6 @@ namespace Go2It
             Go2ItProjectSettings.Instance.SearchBufferDistance = AttachSetting("search_buffer_distance", Go2ItProjectSettings.Instance.SearchBufferDistance, p);
             Go2ItProjectSettings.Instance.SearchZoomFactor = AttachSetting("search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor, p);
             Go2ItProjectSettings.Instance.SearchQueryParserLogging = AttachSetting("search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging, p);
-            Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
             Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = AttachSetting("ali_enterpol_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog, p);
             Go2ItProjectSettings.Instance.AliEnterpolTableName = AttachSetting("ali_enterpol_tablename", Go2ItProjectSettings.Instance.AliEnterpolTableName, p);
             Go2ItProjectSettings.Instance.AliEnterpolDataSource = AttachSetting("ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource, p);
@@ -375,6 +374,8 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliSdrServerDbPath = AttachSetting("ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath, p);
             Go2ItProjectSettings.Instance.AliSdrServerUdpHost = AttachSetting("ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost, p);
             Go2ItProjectSettings.Instance.AliSdrServerUdpPort = AttachSetting("ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort, p);
+            // needs to be final ali setting loaded as it fires a change event 
+            Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
                 
             const string gsQuery = "SELECT * FROM GraphicSettings";
             DataTable g = SQLiteHelper.GetDataTable(conn, gsQuery);
