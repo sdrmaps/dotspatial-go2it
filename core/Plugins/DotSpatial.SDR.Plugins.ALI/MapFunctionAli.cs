@@ -84,11 +84,11 @@ namespace DotSpatial.SDR.Plugins.ALI
 
             
             
-            /// string sql = "SELECT * FROM " + SdrAliServerConfig.Default.TableName;
+            string sql = "SELECT * FROM " + SdrAliServerConfig.Default.TableName;
 
 
 
-            // BindDataGridView(_aliServerDbConnString, sql);
+            BindDataGridView(_aliServerDbConnString, sql);
 
             _aliPanel.ShowStandardInterface();
         }

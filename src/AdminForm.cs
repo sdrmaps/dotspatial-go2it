@@ -3025,29 +3025,12 @@ namespace Go2It
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var asm = Assembly.Load("DotSpatial.SDR.Plugins.ALI");
-            var cf = GetDllConfiguration(asm);
-            var sg = cf.SectionGroups["applicationSettings"];
-            if (sg != null)
-            {
-                var s = sg.Sections["DotSpatial.SDR.Plugins.ALI.Properties.SdrAliServerConfig"];
-                var xml = s.SectionInformation.GetRawXml();
+            var r = SdrConfig.Plugins.GetPluginApplicationConfigValue(
+                "DotSpatial.SDR.Plugins.ALI",
+                "GlobalCadConfig",
+                "IniKeyLookup");
 
-                var xdoc = new XmlDocument();
-                xdoc.LoadXml(xml);
-                var configSection = xdoc.ChildNodes[0];  // DotSpatial.SDR.Plugins.ALI.Properties.GlobalCadConfig Node
-                var xmlAttributeCollection = configSection.ChildNodes[0].Attributes;
-                if (xmlAttributeCollection != null)
-                {
-                    var lookupKey = xmlAttributeCollection[0].Value;
-                    var value = configSection.InnerText;
-
-                    Debug.WriteLine("================================================");
-                    Debug.WriteLine(lookupKey);
-                    Debug.WriteLine(value);
-                }
-            }
-            Debug.WriteLine("================================================");
+            Debug.WriteLine(r);
         }
     }
 }

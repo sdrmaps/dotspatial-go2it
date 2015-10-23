@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DotSpatial.SDR.Plugins.ALI.Properties" GeneratedClassName="GlobalCadConfig">
+  <Profiles />
+  <Settings>
+    <Setting Name="IniFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">LogParser</Value>
+    </Setting>
+    <Setting Name="IniKeyLookup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ParserConfig</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

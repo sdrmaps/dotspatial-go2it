@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -10,38 +8,45 @@ namespace SDR.Configuration
 {
     public static class Plugins
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pluginName">DotSpatial.SDR.Plugins.ALI</param>
-        /// <param name="configSection">DotSpatial.SDR.Plugins.ALI.Properties.GlobalCadConfig</param>
-        /// <param name="lookupKey"></param>
-        /// <returns></returns>
-        public static string GetPluginApplicationConfigValue(string plugin, string section, string lookupKey)
+        public static string GetPluginApplicationConfigValue(string plugin, string section, string key)
         {
             var config = GetFullConfigName(plugin, section);
             var node = GetSectionNode(plugin, config);
-            if (node != null)
+
+            for (var i = 0; i <= node.ChildNodes.Count - 1; i++)
             {
-                var attrColl = node.ChildNodes[0].Attributes;
-                if (attrColl == null) return null;
-                // find the key we are looking for
-                for (var i = 0; i <= attrColl.Count - 1; i++)
+                var val = node.ChildNodes[i].InnerText;  // value of this child node
+                var attrColl = node.ChildNodes[i].Attributes;
+                if (attrColl != null)
                 {
-                    var lookup = attrColl[i].Value;
-                    if (lookup == lookupKey)
+                    var lookup = attrColl[0].Value;  // lookup key
+                    if (lookup == key)
                     {
-
-
-                        return node.InnerText;
+                        return val;
                     }
                 }
-
             }
-
-
-
             return null;
+        }
+
+        public static Dictionary<string, string> GetPluginApplicationConfigSectionAsDict(string plugin, string section)
+        {
+            var config = GetFullConfigName(plugin, section);
+            var node = GetSectionNode(plugin, config);
+
+            var retDict = new Dictionary<string, string>();
+
+            for (var i = 0; i <= node.ChildNodes.Count - 1; i++)
+            {
+                var val = node.ChildNodes[i].InnerText;  // value of this child node
+                var attrColl = node.ChildNodes[i].Attributes;
+                if (attrColl != null)
+                {
+                    var lookup = attrColl[0].Value;  // lookup key
+                    retDict.Add(lookup, val);
+                }
+            }
+            return retDict;
         }
 
         private static XmlNode GetSectionNode(string plugin, string config)
@@ -50,19 +55,21 @@ namespace SDR.Configuration
             var cf = GetDllConfiguration(asm);  // load the assembly configuration
             var sg = cf.SectionGroups["applicationSettings"]; // application level settings
             if (sg == null) return null;
-            var s = sg.Sections[config];  // grab the requested section from the group
+
+            var s = sg.Sections[config];  // snatch the requested config section from the group
             if (s == null) return null;
-            // load the raw xml into a document for parsing
+
+            // load raw xml into document for parsing
             var xml = s.SectionInformation.GetRawXml();
             var xdoc = new XmlDocument();
             xdoc.LoadXml(xml);
-            return xdoc.HasChildNodes ? xdoc.ChildNodes[0] : null;
+
+            return xdoc.ChildNodes[0];  // return the section node
         }
 
-        private static string GetFullConfigName(string pluginName, string configSection)
+        private static string GetFullConfigName(string plugin, string section)
         {
-            // create the full configuration section name
-            return pluginName + ".Properties." + configSection;
+            return plugin + ".Properties." + section;  // create the full configuration section name
         }
 
         private static System.Configuration.Configuration GetDllConfiguration(Assembly targetAsm)
@@ -75,6 +82,4 @@ namespace SDR.Configuration
             return ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
         }
     }
-
-
 }
