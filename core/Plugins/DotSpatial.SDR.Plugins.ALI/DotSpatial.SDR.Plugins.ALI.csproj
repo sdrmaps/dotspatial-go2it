@@ -99,6 +99,11 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="Properties\AliInterfaceModes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AliInterfaceModes.settings</DependentUpon>
+    </Compile>
     <Compile Include="AliMode.cs" />
     <Compile Include="AliPanel.cs">
       <SubType>UserControl</SubType>
@@ -136,6 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Properties\AliInterfaceModes.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AliInterfaceModes.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\GlobalCadConfig.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>GlobalCadConfig.Designer.cs</LastGenOutput>

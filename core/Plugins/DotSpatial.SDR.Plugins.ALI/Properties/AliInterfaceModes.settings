@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DotSpatial.SDR.Plugins.ALI.Properties" GeneratedClassName="AliInterfaceModes">
+  <Profiles />
+  <Settings>
+    <Setting Name="Disabled" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Disabled</Value>
+    </Setting>
+    <Setting Name="Sdraliserver" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SDR AliServer</Value>
+    </Setting>
+    <Setting Name="Globalcad" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">GlobalCAD Log</Value>
+    </Setting>
+    <Setting Name="Enterpol" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Enterpol Database</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

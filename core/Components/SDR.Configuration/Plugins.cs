@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 namespace SDR.Configuration

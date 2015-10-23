@@ -60,13 +60,14 @@ namespace Go2It
         // TODO: refactor so this can be pulled directly from the enums in the [DotSpatial.SDR.Plugins.ALI] assembly
         //  key: all ali interfaces enums as string from [DotSpatial.SDR.Plugins.ALI]
         //  value: prettified name label for general display purposes
-        private readonly Dictionary<string, string> _aliInterfaces = new Dictionary<string, string>
-        {
-            { "Disabled", "Disabled" },
-            { "Sdraliserver", "SDR AliServer" },
-            { "Globalcad", "GlobalCAD Log" },
-            { "Enterpol", "Enterpol Database" }
-        };
+        //private readonly Dictionary<string, string> _aliInterfaces = new Dictionary<string, string>
+        //{
+        //    { "Disabled", "Disabled" },
+        //    { "Sdraliserver", "SDR AliServer" },
+        //    { "Globalcad", "GlobalCAD Log" },
+        //    { "Enterpol", "Enterpol Database" }
+        //};
+        private Dictionary<string, string> _aliInterfaces;
 
         // name of the initial map tab, if no map tabs currently exist
         private const string MapTabDefaultCaption = "My Map";
@@ -190,10 +191,16 @@ namespace Go2It
             }
         }
 
+        private void InitializeAliModesDict()
+        {
+            _aliInterfaces = SdrConfig.Plugins.GetPluginApplicationConfigSectionAsDict("DotSpatial.SDR.Plugins.ALI", "AliInterfaceModes");
+        }
+
         public AdminForm(AppManager app)
         {
             InitializeComponent();
             InitializeSaveSplitButton();
+            InitializeAliModesDict();
 
             // assign all the admin form elements
             _appManager = app;
@@ -3011,26 +3018,6 @@ namespace Go2It
             {
                 txtAliGlobalCadConfigIni.Text = fd.FileName;
             }
-        }
-
-        Configuration GetDllConfiguration(Assembly targetAsm)
-        {
-            var configFile = targetAsm.Location + ".config";
-            var map = new ExeConfigurationFileMap
-            {
-                ExeConfigFilename = configFile
-            };
-            return ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var r = SdrConfig.Plugins.GetPluginApplicationConfigValue(
-                "DotSpatial.SDR.Plugins.ALI",
-                "GlobalCadConfig",
-                "IniKeyLookup");
-
-            Debug.WriteLine(r);
         }
     }
 }
