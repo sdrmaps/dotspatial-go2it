@@ -1,8 +1,8 @@
 ﻿using System.Threading;
-using System.Windows.Forms;
 
 namespace DotSpatial.SDR.Controls
 {
+    // TODO: we really need a better way to properly parent the form to the calling form
     public class ProgressPanel
     {
         private static Thread _t = new Thread(ShowProgressForm);

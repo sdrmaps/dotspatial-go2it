@@ -3,15 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
+using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
@@ -39,6 +47,7 @@ using DotSpatial.Controls;
 using SDR.Authentication;
 using SDR.Data.Database;
 using Go2It.Properties;
+using Directory = System.IO.Directory;
 using IGeometry = DotSpatial.Topology.IGeometry;
 using Point = System.Drawing.Point;
 using PointShape = DotSpatial.Symbology.PointShape;
@@ -2838,12 +2847,17 @@ namespace Go2It
         private void btnAliGlobalCadLogPathBrowse_Click(object sender, EventArgs e)
         {
             FileDialog fd = new OpenFileDialog();
-            fd.Filter = @"Log Files (*.log)";
+            fd.Filter = @"Log Files|*.log";
             fd.CheckFileExists = true;
             DialogResult r = fd.ShowDialog();
             if (r == DialogResult.OK)
             {
                 txtAliGlobalCadLogPath.Text = fd.FileName;
+                // if the archive path has not yet been set, then auto generate a path now
+                if (txtAliGlobalCadArchivePath.Text.Length == 0)
+                {
+                    txtAliGlobalCadArchivePath.Text = Path.GetDirectoryName(txtAliGlobalCadLogPath.Text) + @"\Archive";
+                }
             }
         }
 
@@ -2851,9 +2865,15 @@ namespace Go2It
         {
             switch (cmbAliMode.Text)
             {
-                // use the user friendly names from the combobox for the switch
                 case "GlobalCAD Log":
-                    MessageBox.Show("Not Implemented Yet");
+                    if (ValidateGlobalCadInput(
+                        txtAliGlobalCadLogPath.Text,
+                        txtAliGlobalCadArchivePath.Text,
+                        txtAliGlobalCadConfigIni.Text))
+                    {
+                        var msg = AppContext.Instance.Get<IUserMessage>();
+                        msg.Info("GlobalCAD settings Validated");
+                    }
                     return;
                 case "SDR AliServer":
                     if (ValidateSdrServerInput(
@@ -2861,7 +2881,8 @@ namespace Go2It
                         txtAliInterfaceUdpHost.Text,
                         Convert.ToInt32(numAliInterfaceUdpPort.Value)))
                     {
-                        MessageBox.Show(@"Valid Settings");
+                        var msg = AppContext.Instance.Get<IUserMessage>();
+                        msg.Info("SDR AliServer settings Validated");
                     }
                     return;
                 case "Enterpol Database":
@@ -2872,39 +2893,161 @@ namespace Go2It
             }
         }
 
+        private bool ValidateGlobalCadInput(string logPath, string archivePath, string configPath)
+        {
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            if (archivePath.Length == 0)
+            {
+                msg.Warn(@"Log Archive path value is null");
+                return false;
+            }
+            if (logPath.Length == 0)
+            {
+                msg.Warn(@"Active Log path value is null");
+                return false;
+            }
+            if (configPath.Length == 0)
+            {
+                msg.Warn(@"Parser Config path value is null");
+                return false;
+            }
+            if (!Directory.Exists(archivePath))
+            {
+                var dr = MessageBox.Show(
+                    @"Would you like to create the Archive Directory?",
+                    @"Archive Directory Does not Exist", MessageBoxButtons.YesNo);
+                if (dr == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(archivePath);
+                    }
+                    catch (Exception e)
+                    {
+                        msg.Error("Failed to create Archive Directory", e);
+                        return false;
+                    }
+                }
+                else
+                {
+                    msg.Warn(@"Please create or select the existing Archive directory");
+                    return false;
+                }
+            }
+            if (!File.Exists(logPath))
+            {
+                msg.Warn(@"Log file does not exist");
+                return false;
+            }
+            if (File.Exists(configPath))
+            {
+                
+                
+                // lets validate that the ini file contains the keylookup we need
+                //SDR.Data.Files.IniHelper.IniGetAllSectionKeys(btnAliGlobalCadConfigIniBrowse.)
+                //IniGetAllSectionKeys
+            }
+            else
+            {
+                msg.Warn(@"Parser Config file does not exist");
+                return false;
+            }
+            return true;
+        }
+
         private bool ValidateSdrServerInput(string mdbPath, string udpHost, int udpPort)
         {
+            var msg = AppContext.Instance.Get<IUserMessage>();
             if (mdbPath.Length == 0)
             {
-                MessageBox.Show(@"AliServer .MDB path value is null");
+                msg.Warn(@"AliServer .MDB path value is null");
                 return false;
             }
             if (!MdbHelper.DatabaseExists(mdbPath))
             {
-                MessageBox.Show(@"AliServer database does not exist at location: " + mdbPath);
+                msg.Warn(@"AliServer database does not exist at location: " + mdbPath);
                 return false;
             }
             var conn = MdbHelper.GetMdbConnectionString(mdbPath);
             if (!MdbHelper.TableExists(conn, "IncomingALI"))
             {
-                MessageBox.Show(@"AliServer database is missing table 'IncomingALI'");
+                msg.Warn(@"AliServer database is missing table 'IncomingALI'");
                 return false;
             }
             if (udpHost.Length == 0)
             {
-                MessageBox.Show(@"AliServer UDP host value is null");
+                msg.Warn(@"AliServer UDP host value is null");
                 return false;
             }
             // validate the aliserver is at this location and listening
             var client = new AliServerClient(txtAliInterfaceUdpHost.Text.ToString(), Convert.ToInt32(numAliInterfaceUdpPort.Value));
             if (!client.Ping())
             {
-                MessageBox.Show(@"AliServer is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
+                msg.Warn(@"AliServer is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
                 client.Close();
                 return false;
             }
             client.Close();
             return true;
+        }
+
+        private void btnAliGlobalCadArchivePathBrowse_Click(object sender, EventArgs e)
+        {
+            var fbd = new FolderBrowserDialog {Description = @"Select GlobalCAD Archive Directory"};
+            DialogResult r = fbd.ShowDialog();
+            if (r == DialogResult.OK)
+            {
+                txtAliGlobalCadArchivePath.Text = fbd.SelectedPath;
+            }
+        }
+
+        private void btnAliGlobalCadConfigIniBrowse_Click(object sender, EventArgs e)
+        {
+            FileDialog fd = new OpenFileDialog();
+            fd.Filter = @"Ini Files|*.ini";
+            fd.CheckFileExists = true;
+            DialogResult r = fd.ShowDialog();
+            if (r == DialogResult.OK)
+            {
+                txtAliGlobalCadConfigIni.Text = fd.FileName;
+            }
+        }
+
+        Configuration GetDllConfiguration(Assembly targetAsm)
+        {
+            var configFile = targetAsm.Location + ".config";
+            var map = new ExeConfigurationFileMap
+            {
+                ExeConfigFilename = configFile
+            };
+            return ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var asm = Assembly.Load("DotSpatial.SDR.Plugins.ALI");
+            var cf = GetDllConfiguration(asm);
+            var sg = cf.SectionGroups["applicationSettings"];
+            if (sg != null)
+            {
+                var s = sg.Sections["DotSpatial.SDR.Plugins.ALI.Properties.SdrAliServerConfig"];
+                var xml = s.SectionInformation.GetRawXml();
+
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(xml);
+                var configSection = xdoc.ChildNodes[0];  // DotSpatial.SDR.Plugins.ALI.Properties.GlobalCadConfig Node
+                var xmlAttributeCollection = configSection.ChildNodes[0].Attributes;
+                if (xmlAttributeCollection != null)
+                {
+                    var lookupKey = xmlAttributeCollection[0].Value;
+                    var value = configSection.InnerText;
+
+                    Debug.WriteLine("================================================");
+                    Debug.WriteLine(lookupKey);
+                    Debug.WriteLine(value);
+                }
+            }
+            Debug.WriteLine("================================================");
         }
     }
 }

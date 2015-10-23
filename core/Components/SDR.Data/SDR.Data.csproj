@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Database\MdbHelper.cs" />
     <Compile Include="Database\SQLiteHelper.cs" />
+    <Compile Include="Files\IniHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

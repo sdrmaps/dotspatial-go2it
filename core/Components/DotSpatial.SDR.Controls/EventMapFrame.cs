@@ -18,7 +18,7 @@ namespace DotSpatial.SDR.Controls
             base.Initialize();
         }
 
-        // TODO; need to further investigate this issue and how to best handle it
+        // TODO: need to further investigate this issue and how to best handle it
         //public void DisplayReprojectionDialog()
         //{
 

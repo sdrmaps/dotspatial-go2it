@@ -96,7 +96,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
 
-            // TODO: investigate if we need to set the _isFunctionActive flag here or if the events handle it
+            // TODO: do we need to set _isFunctionActive flag here or will the events handle it??
             _isPluginActive = false;  // set our status flag back to false
         }
 

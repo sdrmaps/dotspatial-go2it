@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using DotSpatial.SDR.Plugins.ALI.Properties;
 using SDR.Data.Database;
 using SDR.Network;
 using SdrConfig = SDR.Configuration;
@@ -14,7 +15,6 @@ namespace DotSpatial.SDR.Plugins.ALI
     /// </summary>
     public class MapFunctionAli : MapFunction
     {
-        private const string SdrAliServerTableName = "IncomingALI";
         private string _aliServerDbConnString = string.Empty;
 
         private AliPanel _aliPanel;
@@ -80,10 +80,15 @@ namespace DotSpatial.SDR.Plugins.ALI
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
 
             _aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
-            //TODO we may need to run the rebind process on db change? trap for bad db connection as well
+            // TODO we may need to run the rebind process on db change? trap for bad db connection as well
+
             
-            const string sql = "SELECT * FROM " + SdrAliServerTableName;
-            BindDataGridView(_aliServerDbConnString, sql);
+            
+            /// string sql = "SELECT * FROM " + SdrAliServerConfig.Default.TableName;
+
+
+
+            // BindDataGridView(_aliServerDbConnString, sql);
 
             _aliPanel.ShowStandardInterface();
         }
