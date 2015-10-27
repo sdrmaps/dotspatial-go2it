@@ -19,7 +19,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private AliPanel _aliPanel;
         private readonly DataGridView _dataGridView;
-        private BindingSource _bindingSource;
+        // private BindingSource _bindingSource;
         private AliMode _currentAliMode = AliMode.Disabled;
 
         // all network communication clients that may be used for ali interface 
@@ -38,7 +38,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
             _aliPanel = ap;
             _dataGridView = ap.DataGridDisplay;
-            _bindingSource = new BindingSource();
+            // _bindingSource = new BindingSource();
 
             HandleAliPanelEvents();
         }
@@ -96,13 +96,13 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void BindDataGridView(string connString, string sqlString)
         {
             // bind our db to the dgv now
-            var cnn = new OleDbConnection(connString);
-            cnn.Open();
-            var dbTable = new DataTable();
-            var dbAdapter = new OleDbDataAdapter(sqlString, cnn);
-            dbAdapter.Fill(dbTable);
-            _bindingSource.DataSource = dbTable;
-            _dataGridView.DataSource = _bindingSource;
+            //var cnn = new OleDbConnection(connString);
+            //cnn.Open();
+            //var dbTable = new DataTable();
+            //var dbAdapter = new OleDbDataAdapter(sqlString, cnn);
+            //dbAdapter.Fill(dbTable);
+            //_bindingSource.DataSource = dbTable;
+            //_dataGridView.DataSource = _bindingSource;
         }
 
         private void InstanceOnAliSdrServerUdpPortChanged(object sender, EventArgs eventArgs)
@@ -140,13 +140,21 @@ namespace DotSpatial.SDR.Plugins.ALI
                     HandleAliServerClient();
                     break;
                 case AliMode.Globalcad:
-                    _aliPanel.ShowGlobalCadInterface();
+                    HandleGlobalCadFiles();
                     break;
                 case AliMode.Enterpol:
                     _aliPanel.ShowStandardInterface();
                     break;
             }
             _currentAliMode = am;
+        }
+
+        private void HandleGlobalCadFiles()
+        {
+
+
+
+            _aliPanel.ShowGlobalCadInterface();
         }
 
         /// <summary>

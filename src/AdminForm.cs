@@ -57,16 +57,8 @@ namespace Go2It
 {
     public partial class AdminForm : Form
     {
-        // TODO: refactor so this can be pulled directly from the enums in the [DotSpatial.SDR.Plugins.ALI] assembly
-        //  key: all ali interfaces enums as string from [DotSpatial.SDR.Plugins.ALI]
-        //  value: prettified name label for general display purposes
-        //private readonly Dictionary<string, string> _aliInterfaces = new Dictionary<string, string>
-        //{
-        //    { "Disabled", "Disabled" },
-        //    { "Sdraliserver", "SDR AliServer" },
-        //    { "Globalcad", "GlobalCAD Log" },
-        //    { "Enterpol", "Enterpol Database" }
-        //};
+        private const string AliPlugin = "DotSpatial.SDR.Plugins.ALI";
+
         private Dictionary<string, string> _aliInterfaces;
 
         // name of the initial map tab, if no map tabs currently exist
@@ -193,7 +185,7 @@ namespace Go2It
 
         private void InitializeAliModesDict()
         {
-            _aliInterfaces = SdrConfig.Plugins.GetPluginApplicationConfigSectionAsDict("DotSpatial.SDR.Plugins.ALI", "AliInterfaceModes");
+            _aliInterfaces = SdrConfig.Plugins.GetPluginApplicationConfigSectionAsDict(AliPlugin, "AliInterfaceModes");
         }
 
         public AdminForm(AppManager app)
@@ -933,6 +925,7 @@ namespace Go2It
             txtAliEnterpolTableName.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
             txtAliGlobalCadLogPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath;
             txtAliGlobalCadArchivePath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
+            txtAliGlobalCadConfigIni.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath;
             txtAliInterfaceDbPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath;
             txtAliInterfaceUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost;
             numAliInterfaceUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort;
@@ -1433,6 +1426,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolConnectionString = txtAliEnterpolConnString.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath = txtAliGlobalCadLogPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath = txtAliGlobalCadArchivePath.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath = txtAliGlobalCadConfigIni.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort =Convert.ToInt32(numAliInterfaceUdpPort.Value);
@@ -2893,7 +2887,7 @@ namespace Go2It
                     }
                     return;
                 case "Enterpol Database":
-                    MessageBox.Show("Not Implemented Yet");
+                    MessageBox.Show(@"Not Implemented Yet");
                     return;
                 default: // disabled
                     return;
@@ -2948,11 +2942,13 @@ namespace Go2It
             }
             if (File.Exists(configPath))
             {
-                
-                
-                // lets validate that the ini file contains the keylookup we need
-                //SDR.Data.Files.IniHelper.IniGetAllSectionKeys(btnAliGlobalCadConfigIniBrowse.)
-                //IniGetAllSectionKeys
+                var iniSection = SdrConfig.Plugins.GetPluginApplicationConfigValue(AliPlugin, "GlobalCadConfig", "IniKeyLookup");
+                string[] allKeys = SDR.Data.Files.IniHelper.IniGetAllSectionKeys(iniSection, configPath);
+                if (allKeys.Length == 1 && allKeys[0].Length == 0)
+                {
+                    msg.Warn("Config file is missing required section: [" + iniSection + "] values");
+                    return false;
+                }
             }
             else
             {
@@ -2976,9 +2972,10 @@ namespace Go2It
                 return false;
             }
             var conn = MdbHelper.GetMdbConnectionString(mdbPath);
-            if (!MdbHelper.TableExists(conn, "IncomingALI"))
+            var tableName = SdrConfig.Plugins.GetPluginApplicationConfigValue(AliPlugin, "SdrAliServerConfig", "TableName");
+            if (!MdbHelper.TableExists(conn, tableName))
             {
-                msg.Warn(@"AliServer database is missing table 'IncomingALI'");
+                msg.Warn(@"AliServer database is missing table '" + tableName + "'");
                 return false;
             }
             if (udpHost.Length == 0)

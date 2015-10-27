@@ -446,6 +446,27 @@ namespace SDR.Configuration.Project
                 AliGlobalCadLogPathChanged(this, e);
         }
 
+        public event EventHandler AliGlobalCadConfigPathChanged;
+        public string AliGlobalCadConfigPath
+        {
+            get { return Properties.ProjectSettings.Default.AliGlobalCadConfigPath; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliGlobalCadConfigPath != value)
+                {
+                    Properties.ProjectSettings.Default.AliGlobalCadConfigPath = value;
+                    OnAliGlobalCadConfigPathChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliGlobalCadConfigPathChanged(EventArgs e)
+        {
+            if (AliGlobalCadConfigPathChanged != null)
+                AliGlobalCadConfigPathChanged(this, e);
+        }
+
         public event EventHandler AliGlobalCadArchivePathChanged;
         public string AliGlobalCadArchivePath
         {

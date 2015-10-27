@@ -481,5 +481,17 @@ namespace SDR.Configuration.Properties {
                 this["AliGlobalCadArchivePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliGlobalCadConfigPath {
+            get {
+                return ((string)(this["AliGlobalCadConfigPath"]));
+            }
+            set {
+                this["AliGlobalCadConfigPath"] = value;
+            }
+        }
     }
 }

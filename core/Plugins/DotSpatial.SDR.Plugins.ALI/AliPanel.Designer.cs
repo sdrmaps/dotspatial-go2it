@@ -103,7 +103,9 @@
             this.aliDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.aliDGV.Location = new System.Drawing.Point(3, 3);
             this.aliDGV.Name = "aliDGV";
+            this.aliDGV.ReadOnly = true;
             this.aliTableLayoutPanel.SetRowSpan(this.aliDGV, 2);
+            this.aliDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.aliDGV.Size = new System.Drawing.Size(459, 128);
             this.aliDGV.TabIndex = 0;
             // 

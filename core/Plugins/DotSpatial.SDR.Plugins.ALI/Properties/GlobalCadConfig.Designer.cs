@@ -25,16 +25,7 @@ namespace DotSpatial.SDR.Plugins.ALI.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LogParser")]
-        public string IniFileName {
-            get {
-                return ((string)(this["IniFileName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ParserConfig")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Parser Config")]
         public string IniKeyLookup {
             get {
                 return ((string)(this["IniKeyLookup"]));

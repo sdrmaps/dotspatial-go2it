@@ -70,6 +70,10 @@
       <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Topology.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SDR.Common">
+      <HintPath>..\..\..\build\$(Configuration)\SDR.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SDR.Configuration">
       <HintPath>..\..\..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
       <Private>False</Private>

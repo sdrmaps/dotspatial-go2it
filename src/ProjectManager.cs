@@ -266,6 +266,7 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_datasource", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolDataSource.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_global_logpath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadLogPath.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_global_archivepath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadArchivePath.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_global_configpath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadConfigPath.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udpport", "NUMERIC"), Go2ItProjectSettings.Instance.AliSdrServerUdpPort.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udphost", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_dbpath", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
@@ -370,6 +371,7 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliEnterpolDataSource = AttachSetting("ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource, p);
             Go2ItProjectSettings.Instance.AliEnterpolConnectionString = AttachSetting("ali_enterpol_connstring", Go2ItProjectSettings.Instance.AliEnterpolConnectionString, p);
             Go2ItProjectSettings.Instance.AliGlobalCadLogPath = AttachSetting("ali_global_logpath", Go2ItProjectSettings.Instance.AliGlobalCadLogPath, p);
+            Go2ItProjectSettings.Instance.AliGlobalCadConfigPath = AttachSetting("ali_global_configpath", Go2ItProjectSettings.Instance.AliGlobalCadConfigPath, p);
             Go2ItProjectSettings.Instance.AliGlobalCadArchivePath = AttachSetting("ali_global_archivepath", Go2ItProjectSettings.Instance.AliGlobalCadArchivePath, p);
             Go2ItProjectSettings.Instance.AliSdrServerDbPath = AttachSetting("ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath, p);
             Go2ItProjectSettings.Instance.AliSdrServerUdpHost = AttachSetting("ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost, p);

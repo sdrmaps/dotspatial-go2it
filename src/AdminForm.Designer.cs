@@ -148,6 +148,8 @@
             this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.numDisplayMaxCalls = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_LayerManagement.SuspendLayout();
@@ -176,6 +178,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDisplayMaxCalls)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -934,6 +937,8 @@
             // 
             // adminTab_SymbologySettings
             // 
+            this.adminTab_SymbologySettings.Controls.Add(this.label5);
+            this.adminTab_SymbologySettings.Controls.Add(this.numDisplayMaxCalls);
             this.adminTab_SymbologySettings.Controls.Add(this.btnAliValidate);
             this.adminTab_SymbologySettings.Controls.Add(this.pnlAliEnterpol);
             this.adminTab_SymbologySettings.Controls.Add(this.pnlAliGlobalCad);
@@ -987,7 +992,7 @@
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolDataSource);
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolTableName);
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolConnString);
-            this.pnlAliEnterpol.Location = new System.Drawing.Point(210, 462);
+            this.pnlAliEnterpol.Location = new System.Drawing.Point(210, 495);
             this.pnlAliEnterpol.Name = "pnlAliEnterpol";
             this.pnlAliEnterpol.Size = new System.Drawing.Size(379, 119);
             this.pnlAliEnterpol.TabIndex = 62;
@@ -1067,7 +1072,7 @@
             this.pnlAliGlobalCad.Controls.Add(this.label14);
             this.pnlAliGlobalCad.Controls.Add(this.btnAliGlobalCadLogPathBrowse);
             this.pnlAliGlobalCad.Controls.Add(this.txtAliGlobalCadLogPath);
-            this.pnlAliGlobalCad.Location = new System.Drawing.Point(210, 343);
+            this.pnlAliGlobalCad.Location = new System.Drawing.Point(210, 376);
             this.pnlAliGlobalCad.Name = "pnlAliGlobalCad";
             this.pnlAliGlobalCad.Size = new System.Drawing.Size(379, 113);
             this.pnlAliGlobalCad.TabIndex = 61;
@@ -1161,7 +1166,7 @@
             this.pnlAliSdrAliServer.Controls.Add(this.txtAliInterfaceDbPath);
             this.pnlAliSdrAliServer.Location = new System.Drawing.Point(210, 254);
             this.pnlAliSdrAliServer.Name = "pnlAliSdrAliServer";
-            this.pnlAliSdrAliServer.Size = new System.Drawing.Size(375, 83);
+            this.pnlAliSdrAliServer.Size = new System.Drawing.Size(375, 116);
             this.pnlAliSdrAliServer.TabIndex = 60;
             // 
             // numAliInterfaceUdpPort
@@ -1490,6 +1495,22 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // numDisplayMaxCalls
+            // 
+            this.numDisplayMaxCalls.Location = new System.Drawing.Point(29, 350);
+            this.numDisplayMaxCalls.Name = "numDisplayMaxCalls";
+            this.numDisplayMaxCalls.Size = new System.Drawing.Size(160, 20);
+            this.numDisplayMaxCalls.TabIndex = 64;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(32, 332);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(89, 13);
+            this.label5.TabIndex = 65;
+            this.label5.Text = "Display Max Calls";
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1536,6 +1557,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDisplayMaxCalls)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1656,6 +1678,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnAliGlobalCadConfigIniBrowse;
         private System.Windows.Forms.Button btnAliGlobalCadArchivePathBrowse;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numDisplayMaxCalls;
 
     }
 }
