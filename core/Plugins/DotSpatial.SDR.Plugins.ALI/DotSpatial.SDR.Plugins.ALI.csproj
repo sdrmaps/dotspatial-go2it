@@ -103,6 +103,7 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="PluginSettings.cs" />
     <Compile Include="Properties\AliInterfaceModes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -133,6 +134,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>SdrAliServerConfig.settings</DependentUpon>
     </Compile>
+    <Compile Include="Properties\UserSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>UserSettings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AliPanel.resx">
@@ -157,6 +163,10 @@
     <None Include="Properties\SdrAliServerConfig.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SdrAliServerConfig.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\UserSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>UserSettings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Windows.Forms;
 using DotSpatial.Data;
@@ -36,7 +37,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return aliDGV; }
         }
-
         #endregion
 
         #region Methods 
@@ -46,7 +46,114 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 100;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
+
+            if (PluginSettings.Instance.ActiveGlobalCadCommLog.Length == 0)
+            {
+                PluginSettings.Instance.ActiveGlobalCadCommLog = Path.GetFileNameWithoutExtension(
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
+                    DateTime.Now.ToShortDateString().Replace("/", "");
+            }
+            
             // populate the combobox with files now
+            PopulateComboBox();
+            // set up the event handler for the combobox index change
+            cmbAliCommLog.SelectedIndexChanged += CmbAliCommLogOnSelectedIndexChanged;
+            // set the selection initiating the datagridview columns
+            cmbAliCommLog.SelectedIndex = cmbAliCommLog.FindStringExact(PluginSettings.Instance.ActiveGlobalCadCommLog);
+
+            //  initiate file watchers for changes
+            var arkWatch = new FileSystemWatcher
+            {
+                Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath,
+                NotifyFilter = NotifyFilters.FileName,
+                Filter = "*.log"
+            };
+            arkWatch.Created += OnGlobalCadArchiveChanged;
+            arkWatch.Deleted += OnGlobalCadArchiveChanged;
+            arkWatch.Renamed += OnGlobalCadArchiveChanged;
+            arkWatch.Changed += OnGlobalCadArchiveChanged;
+            arkWatch.EnableRaisingEvents = true;
+
+            var logWatch = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath),
+                Filter = "*.log",
+                NotifyFilter = NotifyFilters.LastWrite
+            };
+            logWatch.Changed += OnGlobalCadFileChanged;
+            logWatch.EnableRaisingEvents = true;
+        }
+
+        private void OnGlobalCadFileChanged(object source, FileSystemEventArgs e)
+        {
+            var curLog = Path.GetFileNameWithoutExtension(
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
+                DateTime.Now.ToShortDateString().Replace("/", "");
+
+            if (PluginSettings.Instance.ActiveGlobalCadCommLog == curLog)
+            {
+                try
+                {
+                    var log = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath;
+                    var array = GlobalCadLogToCollection(log).ToArray();
+                    SetDgvDataSource(array);
+                }
+                catch (Exception ex)
+                {
+                    var msg = AppContext.Instance.Get<IUserMessage>();
+                    msg.Warn("Failed to Locate Archived GlobalCAD Files", ex);
+                }
+            }
+        }
+
+        delegate void SetDgvDataSourceCallback(GlocalCadRecord[]source);
+        private void SetDgvDataSource(GlocalCadRecord[] source)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (aliDGV.InvokeRequired)
+            {
+                var cb = new SetDgvDataSourceCallback(SetDgvDataSource);
+                Invoke(cb, new object[] { source });
+            }
+            else
+            {
+                aliDGV.DataSource = source;
+            }
+        }
+
+        delegate void FillComboBoxCallback(string[] array);
+        private void FillComboBox(string[] array)
+        {
+            if (cmbAliCommLog.InvokeRequired)
+            {
+                var cb = new FillComboBoxCallback(FillComboBox);
+                Invoke(cb, new object[] { array });
+            }
+            else
+            {
+                cmbAliCommLog.Items.AddRange(array);
+            }
+        }
+
+        delegate void ClearComboBoxCallback();
+        private void ClearComboBox()
+        {
+            if (cmbAliCommLog.InvokeRequired)
+            {
+                var cb = new ClearComboBoxCallback(ClearComboBox);
+                Invoke(cb, new object[] {});
+            }
+            else
+            {
+                cmbAliCommLog.Items.Clear();
+                cmbAliCommLog.SelectedIndexChanged -= CmbAliCommLogOnSelectedIndexChanged;
+            }
+        }
+
+        private void OnGlobalCadArchiveChanged(object source, FileSystemEventArgs e)
+        {
             PopulateComboBox();
         }
 
@@ -60,29 +167,25 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void PopulateComboBox()
         {
-            cmbAliCommLog.Items.Clear();
+            ClearComboBox();
             var files = new List<string>();
             var dir = new DirectoryInfo(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath);
             try
             {
                 files.AddRange(dir.GetFiles("*.log").Select(fi => Path.GetFileNameWithoutExtension(fi.Name)));
-                // add the current (todays) log to the list
+                // add todays log to the list
                 var curLog = Path.GetFileNameWithoutExtension(
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) + 
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
                     DateTime.Now.ToShortDateString().Replace("/", "");
-
                 files.Add(curLog);
                 files.Sort();
                 files.Reverse();
-                cmbAliCommLog.Items.AddRange(files.ToArray());
-                cmbAliCommLog.SelectedIndexChanged += CmbAliCommLogOnSelectedIndexChanged;
-                // set the selection initiating the datagridview columns
-                cmbAliCommLog.SelectedIndex = cmbAliCommLog.FindStringExact(curLog);
+                FillComboBox(files.ToArray());
             }
             catch (Exception ex)
             {
                 var msg = AppContext.Instance.Get<IUserMessage>();
-                msg.Warn("Failed to Locate Archived GlobalCAD Files", ex);
+                msg.Warn("Failed to populate ComboBox with Log Files", ex);
             }
         }
 
@@ -91,8 +194,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             try
             {
                 var cmb = (ComboBox)sender;
-                // check if this log it todays log
                 var itm = cmb.SelectedItem.ToString();
+                PluginSettings.Instance.ActiveGlobalCadCommLog = itm;
                 string log;
                 if (itm.EndsWith(DateTime.Now.ToShortDateString().Replace("/", "")))
                 {
@@ -248,22 +351,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         #endregion
-
-        #region Events
-
-        #endregion
-
-        #region FormEvents
-
-        // TODO: handle all form events
-
-        #endregion
-
-        #region Event Handlers
-
-        // TODO: add all event handlers
-
-        #endregion
     }
 }
 
@@ -283,7 +370,7 @@ public class GlocalCadRecord
     [DisplayName(@"Full Address")] 
     public string FullAddress
     {
-        get { return this.Address + " " + this.Street; }
+        get { return Address + " " + Street; }
     }
 }
 

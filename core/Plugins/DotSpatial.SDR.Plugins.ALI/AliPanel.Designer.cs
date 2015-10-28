@@ -96,6 +96,7 @@
             this.cmbAliCommLog.Name = "cmbAliCommLog";
             this.cmbAliCommLog.Size = new System.Drawing.Size(204, 21);
             this.cmbAliCommLog.TabIndex = 1;
+            this.cmbAliCommLog.SelectedIndexChanged += new System.EventHandler(this.CmbAliCommLogOnSelectedIndexChanged);
             // 
             // aliDGV
             // 
