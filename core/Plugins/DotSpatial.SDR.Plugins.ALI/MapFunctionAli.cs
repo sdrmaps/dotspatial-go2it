@@ -55,6 +55,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void DisableCurrentAliMode()
         {
+            _aliPanel.ResetInterface();
             if (_currentAliMode == AliMode.Sdraliserver)
             {
                 if (_aliServerClient != null)

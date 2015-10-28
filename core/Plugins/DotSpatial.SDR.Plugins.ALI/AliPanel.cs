@@ -20,6 +20,8 @@ namespace DotSpatial.SDR.Plugins.ALI
 {
     public sealed partial class AliPanel : UserControl
     {
+        private FileSystemWatcher _arkWatch;
+        private FileSystemWatcher _logWatch;
 
         #region Constructors
         public AliPanel()
@@ -29,7 +31,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         #endregion
 
         #region Properties
-
         /// <summary>
         /// Gets the datagridview for record display
         /// </summary>
@@ -40,11 +41,17 @@ namespace DotSpatial.SDR.Plugins.ALI
         #endregion
 
         #region Methods 
+        public void ResetInterface()
+        {
+            cmbAliCommLog.SelectedIndexChanged -= CmbAliCommLogOnSelectedIndexChanged;
+            if (_arkWatch != null) { _arkWatch.EnableRaisingEvents = false; }
+            if (_logWatch != null) { _logWatch.EnableRaisingEvents = false; }
+        }
 
         public void ShowGlobalCadInterface()
         {
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
-            aliTableLayoutPanel.ColumnStyles[0].Width = 100;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 80;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
 
             if (PluginSettings.Instance.ActiveGlobalCadCommLog.Length == 0)
@@ -62,26 +69,26 @@ namespace DotSpatial.SDR.Plugins.ALI
             cmbAliCommLog.SelectedIndex = cmbAliCommLog.FindStringExact(PluginSettings.Instance.ActiveGlobalCadCommLog);
 
             //  initiate file watchers for changes
-            var arkWatch = new FileSystemWatcher
+            _arkWatch = new FileSystemWatcher
             {
                 Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath,
                 NotifyFilter = NotifyFilters.FileName,
                 Filter = "*.log"
             };
-            arkWatch.Created += OnGlobalCadArchiveChanged;
-            arkWatch.Deleted += OnGlobalCadArchiveChanged;
-            arkWatch.Renamed += OnGlobalCadArchiveChanged;
-            arkWatch.Changed += OnGlobalCadArchiveChanged;
-            arkWatch.EnableRaisingEvents = true;
+            _arkWatch.Created += OnGlobalCadArchiveChanged;
+            _arkWatch.Deleted += OnGlobalCadArchiveChanged;
+            _arkWatch.Renamed += OnGlobalCadArchiveChanged;
+            _arkWatch.Changed += OnGlobalCadArchiveChanged;
+            _arkWatch.EnableRaisingEvents = true;
 
-            var logWatch = new FileSystemWatcher
+            _logWatch = new FileSystemWatcher
             {
                 Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath),
                 Filter = "*.log",
                 NotifyFilter = NotifyFilters.LastWrite
             };
-            logWatch.Changed += OnGlobalCadFileChanged;
-            logWatch.EnableRaisingEvents = true;
+            _logWatch.Changed += OnGlobalCadFileChanged;
+            _logWatch.EnableRaisingEvents = true;
         }
 
         private void OnGlobalCadFileChanged(object source, FileSystemEventArgs e)
@@ -265,7 +272,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             return bindingList;
         }
 
-        private GlocalCadRecord ProcessGlocalCadRecord(List<string> recList)
+        private static GlocalCadRecord ProcessGlocalCadRecord(List<string> recList)
         {
             // fetch the settings for parsing the values from the list
             var pFile = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath;
