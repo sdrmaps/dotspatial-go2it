@@ -196,6 +196,20 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        public void UpdateGlobalCadLogWatcher()
+        {
+            _logWatch.EnableRaisingEvents = false;
+            _logWatch.Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath);
+            _logWatch.EnableRaisingEvents = true;
+        }
+
+        public void UpdateGlobalCadArchiveWatcher()
+        {
+            _arkWatch.EnableRaisingEvents = false;
+            _arkWatch.Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
+            _arkWatch.EnableRaisingEvents = true;
+        }
+
         private void CmbAliCommLogOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             try

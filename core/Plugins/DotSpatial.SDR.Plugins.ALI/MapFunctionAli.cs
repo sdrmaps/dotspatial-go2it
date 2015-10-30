@@ -152,10 +152,25 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void HandleGlobalCadFiles()
         {
-
-
-
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePathChanged += InstanceOnAliGlobalCadArchivePathChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPathChanged += InstanceOnAliGlobalCadLogPathChanged;
             _aliPanel.ShowGlobalCadInterface();
+        }
+
+        private void InstanceOnAliGlobalCadLogPathChanged(object sender, EventArgs eventArgs)
+        {
+            if (_currentAliMode == AliMode.Globalcad)
+            {
+                _aliPanel.UpdateGlobalCadLogWatcher();
+            }
+        }
+
+        private void InstanceOnAliGlobalCadArchivePathChanged(object sender, EventArgs eventArgs)
+        {
+            if (_currentAliMode == AliMode.Globalcad)
+            {
+                _aliPanel.UpdateGlobalCadArchiveWatcher();
+            }
         }
 
         /// <summary>
