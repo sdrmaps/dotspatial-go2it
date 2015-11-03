@@ -167,7 +167,7 @@
             // tsbClear
             // 
             this.tsbClear.AutoSize = false;
-            this.tsbClear.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.clear2_16;
+            this.tsbClear.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.clear_16;
             this.tsbClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClear.Name = "tsbClear";
             this.tsbClear.Size = new System.Drawing.Size(45, 45);

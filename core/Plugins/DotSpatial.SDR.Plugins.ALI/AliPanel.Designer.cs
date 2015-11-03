@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AliPanel));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbAliLocate = new System.Windows.Forms.ToolStripButton();
-            this.tsbAliUpdate = new System.Windows.Forms.ToolStripButton();
             this.lblCommLog = new System.Windows.Forms.Label();
             this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
             this.aliDGV = new System.Windows.Forms.DataGridView();
             this.aliTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.tsbAliLocate = new System.Windows.Forms.ToolStripButton();
+            this.tsbAliUpdate = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).BeginInit();
             this.aliTableLayoutPanel.SuspendLayout();
@@ -53,30 +53,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(675, 48);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // tsbAliLocate
-            // 
-            this.tsbAliLocate.AutoSize = false;
-            this.tsbAliLocate.Image = ((System.Drawing.Image)(resources.GetObject("tsbAliLocate.Image")));
-            this.tsbAliLocate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAliLocate.Name = "tsbAliLocate";
-            this.tsbAliLocate.Size = new System.Drawing.Size(45, 45);
-            this.tsbAliLocate.Text = "Locate";
-            this.tsbAliLocate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.tsbAliLocate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbAliLocate.ToolTipText = "Locate Selected Record";
-            // 
-            // tsbAliUpdate
-            // 
-            this.tsbAliUpdate.AutoSize = false;
-            this.tsbAliUpdate.Image = ((System.Drawing.Image)(resources.GetObject("tsbAliUpdate.Image")));
-            this.tsbAliUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAliUpdate.Name = "tsbAliUpdate";
-            this.tsbAliUpdate.Size = new System.Drawing.Size(45, 45);
-            this.tsbAliUpdate.Text = "Update";
-            this.tsbAliUpdate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.tsbAliUpdate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbAliUpdate.ToolTipText = "Update Record Display";
             // 
             // lblCommLog
             // 
@@ -126,6 +102,30 @@
             this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.aliTableLayoutPanel.Size = new System.Drawing.Size(675, 134);
             this.aliTableLayoutPanel.TabIndex = 1;
+            // 
+            // tsbAliLocate
+            // 
+            this.tsbAliLocate.AutoSize = false;
+            this.tsbAliLocate.Image = ((System.Drawing.Image)(resources.GetObject("tsbAliLocate.Image")));
+            this.tsbAliLocate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAliLocate.Name = "tsbAliLocate";
+            this.tsbAliLocate.Size = new System.Drawing.Size(45, 45);
+            this.tsbAliLocate.Text = "Locate";
+            this.tsbAliLocate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tsbAliLocate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbAliLocate.ToolTipText = "Locate Selected Record";
+            // 
+            // tsbAliUpdate
+            // 
+            this.tsbAliUpdate.AutoSize = false;
+            this.tsbAliUpdate.Image = global::DotSpatial.SDR.Plugins.ALI.Properties.Resources.recent_32;
+            this.tsbAliUpdate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAliUpdate.Name = "tsbAliUpdate";
+            this.tsbAliUpdate.Size = new System.Drawing.Size(45, 45);
+            this.tsbAliUpdate.Text = "Update";
+            this.tsbAliUpdate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.tsbAliUpdate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbAliUpdate.ToolTipText = "Update Record Display";
             // 
             // AliPanel
             // 

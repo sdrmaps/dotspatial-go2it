@@ -118,23 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="pan2_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pan2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pan2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pan2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="pan_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pan_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pan_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pan_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_extent2_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_extent2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_extent2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_extent2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="zoom_extent_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_extent_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,23 +130,11 @@
   <data name="zoom_extent_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_extent_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="zoom_in2_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_in2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_in2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_in2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="zoom_in_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_in_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="zoom_in_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_in_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_next2_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_next2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_next2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_next2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="zoom_next_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_next_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -166,23 +142,11 @@
   <data name="zoom_next_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_next_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="zoom_out2_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_out2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_out2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_out2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="zoom_out_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_out_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="zoom_out_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_out_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_prev2_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_prev2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom_prev2_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom_prev2_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="zoom_prev_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\zoom_prev_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

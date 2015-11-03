@@ -120,28 +120,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pan2_16.png" />
-    <None Include="Resources\pan2_32.png" />
     <Content Include="Resources\pan_16.png" />
     <Content Include="Resources\pan_32.png" />
-    <None Include="Resources\zoom_extent2_16.png" />
-    <None Include="Resources\zoom_extent2_32.png" />
     <Content Include="Resources\zoom_extent_16.png" />
     <Content Include="Resources\zoom_extent_32.png" />
-    <None Include="Resources\zoom_in2_16.png" />
-    <None Include="Resources\zoom_in2_32.png" />
     <Content Include="Resources\zoom_in_16.png" />
     <Content Include="Resources\zoom_in_32.png" />
-    <None Include="Resources\zoom_next2_16.png" />
-    <None Include="Resources\zoom_next2_32.png" />
     <Content Include="Resources\zoom_next_16.png" />
     <Content Include="Resources\zoom_next_32.png" />
-    <None Include="Resources\zoom_out2_16.png" />
-    <None Include="Resources\zoom_out2_32.png" />
     <Content Include="Resources\zoom_out_16.png" />
     <Content Include="Resources\zoom_out_32.png" />
-    <None Include="Resources\zoom_prev2_16.png" />
-    <None Include="Resources\zoom_prev2_32.png" />
     <Content Include="Resources\zoom_prev_16.png" />
     <Content Include="Resources\zoom_prev_32.png" />
     <Content Include="Resources\zoom_to_layer_16.png" />

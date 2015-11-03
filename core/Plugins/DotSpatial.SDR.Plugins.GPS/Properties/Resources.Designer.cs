@@ -79,5 +79,15 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap start_gps_32 {
+            get {
+                object obj = ResourceManager.GetObject("start_gps_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace Go2It
                 GroupCaption = "Overview_Toggle",
                 ToolTipText = "Toggle Overview Map Visibility",
                 SmallImage = Resources.legend_16,
-                LargeImage = Resources.legend_32
+                LargeImage = Resources.overview_32
             });
 
             ProjectManager = (ProjectManager)App.SerializationManager;
