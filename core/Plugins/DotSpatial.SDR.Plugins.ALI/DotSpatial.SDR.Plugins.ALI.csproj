@@ -151,6 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="LogParser.ini.example">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\AliInterfaceModes.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AliInterfaceModes.Designer.cs</LastGenOutput>

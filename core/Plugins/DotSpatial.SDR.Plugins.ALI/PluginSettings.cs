@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Collections.Specialized;
 using DotSpatial.SDR.Plugins.ALI.Properties;
 
 namespace DotSpatial.SDR.Plugins.ALI
@@ -27,6 +26,24 @@ namespace DotSpatial.SDR.Plugins.ALI
             set
             {
                 UserSettings.Default.ActiveGlobalCadCommLog = value;
+                UserSettings.Default.Save();
+            }
+        }
+
+        public StringCollection DgvSortOrder
+        {
+            get { return UserSettings.Default.DgvSortOrder; }
+            set
+            {
+                var dif = false;
+                for (var i = 0; i <= UserSettings.Default.DgvSortOrder.Count - 1; i++)
+                {
+                    if (value[i] == UserSettings.Default.DgvSortOrder[i]) continue;
+                    dif = true;
+                    break;
+                }
+                if (!dif) return;
+                UserSettings.Default.DgvSortOrder = value;
                 UserSettings.Default.Save();
             }
         }

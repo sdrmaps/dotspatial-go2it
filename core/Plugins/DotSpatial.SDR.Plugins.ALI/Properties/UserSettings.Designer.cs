@@ -34,5 +34,32 @@ namespace DotSpatial.SDR.Plugins.ALI.Properties {
                 this["ActiveGlobalCadCommLog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>CallTime</string>
+  <string>Phone</string>
+  <string>Address</string>
+  <string>Street</string>
+  <string>ServiceClass</string>
+  <string>Customer</string>
+  <string>CallDate</string>
+  <string>City</string>
+  <string>State</string>
+  <string>Sector</string>
+  <string>X</string>
+  <string>Y</string>
+  <string>Uncertainty</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection DgvSortOrder {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["DgvSortOrder"]));
+            }
+            set {
+                this["DgvSortOrder"] = value;
+            }
+        }
     }
 }

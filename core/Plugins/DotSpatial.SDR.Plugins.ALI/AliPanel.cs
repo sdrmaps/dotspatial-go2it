@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Windows.Forms;
-using DotSpatial.Data;
 using DotSpatial.SDR.Plugins.ALI.Properties;
 using SDR.Common;
 using SDR.Data.Files;
@@ -20,6 +16,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 {
     public sealed partial class AliPanel : UserControl
     {
+        // local file watchers for global cad interface
         private FileSystemWatcher _arkWatch;
         private FileSystemWatcher _logWatch;
 
@@ -43,9 +40,16 @@ namespace DotSpatial.SDR.Plugins.ALI
         #region Methods 
         public void ResetInterface()
         {
+            if (_arkWatch != null) { 
+                _arkWatch.EnableRaisingEvents = false;
+                _arkWatch = null; 
+            }
+            if (_logWatch != null)
+            {
+                _logWatch.EnableRaisingEvents = false;
+                _logWatch = null;
+            }
             cmbAliCommLog.SelectedIndexChanged -= CmbAliCommLogOnSelectedIndexChanged;
-            if (_arkWatch != null) { _arkWatch.EnableRaisingEvents = false; }
-            if (_logWatch != null) { _logWatch.EnableRaisingEvents = false; }
         }
 
         public void ShowGlobalCadInterface()
@@ -113,8 +117,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        delegate void SetDgvDataSourceCallback(GlocalCadRecord[]source);
-        private void SetDgvDataSource(GlocalCadRecord[] source)
+        delegate void SetDgvDataSourceCallback(GlobalCadRecord[]source);
+        private void SetDgvDataSource(GlobalCadRecord[] source)
         {
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
@@ -122,6 +126,23 @@ namespace DotSpatial.SDR.Plugins.ALI
             if (aliDGV.InvokeRequired)
             {
                 var cb = new SetDgvDataSourceCallback(SetDgvDataSource);
+                Invoke(cb, new object[] { source });
+            }
+            else
+            {
+                aliDGV.DataSource = source;
+            }
+        }
+
+        public delegate void SetDgvBindingSourceCallback(BindingSource source);
+        public void SetDgvBindingSource(BindingSource source)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (aliDGV.InvokeRequired)
+            {
+                var cb = new SetDgvBindingSourceCallback(SetDgvBindingSource);
                 Invoke(cb, new object[] { source });
             }
             else
@@ -236,9 +257,9 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        private List<GlocalCadRecord> GlobalCadLogToCollection(string logPath)
+        private List<GlobalCadRecord> GlobalCadLogToCollection(string logPath)
         {
-            var bindingList = new List<GlocalCadRecord>();
+            var bindingList = new List<GlobalCadRecord>();
             var newRec = false;
             var rec = new List<string>();
 
@@ -286,7 +307,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             return bindingList;
         }
 
-        private static GlocalCadRecord ProcessGlocalCadRecord(List<string> recList)
+        private static GlobalCadRecord ProcessGlocalCadRecord(List<string> recList)
         {
             // fetch the settings for parsing the values from the list
             var pFile = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath;
@@ -326,8 +347,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             var stateLine = Convert.ToInt32(IniHelper.IniReadValue(GlobalCadConfig.Default.IniKeyLookup, "StateLine", pFile)) - 1;
             var stateStart = Convert.ToInt32(IniHelper.IniReadValue(GlobalCadConfig.Default.IniKeyLookup, "StateStart", pFile)) - 1;
             var stateLen = Convert.ToInt32(IniHelper.IniReadValue(GlobalCadConfig.Default.IniKeyLookup, "StateLength", pFile));
-            
-            var gcr = new GlocalCadRecord();
+
+            var gcr = new GlobalCadRecord();
             try
             {
                 gcr.Time = recList[timeLine].Substring(timeStart, timeLen).Trim();
@@ -375,7 +396,7 @@ namespace DotSpatial.SDR.Plugins.ALI
     }
 }
 
-public class GlocalCadRecord
+public class GlobalCadRecord
 {
     public string Time { get; set; }
     public string Phone { get; set; }
@@ -383,15 +404,14 @@ public class GlocalCadRecord
     public string Street { get; set; }
     public string City { get; set; }
     public string State { get; set; }
-    [DisplayName(@"Service Class")] 
+    [DisplayName(@"Service Class")]
     public string ServiceClass { get; set; }
     public string X { get; set; }
     public string Y { get; set; }
     public string Unc { get; set; }
-    [DisplayName(@"Full Address")] 
+    [DisplayName(@"Full Address")]
     public string FullAddress
     {
-        get { return Address + " " + Street; }
+        get { return (Address + " " + Street).Trim(); }
     }
 }
-
