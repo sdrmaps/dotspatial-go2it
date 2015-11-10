@@ -64,7 +64,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                     SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
                     DateTime.Now.ToShortDateString().Replace("/", "");
             }
-            
             // populate the combobox with files now
             PopulateComboBox();
             // set up the event handler for the combobox index change

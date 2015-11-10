@@ -49,7 +49,12 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void HandleAliPanelEvents()
         {
+            _aliPanel.DataGridDisplay.CellClick += DataGridDisplayOnCellClick;
+        }
 
+        private void DataGridDisplayOnCellClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
+        {
+            Debug.WriteLine("datagridrow clicked");
         }
 
         private void DisableCurrentAliMode()
@@ -86,6 +91,12 @@ namespace DotSpatial.SDR.Plugins.ALI
             _aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
             PopulateDgv();
             _aliPanel.ShowStandardInterface();
+        }
+
+        private void HandleNetworkFleetClient()
+        {
+
+            
         }
 
         private void HumanizeCamelCasedDgvHeaders()
@@ -240,6 +251,9 @@ namespace DotSpatial.SDR.Plugins.ALI
                     HandleGlobalCadFiles();
                     break;
                 case AliMode.Enterpol:
+                    _aliPanel.ShowStandardInterface();
+                    break;
+                case AliMode.Networkfleet:
                     _aliPanel.ShowStandardInterface();
                     break;
             }

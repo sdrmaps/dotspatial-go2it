@@ -6,5 +6,6 @@
         Sdraliserver,
         Globalcad,
         Enterpol,
+        Networkfleet,
     }
 }
