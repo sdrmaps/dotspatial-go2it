@@ -194,6 +194,8 @@ namespace SDR.Network
 
         private void OnMessageReceieved(IAsyncResult ar)
         {
+            if (!_loggedIn) return;
+
             UdpClient u = ((UdpState)(ar.AsyncState)).Udpclient;
             IPEndPoint e = ((UdpState)(ar.AsyncState)).Endpoint;
 
@@ -201,7 +203,6 @@ namespace SDR.Network
             var receiveMsg = new AliServerDataPacket(message);
 
             OnPacketReceieved(receiveMsg);
-
             // setup a new listener and start the process anew
             var state = new UdpState(_udpClient, _endPoint);
             _udpClient.BeginReceive(OnMessageReceieved, state);
