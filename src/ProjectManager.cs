@@ -318,35 +318,35 @@ namespace Go2It
         {
             if (!dt.Columns.Contains(key)) return setting;
             DataRow r = dt.Rows[0]; // there is only one row for project settings
-            return r[key].ToString();
+            return r[key].ToString().Length == 0 ? setting : r[key].ToString();
         }
 
         private static Color AttachSetting(string key, Color setting, DataTable dt)
         {
             if (!dt.Columns.Contains(key)) return setting;
             DataRow r = dt.Rows[0]; // there is only one row for project settings
-            return Color.FromArgb((Convert.ToInt32(r[key].ToString())));
+            return r[key].ToString().Length == 0 ? setting : Color.FromArgb((Convert.ToInt32(r[key].ToString())));
         }
 
         private static bool AttachSetting(string key, bool setting, DataTable dt)
         {
             if (!dt.Columns.Contains(key)) return setting;
             DataRow r = dt.Rows[0]; // there is only one row for project settings
-            return bool.Parse(r[key].ToString());
+            return r[key].ToString().Length == 0 ? setting : bool.Parse(r[key].ToString());
         }
 
         private static int AttachSetting(string key, int setting, DataTable dt)
         {
             if (!dt.Columns.Contains(key)) return setting;
             DataRow r = dt.Rows[0]; // there is only one row for project settings
-            return int.Parse(r[key].ToString());
+            return r[key].ToString().Length == 0 ? setting : int.Parse(r[key].ToString());
         }
 
         private static decimal AttachSetting(string key, decimal setting, DataTable dt)
         {
             if (!dt.Columns.Contains(key)) return setting;
             DataRow r = dt.Rows[0]; // there is only one row for project settings
-            return decimal.Parse(r[key].ToString());
+            return r[key].ToString().Length == 0 ? setting : decimal.Parse(r[key].ToString());
         }
 
         private void LoadProjectSettings()

@@ -310,7 +310,6 @@
     <Content Include="Resources\login_32.png" />
     <Content Include="Resources\logout_16.png" />
     <Content Include="Resources\logout_32.png" />
-    <None Include="Resources\overview_32.bmp" />
     <Content Include="Resources\overview_32.png" />
     <Content Include="Resources\settingsDatabase.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
