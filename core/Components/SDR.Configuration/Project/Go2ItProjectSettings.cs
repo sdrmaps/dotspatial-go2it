@@ -64,6 +64,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolTableName = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadLogPath = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadArchivePath = string.Empty;
+            Properties.ProjectSettings.Default.AliGlobalCadConfigPath = string.Empty;
             Properties.ProjectSettings.Default.AliSdrServerDbPath = string.Empty;
             Properties.ProjectSettings.Default.AliSdrServerUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliSdrServerUdpPort = 777;
