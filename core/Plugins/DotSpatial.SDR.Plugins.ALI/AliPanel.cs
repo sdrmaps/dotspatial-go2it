@@ -54,10 +54,6 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public void ShowGlobalCadInterface()
         {
-            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
-            aliTableLayoutPanel.ColumnStyles[0].Width = 80;
-            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
-
             if (PluginSettings.Instance.ActiveGlobalCadCommLog.Length == 0)
             {
                 PluginSettings.Instance.ActiveGlobalCadCommLog = Path.GetFileNameWithoutExtension(
@@ -184,12 +180,42 @@ namespace DotSpatial.SDR.Plugins.ALI
             PopulateComboBox();
         }
 
-        public void ShowStandardInterface()
+        public void DisplayStandardInterface()
         {
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 100;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
             aliTableLayoutPanel.ColumnStyles[1].Width = 0;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 0;
+        }
+
+        public void DisplayNetworkfleetInterface()
+        {
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 80;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 0;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.AutoSize;
+        }
+
+        public void DisplayNetworkfleetAndGlobalInterface()
+        {
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 60;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.AutoSize;
+            ShowGlobalCadInterface();
+        }
+
+        public void DisplayGlobalInterface()
+        {
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 80;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 0;
+            ShowGlobalCadInterface();
         }
 
         private void PopulateComboBox()

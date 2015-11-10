@@ -90,13 +90,12 @@ namespace DotSpatial.SDR.Plugins.ALI
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
             _aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
             PopulateDgv();
-            _aliPanel.ShowStandardInterface();
         }
 
         private void HandleNetworkFleetClient()
         {
+            // TODO: handle the network fleet client here
 
-            
         }
 
         private void HumanizeCamelCasedDgvHeaders()
@@ -237,7 +236,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         // this is called on startup as well as everytime the ali mode changes
-        public void ConfigureAliClient(AliMode am)
+        public void ConfigureAliClient(AliMode am, bool useNetworkfleet)
         {
             if (_currentAliMode == am) return;  // no need to update anything no change was made
             DisableCurrentAliMode();
@@ -246,18 +245,36 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 case AliMode.Sdraliserver:
                     HandleAliServerClient();
+                    if (useNetworkfleet)
+                    {
+                        _aliPanel.DisplayNetworkfleetInterface();
+                    }
+                    else
+                    {
+                        _aliPanel.DisplayStandardInterface();
+                    }
                     break;
                 case AliMode.Globalcad:
                     HandleGlobalCadFiles();
+                    if (useNetworkfleet)
+                    {
+                        _aliPanel.DisplayNetworkfleetAndGlobalInterface();
+                    }
+                    else
+                    {
+                        _aliPanel.DisplayGlobalInterface();
+                    }
                     break;
                 case AliMode.Enterpol:
-                    _aliPanel.ShowStandardInterface();
+                    // HandleEnterpolDbView();
                     break;
                 default: // disabled
+                    if (useNetworkfleet)
+                    {
+                        HandleNetworkFleetClient();
+                        _aliPanel.DisplayNetworkfleetInterface();
+                    }
                     break;
-                    //case AliMode.Networkfleet:
-                    //    _aliPanel.ShowStandardInterface();
-                    //    break;
             }
         }
 
@@ -265,7 +282,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePathChanged += InstanceOnAliGlobalCadArchivePathChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPathChanged += InstanceOnAliGlobalCadLogPathChanged;
-            _aliPanel.ShowGlobalCadInterface();
         }
 
         private void InstanceOnAliGlobalCadLogPathChanged(object sender, EventArgs eventArgs)
