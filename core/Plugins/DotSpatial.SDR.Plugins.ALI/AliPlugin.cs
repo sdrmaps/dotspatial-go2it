@@ -37,12 +37,19 @@ namespace DotSpatial.SDR.Plugins.ALI
                 return am;
             }
         }
+
+        public static bool UseNetworkfleet
+        {
+            get { return SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet; }
+        }
         #endregion
 
         public override void Activate()
         {
             // watch for the change of alimode to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliUseNetworkfleetChanged;
+
             // determine if the plugin is currently activated or not
             if (CurrentAliMode != AliMode.Disabled)
             {
@@ -81,6 +88,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         public override void Deactivate()
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliUseNetworkfleetChanged;
+            
             if (_isPluginActive)
             {
                 DeactivateAliPlugin();
@@ -120,6 +129,11 @@ namespace DotSpatial.SDR.Plugins.ALI
                     DeactivateAliPlugin();  // go ahead and deactivate the plugin now
                 }
             }
+        }
+
+        private void OnAliUseNetworkfleetChanged(object sender, EventArgs eventArgs)
+        {
+            
         }
 
         private void AddAliMapFunction()

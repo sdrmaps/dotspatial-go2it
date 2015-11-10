@@ -97,6 +97,12 @@
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.adminTab_SymbologySettings = new System.Windows.Forms.TabPage();
+            this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
+            this.pnlAliNetworkfleet = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numAliNetworkfleetUdpPort = new System.Windows.Forms.NumericUpDown();
+            this.txtAliNetworkfleetUdpHost = new System.Windows.Forms.TextBox();
             this.btnAliValidate = new System.Windows.Forms.Button();
             this.pnlAliEnterpol = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
@@ -166,6 +172,8 @@
             this.adminTab_SearchProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
             this.adminTab_SymbologySettings.SuspendLayout();
+            this.pnlAliNetworkfleet.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).BeginInit();
             this.pnlAliEnterpol.SuspendLayout();
             this.pnlAliGlobalCad.SuspendLayout();
             this.pnlAliSdrAliServer.SuspendLayout();
@@ -934,6 +942,8 @@
             // 
             // adminTab_SymbologySettings
             // 
+            this.adminTab_SymbologySettings.Controls.Add(this.chkNetworkfleet);
+            this.adminTab_SymbologySettings.Controls.Add(this.pnlAliNetworkfleet);
             this.adminTab_SymbologySettings.Controls.Add(this.btnAliValidate);
             this.adminTab_SymbologySettings.Controls.Add(this.pnlAliEnterpol);
             this.adminTab_SymbologySettings.Controls.Add(this.pnlAliGlobalCad);
@@ -966,6 +976,66 @@
             this.adminTab_SymbologySettings.TabIndex = 5;
             this.adminTab_SymbologySettings.Text = "Project Settings";
             this.adminTab_SymbologySettings.UseVisualStyleBackColor = true;
+            // 
+            // chkNetworkfleet
+            // 
+            this.chkNetworkfleet.AutoSize = true;
+            this.chkNetworkfleet.Location = new System.Drawing.Point(29, 328);
+            this.chkNetworkfleet.Name = "chkNetworkfleet";
+            this.chkNetworkfleet.Size = new System.Drawing.Size(146, 17);
+            this.chkNetworkfleet.TabIndex = 4;
+            this.chkNetworkfleet.Text = "Use Verizon Networkfleet";
+            this.chkNetworkfleet.UseVisualStyleBackColor = true;
+            this.chkNetworkfleet.CheckedChanged += new System.EventHandler(this.chkNetworkfleet_CheckedChanged);
+            // 
+            // pnlAliNetworkfleet
+            // 
+            this.pnlAliNetworkfleet.Controls.Add(this.label6);
+            this.pnlAliNetworkfleet.Controls.Add(this.label5);
+            this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetUdpPort);
+            this.pnlAliNetworkfleet.Controls.Add(this.txtAliNetworkfleetUdpHost);
+            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(8, 351);
+            this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
+            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(196, 93);
+            this.pnlAliNetworkfleet.TabIndex = 64;
+            this.pnlAliNetworkfleet.Visible = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 46);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(29, 13);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Port:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(13, 6);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(58, 13);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "UDP Host:";
+            // 
+            // numAliNetworkfleetUdpPort
+            // 
+            this.numAliNetworkfleetUdpPort.Location = new System.Drawing.Point(10, 62);
+            this.numAliNetworkfleetUdpPort.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numAliNetworkfleetUdpPort.Name = "numAliNetworkfleetUdpPort";
+            this.numAliNetworkfleetUdpPort.Size = new System.Drawing.Size(91, 20);
+            this.numAliNetworkfleetUdpPort.TabIndex = 1;
+            // 
+            // txtAliNetworkfleetUdpHost
+            // 
+            this.txtAliNetworkfleetUdpHost.Location = new System.Drawing.Point(10, 22);
+            this.txtAliNetworkfleetUdpHost.Name = "txtAliNetworkfleetUdpHost";
+            this.txtAliNetworkfleetUdpHost.Size = new System.Drawing.Size(167, 20);
+            this.txtAliNetworkfleetUdpHost.TabIndex = 0;
             // 
             // btnAliValidate
             // 
@@ -1523,6 +1593,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.adminTab_SymbologySettings.ResumeLayout(false);
             this.adminTab_SymbologySettings.PerformLayout();
+            this.pnlAliNetworkfleet.ResumeLayout(false);
+            this.pnlAliNetworkfleet.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).EndInit();
             this.pnlAliEnterpol.ResumeLayout(false);
             this.pnlAliEnterpol.PerformLayout();
             this.pnlAliGlobalCad.ResumeLayout(false);
@@ -1656,6 +1729,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnAliGlobalCadConfigIniBrowse;
         private System.Windows.Forms.Button btnAliGlobalCadArchivePathBrowse;
+        private System.Windows.Forms.Panel pnlAliNetworkfleet;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numAliNetworkfleetUdpPort;
+        private System.Windows.Forms.TextBox txtAliNetworkfleetUdpHost;
+        private System.Windows.Forms.CheckBox chkNetworkfleet;
 
     }
 }

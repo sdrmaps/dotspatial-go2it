@@ -68,6 +68,9 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliSdrServerDbPath = string.Empty;
             Properties.ProjectSettings.Default.AliSdrServerUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliSdrServerUdpPort = 777;
+            Properties.ProjectSettings.Default.AliUseNetworkfleet = false;
+            Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = "127.0.0.1";
+            Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;
         }
 
         /// <summary>
@@ -424,6 +427,66 @@ namespace SDR.Configuration.Project
         {
             if (AliSdrServerUdpPortChanged != null)
                 AliSdrServerUdpPortChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetUdpHostChanged;
+        public string AliNetworkfleetUdpHost
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetUdpHost; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetUdpHost != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = value;
+                    OnAliNetworkfleetUdpHostChanged(EventArgs.Empty);
+                }
+
+            }
+
+        }
+        protected virtual void OnAliNetworkfleetUdpHostChanged(EventArgs e)
+        {
+            if (AliNetworkfleetUdpHostChanged != null)
+                AliNetworkfleetUdpHostChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetUdpPortChanged;
+        public int AliNetworkfleetUdpPort
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetUdpPort; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetUdpPort != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = value;
+                    OnAliSdrServeUdpPortChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetUdpPortChanged(EventArgs e)
+        {
+            if (AliNetworkfleetUdpPortChanged != null)
+                AliNetworkfleetUdpPortChanged(this, e);
+        }
+
+        public event EventHandler AliUseNetworkfleetChanged;
+        public bool AliUseNetworkfleet
+        {
+            get { return Properties.ProjectSettings.Default.AliUseNetworkfleet; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliUseNetworkfleet != value)
+                {
+                    Properties.ProjectSettings.Default.AliUseNetworkfleet = value;
+                    OnAliUseNetworkfleetChanged(EventArgs.Empty);
+                }
+
+            }
+        }
+        protected virtual void OnAliUseNetworkfleetChanged(EventArgs e)
+        {
+            if (AliUseNetworkfleetChanged != null)
+                AliUseNetworkfleetChanged(this, e);
         }
 
         public event EventHandler AliGlobalCadLogPathChanged;

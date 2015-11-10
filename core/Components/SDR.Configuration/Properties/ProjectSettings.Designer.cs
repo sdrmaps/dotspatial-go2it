@@ -493,5 +493,41 @@ namespace SDR.Configuration.Properties {
                 this["AliGlobalCadConfigPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string AliNetworkfleetUdpHost {
+            get {
+                return ((string)(this["AliNetworkfleetUdpHost"]));
+            }
+            set {
+                this["AliNetworkfleetUdpHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1111")]
+        public int AliNetworkfleetUdpPort {
+            get {
+                return ((int)(this["AliNetworkfleetUdpPort"]));
+            }
+            set {
+                this["AliNetworkfleetUdpPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AliUseNetworkfleet {
+            get {
+                return ((bool)(this["AliUseNetworkfleet"]));
+            }
+            set {
+                this["AliUseNetworkfleet"] = value;
+            }
+        }
     }
 }

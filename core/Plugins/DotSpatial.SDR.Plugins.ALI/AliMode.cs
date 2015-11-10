@@ -5,7 +5,6 @@
         Disabled,
         Sdraliserver,
         Globalcad,
-        Enterpol,
-        Networkfleet,
+        Enterpol
     }
 }

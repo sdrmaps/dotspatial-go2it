@@ -270,6 +270,9 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udpport", "NUMERIC"), Go2ItProjectSettings.Instance.AliSdrServerUdpPort.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_udphost", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerUdpHost.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_sdrserver_dbpath", "TEXT"), Go2ItProjectSettings.Instance.AliSdrServerDbPath.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_networkfleet_udphost", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_networkfleet_udpport", "NUMERIC"), Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_use_networkfleet", "TEXT"), Go2ItProjectSettings.Instance.AliUseNetworkfleet.ToString(CultureInfo.InvariantCulture)},
             };
             var k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM ProjectSettings limit 1");
             if (k.Length == 0)
@@ -376,9 +379,12 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliSdrServerDbPath = AttachSetting("ali_sdrserver_dbpath", Go2ItProjectSettings.Instance.AliSdrServerDbPath, p);
             Go2ItProjectSettings.Instance.AliSdrServerUdpHost = AttachSetting("ali_sdrserver_udphost", Go2ItProjectSettings.Instance.AliSdrServerUdpHost, p);
             Go2ItProjectSettings.Instance.AliSdrServerUdpPort = AttachSetting("ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort, p);
+            Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost = AttachSetting("ali_networkfleet_udphost", Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost, p);
+            Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort = AttachSetting("ali_networkfleet_udpport", Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort, p);
             // needs to be final ali setting loaded as it fires a change event 
             Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
-                
+            Go2ItProjectSettings.Instance.AliUseNetworkfleet = AttachSetting("ali_use_networkfleet", Go2ItProjectSettings.Instance.AliUseNetworkfleet, p);
+            
             const string gsQuery = "SELECT * FROM GraphicSettings";
             DataTable g = SQLiteHelper.GetDataTable(conn, gsQuery);
             Go2ItProjectSettings.Instance.GraphicPointColor = AttachSetting("point_color", Go2ItProjectSettings.Instance.GraphicPointColor, g);

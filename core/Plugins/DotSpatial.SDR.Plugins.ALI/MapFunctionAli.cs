@@ -253,9 +253,11 @@ namespace DotSpatial.SDR.Plugins.ALI
                 case AliMode.Enterpol:
                     _aliPanel.ShowStandardInterface();
                     break;
-                case AliMode.Networkfleet:
-                    _aliPanel.ShowStandardInterface();
+                default: // disabled
                     break;
+                    //case AliMode.Networkfleet:
+                    //    _aliPanel.ShowStandardInterface();
+                    //    break;
             }
         }
 

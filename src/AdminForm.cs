@@ -929,6 +929,10 @@ namespace Go2It
             txtAliInterfaceDbPath.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath;
             txtAliInterfaceUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost;
             numAliInterfaceUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort;
+            txtAliNetworkfleetUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost;
+            numAliNetworkfleetUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort;
+            chkNetworkfleet.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet;
+
             // populate all the ali interfaces to the combobox
             foreach (var aliInterface in _aliInterfaces)
             {
@@ -939,7 +943,6 @@ namespace Go2It
             string aliOut;
             _aliInterfaces.TryGetValue(aliMode, out aliOut);
             cmbAliMode.SelectedIndex = cmbAliMode.Items.IndexOf(aliOut ?? "Disabled");  // if we fail then just disable the damn thing
-
             chkPretypes.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes;
             chkEnableQueryParserLog.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchQueryParserLogging;
             searchBufferDistance.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance;
@@ -1430,6 +1433,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort =Convert.ToInt32(numAliInterfaceUdpPort.Value);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet = chkNetworkfleet.Checked;
             string aliValue;  // swap key and value positions to use the friendly label as a lookup key for the enum string value
             var swapDict = _aliInterfaces.ToDictionary(e => e.Value, e => e.Key);
             swapDict.TryGetValue(cmbAliMode.SelectedItem.ToString(), out aliValue);
@@ -2864,6 +2868,19 @@ namespace Go2It
 
         private void btnAliValidate_Click(object sender, EventArgs e)
         {
+            string stat = string.Empty;
+            var msg = AppContext.Instance.Get<IUserMessage>();
+
+            if (chkNetworkfleet.Checked)
+            {
+                if (!ValidateNetworkfleetInput(
+                    txtAliNetworkfleetUdpHost.Text,
+                    Convert.ToInt32(numAliNetworkfleetUdpPort.Value)))
+                {
+                    return;
+                }
+                stat = "Networkfleet/";
+            }
             switch (cmbAliMode.Text)
             {
                 case "GlobalCAD Log":
@@ -2872,8 +2889,7 @@ namespace Go2It
                         txtAliGlobalCadArchivePath.Text,
                         txtAliGlobalCadConfigIni.Text))
                     {
-                        var msg = AppContext.Instance.Get<IUserMessage>();
-                        msg.Info("GlobalCAD settings Validated");
+                        msg.Info(stat + "GlobalCAD settings Validated");
                     }
                     return;
                 case "SDR AliServer":
@@ -2882,16 +2898,39 @@ namespace Go2It
                         txtAliInterfaceUdpHost.Text,
                         Convert.ToInt32(numAliInterfaceUdpPort.Value)))
                     {
-                        var msg = AppContext.Instance.Get<IUserMessage>();
-                        msg.Info("SDR AliServer settings Validated");
+                        msg.Info(stat + "SDR AliServer settings Validated");
                     }
                     return;
                 case "Enterpol Database":
                     MessageBox.Show(@"Not Implemented Yet");
                     return;
                 default: // disabled
+                    if (stat.Length != 0)
+                    {
+                        msg.Info(stat.TrimEnd('/') + " settings Validated");
+                    }
                     return;
             }
+        }
+
+        private bool ValidateNetworkfleetInput(string udpHost, int udpPort)
+        {
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            if (udpHost.Length == 0)
+            {
+                msg.Warn(@"Networkfleet UDP host value is null");
+                return false;
+            }
+            // validate the networkfleet is at this location and listening
+            var client = new AliServerClient(udpHost, udpPort);
+            if (!client.Ping())
+            {
+                msg.Warn(@"Networkfleet is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
+                client.Close();
+                return false;
+            }
+            client.Close();
+            return true;
         }
 
         private bool ValidateGlobalCadInput(string logPath, string archivePath, string configPath)
@@ -2984,7 +3023,7 @@ namespace Go2It
                 return false;
             }
             // validate the aliserver is at this location and listening
-            var client = new AliServerClient(txtAliInterfaceUdpHost.Text.ToString(), Convert.ToInt32(numAliInterfaceUdpPort.Value));
+            var client = new AliServerClient(udpHost, udpPort);
             if (!client.Ping())
             {
                 msg.Warn(@"AliServer is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
@@ -3015,6 +3054,12 @@ namespace Go2It
             {
                 txtAliGlobalCadConfigIni.Text = fd.FileName;
             }
+        }
+
+        private void chkNetworkfleet_CheckedChanged(object sender, EventArgs e)
+        {
+            var chk = (CheckBox) sender;
+            pnlAliNetworkfleet.Visible = chk.Checked;
         }
     }
 }
