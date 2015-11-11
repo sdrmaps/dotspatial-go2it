@@ -24,6 +24,7 @@ namespace DotSpatial.SDR.Plugins.ALI
     {
         private AliPanel _aliPanel;
         private AliMode _currentAliMode = AliMode.Disabled;
+        private NetworkFleet _networkFleet = NetworkFleet.Null;  // set to null on startup only
 
         // specific interface variables
         private string _aliServerDbConnString = string.Empty;
@@ -236,7 +237,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         // this is called on startup as well as everytime the ali mode changes
-        public void ConfigureAliClient(AliMode am, bool useNetworkfleet)
+        public void ConfigureAliClient(AliMode am)
         {
             if (_currentAliMode == am) return;  // no need to update anything no change was made
             DisableCurrentAliMode();
@@ -245,36 +246,58 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 case AliMode.Sdraliserver:
                     HandleAliServerClient();
-                    if (useNetworkfleet)
-                    {
-                        _aliPanel.DisplayNetworkfleetInterface();
-                    }
-                    else
-                    {
-                        _aliPanel.DisplayStandardInterface();
-                    }
                     break;
                 case AliMode.Globalcad:
                     HandleGlobalCadFiles();
-                    if (useNetworkfleet)
-                    {
-                        _aliPanel.DisplayNetworkfleetAndGlobalInterface();
-                    }
-                    else
-                    {
-                        _aliPanel.DisplayGlobalInterface();
-                    }
                     break;
                 case AliMode.Enterpol:
                     // HandleEnterpolDbView();
                     break;
-                default: // disabled
-                    if (useNetworkfleet)
-                    {
+            }
+        }
+
+        public void ConfigureInterface(bool nf)
+        {
+            if (nf)
+            {
+                if (_networkFleet == NetworkFleet.Active) return;  // it has already been activated no need to repeat
+                _networkFleet = NetworkFleet.Active;
+                switch (_currentAliMode)
+                {
+                    case AliMode.Sdraliserver:
+                        _aliPanel.DisplayNetworkfleetInterface();
+                        break;
+                    case AliMode.Globalcad:
+                        _aliPanel.DisplayNetworkfleetAndGlobalInterface();
+                        break;
+                    case AliMode.Enterpol:
+                        // HandleEnterpolDbView();
+                        break;
+                    default: // disabled
                         HandleNetworkFleetClient();
                         _aliPanel.DisplayNetworkfleetInterface();
-                    }
-                    break;
+                        break;
+                }
+            }
+            else
+            {
+                if (_networkFleet == NetworkFleet.Disabled) return;
+                _networkFleet = NetworkFleet.Disabled;
+                switch (_currentAliMode)
+                {
+                    case AliMode.Sdraliserver:
+                        _aliPanel.DisplayStandardInterface();
+                        break;
+                    case AliMode.Globalcad:
+                        _aliPanel.DisplayGlobalInterface();
+                        break;
+                    case AliMode.Enterpol:
+                        // _aliPanel.DisplayEnterpolInterface();
+                        break;
+                    default: // disabled
+                        // DisableNetworkFleet();
+                        break;
+                }
             }
         }
 

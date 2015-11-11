@@ -7,4 +7,11 @@
         Globalcad,
         Enterpol
     }
+
+    public enum NetworkFleet
+    {
+        Active,
+        Disabled,
+        Null
+    }
 }

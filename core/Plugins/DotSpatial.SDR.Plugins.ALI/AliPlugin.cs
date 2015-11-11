@@ -48,7 +48,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             // watch for the change of alimode to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliUseNetworkfleetChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliModeChanged;
 
             // determine if the plugin is currently activated or not
             if (CurrentAliMode != AliMode.Disabled || UseNetworkfleet)
@@ -57,7 +57,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             if (_mapFunction != null)
             {
-                _mapFunction.ConfigureAliClient(CurrentAliMode, UseNetworkfleet);  // configure the ali client for mode type
+                _mapFunction.ConfigureAliClient(CurrentAliMode);  // configure the ali client for mode type
+                _mapFunction.ConfigureInterface(UseNetworkfleet); 
             }
             base.Activate();
         }
@@ -88,7 +89,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         public override void Deactivate()
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliUseNetworkfleetChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
             
             if (_isPluginActive)
             {
@@ -119,29 +120,8 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 if (_mapFunction != null)
                 {
-                    _mapFunction.ConfigureAliClient(CurrentAliMode, UseNetworkfleet);  // configure the ali client for mode type
-                }
-            }
-            else  // ali interface mode has been set to disabled
-            {
-                if (_isPluginActive)  // check if it has ever been activated previous to this mode change
-                {
-                    DeactivateAliPlugin();  // go ahead and deactivate the plugin now
-                }
-            }
-        }
-
-        private void OnAliUseNetworkfleetChanged(object sender, EventArgs eventArgs)
-        {
-            if (CurrentAliMode != AliMode.Disabled || UseNetworkfleet)
-            {
-                if (!_isPluginActive)  // check if it has already been activated
-                {
-                    ActivateAliPlugin();  // activate the ali plugin now
-                }
-                if (_mapFunction != null)
-                {
-                    _mapFunction.ConfigureAliClient(CurrentAliMode, UseNetworkfleet);  // configure the ali client for mode type
+                    _mapFunction.ConfigureAliClient(CurrentAliMode);  // configure the ali client for mode type
+                    _mapFunction.ConfigureInterface(UseNetworkfleet);  // display interface accordingly
                 }
             }
             else  // ali interface mode has been set to disabled
