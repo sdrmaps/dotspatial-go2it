@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -147,7 +146,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         delegate void FillComboBoxCallback(string[] array);
-        private void FillComboBox(string[] array)
+        private void FillComboBox(object[] array)
         {
             if (cmbAliCommLog.InvokeRequired)
             {

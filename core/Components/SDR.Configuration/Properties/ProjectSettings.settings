@@ -131,5 +131,14 @@
     <Setting Name="AliUseNetworkfleet" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="AliNetworkfleetPointColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">DarkTurquoise</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetPointFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">ESRI Transportation &amp; Civic, 20.2499981pt</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetPointChar" Type="System.Char" Scope="User">
+      <Value Profile="(Default)">n</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

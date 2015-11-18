@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -294,6 +295,10 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "line_size", "NUMERIC"), Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "line_cap", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineCap},
                 { ValidateColumn(conn, "GraphicSettings", "line_style", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineStyle},
+
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_color", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_font", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetFont.ToString()},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_char", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString()},
             };
             k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM GraphicSettings limit 1");
             if (k.Length == 0)
@@ -352,6 +357,25 @@ namespace Go2It
             return r[key].ToString().Length == 0 ? setting : decimal.Parse(r[key].ToString());
         }
 
+        private static char AttachSetting(string key, char setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            return r[key].ToString().Length == 0 ? setting : char.Parse(r[key].ToString());
+        }
+
+        private static Font AttachSetting(string key, Font setting, DataTable dt)
+        {
+            if (!dt.Columns.Contains(key)) return setting;
+            DataRow r = dt.Rows[0]; // there is only one row for project settings
+            if (r[key].ToString().Length == 0)
+            {
+                return setting;
+            }
+            TypeConverter converter = TypeDescriptor.GetConverter(typeof(Font));
+            return (Font)converter.ConvertFromString(r[key].ToString());
+        }
+
         private void LoadProjectSettings()
         {
             var conn = SQLiteHelper.GetSQLiteConnectionString(CurrentProjectFile);
@@ -395,6 +419,10 @@ namespace Go2It
             Go2ItProjectSettings.Instance.GraphicLineSize = AttachSetting("line_size", Go2ItProjectSettings.Instance.GraphicLineSize, g);
             Go2ItProjectSettings.Instance.GraphicLineStyle = AttachSetting("line_style", Go2ItProjectSettings.Instance.GraphicLineStyle, g);
             Go2ItProjectSettings.Instance.GraphicLineCap = AttachSetting("line_cap", Go2ItProjectSettings.Instance.GraphicLineCap, g);
+
+            Go2ItProjectSettings.Instance.AliNetworkfleetColor = AttachSetting("ali_networkfleet_color", Go2ItProjectSettings.Instance.AliNetworkfleetColor, g);
+            Go2ItProjectSettings.Instance.AliNetworkfleetChar = AttachSetting("ali_networkfleet_char", Go2ItProjectSettings.Instance.AliNetworkfleetChar, g);
+            Go2ItProjectSettings.Instance.AliNetworkfleetFont = AttachSetting("ali_networkfleet_font", Go2ItProjectSettings.Instance.AliNetworkfleetFont, g);
 
             const string lyrQuery = "SELECT * FROM Layers";  // assign all layers to their proper lookup 'type'
             DataTable lyrTable = SQLiteHelper.GetDataTable(conn, lyrQuery);

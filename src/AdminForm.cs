@@ -60,6 +60,7 @@ namespace Go2It
         private const string AliPlugin = "DotSpatial.SDR.Plugins.ALI";
 
         private Dictionary<string, string> _aliInterfaces;
+        private Font _networkFleetFont;
 
         // name of the initial map tab, if no map tabs currently exist
         private const string MapTabDefaultCaption = "My Map";
@@ -271,6 +272,50 @@ namespace Go2It
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
+        private void DrawNetworkfleetGraphics()
+        {
+            Map ptMap;  // check for a map first
+            if (ptAliNetworkfleetGraphic.Controls.Count != 0)
+            {
+                ptMap = ptAliNetworkfleetGraphic.Controls[0] as Map;
+                UpdateNetworkfleetGraphics(ptMap);
+            }
+            else
+            {
+                ptMap = new Map
+                {
+                    ViewExtents = new Envelope(-130, -60, 10, 55).ToExtent(),
+                    FunctionMode = FunctionMode.None,
+                };
+                ptMap.MapFunctions.Clear(); // clear all built in map functions (nav/zoom/etc)
+                ptAliNetworkfleetGraphic.Controls.Add(ptMap);
+
+                var ftSet = new FeatureSet(FeatureType.Point);
+                var ftLyr = new MapPointLayer(ftSet);
+                ptMap.MapFrame.DrawingLayers.Add(ftLyr);
+
+                // get the center of the control panel (location to render point)
+                var y = ((ptAliNetworkfleetGraphic.Bottom - ptAliNetworkfleetGraphic.Top) / 2) - 1;
+                var x = ((ptAliNetworkfleetGraphic.Right - ptAliNetworkfleetGraphic.Left) / 2) - 1;
+                var c = ptMap.PixelToProj(new Point(x, y));
+                ftSet.AddFeature(new DotSpatial.Topology.Point(c));
+            }
+            UpdateNetworkfleetGraphics(ptMap);
+        }
+
+        private void UpdateNetworkfleetGraphics(Map map)
+        {
+            var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
+            if (pLyr != null)
+            {
+                var c = char.Parse(ptAliNetworkfleetChar.Text);
+                pLyr.Symbolizer = new PointSymbolizer(c, _networkFleetFont.Name.ToString(), ptAliNetworkfleetColor.BackColor, _networkFleetFont.Size);
+
+            }
+            map.BackColor = mapBGColorPanel.BackColor;
+            map.MapFrame.Invalidate();
+        }
+
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
         {
             // at this point all the projectManager settings have been saved
@@ -455,6 +500,8 @@ namespace Go2It
             lineSymbolSize.ValueChanged -= LineSymbolSizeOnValueChanged;
             lineSymbolCap.SelectedIndexChanged -= LineSymbolCapOnSelectedIndexChanged;
             lineSymbolStyle.SelectedIndexChanged -= LineSymbolStyleOnSelectedIndexChanged;
+            ptAliNetworkfleetColor.Click -= PtAliNetworkfleetColorOnClick;
+            ptAliNetworkfleetChar.TextChanged -= PtAliNetworkfleetCharOnTextChanged;
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
@@ -747,6 +794,17 @@ namespace Go2It
             ptSymbolStyle.SelectedIndexChanged += PtSymbolStyleOnSelectedIndexChanged;
             DrawPointGraphics();
 
+            Color nfColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetColor;
+            ptAliNetworkfleetColor.BackColor = nfColor;
+            ptAliNetworkfleetColor.Click += PtAliNetworkfleetColorOnClick;
+            ptAliNetworkfleetChar.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString();
+            ptAliNetworkfleetChar.TextChanged += PtAliNetworkfleetCharOnTextChanged;
+            _networkFleetFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont;
+            ptAliNetworkfleetFont.Text = _networkFleetFont.Name;
+            ptAliNetworkfleetFont.Font = _networkFleetFont;
+            ptAliNetworkfleetSize.Text = _networkFleetFont.Size.ToString();
+            DrawNetworkfleetGraphics();
+
             // line symbology for graphics rendering
             lineSymbolBorderColor.BackColor = SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor;
             lineSymbolBorderColor.Click += LineSymbolBorderColorOnClick;
@@ -781,7 +839,25 @@ namespace Go2It
             DrawLineGraphics();
         }
 
- 
+        private void PtAliNetworkfleetCharOnTextChanged(object sender, EventArgs eventArgs)
+        {
+            DrawNetworkfleetGraphics();
+            _projectManager.IsDirty = true;
+        }
+
+        private void PtAliNetworkfleetColorOnClick(object sender, EventArgs eventArgs)
+        {
+            var oColor = ptAliNetworkfleetColor.BackColor;
+            var dlg = new ColorDialog();
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+            ptAliNetworkfleetColor.BackColor = Color.FromArgb(255, dlg.Color.R, dlg.Color.G, dlg.Color.B);
+            if (oColor != ptSymbolColor.BackColor)
+            {
+                _projectManager.IsDirty = true;
+            }
+            DrawNetworkfleetGraphics();
+        }
+
         private void LineSymbolColorSliderOnValueChanged(object sender, EventArgs eventArgs)
         {
             int alpha = Convert.ToInt32(lineSymbolColorSlider.Value * 255);
@@ -1422,6 +1498,11 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineSize = Convert.ToInt32(lineSymbolSize.Text);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle = ApplyComboBoxSetting(lineSymbolStyle);
             SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap = ApplyComboBoxSetting(lineSymbolCap);
+
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar = char.Parse(ptAliNetworkfleetChar.Text.ToString());
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetColor = ptAliNetworkfleetColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont = _networkFleetFont;
+
             // setup ali interface configuration
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
@@ -3060,6 +3141,22 @@ namespace Go2It
         {
             var chk = (CheckBox) sender;
             pnlAliNetworkfleet.Visible = chk.Checked;
+        }
+
+        private void btnAliNetworkfleetFont_Click(object sender, EventArgs e)
+        {
+            var fd = new FontDialog();
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                ptAliNetworkfleetFont.Text = fd.Font.Name;
+                ptAliNetworkfleetFont.Font = fd.Font;
+                ptAliNetworkfleetSize.Text = fd.Font.Size.ToString();
+                _networkFleetFont = fd.Font;
+
+                DrawNetworkfleetGraphics();
+                _projectManager.IsDirty = true;
+            }
+
         }
     }
 }

@@ -151,9 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Content Include="LogParser.ini.example">
+    <None Include="AliPlugin-ConfigExamples\GlobalCAD-LogParser.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="Properties\AliInterfaceModes.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AliInterfaceModes.Designer.cs</LastGenOutput>
@@ -176,6 +176,9 @@
     <None Include="Resources\info_32.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AliPlugin-ConfigExamples\SDRAliServer-ALIQueue.mdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Resources\recent_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

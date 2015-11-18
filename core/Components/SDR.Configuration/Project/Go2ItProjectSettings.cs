@@ -71,6 +71,10 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliUseNetworkfleet = false;
             Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;
+
+            Properties.ProjectSettings.Default.AliNetworkfleetPointChar = 'n';
+            Properties.ProjectSettings.Default.AliNetworkfleetPointColor = Color.DarkTurquoise;
+            // Properties.ProjectSettings.Default.AliNetworkfleetPointFont = System.Drawing.Font.FromHfont()
         }
 
         /// <summary>
@@ -317,6 +321,24 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.GraphicLineStyle = value; }
             get { return Properties.ProjectSettings.Default.GraphicLineStyle; }
+        }
+
+        public Font AliNetworkfleetFont
+        {
+            set { Properties.ProjectSettings.Default.AliNetworkfleetPointFont = value; }
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetPointFont; }
+        }
+
+        public Char AliNetworkfleetChar
+        {
+            set { Properties.ProjectSettings.Default.AliNetworkfleetPointChar = value; }
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetPointChar; }
+        }
+
+        public Color AliNetworkfleetColor
+        {
+            set { Properties.ProjectSettings.Default.AliNetworkfleetPointColor = value; }
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetPointColor; }
         }
 
         public int HydrantSearchCount

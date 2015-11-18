@@ -529,5 +529,41 @@ namespace SDR.Configuration.Properties {
                 this["AliUseNetworkfleet"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkTurquoise")]
+        public global::System.Drawing.Color AliNetworkfleetPointColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliNetworkfleetPointColor"]));
+            }
+            set {
+                this["AliNetworkfleetPointColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ESRI Transportation & Civic, 20.2499981pt")]
+        public global::System.Drawing.Font AliNetworkfleetPointFont {
+            get {
+                return ((global::System.Drawing.Font)(this["AliNetworkfleetPointFont"]));
+            }
+            set {
+                this["AliNetworkfleetPointFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("n")]
+        public char AliNetworkfleetPointChar {
+            get {
+                return ((char)(this["AliNetworkfleetPointChar"]));
+            }
+            set {
+                this["AliNetworkfleetPointChar"] = value;
+            }
+        }
     }
 }

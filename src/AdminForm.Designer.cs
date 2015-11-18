@@ -99,6 +99,12 @@
             this.adminTab_SymbologySettings = new System.Windows.Forms.TabPage();
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.pnlAliNetworkfleet = new System.Windows.Forms.Panel();
+            this.ptAliNetworkfleetColor = new System.Windows.Forms.Panel();
+            this.ptAliNetworkfleetSize = new System.Windows.Forms.Label();
+            this.ptAliNetworkfleetFont = new System.Windows.Forms.Label();
+            this.btnAliNetworkfleetFont = new System.Windows.Forms.Button();
+            this.ptAliNetworkfleetChar = new System.Windows.Forms.TextBox();
+            this.ptAliNetworkfleetGraphic = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.numAliNetworkfleetUdpPort = new System.Windows.Forms.NumericUpDown();
@@ -990,20 +996,76 @@
             // 
             // pnlAliNetworkfleet
             // 
+            this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetColor);
+            this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetSize);
+            this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetFont);
+            this.pnlAliNetworkfleet.Controls.Add(this.btnAliNetworkfleetFont);
+            this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetChar);
+            this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetGraphic);
             this.pnlAliNetworkfleet.Controls.Add(this.label6);
             this.pnlAliNetworkfleet.Controls.Add(this.label5);
             this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetUdpPort);
             this.pnlAliNetworkfleet.Controls.Add(this.txtAliNetworkfleetUdpHost);
             this.pnlAliNetworkfleet.Location = new System.Drawing.Point(8, 351);
             this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
-            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(196, 93);
+            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(196, 226);
             this.pnlAliNetworkfleet.TabIndex = 64;
             this.pnlAliNetworkfleet.Visible = false;
+            // 
+            // ptAliNetworkfleetColor
+            // 
+            this.ptAliNetworkfleetColor.Location = new System.Drawing.Point(85, 101);
+            this.ptAliNetworkfleetColor.Name = "ptAliNetworkfleetColor";
+            this.ptAliNetworkfleetColor.Size = new System.Drawing.Size(24, 23);
+            this.ptAliNetworkfleetColor.TabIndex = 70;
+            // 
+            // ptAliNetworkfleetSize
+            // 
+            this.ptAliNetworkfleetSize.AutoSize = true;
+            this.ptAliNetworkfleetSize.Location = new System.Drawing.Point(118, 187);
+            this.ptAliNetworkfleetSize.Name = "ptAliNetworkfleetSize";
+            this.ptAliNetworkfleetSize.Size = new System.Drawing.Size(48, 13);
+            this.ptAliNetworkfleetSize.TabIndex = 65;
+            this.ptAliNetworkfleetSize.Text = "FontSize";
+            // 
+            // ptAliNetworkfleetFont
+            // 
+            this.ptAliNetworkfleetFont.AutoSize = true;
+            this.ptAliNetworkfleetFont.Location = new System.Drawing.Point(62, 167);
+            this.ptAliNetworkfleetFont.Name = "ptAliNetworkfleetFont";
+            this.ptAliNetworkfleetFont.Size = new System.Drawing.Size(105, 13);
+            this.ptAliNetworkfleetFont.TabIndex = 69;
+            this.ptAliNetworkfleetFont.Text = "This is the font name";
+            // 
+            // btnAliNetworkfleetFont
+            // 
+            this.btnAliNetworkfleetFont.Location = new System.Drawing.Point(14, 162);
+            this.btnAliNetworkfleetFont.Name = "btnAliNetworkfleetFont";
+            this.btnAliNetworkfleetFont.Size = new System.Drawing.Size(44, 23);
+            this.btnAliNetworkfleetFont.TabIndex = 68;
+            this.btnAliNetworkfleetFont.Text = "Font";
+            this.btnAliNetworkfleetFont.UseVisualStyleBackColor = true;
+            this.btnAliNetworkfleetFont.Click += new System.EventHandler(this.btnAliNetworkfleetFont_Click);
+            // 
+            // ptAliNetworkfleetChar
+            // 
+            this.ptAliNetworkfleetChar.Location = new System.Drawing.Point(115, 101);
+            this.ptAliNetworkfleetChar.MaxLength = 1;
+            this.ptAliNetworkfleetChar.Name = "ptAliNetworkfleetChar";
+            this.ptAliNetworkfleetChar.Size = new System.Drawing.Size(34, 20);
+            this.ptAliNetworkfleetChar.TabIndex = 67;
+            // 
+            // ptAliNetworkfleetGraphic
+            // 
+            this.ptAliNetworkfleetGraphic.Location = new System.Drawing.Point(16, 99);
+            this.ptAliNetworkfleetGraphic.Name = "ptAliNetworkfleetGraphic";
+            this.ptAliNetworkfleetGraphic.Size = new System.Drawing.Size(53, 50);
+            this.ptAliNetworkfleetGraphic.TabIndex = 4;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 46);
+            this.label6.Location = new System.Drawing.Point(13, 53);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 3;
@@ -1012,7 +1074,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 6);
+            this.label5.Location = new System.Drawing.Point(11, 9);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(58, 13);
             this.label5.TabIndex = 2;
@@ -1020,7 +1082,7 @@
             // 
             // numAliNetworkfleetUdpPort
             // 
-            this.numAliNetworkfleetUdpPort.Location = new System.Drawing.Point(10, 62);
+            this.numAliNetworkfleetUdpPort.Location = new System.Drawing.Point(10, 69);
             this.numAliNetworkfleetUdpPort.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -1032,9 +1094,9 @@
             // 
             // txtAliNetworkfleetUdpHost
             // 
-            this.txtAliNetworkfleetUdpHost.Location = new System.Drawing.Point(10, 22);
+            this.txtAliNetworkfleetUdpHost.Location = new System.Drawing.Point(10, 25);
             this.txtAliNetworkfleetUdpHost.Name = "txtAliNetworkfleetUdpHost";
-            this.txtAliNetworkfleetUdpHost.Size = new System.Drawing.Size(167, 20);
+            this.txtAliNetworkfleetUdpHost.Size = new System.Drawing.Size(171, 20);
             this.txtAliNetworkfleetUdpHost.TabIndex = 0;
             // 
             // btnAliValidate
@@ -1735,6 +1797,12 @@
         private System.Windows.Forms.NumericUpDown numAliNetworkfleetUdpPort;
         private System.Windows.Forms.TextBox txtAliNetworkfleetUdpHost;
         private System.Windows.Forms.CheckBox chkNetworkfleet;
+        private System.Windows.Forms.Panel ptAliNetworkfleetGraphic;
+        private System.Windows.Forms.TextBox ptAliNetworkfleetChar;
+        private System.Windows.Forms.Label ptAliNetworkfleetFont;
+        private System.Windows.Forms.Button btnAliNetworkfleetFont;
+        private System.Windows.Forms.Label ptAliNetworkfleetSize;
+        private System.Windows.Forms.Panel ptAliNetworkfleetColor;
 
     }
 }

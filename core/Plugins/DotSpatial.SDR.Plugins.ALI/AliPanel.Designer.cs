@@ -150,8 +150,6 @@
             // 
             this.chkNetworkfleetVehicles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkNetworkfleetVehicles.FormattingEnabled = true;
-            this.chkNetworkfleetVehicles.Items.AddRange(new object[] {
-            "ddddd"});
             this.chkNetworkfleetVehicles.Location = new System.Drawing.Point(552, 16);
             this.chkNetworkfleetVehicles.Name = "chkNetworkfleetVehicles";
             this.chkNetworkfleetVehicles.Size = new System.Drawing.Size(120, 115);
