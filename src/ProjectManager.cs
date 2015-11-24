@@ -285,6 +285,8 @@ namespace Go2It
                 SQLiteHelper.Update(conn, "ProjectSettings", d, "key=" + k.ToString());
             }
 
+            TypeConverter converter = TypeDescriptor.GetConverter(typeof(Font));
+            string networkFleetFont = converter.ConvertToString(Go2ItProjectSettings.Instance.AliNetworkfleetFont);
             var g = new Dictionary<string, string>
             {
                 { ValidateColumn(conn, "GraphicSettings", "point_color", "TEXT"), Go2ItProjectSettings.Instance.GraphicPointColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
@@ -295,9 +297,8 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "line_size", "NUMERIC"), Go2ItProjectSettings.Instance.GraphicLineSize.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "line_cap", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineCap},
                 { ValidateColumn(conn, "GraphicSettings", "line_style", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineStyle},
-
                 { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_color", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_font", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetFont.ToString()},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_font", "TEXT"), networkFleetFont},
                 { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_char", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString()},
             };
             k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM GraphicSettings limit 1");
@@ -419,7 +420,6 @@ namespace Go2It
             Go2ItProjectSettings.Instance.GraphicLineSize = AttachSetting("line_size", Go2ItProjectSettings.Instance.GraphicLineSize, g);
             Go2ItProjectSettings.Instance.GraphicLineStyle = AttachSetting("line_style", Go2ItProjectSettings.Instance.GraphicLineStyle, g);
             Go2ItProjectSettings.Instance.GraphicLineCap = AttachSetting("line_cap", Go2ItProjectSettings.Instance.GraphicLineCap, g);
-
             Go2ItProjectSettings.Instance.AliNetworkfleetColor = AttachSetting("ali_networkfleet_color", Go2ItProjectSettings.Instance.AliNetworkfleetColor, g);
             Go2ItProjectSettings.Instance.AliNetworkfleetChar = AttachSetting("ali_networkfleet_char", Go2ItProjectSettings.Instance.AliNetworkfleetChar, g);
             Go2ItProjectSettings.Instance.AliNetworkfleetFont = AttachSetting("ali_networkfleet_font", Go2ItProjectSettings.Instance.AliNetworkfleetFont, g);

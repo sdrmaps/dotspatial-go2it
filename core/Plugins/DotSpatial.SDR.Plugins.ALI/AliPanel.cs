@@ -146,7 +146,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         delegate void FillComboBoxCallback(string[] array);
-        private void FillComboBox(object[] array)
+        private void FillComboBox(string[] array)
         {
             if (cmbAliCommLog.InvokeRequired)
             {

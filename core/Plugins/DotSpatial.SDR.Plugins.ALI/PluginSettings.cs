@@ -30,20 +30,20 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        public StringCollection DgvSortOrder
+        public StringCollection SdrAliServerDgvSortOrder
         {
-            get { return UserSettings.Default.DgvSortOrder; }
+            get { return UserSettings.Default.SdrAliServerDgvSortOrder; }
             set
             {
                 var dif = false;
-                for (var i = 0; i <= UserSettings.Default.DgvSortOrder.Count - 1; i++)
+                for (var i = 0; i <= UserSettings.Default.SdrAliServerDgvSortOrder.Count - 1; i++)
                 {
-                    if (value[i] == UserSettings.Default.DgvSortOrder[i]) continue;
+                    if (value[i] == UserSettings.Default.SdrAliServerDgvSortOrder[i]) continue;
                     dif = true;
                     break;
                 }
                 if (!dif) return;
-                UserSettings.Default.DgvSortOrder = value;
+                UserSettings.Default.SdrAliServerDgvSortOrder = value;
                 UserSettings.Default.Save();
             }
         }

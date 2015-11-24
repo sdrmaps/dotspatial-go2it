@@ -2,13 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SDR.Configuration.Properties" GeneratedClassName="UserSettings">
   <Profiles />
   <Settings>
-    <Setting Name="GridHeaderColumnCount" Roaming="true" Type="System.Int32" Scope="User">
+    <Setting Name="GridHeaderColumnCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
-    <Setting Name="ActiveFunctionMode" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="ActiveFunctionMode" Type="System.String" Scope="User">
       <Value Profile="(Default)">None</Value>
     </Setting>
-    <Setting Name="ActiveFunctionPanel" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="ActiveFunctionPanel" Type="System.String" Scope="User">
       <Value Profile="(Default)">kPanel_Measure</Value>
     </Setting>
     <Setting Name="AdminModeActive" Type="System.Boolean" Scope="User">

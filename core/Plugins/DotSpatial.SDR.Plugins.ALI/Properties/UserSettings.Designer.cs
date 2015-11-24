@@ -53,12 +53,12 @@ namespace DotSpatial.SDR.Plugins.ALI.Properties {
   <string>Y</string>
   <string>Uncertainty</string>
 </ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection DgvSortOrder {
+        public global::System.Collections.Specialized.StringCollection SdrAliServerDgvSortOrder {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["DgvSortOrder"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["SdrAliServerDgvSortOrder"]));
             }
             set {
-                this["DgvSortOrder"] = value;
+                this["SdrAliServerDgvSortOrder"] = value;
             }
         }
     }

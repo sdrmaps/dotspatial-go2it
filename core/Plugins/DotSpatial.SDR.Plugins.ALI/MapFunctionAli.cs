@@ -90,13 +90,13 @@ namespace DotSpatial.SDR.Plugins.ALI
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
             _aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
-            PopulateDgv();
+            PopulateSdrAliServerDgv();
         }
 
         private void HandleNetworkFleetClient()
         {
             // TODO: handle the network fleet client here
-
+            // use the on paint event i guess would make the most sense...?
         }
 
         private void HumanizeCamelCasedDgvHeaders()
@@ -108,10 +108,10 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        private void PopulateDgv()
+        private void PopulateSdrAliServerDgv()
         {
             // lets update the dgv column order if needed
-            if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.DgvSortOrder.Count)
+            if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.SdrAliServerDgvSortOrder.Count)
             {
                 var dgvArr = new string[_aliPanel.DataGridDisplay.ColumnCount];
                 for (var j = 0; j <= _aliPanel.DataGridDisplay.ColumnCount - 1; j++)
@@ -122,7 +122,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 var dgvOrder = new StringCollection();
                 dgvOrder.AddRange(dgvArr);
-                PluginSettings.Instance.DgvSortOrder = dgvOrder;
+                PluginSettings.Instance.SdrAliServerDgvSortOrder = dgvOrder;
             }
             var sql = ConstructSqlQuery();
             BindDataGridView(_aliServerDbConnString, sql);
@@ -146,9 +146,9 @@ namespace DotSpatial.SDR.Plugins.ALI
             const string unc = "Trim([mUncertainty]) As Uncertainty";
 
             string sql = "SELECT ";
-            for (int i = 0; i <= PluginSettings.Instance.DgvSortOrder.Count - 1; i++)
+            for (int i = 0; i <= PluginSettings.Instance.SdrAliServerDgvSortOrder.Count - 1; i++)
             {
-                var col = PluginSettings.Instance.DgvSortOrder[i];
+                var col = PluginSettings.Instance.SdrAliServerDgvSortOrder[i];
                 switch (col)
                 {
                     case "Address":
@@ -191,7 +191,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                         sql = sql + unc + ",";
                         break;
                 }
-                if (i != PluginSettings.Instance.DgvSortOrder.Count - 1) continue;
+                if (i != PluginSettings.Instance.SdrAliServerDgvSortOrder.Count - 1) continue;
                 // strip off the final comma if last item
                 char[] chr = {','};
                 sql = sql.TrimEnd(chr);
@@ -233,7 +233,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void AliServerClientOnPacketReceieved(object sender, AliServerDataPacket packet)
         {
-            PopulateDgv();
+            PopulateSdrAliServerDgv();
         }
 
         // this is called on startup as well as everytime the ali mode changes

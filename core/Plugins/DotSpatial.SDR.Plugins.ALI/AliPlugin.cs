@@ -40,7 +40,10 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public static bool UseNetworkfleet
         {
-            get { return SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet; }
+            get
+            {
+                return SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet;
+            }
         }
         #endregion
 

@@ -57,6 +57,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.SearchZoomFactor = (decimal) 0.05;
             Properties.ProjectSettings.Default.SearchBufferDistance = 250;
             Properties.ProjectSettings.Default.SearchQueryParserLogging = false;
+
             Properties.ProjectSettings.Default.AliMode = "Disabled";
             Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
             Properties.ProjectSettings.Default.AliEnterpolDbConnString = string.Empty;
@@ -72,9 +73,11 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;
 
+
+
             Properties.ProjectSettings.Default.AliNetworkfleetPointChar = 'n';
             Properties.ProjectSettings.Default.AliNetworkfleetPointColor = Color.DarkTurquoise;
-            // Properties.ProjectSettings.Default.AliNetworkfleetPointFont = System.Drawing.Font.FromHfont()
+            Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 20);
         }
 
         /// <summary>
