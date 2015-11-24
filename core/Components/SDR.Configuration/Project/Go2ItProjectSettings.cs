@@ -73,8 +73,6 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;
 
-
-
             Properties.ProjectSettings.Default.AliNetworkfleetPointChar = 'n';
             Properties.ProjectSettings.Default.AliNetworkfleetPointColor = Color.DarkTurquoise;
             Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 20);
