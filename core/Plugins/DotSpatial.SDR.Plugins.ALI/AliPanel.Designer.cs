@@ -33,11 +33,11 @@
             this.tsbAliLocate = new System.Windows.Forms.ToolStripButton();
             this.tsbAliUpdate = new System.Windows.Forms.ToolStripButton();
             this.lblCommLog = new System.Windows.Forms.Label();
-            this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
             this.aliDGV = new System.Windows.Forms.DataGridView();
             this.aliTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.chkNetworkfleetVehicles = new System.Windows.Forms.CheckedListBox();
+            this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).BeginInit();
             this.aliTableLayoutPanel.SuspendLayout();
@@ -52,7 +52,7 @@
             this.tsbAliUpdate});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(675, 48);
+            this.toolStrip1.Size = new System.Drawing.Size(790, 48);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -83,21 +83,12 @@
             // lblCommLog
             // 
             this.lblCommLog.AutoSize = true;
-            this.lblCommLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblCommLog.Location = new System.Drawing.Point(408, 0);
+            this.lblCommLog.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblCommLog.Location = new System.Drawing.Point(595, 0);
             this.lblCommLog.Name = "lblCommLog";
-            this.lblCommLog.Size = new System.Drawing.Size(129, 13);
+            this.lblCommLog.Size = new System.Drawing.Size(90, 13);
             this.lblCommLog.TabIndex = 2;
             this.lblCommLog.Text = "Active Comm Log";
-            // 
-            // cmbAliCommLog
-            // 
-            this.cmbAliCommLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmbAliCommLog.FormattingEnabled = true;
-            this.cmbAliCommLog.Location = new System.Drawing.Point(408, 16);
-            this.cmbAliCommLog.Name = "cmbAliCommLog";
-            this.cmbAliCommLog.Size = new System.Drawing.Size(129, 21);
-            this.cmbAliCommLog.TabIndex = 1;
             // 
             // aliDGV
             // 
@@ -113,33 +104,34 @@
             this.aliDGV.ReadOnly = true;
             this.aliTableLayoutPanel.SetRowSpan(this.aliDGV, 2);
             this.aliDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.aliDGV.Size = new System.Drawing.Size(399, 128);
+            this.aliDGV.Size = new System.Drawing.Size(389, 128);
             this.aliDGV.TabIndex = 0;
             // 
             // aliTableLayoutPanel
             // 
             this.aliTableLayoutPanel.ColumnCount = 3;
-            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.aliTableLayoutPanel.Controls.Add(this.aliDGV, 0, 0);
-            this.aliTableLayoutPanel.Controls.Add(this.cmbAliCommLog, 1, 1);
-            this.aliTableLayoutPanel.Controls.Add(this.lblCommLog, 1, 0);
-            this.aliTableLayoutPanel.Controls.Add(this.label1, 2, 0);
-            this.aliTableLayoutPanel.Controls.Add(this.chkNetworkfleetVehicles, 2, 1);
+            this.aliTableLayoutPanel.Controls.Add(this.cmbAliCommLog, 2, 1);
+            this.aliTableLayoutPanel.Controls.Add(this.chkNetworkfleetVehicles, 1, 1);
+            this.aliTableLayoutPanel.Controls.Add(this.lblCommLog, 2, 0);
+            this.aliTableLayoutPanel.Controls.Add(this.label1, 1, 0);
             this.aliTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.aliTableLayoutPanel.Location = new System.Drawing.Point(0, 48);
             this.aliTableLayoutPanel.Name = "aliTableLayoutPanel";
             this.aliTableLayoutPanel.RowCount = 2;
             this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.aliTableLayoutPanel.Size = new System.Drawing.Size(675, 134);
+            this.aliTableLayoutPanel.Size = new System.Drawing.Size(790, 134);
             this.aliTableLayoutPanel.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(543, 0);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label1.Location = new System.Drawing.Point(398, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(110, 13);
             this.label1.TabIndex = 3;
@@ -149,10 +141,21 @@
             // 
             this.chkNetworkfleetVehicles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkNetworkfleetVehicles.FormattingEnabled = true;
-            this.chkNetworkfleetVehicles.Location = new System.Drawing.Point(543, 16);
+            this.chkNetworkfleetVehicles.Location = new System.Drawing.Point(398, 16);
             this.chkNetworkfleetVehicles.Name = "chkNetworkfleetVehicles";
-            this.chkNetworkfleetVehicles.Size = new System.Drawing.Size(129, 115);
+            this.chkNetworkfleetVehicles.Size = new System.Drawing.Size(191, 115);
             this.chkNetworkfleetVehicles.TabIndex = 4;
+            // 
+            // cmbAliCommLog
+            // 
+            this.cmbAliCommLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbAliCommLog.FormattingEnabled = true;
+            this.cmbAliCommLog.Location = new System.Drawing.Point(595, 16);
+            this.cmbAliCommLog.MaxDropDownItems = 35;
+            this.cmbAliCommLog.Name = "cmbAliCommLog";
+            this.cmbAliCommLog.Size = new System.Drawing.Size(192, 21);
+            this.cmbAliCommLog.TabIndex = 5;
             // 
             // AliPanel
             // 
@@ -161,7 +164,7 @@
             this.Controls.Add(this.aliTableLayoutPanel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "AliPanel";
-            this.Size = new System.Drawing.Size(675, 182);
+            this.Size = new System.Drawing.Size(790, 182);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).EndInit();
@@ -178,10 +181,10 @@
         private System.Windows.Forms.ToolStripButton tsbAliLocate;
         private System.Windows.Forms.ToolStripButton tsbAliUpdate;
         private System.Windows.Forms.Label lblCommLog;
-        private System.Windows.Forms.ComboBox cmbAliCommLog;
         private System.Windows.Forms.DataGridView aliDGV;
         private System.Windows.Forms.TableLayoutPanel aliTableLayoutPanel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckedListBox chkNetworkfleetVehicles;
+        private System.Windows.Forms.ComboBox cmbAliCommLog;
     }
 }

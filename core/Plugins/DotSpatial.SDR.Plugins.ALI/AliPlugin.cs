@@ -23,6 +23,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private bool _isFunctionActive;  // eliminate redundant calls on hide/show/functionmode changes
         private bool _isPluginActive;  // flag to determine if the plugin has already been activated on ali mode changes
+
         #endregion
 
         #region Properties

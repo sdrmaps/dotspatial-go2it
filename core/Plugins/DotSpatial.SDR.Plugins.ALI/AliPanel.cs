@@ -26,9 +26,9 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return aliDGV; }
         }
-        public ComboBox GlobalCadComLogs
+        public ComboBox GlobalCadComLogs  // combobox used to select active globalcad comm log // used for index change events on mapfunction
         {
-            get { return cmbAliCommLog;  }
+            get { return cmbAliCommLog; }
         }
         #endregion
 
@@ -108,27 +108,31 @@ namespace DotSpatial.SDR.Plugins.ALI
         public void DisplayNetworkfleetInterface()
         {
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
-            aliTableLayoutPanel.ColumnStyles[0].Width = 80;
-            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
-            aliTableLayoutPanel.ColumnStyles[1].Width = 0;
-            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 75;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 25;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 0;
         }
 
         public void DisplayNetworkfleetAndGlobalInterface()
         {
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 60;
-            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
-            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 20;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 20;
         }
 
         public void DisplayGlobalInterface()
         {
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
-            aliTableLayoutPanel.ColumnStyles[0].Width = 80;
-            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.AutoSize;
-            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Absolute;
-            aliTableLayoutPanel.ColumnStyles[2].Width = 0;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 75;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 0;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 25;
         }
 
         public void PopulateComboBox()
