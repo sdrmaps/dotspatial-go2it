@@ -5,13 +5,13 @@
         Disabled,
         Sdraliserver,
         Globalcad,
-        Enterpol
+        Enterpol,
     }
 
     public enum NetworkFleet
     {
         Active,
         Disabled,
-        Null
+        Null,
     }
 }

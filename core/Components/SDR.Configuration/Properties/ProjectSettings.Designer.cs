@@ -425,18 +425,6 @@ namespace SDR.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string AliEnterpolDbConnString {
-            get {
-                return ((string)(this["AliEnterpolDbConnString"]));
-            }
-            set {
-                this["AliEnterpolDbConnString"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string AliEnterpolTableName {
             get {
                 return ((string)(this["AliEnterpolTableName"]));

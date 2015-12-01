@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Positioning;
 using DotSpatial.Projections;
-using DotSpatial.SDR.Plugins.GPS.Properties;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
 using Point = DotSpatial.Topology.Point;

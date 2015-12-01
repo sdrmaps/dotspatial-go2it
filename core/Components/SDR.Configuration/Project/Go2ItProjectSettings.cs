@@ -60,7 +60,6 @@ namespace SDR.Configuration.Project
 
             Properties.ProjectSettings.Default.AliMode = "Disabled";
             Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
-            Properties.ProjectSettings.Default.AliEnterpolDbConnString = string.Empty;
             Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = string.Empty;
             Properties.ProjectSettings.Default.AliEnterpolTableName = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadLogPath = string.Empty;
@@ -379,9 +378,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliMode = value;
                     OnAliModeChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliModeChanged(EventArgs e)
         {
@@ -400,9 +397,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliSdrServerDbPath = value;
                     OnAliSdrServerDbPathChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliSdrServerDbPathChanged(EventArgs e)
         {
@@ -421,9 +416,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliSdrServerUdpHost = value;
                     OnAliSdrServeUdpHostChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliSdrServeUdpHostChanged(EventArgs e)
         {
@@ -442,9 +435,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliSdrServerUdpPort = value;
                     OnAliSdrServeUdpPortChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliSdrServeUdpPortChanged(EventArgs e)
         {
@@ -463,9 +454,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = value;
                     OnAliNetworkfleetUdpHostChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliNetworkfleetUdpHostChanged(EventArgs e)
         {
@@ -503,7 +492,6 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliUseNetworkfleet = value;
                     OnAliUseNetworkfleetChanged(EventArgs.Empty);
                 }
-
             }
         }
         protected virtual void OnAliUseNetworkfleetChanged(EventArgs e)
@@ -523,9 +511,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliGlobalCadLogPath = value;
                     OnAliGlobalCadLogPathChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliGlobalCadLogPathChanged(EventArgs e)
         {
@@ -544,9 +530,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliGlobalCadConfigPath = value;
                     OnAliGlobalCadConfigPathChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliGlobalCadConfigPathChanged(EventArgs e)
         {
@@ -565,35 +549,12 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliGlobalCadArchivePath = value;
                     OnAliGlobalCadArchivePathChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliGlobalCadArchivePathChanged(EventArgs e)
         {
             if (AliGlobalCadArchivePathChanged != null)
                 AliGlobalCadArchivePathChanged(this, e);
-        }
-
-        public event EventHandler AliEnterpolDbConnectionStringChanged;
-        public string AliEnterpolConnectionString
-        {
-            get { return Properties.ProjectSettings.Default.AliEnterpolDbConnString; }
-            set
-            {
-                if (Properties.ProjectSettings.Default.AliEnterpolDbConnString != value)
-                {
-                    Properties.ProjectSettings.Default.AliEnterpolDbConnString = value;
-                    OnAliEnterpolConnectionStringChanged(EventArgs.Empty);
-                }
-
-            }
-
-        }
-        protected virtual void OnAliEnterpolConnectionStringChanged(EventArgs e)
-        {
-            if (AliEnterpolDbConnectionStringChanged != null)
-                AliEnterpolDbConnectionStringChanged(this, e);
         }
 
         public event EventHandler AliEnterpolTableNameChanged;
@@ -607,9 +568,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliEnterpolTableName = value;
                     OnAliEnterpolTableNameChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliEnterpolTableNameChanged(EventArgs e)
         {
@@ -628,9 +587,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliEnterpolDataSource = value;
                     OnAliEnterpolDataSourceChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliEnterpolDataSourceChanged(EventArgs e)
         {
@@ -649,9 +606,7 @@ namespace SDR.Configuration.Project
                     Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = value;
                     OnAliEnterpolInitialCatalogChanged(EventArgs.Empty);
                 }
-
             }
-
         }
         protected virtual void OnAliEnterpolInitialCatalogChanged(EventArgs e)
         {

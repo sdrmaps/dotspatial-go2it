@@ -7,6 +7,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Primitives;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -267,7 +268,7 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted += idx_RunWorkerCompleted;
 
             _projectManager.IsDirty = false;
-            // TODO: investigate this flag further
+
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
@@ -995,7 +996,6 @@ namespace Go2It
 
         private void PopulateSettingsToForm()
         {
-            txtAliEnterpolConnString.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolConnectionString;
             txtAliEnterpolDataSource.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource;
             txtAliEnterpolInitialCatalog.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog;
             txtAliEnterpolTableName.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
@@ -1008,7 +1008,6 @@ namespace Go2It
             txtAliNetworkfleetUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost;
             numAliNetworkfleetUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort;
             chkNetworkfleet.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet;
-
             // populate all the ali interfaces to the combobox
             foreach (var aliInterface in _aliInterfaces)
             {
@@ -1507,7 +1506,6 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource = txtAliEnterpolDataSource.Text;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolConnectionString = txtAliEnterpolConnString.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath = txtAliGlobalCadLogPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath = txtAliGlobalCadArchivePath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath = txtAliGlobalCadConfigIni.Text;
@@ -2983,7 +2981,13 @@ namespace Go2It
                     }
                     return;
                 case "Enterpol Database":
-                    MessageBox.Show(@"Not Implemented Yet");
+                    if (ValidateEnterpolInput(
+                        txtAliEnterpolDataSource.Text,
+                        txtAliEnterpolInitialCatalog.Text,
+                        txtAliEnterpolTableName.Text))
+                    {
+                        msg.Info(stat + "Enterpol Database settings Validated");
+                    }
                     return;
                 default: // disabled
                     if (stat.Length != 0)
@@ -2992,6 +2996,34 @@ namespace Go2It
                     }
                     return;
             }
+        }
+
+        private bool ValidateEnterpolInput(string server,  string database,  string table)
+        {
+            const string xserver = "CATCH-22\\SQLEXPRESS";
+            const string xdatabase = "Huberville";
+
+            string connStr = SqlServerHelper.GetSqlConnectionString(
+                "Server=" + server + ";" +
+                "Database=" + database + ";" +
+                "Integrated Security=SSPI;" +
+                "connection timeout=20"
+                );
+
+            using (var conn = new SqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    // todo: query for the table/view we need and return of valid
+                }
+                catch (Exception ex)
+                {
+                    var x = ex;
+                    var c = x;
+                }
+            }
+            return false;
         }
 
         private bool ValidateNetworkfleetInput(string udpHost, int udpPort)
@@ -3156,7 +3188,6 @@ namespace Go2It
                 DrawNetworkfleetGraphics();
                 _projectManager.IsDirty = true;
             }
-
         }
     }
 }

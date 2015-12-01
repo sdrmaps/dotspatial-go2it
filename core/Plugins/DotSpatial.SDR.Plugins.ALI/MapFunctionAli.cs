@@ -29,14 +29,13 @@ namespace DotSpatial.SDR.Plugins.ALI
     {
         private AliPanel _aliPanel;
         private AliMode _currentAliMode = AliMode.Disabled;
-        private NetworkFleet _networkFleet = NetworkFleet.Null;  // set to null on startup only
+        // private NetworkFleet _networkFleet = NetworkFleet.Null;  // set to null on startup only
 
         // specific interface variables
         private string _aliServerDbConnString = string.Empty;
         private AliServerClient _aliServerClient;  // handles SDR AliServer Interface
-
-        private FileSystemWatcher _globalCadarkWatch;
-        private FileSystemWatcher _globalCadlogWatch;
+        private FileSystemWatcher _globalCadarkWatch;  // archive watcher for global cad
+        private FileSystemWatcher _globalCadlogWatch;  // active log watcher for global cad
 
         #region Constructors
 
@@ -129,7 +128,12 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void HandleEnterpolDbView()
         {
-            // TODO:
+            // open db
+            // open recordset
+            // fetch records
+            // populate to grid
+            // close rs
+            // close db
         }
 
         private void HandleAliServerClient()
@@ -529,7 +533,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             if (nf)
             {
                 // if (_networkFleet == NetworkFleet.Active) return;  // it has already been activated no need to repeat
-                _networkFleet = NetworkFleet.Active;
+                // _networkFleet = NetworkFleet.Active;
                 switch (_currentAliMode)
                 {
                     case AliMode.Sdraliserver:
@@ -549,8 +553,9 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             else
             {
+                // TODO: validate these are actually causing issues (not needed)
                 // if (_networkFleet == NetworkFleet.Disabled) return;
-                _networkFleet = NetworkFleet.Disabled;
+                // _networkFleet = NetworkFleet.Disabled;
                 switch (_currentAliMode)
                 {
                     case AliMode.Sdraliserver:
