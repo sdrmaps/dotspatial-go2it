@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.gpsDetectCancel = new System.Windows.Forms.ToolStripButton();
+            this.gpsStartStop = new System.Windows.Forms.ToolStripButton();
+            this.gpsPauseResume = new System.Windows.Forms.ToolStripButton();
+            this.gpsSettings = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lblDate = new System.Windows.Forms.Label();
             this.lblAltitude = new System.Windows.Forms.Label();
@@ -48,16 +52,12 @@
             this.txtConnType = new System.Windows.Forms.TextBox();
             this.lblBaudRate = new System.Windows.Forms.Label();
             this.lblPosition = new System.Windows.Forms.Label();
-            this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
             this.clock1 = new DotSpatial.Positioning.Forms.Clock();
             this.satelliteViewer1 = new DotSpatial.Positioning.Forms.SatelliteViewer();
             this.altimeter1 = new DotSpatial.Positioning.Forms.Altimeter();
             this.speedometer1 = new DotSpatial.Positioning.Forms.Speedometer();
             this.compass1 = new DotSpatial.Positioning.Forms.Compass();
-            this.gpsDetectCancel = new System.Windows.Forms.ToolStripButton();
-            this.gpsStartStop = new System.Windows.Forms.ToolStripButton();
-            this.gpsPauseResume = new System.Windows.Forms.ToolStripButton();
-            this.gpsSettings = new System.Windows.Forms.ToolStripButton();
+            this.nmeaInterpreter = new DotSpatial.Positioning.NmeaInterpreter();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -77,6 +77,58 @@
             this.toolStrip1.Size = new System.Drawing.Size(594, 48);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // gpsDetectCancel
+            // 
+            this.gpsDetectCancel.AutoSize = false;
+            this.gpsDetectCancel.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.detect_gps_16;
+            this.gpsDetectCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.gpsDetectCancel.Name = "gpsDetectCancel";
+            this.gpsDetectCancel.Size = new System.Drawing.Size(45, 45);
+            this.gpsDetectCancel.Text = "Detect";
+            this.gpsDetectCancel.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.gpsDetectCancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.gpsDetectCancel.Click += new System.EventHandler(this.gpsDetectCancel_Click);
+            // 
+            // gpsStartStop
+            // 
+            this.gpsStartStop.AutoSize = false;
+            this.gpsStartStop.Enabled = false;
+            this.gpsStartStop.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.start_gps_16;
+            this.gpsStartStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.gpsStartStop.Name = "gpsStartStop";
+            this.gpsStartStop.Size = new System.Drawing.Size(45, 45);
+            this.gpsStartStop.Text = "Start";
+            this.gpsStartStop.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.gpsStartStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.gpsStartStop.Click += new System.EventHandler(this.gpsStartStop_Click);
+            // 
+            // gpsPauseResume
+            // 
+            this.gpsPauseResume.AutoSize = false;
+            this.gpsPauseResume.Enabled = false;
+            this.gpsPauseResume.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.pause_gps_16;
+            this.gpsPauseResume.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.gpsPauseResume.Name = "gpsPauseResume";
+            this.gpsPauseResume.Size = new System.Drawing.Size(45, 45);
+            this.gpsPauseResume.Text = "Pause";
+            this.gpsPauseResume.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.gpsPauseResume.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.gpsPauseResume.ToolTipText = "Pause/Resume GPS Feed";
+            this.gpsPauseResume.Click += new System.EventHandler(this.gpsPauseResume_Click);
+            // 
+            // gpsSettings
+            // 
+            this.gpsSettings.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.gpsSettings.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.info_32;
+            this.gpsSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.gpsSettings.Name = "gpsSettings";
+            this.gpsSettings.Size = new System.Drawing.Size(53, 45);
+            this.gpsSettings.Text = "Settings";
+            this.gpsSettings.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.gpsSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.gpsSettings.ToolTipText = "Edit GPS Display Settings";
+            this.gpsSettings.Click += new System.EventHandler(this.gpsSettings_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -406,58 +458,6 @@
             this.compass1.Text = "compass1";
             this.compass1.Value = new DotSpatial.Positioning.Azimuth(0D);
             this.compass1.Width = 106;
-            // 
-            // gpsDetectCancel
-            // 
-            this.gpsDetectCancel.AutoSize = false;
-            this.gpsDetectCancel.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.info_32;
-            this.gpsDetectCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.gpsDetectCancel.Name = "gpsDetectCancel";
-            this.gpsDetectCancel.Size = new System.Drawing.Size(45, 45);
-            this.gpsDetectCancel.Text = "Detect";
-            this.gpsDetectCancel.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.gpsDetectCancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.gpsDetectCancel.Click += new System.EventHandler(this.gpsDetectCancel_Click);
-            // 
-            // gpsStartStop
-            // 
-            this.gpsStartStop.AutoSize = false;
-            this.gpsStartStop.Enabled = false;
-            this.gpsStartStop.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.start_gps_32;
-            this.gpsStartStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.gpsStartStop.Name = "gpsStartStop";
-            this.gpsStartStop.Size = new System.Drawing.Size(45, 45);
-            this.gpsStartStop.Text = "Start";
-            this.gpsStartStop.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.gpsStartStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.gpsStartStop.Click += new System.EventHandler(this.gpsStartStop_Click);
-            // 
-            // gpsPauseResume
-            // 
-            this.gpsPauseResume.AutoSize = false;
-            this.gpsPauseResume.Enabled = false;
-            this.gpsPauseResume.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.info_32;
-            this.gpsPauseResume.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.gpsPauseResume.Name = "gpsPauseResume";
-            this.gpsPauseResume.Size = new System.Drawing.Size(45, 45);
-            this.gpsPauseResume.Text = "Pause";
-            this.gpsPauseResume.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.gpsPauseResume.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.gpsPauseResume.ToolTipText = "Pause/Resume GPS Feed";
-            this.gpsPauseResume.Click += new System.EventHandler(this.gpsPauseResume_Click);
-            // 
-            // gpsSettings
-            // 
-            this.gpsSettings.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.gpsSettings.Image = global::DotSpatial.SDR.Plugins.GPS.Properties.Resources.info_32;
-            this.gpsSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.gpsSettings.Name = "gpsSettings";
-            this.gpsSettings.Size = new System.Drawing.Size(53, 45);
-            this.gpsSettings.Text = "Settings";
-            this.gpsSettings.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.gpsSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.gpsSettings.ToolTipText = "Edit GPS Display Settings";
-            this.gpsSettings.Click += new System.EventHandler(this.gpsSettings_Click);
             // 
             // GpsPanel
             // 

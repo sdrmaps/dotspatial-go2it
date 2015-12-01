@@ -63,6 +63,16 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap detect_gps_16 {
+            get {
+                object obj = ResourceManager.GetObject("detect_gps_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap info_16 {
             get {
                 object obj = ResourceManager.GetObject("info_16", resourceCulture);
@@ -83,9 +93,29 @@ namespace DotSpatial.SDR.Plugins.GPS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap start_gps_32 {
+        internal static System.Drawing.Bitmap init_gps_32 {
             get {
-                object obj = ResourceManager.GetObject("start_gps_32", resourceCulture);
+                object obj = ResourceManager.GetObject("init_gps_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pause_gps_16 {
+            get {
+                object obj = ResourceManager.GetObject("pause_gps_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap start_gps_16 {
+            get {
+                object obj = ResourceManager.GetObject("start_gps_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

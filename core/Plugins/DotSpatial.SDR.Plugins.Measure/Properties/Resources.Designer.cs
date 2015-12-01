@@ -83,19 +83,9 @@ namespace DotSpatial.SDR.Plugins.Measure.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap clear_32 {
+        internal static System.Drawing.Bitmap distance_16 {
             get {
-                object obj = ResourceManager.GetObject("clear_32", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap line_16 {
-            get {
-                object obj = ResourceManager.GetObject("line_16", resourceCulture);
+                object obj = ResourceManager.GetObject("distance_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

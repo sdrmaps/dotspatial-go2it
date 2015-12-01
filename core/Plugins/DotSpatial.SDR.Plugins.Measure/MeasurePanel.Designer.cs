@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MeasurePanel));
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -139,7 +140,7 @@
             // 
             this.tsbDistance.AutoSize = false;
             this.tsbDistance.CheckOnClick = true;
-            this.tsbDistance.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.line_16;
+            this.tsbDistance.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.distance_16;
             this.tsbDistance.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDistance.Name = "tsbDistance";
             this.tsbDistance.Size = new System.Drawing.Size(45, 45);
@@ -167,7 +168,7 @@
             // tsbClear
             // 
             this.tsbClear.AutoSize = false;
-            this.tsbClear.Image = global::DotSpatial.SDR.Plugins.Measure.Properties.Resources.clear_16;
+            this.tsbClear.Image = ((System.Drawing.Image)(resources.GetObject("tsbClear.Image")));
             this.tsbClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClear.Name = "tsbClear";
             this.tsbClear.Size = new System.Drawing.Size(45, 45);

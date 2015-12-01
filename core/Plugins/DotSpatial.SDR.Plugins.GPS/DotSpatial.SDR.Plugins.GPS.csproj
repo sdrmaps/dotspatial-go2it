@@ -152,7 +152,16 @@
     <None Include="Resources\info_32.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\start_gps_32.png" />
+    <None Include="Resources\detect_gps_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\init_gps_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pause_gps_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\start_gps_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

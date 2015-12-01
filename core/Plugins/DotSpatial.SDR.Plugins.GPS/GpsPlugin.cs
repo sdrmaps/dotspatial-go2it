@@ -32,7 +32,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 GroupCaption = "Gps_Setup",
                 ToolTipText = "Click to Configure GPS",
                 SmallImage = Resources.info_16,
-                LargeImage = Resources.start_gps_32,
+                LargeImage = Resources.init_gps_32,
                 Key = PluginKey,
             });
             // generate the gps interface display panel and add it to the tool panel

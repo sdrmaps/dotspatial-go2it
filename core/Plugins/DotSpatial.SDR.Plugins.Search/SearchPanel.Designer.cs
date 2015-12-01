@@ -91,7 +91,7 @@
             // searchAdds
             // 
             this.searchAdds.CheckOnClick = true;
-            this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.address_search_16;
+            this.searchAdds.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.address_16;
             this.searchAdds.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchAdds.Name = "searchAdds";
             this.searchAdds.Size = new System.Drawing.Size(53, 45);
@@ -103,7 +103,7 @@
             // searchName
             // 
             this.searchName.CheckOnClick = true;
-            this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.name_search_16;
+            this.searchName.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.name_16;
             this.searchName.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchName.Name = "searchName";
             this.searchName.Size = new System.Drawing.Size(43, 45);
@@ -115,7 +115,7 @@
             // searchPhone
             // 
             this.searchPhone.CheckOnClick = true;
-            this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.phone_search_16;
+            this.searchPhone.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.phone_16;
             this.searchPhone.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchPhone.Name = "searchPhone";
             this.searchPhone.Size = new System.Drawing.Size(45, 45);
@@ -151,7 +151,7 @@
             // searchRoad
             // 
             this.searchRoad.CheckOnClick = true;
-            this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.road_search_16;
+            this.searchRoad.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.road_16;
             this.searchRoad.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchRoad.Name = "searchRoad";
             this.searchRoad.Size = new System.Drawing.Size(38, 45);
@@ -163,7 +163,7 @@
             // searchIntersection
             // 
             this.searchIntersection.CheckOnClick = true;
-            this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.intersection_search_16;
+            this.searchIntersection.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.intersection_16;
             this.searchIntersection.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchIntersection.Name = "searchIntersection";
             this.searchIntersection.Size = new System.Drawing.Size(73, 45);
@@ -175,7 +175,7 @@
             // searchCity
             // 
             this.searchCity.CheckOnClick = true;
-            this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCity.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.cities_16;
             this.searchCity.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchCity.Name = "searchCity";
             this.searchCity.Size = new System.Drawing.Size(32, 45);
@@ -187,7 +187,7 @@
             // searchEsn
             // 
             this.searchEsn.CheckOnClick = true;
-            this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchEsn.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.esn_16;
             this.searchEsn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchEsn.Name = "searchEsn";
             this.searchEsn.Size = new System.Drawing.Size(32, 45);
@@ -199,7 +199,7 @@
             // searchKeyLocations
             // 
             this.searchKeyLocations.CheckOnClick = true;
-            this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.keylocations_search_16;
+            this.searchKeyLocations.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.keylocations_16;
             this.searchKeyLocations.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchKeyLocations.Name = "searchKeyLocations";
             this.searchKeyLocations.Size = new System.Drawing.Size(84, 45);
@@ -224,7 +224,7 @@
             // searchCellSector
             // 
             this.searchCellSector.CheckOnClick = true;
-            this.searchCellSector.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchCellSector.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.cell_sector_16;
             this.searchCellSector.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchCellSector.Name = "searchCellSector";
             this.searchCellSector.Size = new System.Drawing.Size(72, 45);
@@ -236,7 +236,7 @@
             // searchParcels
             // 
             this.searchParcels.CheckOnClick = true;
-            this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.info_16;
+            this.searchParcels.Image = global::DotSpatial.SDR.Plugins.Search.Properties.Resources.parcel_16;
             this.searchParcels.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.searchParcels.Name = "searchParcels";
             this.searchParcels.Size = new System.Drawing.Size(48, 45);
