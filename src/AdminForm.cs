@@ -1777,22 +1777,27 @@ namespace Go2It
                 {"hash", sh.Hash}
             };
 
-            bool success;
-            if (lstUsers.Items.Contains(txtUsername.Text))
+            try
             {
-                // perform an update on an exiting user
-                success = SQLiteHelper.Update(conn, "logins", d, "username ='" + txtUsername.Text + "'");
+                if (lstUsers.Items.Contains(txtUsername.Text))
+                {
+                    SQLiteHelper.Update(conn, "logins", d, "username ='" + txtUsername.Text + "'");
+                }
+                else
+                {
+                    // add a new user to the database
+                    lstUsers.Items.Add(txtUsername.Text);
+                    SQLiteHelper.Insert(conn, "logins", d);
+                }
+                txtPassword.Text = string.Empty;
+                txtVerifyPassword.Text = string.Empty;
+                txtUsername.Text = string.Empty;
             }
-            else
+            catch (Exception ex)
             {
-                // add a new user to the database
-                lstUsers.Items.Add(txtUsername.Text);
-                success = SQLiteHelper.Insert(conn, "logins", d);
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
             }
-            if (!success) return;
-            txtPassword.Text = string.Empty;
-            txtVerifyPassword.Text = string.Empty;
-            txtUsername.Text = string.Empty;
         }
 
         private void btnUsersDelete_Click(object sender, EventArgs e)
@@ -1814,11 +1819,19 @@ namespace Go2It
             }
             lstUsers.Items.Remove(txtUsername.Text); // remove the user from the list 
             string conn = SdrConfig.Settings.Instance.ApplicationRepoConnectionString;
-            bool success = SQLiteHelper.Delete(conn, "logins", "username ='" + txtUsername.Text + "'");
-            if (!success) return;
-            txtPassword.Text = string.Empty;
-            txtVerifyPassword.Text = string.Empty;
-            txtUsername.Text = string.Empty;
+
+            try
+            {
+                SQLiteHelper.Delete(conn, "logins", "username ='" + txtUsername.Text + "'");
+                txtPassword.Text = string.Empty;
+                txtVerifyPassword.Text = string.Empty;
+                txtUsername.Text = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
         }
 
         private void lstUsers_DoubleClick(object sender, EventArgs e)
@@ -2948,8 +2961,6 @@ namespace Go2It
         private void btnAliValidate_Click(object sender, EventArgs e)
         {
             string stat = string.Empty;
-            var msg = AppContext.Instance.Get<IUserMessage>();
-
             if (chkNetworkfleet.Checked)
             {
                 if (!ValidateNetworkfleetInput(
@@ -2968,7 +2979,7 @@ namespace Go2It
                         txtAliGlobalCadArchivePath.Text,
                         txtAliGlobalCadConfigIni.Text))
                     {
-                        msg.Info(stat + "GlobalCAD settings Validated");
+                        MessageBox.Show(stat + @"GlobalCAD settings Validated");
                     }
                     return;
                 case "SDR AliServer":
@@ -2977,7 +2988,7 @@ namespace Go2It
                         txtAliInterfaceUdpHost.Text,
                         Convert.ToInt32(numAliInterfaceUdpPort.Value)))
                     {
-                        msg.Info(stat + "SDR AliServer settings Validated");
+                        MessageBox.Show(stat + @"SDR AliServer settings Validated");
                     }
                     return;
                 case "Enterpol Database":
@@ -2986,13 +2997,13 @@ namespace Go2It
                         txtAliEnterpolInitialCatalog.Text,
                         txtAliEnterpolTableName.Text))
                     {
-                        msg.Info(stat + "Enterpol Database settings Validated");
+                        MessageBox.Show(stat + @"Enterpol Database settings Validated");
                     }
                     return;
-                default: // disabled
+                default: // disabled or if stat is > 0 then its network fleet validation
                     if (stat.Length != 0)
                     {
-                        msg.Info(stat.TrimEnd('/') + " settings Validated");
+                        MessageBox.Show(stat.TrimEnd('/') + @" settings Validated");
                     }
                     return;
             }
@@ -3000,30 +3011,43 @@ namespace Go2It
 
         private bool ValidateEnterpolInput(string server,  string database,  string table)
         {
-            const string xserver = "CATCH-22\\SQLEXPRESS";
-            const string xdatabase = "Huberville";
-
-            string connStr = SqlServerHelper.GetSqlConnectionString(
-                "Server=" + server + ";" +
-                "Database=" + database + ";" +
-                "Integrated Security=SSPI;" +
-                "connection timeout=20"
-                );
-
-            using (var conn = new SqlConnection(connStr))
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            if (server.Length == 0)
             {
-                try
+                MessageBox.Show(@"Database server location value is null");
+                return false;
+            }
+            if (database.Length == 0)
+            {
+                MessageBox.Show(@"Database name value is null");
+                return false;
+            }
+            if (table.Length == 0)
+            {
+                MessageBox.Show(@"Initial Catalog value is null");
+                return false;
+            }
+            try
+            {
+                // generate proper conn string and validate it
+                var conn = SqlServerHelper.GetSqlServerConnectionString(
+                    "Server=" + server + ";" +
+                    "Database=" + database + ";" +
+                    "Integrated Security=SSPI;" +
+                    "connection timeout=15");
+
+                if (!SqlServerHelper.TableExists(conn, table))
                 {
-                    conn.Open();
-                    // todo: query for the table/view we need and return of valid
-                }
-                catch (Exception ex)
-                {
-                    var x = ex;
-                    var c = x;
+                    msg.Warn(@"Initial catalog " + table + " does not exist in the database " + database);
+                    return false;
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+                return false;
+            }
+            return true;
         }
 
         private bool ValidateNetworkfleetInput(string udpHost, int udpPort)
@@ -3031,14 +3055,14 @@ namespace Go2It
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (udpHost.Length == 0)
             {
-                msg.Warn(@"Networkfleet UDP host value is null");
+                MessageBox.Show(@"Networkfleet UDP host value is null");
                 return false;
             }
             // validate the networkfleet is at this location and listening
             var client = new AliServerClient(udpHost, udpPort);
             if (!client.Ping())
             {
-                msg.Warn(@"Networkfleet is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
+                msg.Warn(@"Networkfleet is not responding at host: " + udpHost + @" port: " + udpPort);
                 client.Close();
                 return false;
             }
@@ -3051,17 +3075,17 @@ namespace Go2It
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (archivePath.Length == 0)
             {
-                msg.Warn(@"Log Archive path value is null");
+                MessageBox.Show(@"Log Archive path value is null");
                 return false;
             }
             if (logPath.Length == 0)
             {
-                msg.Warn(@"Active Log path value is null");
+                MessageBox.Show(@"Active Log path value is null");
                 return false;
             }
             if (configPath.Length == 0)
             {
-                msg.Warn(@"Parser Config path value is null");
+                MessageBox.Show(@"Parser Config path value is null");
                 return false;
             }
             if (!Directory.Exists(archivePath))
@@ -3083,7 +3107,7 @@ namespace Go2It
                 }
                 else
                 {
-                    msg.Warn(@"Please create or select the existing Archive directory");
+                    MessageBox.Show(@"Please create or select the existing Archive directory");
                     return false;
                 }
             }
@@ -3115,36 +3139,44 @@ namespace Go2It
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (mdbPath.Length == 0)
             {
-                msg.Warn(@"AliServer .MDB path value is null");
+                MessageBox.Show(@"AliServer .MDB path value is null");
                 return false;
             }
-            if (!MdbHelper.DatabaseExists(mdbPath))
+            if (!MdbHelper.DatabaseFileExists(mdbPath))
             {
-                msg.Warn(@"AliServer database does not exist at location: " + mdbPath);
+                MessageBox.Show(@"AliServer database does not exist at location: " + mdbPath);
                 return false;
             }
-            var conn = MdbHelper.GetMdbConnectionString(mdbPath);
-            var tableName = SdrConfig.Plugins.GetPluginApplicationConfigValue(AliPlugin, "SdrAliServerConfig", "TableName");
-            if (!MdbHelper.TableExists(conn, tableName))
+            try
             {
-                msg.Warn(@"AliServer database is missing table '" + tableName + "'");
-                return false;
-            }
-            if (udpHost.Length == 0)
-            {
-                msg.Warn(@"AliServer UDP host value is null");
-                return false;
-            }
-            // validate the aliserver is at this location and listening
-            var client = new AliServerClient(udpHost, udpPort);
-            if (!client.Ping())
-            {
-                msg.Warn(@"AliServer is not responding at host: " + udpHost + @" port: " + udpPort.ToString());
+                var conn = MdbHelper.GetMdbConnectionString(mdbPath);
+                var tableName = SdrConfig.Plugins.GetPluginApplicationConfigValue(AliPlugin, "SdrAliServerConfig", "TableName");
+                if (!MdbHelper.TableExists(conn, tableName))
+                {
+                    msg.Warn(@"AliServer database is missing table '" + tableName + "'");
+                    return false;
+                }
+                if (udpHost.Length == 0)
+                {
+                    MessageBox.Show(@"AliServer UDP host value is null");
+                    return false;
+                }
+                // validate the aliserver is at this location and listening
+                var client = new AliServerClient(udpHost, udpPort);
+                if (!client.Ping())
+                {
+                    msg.Warn(@"AliServer is not responding at host: " + udpHost + @" port: " + udpPort);
+                    client.Close();
+                    return false;
+                }
                 client.Close();
-                return false;
+                return true;
             }
-            client.Close();
-            return true;
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+                throw;
+            }
         }
 
         private void btnAliGlobalCadArchivePathBrowse_Click(object sender, EventArgs e)

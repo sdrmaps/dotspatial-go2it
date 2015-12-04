@@ -181,7 +181,7 @@ namespace Go2It
         private void CreateProjectDatabase()
         {
             // create a default project database if needed
-            if (!SQLiteHelper.DatabaseExists(CurrentProjectFile))
+            if (!SQLiteHelper.DatabaseFileExists(CurrentProjectFile))
             {
                 if (HasWriteAccessToFolder(CurrentProjectDirectory))
                 {
@@ -696,7 +696,7 @@ namespace Go2It
         /// </summary>
         public static bool DatabaseExists(string dbPath)
         {
-            return SQLiteHelper.DatabaseExists(dbPath);
+            return SQLiteHelper.DatabaseFileExists(dbPath);
         }
 
         /// <summary>
