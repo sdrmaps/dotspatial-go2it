@@ -2994,8 +2994,8 @@ namespace Go2It
                 case "Enterpol Database":
                     if (ValidateEnterpolInput(
                         txtAliEnterpolDataSource.Text,
-                        txtAliEnterpolInitialCatalog.Text,
-                        txtAliEnterpolTableName.Text))
+                        txtAliEnterpolTableName.Text,
+                        txtAliEnterpolInitialCatalog.Text))
                     {
                         MessageBox.Show(stat + @"Enterpol Database settings Validated");
                     }

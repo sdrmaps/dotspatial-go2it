@@ -23,5 +23,21 @@
   &lt;string&gt;Uncertainty&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="EnterpolDgvSortOrder" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;CallDate&lt;/string&gt;
+  &lt;string&gt;CallTime&lt;/string&gt;
+  &lt;string&gt;Phone&lt;/string&gt;
+  &lt;string&gt;Address&lt;/string&gt;
+  &lt;string&gt;Street&lt;/string&gt;
+  &lt;string&gt;City&lt;/string&gt;
+  &lt;string&gt;State&lt;/string&gt;
+  &lt;string&gt;Customer&lt;/string&gt;
+  &lt;string&gt;ServiceClass&lt;/string&gt;
+  &lt;string&gt;X&lt;/string&gt;
+  &lt;string&gt;Y&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

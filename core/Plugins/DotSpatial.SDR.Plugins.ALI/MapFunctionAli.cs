@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -34,8 +35,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         // specific interface variables
         private string _aliServerDbConnString = string.Empty;
         private AliServerClient _aliServerClient;  // handles SDR AliServer Interface
-        private FileSystemWatcher _globalCadarkWatch;  // archive watcher for global cad
-        private FileSystemWatcher _globalCadlogWatch;  // active log watcher for global cad
+        private FileSystemWatcher _globalCadArkWatch;  // archive watcher for global cad
+        private FileSystemWatcher _globalCadLogWatch;  // active log watcher for global cad
 
         #region Constructors
 
@@ -80,15 +81,15 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             if (_currentAliMode == AliMode.Globalcad)
             {
-                if (_globalCadarkWatch != null)
+                if (_globalCadArkWatch != null)
                 {
-                    _globalCadarkWatch.EnableRaisingEvents = false;
-                    _globalCadarkWatch = null;
+                    _globalCadArkWatch.EnableRaisingEvents = false;
+                    _globalCadArkWatch = null;
                 }
-                if (_globalCadlogWatch != null)
+                if (_globalCadLogWatch != null)
                 {
-                    _globalCadlogWatch.EnableRaisingEvents = false;
-                    _globalCadlogWatch = null;
+                    _globalCadLogWatch.EnableRaisingEvents = false;
+                    _globalCadLogWatch = null;
                 }
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePathChanged -= InstanceOnAliGlobalCadArchivePathChanged;
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPathChanged -= InstanceOnAliGlobalCadLogPathChanged;
@@ -96,7 +97,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             if (_currentAliMode == AliMode.Enterpol)
             {
-                // TODO:
+                
             }
         }
 
@@ -126,14 +127,107 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        private void PopulateEnterpolDbDgv()
+        {
+            // lets update the dgv column order if needed
+            if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.EnterpolDgvSortOrder.Count)
+            {
+                var dgvArr = new string[_aliPanel.DataGridDisplay.ColumnCount];
+                for (var j = 0; j <= _aliPanel.DataGridDisplay.ColumnCount - 1; j++)
+                {
+                    var n = _aliPanel.DataGridDisplay.Columns[j].DataPropertyName;
+                    var i = _aliPanel.DataGridDisplay.Columns[j].DisplayIndex;
+                    dgvArr[i] = n;
+                }
+                var dgvOrder = new StringCollection();
+                dgvOrder.AddRange(dgvArr);
+                PluginSettings.Instance.EnterpolDgvSortOrder = dgvOrder;
+            }
+            var sql = ConstructEnterpolSqlQuery();
+            var conn = SqlServerHelper.GetSqlServerConnectionString(
+                   "Server=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource + ";" +
+                   "Database=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog + ";" +
+                   "Integrated Security=SSPI;" +
+                   "connection timeout=15");
+            BindDataGridViewToSqlServer(conn, sql);
+            HumanizeCamelCasedDgvHeaders();
+        }
+
         private void HandleEnterpolDbView()
         {
-            // open db
-            // open recordset
-            // fetch records
-            // populate to grid
-            // close rs
-            // close db
+            PopulateEnterpolDbDgv();
+        }
+
+        private void BindDataGridViewToSqlServer(string connString, string sqlString)
+        {
+            var dbAdapter = new SqlDataAdapter(sqlString, connString);
+            var dbTable = new DataTable {Locale = System.Globalization.CultureInfo.InvariantCulture};
+            dbAdapter.Fill(dbTable);
+            var bindingSource = new BindingSource { DataSource = dbTable };
+            _aliPanel.SetDgvBindingSource(bindingSource);
+        }
+
+        private static string ConstructEnterpolSqlQuery()
+        {
+            const string callDate = "CONVERT(varchar(10), [DateTime], 120) As CallDate";
+            const string callTime = "CONVERT(varchar(8), [DateTime], 108) As CallTime";
+            const string phone = "LTRIM(RTRIM([RPPhone])) As Phone";
+            const string address = "LTRIM(RTRIM(CAST(ISNULL([HouseNumber], '') AS VARCHAR) + ' ' + ISNULL([HouseNumberSuffix], ''))) As Address";
+            const string street = "LTRIM(RTRIM(LTRIM(RTRIM(ISNULL([PreDirection], '') + SPACE(1) + ISNULL([StreetName1], ''))) + SPACE(1) + LTRIM(RTRIM(ISNULL([StType], '') + SPACE(1) + ISNULL([PostDirection], ''))))) As Street";
+            const string srvClass = "ISNULL([RPvia], '') As ServiceClass";
+            const string state = "ISNULL([State], '') As State";
+            const string city = "ISNULL([CityName], '') As City";
+            const string customer = "ISNULL([CustomerName], '') As Customer";
+            const string lat = "ISNULL([Latitude], '') As Y";
+            const string lng = "ISNULL([Longitude], '') As X";
+
+            string sql = "SELECT ";
+            for (int i = 0; i <= PluginSettings.Instance.EnterpolDgvSortOrder.Count - 1; i++)
+            {
+                var col = PluginSettings.Instance.EnterpolDgvSortOrder[i];
+                switch (col)
+                {
+                    case "Address":
+                        sql = sql + address + ",";
+                        break;
+                    case "CallDate":
+                        sql = sql + callDate + ",";
+                        break;
+                    case "CallTime":
+                        sql = sql + callTime + ",";
+                        break;
+                    case "Phone":
+                        sql = sql + phone + ",";
+                        break;
+                    case "Street":
+                        sql = sql + street + ",";
+                        break;
+                    case "ServiceClass":
+                        sql = sql + srvClass + ",";
+                        break;
+                    case "Customer":
+                        sql = sql + customer + ",";
+                        break;
+                    case "State":
+                        sql = sql + state + ",";
+                        break;
+                    case "City":
+                        sql = sql + city + ",";
+                        break;
+                    case "X":
+                        sql = sql + lng + ",";
+                        break;
+                    case "Y":
+                        sql = sql + lat + ",";
+                        break;
+                }
+                if (i != PluginSettings.Instance.SdrAliServerDgvSortOrder.Count - 1) continue;
+                // strip off the final comma if last item
+                char[] chr = { ',' };
+                sql = sql.TrimEnd(chr);
+            }
+            sql = sql + " FROM [" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog + "].[dbo].[" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName + "]";
+            return sql;
         }
 
         private void HandleAliServerClient()
@@ -151,26 +245,26 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void HandleGlobalCadFiles()
         {
             //  initiate file watchers for changes
-            _globalCadarkWatch = new FileSystemWatcher
+            _globalCadArkWatch = new FileSystemWatcher
             {
                 Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath,
                 NotifyFilter = NotifyFilters.FileName,
                 Filter = "*.log"
             };
-            _globalCadarkWatch.Created += OnGlobalCadArchiveChanged;
-            _globalCadarkWatch.Deleted += OnGlobalCadArchiveChanged;
-            _globalCadarkWatch.Renamed += OnGlobalCadArchiveChanged;
-            _globalCadarkWatch.Changed += OnGlobalCadArchiveChanged;
-            _globalCadarkWatch.EnableRaisingEvents = true;
+            _globalCadArkWatch.Created += OnGlobalCadArchiveChanged;
+            _globalCadArkWatch.Deleted += OnGlobalCadArchiveChanged;
+            _globalCadArkWatch.Renamed += OnGlobalCadArchiveChanged;
+            _globalCadArkWatch.Changed += OnGlobalCadArchiveChanged;
+            _globalCadArkWatch.EnableRaisingEvents = true;
 
-            _globalCadlogWatch = new FileSystemWatcher
+            _globalCadLogWatch = new FileSystemWatcher
             {
                 Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath),
                 Filter = "*.log",
                 NotifyFilter = NotifyFilters.LastWrite
             };
-            _globalCadlogWatch.Changed += OnGlobalCadFileChanged;
-            _globalCadlogWatch.EnableRaisingEvents = true;
+            _globalCadLogWatch.Changed += OnGlobalCadFileChanged;
+            _globalCadLogWatch.EnableRaisingEvents = true;
 
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePathChanged += InstanceOnAliGlobalCadArchivePathChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPathChanged += InstanceOnAliGlobalCadLogPathChanged;
@@ -396,12 +490,12 @@ namespace DotSpatial.SDR.Plugins.ALI
                 dgvOrder.AddRange(dgvArr);
                 PluginSettings.Instance.SdrAliServerDgvSortOrder = dgvOrder;
             }
-            var sql = ConstructSqlQuery();
-            BindDataGridView(_aliServerDbConnString, sql);
+            var sql = ConstructSdrServerSqlQuery();
+            BindDataGridViewToOleDb(_aliServerDbConnString, sql);
             HumanizeCamelCasedDgvHeaders();
         }
 
-        private static string ConstructSqlQuery()
+        private static string ConstructSdrServerSqlQuery()
         {
             const string date = "Trim(Trim([mMonth]) + '/' + Trim([mDay]) + '/' + Trim([mYear])) As CallDate";
             const string time = "Trim(Trim([mHour]) + ':' + Trim([mMinute]) + ' ' + Trim([mSecond])) As CallTime";
@@ -472,7 +566,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             return sql;
         }
 
-        private void BindDataGridView(string connString, string sqlString)
+        private void BindDataGridViewToOleDb(string connString, string sqlString)
         {
             // bind our db to the dgv now
             var cnn = new OleDbConnection(connString);
@@ -578,9 +672,9 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             if (_currentAliMode == AliMode.Globalcad)
             {
-                _globalCadlogWatch.EnableRaisingEvents = false;
-                _globalCadlogWatch.Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath);
-                _globalCadlogWatch.EnableRaisingEvents = true;
+                _globalCadLogWatch.EnableRaisingEvents = false;
+                _globalCadLogWatch.Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath);
+                _globalCadLogWatch.EnableRaisingEvents = true;
             }
         }
 
@@ -588,9 +682,9 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             if (_currentAliMode == AliMode.Globalcad)
             {
-                _globalCadarkWatch.EnableRaisingEvents = false;
-                _globalCadarkWatch.Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
-                _globalCadarkWatch.EnableRaisingEvents = true;
+                _globalCadArkWatch.EnableRaisingEvents = false;
+                _globalCadArkWatch.Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
+                _globalCadArkWatch.EnableRaisingEvents = true;
             }
         }
 

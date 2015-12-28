@@ -61,5 +61,30 @@ namespace DotSpatial.SDR.Plugins.ALI.Properties {
                 this["SdrAliServerDgvSortOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>CallDate</string>
+  <string>CallTime</string>
+  <string>Phone</string>
+  <string>Address</string>
+  <string>Street</string>
+  <string>City</string>
+  <string>State</string>
+  <string>Customer</string>
+  <string>ServiceClass</string>
+  <string>X</string>
+  <string>Y</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection EnterpolDgvSortOrder {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["EnterpolDgvSortOrder"]));
+            }
+            set {
+                this["EnterpolDgvSortOrder"] = value;
+            }
+        }
     }
 }

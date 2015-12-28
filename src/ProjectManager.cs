@@ -263,9 +263,6 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "ali_mode", "TEXT"), Go2ItProjectSettings.Instance.AliMode.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_tablename", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolTableName.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_initcatalog", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog.ToString(CultureInfo.InvariantCulture)},
-                
-                // { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_connstring", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolConnectionString.ToString(CultureInfo.InvariantCulture)},
-                
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_datasource", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolDataSource.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_global_logpath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadLogPath.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_global_archivepath", "TEXT"), Go2ItProjectSettings.Instance.AliGlobalCadArchivePath.ToString(CultureInfo.InvariantCulture)},

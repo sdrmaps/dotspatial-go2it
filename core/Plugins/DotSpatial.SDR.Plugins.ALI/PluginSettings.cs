@@ -47,6 +47,25 @@ namespace DotSpatial.SDR.Plugins.ALI
                 UserSettings.Default.Save();
             }
         }
+
+        public StringCollection EnterpolDgvSortOrder
+        {
+            get { return UserSettings.Default.EnterpolDgvSortOrder; }
+            set
+            {
+                var dif = false;
+                for (var i = 0; i <= UserSettings.Default.EnterpolDgvSortOrder.Count - 1; i++)
+                {
+                    if (value[i] == UserSettings.Default.EnterpolDgvSortOrder[i]) continue;
+                    dif = true;
+                    break;
+                }
+                if (!dif) return;
+                UserSettings.Default.EnterpolDgvSortOrder = value;
+                UserSettings.Default.Save();
+            }
+        }
+
     }
 }
 
