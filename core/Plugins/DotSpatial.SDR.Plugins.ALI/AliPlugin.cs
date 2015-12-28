@@ -22,7 +22,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         private DockablePanel _dockPanel;
 
         private bool _isFunctionActive;  // eliminate redundant calls on hide/show/functionmode changes
-        private bool _isPluginActive;  // flag to determine if the plugin has already been activated on ali mode changes
+        private bool _isPluginActive;  // flag to determine if the plugin has already been activated on ali mode change
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public override void Activate()
         {
-            // watch for the change of alimode to activate/deactivate this plugin as needed
+            // watch for the change of alimode/networkfleet to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliModeChanged;
 

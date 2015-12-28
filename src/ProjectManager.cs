@@ -393,12 +393,10 @@ namespace Go2It
             Go2ItProjectSettings.Instance.SearchBufferDistance = AttachSetting("search_buffer_distance", Go2ItProjectSettings.Instance.SearchBufferDistance, p);
             Go2ItProjectSettings.Instance.SearchZoomFactor = AttachSetting("search_zoom_factor", Go2ItProjectSettings.Instance.SearchZoomFactor, p);
             Go2ItProjectSettings.Instance.SearchQueryParserLogging = AttachSetting("search_query_logging", Go2ItProjectSettings.Instance.SearchQueryParserLogging, p);
+
             Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = AttachSetting("ali_enterpol_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog, p);
             Go2ItProjectSettings.Instance.AliEnterpolTableName = AttachSetting("ali_enterpol_tablename", Go2ItProjectSettings.Instance.AliEnterpolTableName, p);
             Go2ItProjectSettings.Instance.AliEnterpolDataSource = AttachSetting("ali_enterpol_datasource", Go2ItProjectSettings.Instance.AliEnterpolDataSource, p);
-
-            // Go2ItProjectSettings.Instance.AliEnterpolConnectionString = AttachSetting("ali_enterpol_connstring", Go2ItProjectSettings.Instance.AliEnterpolConnectionString, p);
-            
             Go2ItProjectSettings.Instance.AliGlobalCadLogPath = AttachSetting("ali_global_logpath", Go2ItProjectSettings.Instance.AliGlobalCadLogPath, p);
             Go2ItProjectSettings.Instance.AliGlobalCadConfigPath = AttachSetting("ali_global_configpath", Go2ItProjectSettings.Instance.AliGlobalCadConfigPath, p);
             Go2ItProjectSettings.Instance.AliGlobalCadArchivePath = AttachSetting("ali_global_archivepath", Go2ItProjectSettings.Instance.AliGlobalCadArchivePath, p);
@@ -407,9 +405,8 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliSdrServerUdpPort = AttachSetting("ali_sdrserver_udpport", Go2ItProjectSettings.Instance.AliSdrServerUdpPort, p);
             Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost = AttachSetting("ali_networkfleet_udphost", Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost, p);
             Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort = AttachSetting("ali_networkfleet_udpport", Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort, p);
-            // needs to be final ali setting loaded as it fires a change event
-            // Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
             Go2ItProjectSettings.Instance.AliUseNetworkfleet = AttachSetting("ali_use_networkfleet", Go2ItProjectSettings.Instance.AliUseNetworkfleet, p);
+            // needs to be final ali setting loaded as it fires a change event
             Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);
 
             const string gsQuery = "SELECT * FROM GraphicSettings";
