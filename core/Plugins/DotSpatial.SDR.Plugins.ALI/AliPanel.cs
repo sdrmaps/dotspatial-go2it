@@ -32,7 +32,22 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
         #endregion
 
-        #region Methods 
+        #region Methods
+
+        public void DisablePanelInterface()
+        {
+            tsbAliLocate.Enabled = false;
+            tsbAliUpdate.Enabled = false;
+            cmbAliCommLog.Enabled = false;
+        }
+
+        public void EnablePanelInterface()
+        {
+            tsbAliLocate.Enabled = true;
+            tsbAliUpdate.Enabled = true;
+            cmbAliCommLog.Enabled = true;
+        }
+
         delegate void SetDgvDataSourceCallback(GlobalCadRecord[]source);
         public void SetDgvDataSource(GlobalCadRecord[] source)
         {
@@ -159,5 +174,10 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
         #endregion
+
+        private void tsbAliUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

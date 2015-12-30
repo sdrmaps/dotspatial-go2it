@@ -6,8 +6,6 @@ using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -33,7 +31,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         // private NetworkFleet _networkFleet = NetworkFleet.Null;  // set to null on startup only
 
         // specific interface variables
-        private string _aliServerDbConnString = string.Empty;
         private AliServerClient _aliServerClient;  // handles SDR AliServer Interface
         private FileSystemWatcher _globalCadArkWatch;  // archive watcher for global cad
         private FileSystemWatcher _globalCadLogWatch;  // active log watcher for global cad
@@ -64,6 +61,36 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             Debug.WriteLine("datagridrow clicked");
         }
+
+        //private void StartSqlServerDependencyWatcher()
+        //{
+        //    var conn = GetEnterpolConnString();
+        //    SqlConnection sqlConn = new SqlConnection(conn);
+        //    SqlDependency.Start(conn);
+        //    using (var cmd = new SqlCommand("SELECT COUNT(*) FROM " + SdrAliServerConfig.Default.TableName, sqlConn))
+        //    {
+        //        // create dependency associated with sql command
+        //        var dependency = new SqlDependency(cmd);
+        //        // subscribe to the dependency event.
+        //        dependency.OnChange += new OnChangeEventHandler(OnDependencyChange);
+        //        cmd.ExecuteReader();
+        //        //using (SqlDataReader reader = command.ExecuteReader())
+        //        //{
+        //            // Process the DataReader.
+        //        //}
+        //    }
+        //}
+
+        //void OnDependencyChange(object sender, SqlNotificationEventArgs e)
+        //{
+        //    MessageBox.Show(e.Info.ToString());
+        //}
+
+        //private void EndSqlServerDependencyWatcher()
+        //{
+        //    var conn = GetEnterpolConnString();
+        //    SqlDependency.Stop(conn);
+        //}
 
         private void DisableCurrentAliMode()
         {
@@ -97,7 +124,9 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             if (_currentAliMode == AliMode.Enterpol)
             {
-                
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolDataSourceChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged -= InstanceOnAliEnterpolInitialCatalogChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged -= InstanceOnAliEnterpolTableNameChanged;
             }
         }
 
@@ -127,7 +156,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        private void PopulateEnterpolDbDgv()
+        private void PopulateEnterpolDbDgv(string  conn)
         {
             // lets update the dgv column order if needed
             if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.EnterpolDgvSortOrder.Count)
@@ -144,27 +173,66 @@ namespace DotSpatial.SDR.Plugins.ALI
                 PluginSettings.Instance.EnterpolDgvSortOrder = dgvOrder;
             }
             var sql = ConstructEnterpolSqlQuery();
-            var conn = SqlServerHelper.GetSqlServerConnectionString(
-                   "Server=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource + ";" +
-                   "Database=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog + ";" +
-                   "Integrated Security=SSPI;" +
-                   "connection timeout=15");
             BindDataGridViewToSqlServer(conn, sql);
             HumanizeCamelCasedDgvHeaders();
         }
 
-        private void HandleEnterpolDbView()
+        private void PopulateSdrAliServerDgv(string conn)
         {
-            PopulateEnterpolDbDgv();
+            // lets update the dgv column order if needed
+            if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.SdrAliServerDgvSortOrder.Count)
+            {
+                var dgvArr = new string[_aliPanel.DataGridDisplay.ColumnCount];
+                for (var j = 0; j <= _aliPanel.DataGridDisplay.ColumnCount - 1; j++)
+                {
+                    var n = _aliPanel.DataGridDisplay.Columns[j].DataPropertyName;
+                    var i = _aliPanel.DataGridDisplay.Columns[j].DisplayIndex;
+                    dgvArr[i] = n;
+                }
+                var dgvOrder = new StringCollection();
+                dgvOrder.AddRange(dgvArr);
+                PluginSettings.Instance.SdrAliServerDgvSortOrder = dgvOrder;
+            }
+            var sql = ConstructSdrServerSqlQuery();
+            BindDataGridViewToOleDb(conn, sql);
+            HumanizeCamelCasedDgvHeaders();
+        }
+
+        private void BindDataGridViewToOleDb(string connString, string sqlString)
+        {
+            try
+            {
+                var cnn = new OleDbConnection(connString);
+                cnn.Open();
+                var dbTable = new DataTable();
+                var dbAdapter = new OleDbDataAdapter(sqlString, cnn);
+                dbAdapter.Fill(dbTable);
+                var bindingSource = new BindingSource { DataSource = dbTable };
+                _aliPanel.SetDgvBindingSource(bindingSource);
+                cnn.Close();
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error("Database table binding failed", ex);
+            }
         }
 
         private void BindDataGridViewToSqlServer(string connString, string sqlString)
         {
-            var dbAdapter = new SqlDataAdapter(sqlString, connString);
-            var dbTable = new DataTable {Locale = System.Globalization.CultureInfo.InvariantCulture};
-            dbAdapter.Fill(dbTable);
-            var bindingSource = new BindingSource { DataSource = dbTable };
-            _aliPanel.SetDgvBindingSource(bindingSource);
+            try
+            {
+                var dbAdapter = new SqlDataAdapter(sqlString, connString);
+                var dbTable = new DataTable {Locale = System.Globalization.CultureInfo.InvariantCulture};
+                dbAdapter.Fill(dbTable);
+                var bindingSource = new BindingSource { DataSource = dbTable };
+                _aliPanel.SetDgvBindingSource(bindingSource);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error("Database table binding failed", ex);
+            }
         }
 
         private static string ConstructEnterpolSqlQuery()
@@ -221,25 +289,121 @@ namespace DotSpatial.SDR.Plugins.ALI
                         sql = sql + lat + ",";
                         break;
                 }
-                if (i != PluginSettings.Instance.SdrAliServerDgvSortOrder.Count - 1) continue;
-                // strip off the final comma if last item
-                char[] chr = { ',' };
+                if (i != PluginSettings.Instance.EnterpolDgvSortOrder.Count - 1) continue;
+                char[] chr = { ',' };  // strip off the final comma if last item
                 sql = sql.TrimEnd(chr);
             }
-            sql = sql + " FROM [" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog + "].[dbo].[" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName + "]";
+            sql = sql + " FROM [" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName + "].[dbo].[" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog + "]";
             return sql;
         }
 
         private void HandleAliServerClient()
         {
-            _aliServerClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
-            _aliServerClient.Login();
-            _aliServerClient.PacketReceieved += AliServerClientOnPacketReceieved;
+            var msg = AppContext.Instance.Get<IUserMessage>();
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPathChanged += InstanceOnAliSdrServerDbPathChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
-            _aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
-            PopulateSdrAliServerDgv();
+
+            _aliServerClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
+            _aliServerClient.Login();
+            _aliServerClient.PacketReceieved += AliServerClientOnPacketReceieved;
+            if (_aliServerClient.Ping())  // if the server is not responding notify the user
+            {
+                msg.Warn(@"AliServer is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
+            }
+
+            try
+            {
+                var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
+                PopulateSdrAliServerDgv(aliServerDbConnString);
+            }
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+            }
+        }
+
+        private void HandleEnterpolDbView()
+        {
+            // validate our connection, table, and init catalog are valid
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolDataSourceChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged += InstanceOnAliEnterpolInitialCatalogChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged += InstanceOnAliEnterpolTableNameChanged;
+
+            try
+            {
+                var conn = GetEnterpolConnString();
+                PopulateEnterpolDbDgv(conn);
+                // StartSqlServerDependencyWatcher();
+            }
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+            }
+        }
+
+        private string GetEnterpolConnString()
+        {
+            var connString = SqlServerHelper.GetSqlServerConnectionString(
+                "Server=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource + ";" +
+                "Database=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName + ";" +
+                "Integrated Security=SSPI;" +
+                "connection timeout=15");
+
+            if (!SqlServerHelper.TableExists(connString, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog))
+            {
+                var m = @"Initial catalog " +
+                        SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog +
+                        " does not exist in the database " +
+                        SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
+
+                var ex = new ArgumentException(m, "initial_catalog", null);
+                throw ex;
+            }
+            return connString;
+        }
+
+        private void InstanceOnAliEnterpolTableNameChanged(object sender, EventArgs eventArgs)
+        {
+            try
+            {
+                var conn = GetEnterpolConnString();
+                PopulateEnterpolDbDgv(conn);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
+        }
+
+        private void InstanceOnAliEnterpolInitialCatalogChanged(object sender, EventArgs eventArgs)
+        {
+            try
+            {
+                var conn = GetEnterpolConnString();
+                PopulateEnterpolDbDgv(conn);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
+        }
+
+        private void InstanceOnAliEnterpolDataSourceChanged(object sender, EventArgs eventArgs)
+        {
+            try
+            {
+                var conn = GetEnterpolConnString();
+                PopulateEnterpolDbDgv(conn);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
         }
 
         private void HandleGlobalCadFiles()
@@ -312,7 +476,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 catch (Exception ex)
                 {
                     var msg = AppContext.Instance.Get<IUserMessage>();
-                    msg.Warn("Failed to Locate Archived GlobalCAD Files", ex);
+                    msg.Warn(ex.Message, ex);
                 }
             }
         }
@@ -347,7 +511,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                             break;
                         case "<End Data>":
                             rec.Add(l);
-                            var obj = ProcessGlocalCadRecord(rec);
+                            var obj = ProcessGlobalCadRecord(rec);
                             if (obj != null)
                             {
                                 bindingList.Add(obj);
@@ -367,7 +531,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             return bindingList;
         }
 
-        private static GlobalCadRecord ProcessGlocalCadRecord(List<string> recList)
+        private static GlobalCadRecord ProcessGlobalCadRecord(List<string> recList)
         {
             // fetch the settings for parsing the values from the list
             var pFile = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath;
@@ -445,8 +609,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             catch (Exception ex)
             {
-                var log = AppContext.Instance.Get<ILog>();
-                log.Warn("Failed to Parse GlobalCAD Record", ex);
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error("Failed to Parse GlobalCAD Record", ex);
                 return null;
             }
             return gcr;
@@ -454,7 +618,6 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void HandleNetworkFleetClient()
         {
-            // TODO: handle the network fleet client here
             //_aliServerClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
             //_aliServerClient.Login();
             //_aliServerClient.PacketReceieved += AliServerClientOnPacketReceieved;
@@ -472,27 +635,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                 var n = _aliPanel.DataGridDisplay.Columns[j].HeaderText;
                 _aliPanel.DataGridDisplay.Columns[j].HeaderText = Regex.Replace(n, "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", "$1 ");
             }
-        }
-
-        private void PopulateSdrAliServerDgv()
-        {
-            // lets update the dgv column order if needed
-            if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.SdrAliServerDgvSortOrder.Count)
-            {
-                var dgvArr = new string[_aliPanel.DataGridDisplay.ColumnCount];
-                for (var j = 0; j <= _aliPanel.DataGridDisplay.ColumnCount - 1; j++)
-                {
-                    var n = _aliPanel.DataGridDisplay.Columns[j].DataPropertyName;
-                    var i = _aliPanel.DataGridDisplay.Columns[j].DisplayIndex;
-                    dgvArr[i] = n;
-                }
-                var dgvOrder = new StringCollection();
-                dgvOrder.AddRange(dgvArr);
-                PluginSettings.Instance.SdrAliServerDgvSortOrder = dgvOrder;
-            }
-            var sql = ConstructSdrServerSqlQuery();
-            BindDataGridViewToOleDb(_aliServerDbConnString, sql);
-            HumanizeCamelCasedDgvHeaders();
         }
 
         private static string ConstructSdrServerSqlQuery()
@@ -558,48 +700,62 @@ namespace DotSpatial.SDR.Plugins.ALI
                         break;
                 }
                 if (i != PluginSettings.Instance.SdrAliServerDgvSortOrder.Count - 1) continue;
-                // strip off the final comma if last item
-                char[] chr = {','};
+                char[] chr = { ',' };  // strip off the final comma if last item
                 sql = sql.TrimEnd(chr);
             }
             sql = sql + " FROM " + SdrAliServerConfig.Default.TableName + " ORDER BY IDField DESC";
             return sql;
         }
 
-        private void BindDataGridViewToOleDb(string connString, string sqlString)
-        {
-            // bind our db to the dgv now
-            var cnn = new OleDbConnection(connString);
-            cnn.Open();
-            var dbTable = new DataTable();
-            var dbAdapter = new OleDbDataAdapter(sqlString, cnn);
-            dbAdapter.Fill(dbTable);
-            var bindingSource = new BindingSource { DataSource = dbTable };
-            _aliPanel.SetDgvBindingSource(bindingSource);
-            cnn.Close();
-        }
-
         private void InstanceOnAliSdrServerUdpPortChanged(object sender, EventArgs eventArgs)
         {
             var s = (SdrConfig.Project.Go2ItProjectSettings) sender;
             _aliServerClient.UdpPort = s.AliSdrServerUdpPort;
+            if (!_aliServerClient.Ping())
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Warn(@"AliServer is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
+            }
         }
 
         private void InstanceOnAliSdrServerUdpHostChanged(object sender, EventArgs eventArgs)
         {
             var s = (SdrConfig.Project.Go2ItProjectSettings)sender;
             _aliServerClient.UdpHost = s.AliSdrServerUdpHost;
+            if (!_aliServerClient.Ping())
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Warn(@"AliServer is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
+            }
         }
 
         private void InstanceOnAliSdrServerDbPathChanged(object sender, EventArgs eventArgs)
         {
-            var s = (SdrConfig.Project.Go2ItProjectSettings)sender;
-            _aliServerDbConnString = MdbHelper.GetMdbConnectionString(s.AliSdrServerDbPath);
+            try
+            {
+                var s = (SdrConfig.Project.Go2ItProjectSettings)sender;
+                var aliServerDbConnString = MdbHelper.GetMdbConnectionString(s.AliSdrServerDbPath);
+                PopulateSdrAliServerDgv(aliServerDbConnString);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
         }
 
         private void AliServerClientOnPacketReceieved(object sender, AliServerDataPacket packet)
         {
-            PopulateSdrAliServerDgv();
+            try
+            {
+                var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
+                PopulateSdrAliServerDgv(aliServerDbConnString);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
         }
 
         // this is called on startup as well as everytime the ali mode changes

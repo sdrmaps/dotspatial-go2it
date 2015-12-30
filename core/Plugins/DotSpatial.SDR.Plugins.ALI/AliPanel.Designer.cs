@@ -35,9 +35,9 @@
             this.lblCommLog = new System.Windows.Forms.Label();
             this.aliDGV = new System.Windows.Forms.DataGridView();
             this.aliTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.chkNetworkfleetVehicles = new System.Windows.Forms.CheckedListBox();
             this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
+            this.chkNetworkfleetVehicles = new System.Windows.Forms.CheckedListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).BeginInit();
             this.aliTableLayoutPanel.SuspendLayout();
@@ -79,6 +79,7 @@
             this.tsbAliUpdate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.tsbAliUpdate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.tsbAliUpdate.ToolTipText = "Update Record Display";
+            this.tsbAliUpdate.Click += new System.EventHandler(this.tsbAliUpdate_Click);
             // 
             // lblCommLog
             // 
@@ -127,25 +128,6 @@
             this.aliTableLayoutPanel.Size = new System.Drawing.Size(790, 134);
             this.aliTableLayoutPanel.TabIndex = 1;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label1.Location = new System.Drawing.Point(398, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Networkfleet Vehicles";
-            // 
-            // chkNetworkfleetVehicles
-            // 
-            this.chkNetworkfleetVehicles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkNetworkfleetVehicles.FormattingEnabled = true;
-            this.chkNetworkfleetVehicles.Location = new System.Drawing.Point(398, 16);
-            this.chkNetworkfleetVehicles.Name = "chkNetworkfleetVehicles";
-            this.chkNetworkfleetVehicles.Size = new System.Drawing.Size(191, 115);
-            this.chkNetworkfleetVehicles.TabIndex = 4;
-            // 
             // cmbAliCommLog
             // 
             this.cmbAliCommLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -156,6 +138,25 @@
             this.cmbAliCommLog.Name = "cmbAliCommLog";
             this.cmbAliCommLog.Size = new System.Drawing.Size(192, 21);
             this.cmbAliCommLog.TabIndex = 5;
+            // 
+            // chkNetworkfleetVehicles
+            // 
+            this.chkNetworkfleetVehicles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkNetworkfleetVehicles.FormattingEnabled = true;
+            this.chkNetworkfleetVehicles.Location = new System.Drawing.Point(398, 16);
+            this.chkNetworkfleetVehicles.Name = "chkNetworkfleetVehicles";
+            this.chkNetworkfleetVehicles.Size = new System.Drawing.Size(191, 115);
+            this.chkNetworkfleetVehicles.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label1.Location = new System.Drawing.Point(398, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(110, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Networkfleet Vehicles";
             // 
             // AliPanel
             // 
