@@ -8,10 +8,11 @@
         Enterpol,
     }
 
-    public enum NetworkFleet
+    public enum AliAvl
     {
-        Active,
         Disabled,
-        Null,
+        Enterpoldispatch,
+        Enterpolresponder,
+        Networkfleet,
     }
 }

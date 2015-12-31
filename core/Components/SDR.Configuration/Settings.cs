@@ -1,15 +1,29 @@
 ﻿// originally based on code lifted from hydrodesktop application
-
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace SDR.Configuration
 {
+    /// <summary>
+    /// Application level mode propeerty setting enum
+    /// </summary>
+    public enum AppMode
+    {
+        Dispatch,
+        Responder
+    }
+
     /// <summary>
     /// Application - level settings including web service URLs and database locations
     /// </summary>
     public class Settings
     {
+        // app mode lookup for int based value
+        private AppMode _appMode;
+        private static readonly List<AppMode> AppModes = new List<AppMode>(new[] { AppMode.Dispatch, AppMode.Responder});
+
         /// <summary>
         /// Allocate ourselves. We have a private constructor, so no one else can.
         /// </summary>
@@ -39,6 +53,19 @@ namespace SDR.Configuration
         {
             get;
             set;
+        }
+        
+        public void SetApplicationMode(int mode)
+        {
+            _appMode = AppModes[mode];
+        }
+
+        /// <summary>   
+        /// Gets the Active Application mode
+        /// </summary>
+        public AppMode ApplicationMode
+        {
+            get { return _appMode; }
         }
 
         /// <summary>

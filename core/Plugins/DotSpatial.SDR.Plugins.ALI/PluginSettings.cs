@@ -65,7 +65,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                 UserSettings.Default.Save();
             }
         }
-
     }
 }
 

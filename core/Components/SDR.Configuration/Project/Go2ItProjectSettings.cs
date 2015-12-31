@@ -68,6 +68,9 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliSdrServerDbPath = string.Empty;
             Properties.ProjectSettings.Default.AliSdrServerUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliSdrServerUdpPort = 777;
+
+
+
             Properties.ProjectSettings.Default.AliUseNetworkfleet = false;
             Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;

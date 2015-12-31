@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -26,6 +27,10 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         public override void Activate()
         {
+            if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Dispatch)
+            {
+                return;
+            }
             // add in the button controls for this plugin to the header
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "GPS", GpsTool_Click)
             {
