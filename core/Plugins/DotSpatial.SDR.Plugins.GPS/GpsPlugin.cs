@@ -22,15 +22,12 @@ namespace DotSpatial.SDR.Plugins.GPS
         private GpsPanel _gpsPanel;
         private DockablePanel _dockPanel;
 
-        private bool _isFunctionActive;  // flag to eliminate redundant calls on hide/show,functionmode change
+        private bool _isFunctionActive;  // flag to eliminate redundant calls on hide/show, functionmode change
         #endregion
 
         public override void Activate()
         {
-            if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Dispatch)
-            {
-                return;
-            }
+            if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Dispatch) { return; }
             // add in the button controls for this plugin to the header
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "GPS", GpsTool_Click)
             {
