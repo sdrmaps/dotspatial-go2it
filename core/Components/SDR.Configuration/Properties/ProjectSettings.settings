@@ -111,7 +111,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AliEnterpolInitialCatalog" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">SDRCADInterface</Value>
     </Setting>
     <Setting Name="AliGlobalCadArchivePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -136,6 +136,54 @@
     </Setting>
     <Setting Name="AliNetworkfleetPointChar" Type="System.Char" Scope="User">
       <Value Profile="(Default)">n</Value>
+    </Setting>
+    <Setting Name="AliUseEnterpolAVL" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLUnitsView" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SDRActiveUnitsView</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLSetMyLocProc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SDR_SetMyLocation</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLWhoAmIProc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SDR_WhoAmI</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLUpdateFreq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLAge1Freq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLAge2Freq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLAge3Freq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLReadFreq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50000</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLLEChars" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PD</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLEMSChars" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EMS</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLFDChars" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FD</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLLEColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Cyan</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLEMSColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">LimeGreen</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLFDColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
     </Setting>
   </Settings>
 </SettingsFile>

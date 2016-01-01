@@ -1502,6 +1502,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetColor = ptAliNetworkfleetColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont = _networkFleetFont;
 
+
             // setup ali interface configuration
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
@@ -1516,6 +1517,10 @@ namespace Go2It
             string aliValue;  // swap key and value positions to use the friendly label as a lookup key for the enum string value
             var swapDict = _aliInterfaces.ToDictionary(e => e.Value, e => e.Key);
             swapDict.TryGetValue(cmbAliMode.SelectedItem.ToString(), out aliValue);
+
+
+
+
             // must be last ali value set - it fires off a change event
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliMode = aliValue;
         }

@@ -448,7 +448,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SDRCADInterface")]
         public string AliEnterpolInitialCatalog {
             get {
                 return ((string)(this["AliEnterpolInitialCatalog"]));
@@ -551,6 +551,198 @@ namespace SDR.Configuration.Properties {
             }
             set {
                 this["AliNetworkfleetPointChar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AliUseEnterpolAVL {
+            get {
+                return ((bool)(this["AliUseEnterpolAVL"]));
+            }
+            set {
+                this["AliUseEnterpolAVL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SDRActiveUnitsView")]
+        public string AliEnterpolAVLUnitsView {
+            get {
+                return ((string)(this["AliEnterpolAVLUnitsView"]));
+            }
+            set {
+                this["AliEnterpolAVLUnitsView"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SDR_SetMyLocation")]
+        public string AliEnterpolAVLSetMyLocProc {
+            get {
+                return ((string)(this["AliEnterpolAVLSetMyLocProc"]));
+            }
+            set {
+                this["AliEnterpolAVLSetMyLocProc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SDR_WhoAmI")]
+        public string AliEnterpolAVLWhoAmIProc {
+            get {
+                return ((string)(this["AliEnterpolAVLWhoAmIProc"]));
+            }
+            set {
+                this["AliEnterpolAVLWhoAmIProc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int AliEnterpolAVLUpdateFreq {
+            get {
+                return ((int)(this["AliEnterpolAVLUpdateFreq"]));
+            }
+            set {
+                this["AliEnterpolAVLUpdateFreq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int AliEnterpolAVLAge1Freq {
+            get {
+                return ((int)(this["AliEnterpolAVLAge1Freq"]));
+            }
+            set {
+                this["AliEnterpolAVLAge1Freq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int AliEnterpolAVLAge2Freq {
+            get {
+                return ((int)(this["AliEnterpolAVLAge2Freq"]));
+            }
+            set {
+                this["AliEnterpolAVLAge2Freq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int AliEnterpolAVLAge3Freq {
+            get {
+                return ((int)(this["AliEnterpolAVLAge3Freq"]));
+            }
+            set {
+                this["AliEnterpolAVLAge3Freq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50000")]
+        public int AliEnterpolAVLReadFreq {
+            get {
+                return ((int)(this["AliEnterpolAVLReadFreq"]));
+            }
+            set {
+                this["AliEnterpolAVLReadFreq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        public global::System.Drawing.Font AliEnterpolAVLFont {
+            get {
+                return ((global::System.Drawing.Font)(this["AliEnterpolAVLFont"]));
+            }
+            set {
+                this["AliEnterpolAVLFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PD")]
+        public string AliEnterpolAVLLEChars {
+            get {
+                return ((string)(this["AliEnterpolAVLLEChars"]));
+            }
+            set {
+                this["AliEnterpolAVLLEChars"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("EMS")]
+        public string AliEnterpolAVLEMSChars {
+            get {
+                return ((string)(this["AliEnterpolAVLEMSChars"]));
+            }
+            set {
+                this["AliEnterpolAVLEMSChars"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FD")]
+        public string AliEnterpolAVLFDChars {
+            get {
+                return ((string)(this["AliEnterpolAVLFDChars"]));
+            }
+            set {
+                this["AliEnterpolAVLFDChars"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Cyan")]
+        public global::System.Drawing.Color AliEnterpolAVLLEColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliEnterpolAVLLEColor"]));
+            }
+            set {
+                this["AliEnterpolAVLLEColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LimeGreen")]
+        public global::System.Drawing.Color AliEnterpolAVLEMSColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliEnterpolAVLEMSColor"]));
+            }
+            set {
+                this["AliEnterpolAVLEMSColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Red")]
+        public global::System.Drawing.Color AliEnterpolAVLFDColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliEnterpolAVLFDColor"]));
+            }
+            set {
+                this["AliEnterpolAVLFDColor"] = value;
             }
         }
     }

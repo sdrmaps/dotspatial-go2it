@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
-            this.adminTab_LayerManagement = new System.Windows.Forms.TabPage();
+            this.adminTab_MapConfiguration = new System.Windows.Forms.TabPage();
             this.adminLayerSplitter = new System.Windows.Forms.SplitContainer();
             this.legendSplitter = new System.Windows.Forms.SplitContainer();
             this.legendButtonTable = new System.Windows.Forms.TableLayoutPanel();
@@ -72,6 +72,19 @@
             this.chkRoadLayers = new System.Windows.Forms.CheckedListBox();
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
+            this.adminTab_ProjectSettings = new System.Windows.Forms.TabPage();
+            this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
+            this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
+            this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
+            this.lineSymbolCap = new System.Windows.Forms.ComboBox();
+            this.lineSymbolSize = new System.Windows.Forms.NumericUpDown();
+            this.lineSymbolStyle = new System.Windows.Forms.ComboBox();
+            this.lineSymbolColor = new System.Windows.Forms.Panel();
+            this.ptSymbolSize = new System.Windows.Forms.NumericUpDown();
+            this.ptSymbolColor = new System.Windows.Forms.Panel();
+            this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
+            this.lineSymbolGraphic = new System.Windows.Forms.Panel();
+            this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.adminTab_ProgramManagement = new System.Windows.Forms.TabPage();
             this.btnSaveHotKeys = new System.Windows.Forms.Button();
             this.dgvHotKeys = new System.Windows.Forms.DataGridView();
@@ -84,7 +97,15 @@
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
-            this.adminTab_SearchProperties = new System.Windows.Forms.TabPage();
+            this.adminTab_SearchSettings = new System.Windows.Forms.TabPage();
+            this.lblHydrantDist = new System.Windows.Forms.Label();
+            this.lblZoomFactor = new System.Windows.Forms.Label();
+            this.lblBufDist = new System.Windows.Forms.Label();
+            this.lblHydrantCount = new System.Windows.Forms.Label();
+            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
+            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
+            this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
+            this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
             this.chkEnableQueryParserLog = new System.Windows.Forms.CheckBox();
             this.chkPretypes = new System.Windows.Forms.CheckBox();
             this.btnRemoveIndex = new System.Windows.Forms.Button();
@@ -96,7 +117,7 @@
             this.btnCreateIndex = new System.Windows.Forms.Button();
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
-            this.adminTab_SymbologySettings = new System.Windows.Forms.TabPage();
+            this.adminTab_AliSettings = new System.Windows.Forms.TabPage();
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.pnlAliNetworkfleet = new System.Windows.Forms.Panel();
             this.ptAliNetworkfleetColor = new System.Windows.Forms.Panel();
@@ -111,6 +132,19 @@
             this.txtAliNetworkfleetUdpHost = new System.Windows.Forms.TextBox();
             this.btnAliValidate = new System.Windows.Forms.Button();
             this.pnlAliEnterpol = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
+            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.label20 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -141,31 +175,23 @@
             this.btnAliInterfaceDbPathBrowse = new System.Windows.Forms.Button();
             this.txtAliInterfaceDbPath = new System.Windows.Forms.TextBox();
             this.cmbAliMode = new System.Windows.Forms.ComboBox();
-            this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
-            this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
-            this.lblHydrantDist = new System.Windows.Forms.Label();
-            this.lblZoomFactor = new System.Windows.Forms.Label();
-            this.lblBufDist = new System.Windows.Forms.Label();
-            this.lblHydrantCount = new System.Windows.Forms.Label();
-            this.searchHydrantDistance = new System.Windows.Forms.NumericUpDown();
-            this.searchBufferDistance = new System.Windows.Forms.NumericUpDown();
-            this.searchZoomFactor = new System.Windows.Forms.NumericUpDown();
-            this.searchHydrantCount = new System.Windows.Forms.NumericUpDown();
-            this.lineSymbolBorderColor = new System.Windows.Forms.Panel();
-            this.lineSymbolCap = new System.Windows.Forms.ComboBox();
-            this.lineSymbolSize = new System.Windows.Forms.NumericUpDown();
-            this.lineSymbolStyle = new System.Windows.Forms.ComboBox();
-            this.lineSymbolColor = new System.Windows.Forms.Panel();
-            this.ptSymbolSize = new System.Windows.Forms.NumericUpDown();
-            this.ptSymbolColor = new System.Windows.Forms.Panel();
-            this.ptSymbolStyle = new System.Windows.Forms.ComboBox();
-            this.lineSymbolGraphic = new System.Windows.Forms.Panel();
-            this.ptSymbolGraphic = new System.Windows.Forms.Panel();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
-            this.adminTab_LayerManagement.SuspendLayout();
+            this.adminTab_MapConfiguration.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.adminLayerSplitter)).BeginInit();
             this.adminLayerSplitter.Panel1.SuspendLayout();
             this.adminLayerSplitter.Panel2.SuspendLayout();
@@ -176,23 +202,29 @@
             this.legendButtonTable.SuspendLayout();
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
+            this.adminTab_ProjectSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
             this.adminTab_ProgramManagement.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).BeginInit();
-            this.adminTab_SearchProperties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
-            this.adminTab_SymbologySettings.SuspendLayout();
-            this.pnlAliNetworkfleet.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).BeginInit();
-            this.pnlAliEnterpol.SuspendLayout();
-            this.pnlAliGlobalCad.SuspendLayout();
-            this.pnlAliSdrAliServer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).BeginInit();
+            this.adminTab_SearchSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
+            this.adminTab_AliSettings.SuspendLayout();
+            this.pnlAliNetworkfleet.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).BeginInit();
+            this.pnlAliEnterpol.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.pnlAliGlobalCad.SuspendLayout();
+            this.pnlAliSdrAliServer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -215,10 +247,11 @@
             // adminTab_Control
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.adminTab_Control, 2);
-            this.adminTab_Control.Controls.Add(this.adminTab_LayerManagement);
+            this.adminTab_Control.Controls.Add(this.adminTab_MapConfiguration);
+            this.adminTab_Control.Controls.Add(this.adminTab_ProjectSettings);
             this.adminTab_Control.Controls.Add(this.adminTab_ProgramManagement);
-            this.adminTab_Control.Controls.Add(this.adminTab_SearchProperties);
-            this.adminTab_Control.Controls.Add(this.adminTab_SymbologySettings);
+            this.adminTab_Control.Controls.Add(this.adminTab_SearchSettings);
+            this.adminTab_Control.Controls.Add(this.adminTab_AliSettings);
             this.adminTab_Control.Dock = System.Windows.Forms.DockStyle.Fill;
             this.adminTab_Control.Location = new System.Drawing.Point(0, 0);
             this.adminTab_Control.Margin = new System.Windows.Forms.Padding(0);
@@ -228,16 +261,16 @@
             this.adminTab_Control.Size = new System.Drawing.Size(617, 744);
             this.adminTab_Control.TabIndex = 8;
             // 
-            // adminTab_LayerManagement
+            // adminTab_MapConfiguration
             // 
-            this.adminTab_LayerManagement.BackColor = System.Drawing.Color.Transparent;
-            this.adminTab_LayerManagement.Controls.Add(this.adminLayerSplitter);
-            this.adminTab_LayerManagement.Location = new System.Drawing.Point(4, 22);
-            this.adminTab_LayerManagement.Margin = new System.Windows.Forms.Padding(0);
-            this.adminTab_LayerManagement.Name = "adminTab_LayerManagement";
-            this.adminTab_LayerManagement.Size = new System.Drawing.Size(609, 718);
-            this.adminTab_LayerManagement.TabIndex = 0;
-            this.adminTab_LayerManagement.Text = "Map Configuration";
+            this.adminTab_MapConfiguration.BackColor = System.Drawing.Color.Transparent;
+            this.adminTab_MapConfiguration.Controls.Add(this.adminLayerSplitter);
+            this.adminTab_MapConfiguration.Location = new System.Drawing.Point(4, 22);
+            this.adminTab_MapConfiguration.Margin = new System.Windows.Forms.Padding(0);
+            this.adminTab_MapConfiguration.Name = "adminTab_MapConfiguration";
+            this.adminTab_MapConfiguration.Size = new System.Drawing.Size(609, 718);
+            this.adminTab_MapConfiguration.TabIndex = 0;
+            this.adminTab_MapConfiguration.Text = "Map Configuration";
             // 
             // adminLayerSplitter
             // 
@@ -647,6 +680,175 @@
             this.cmbNotesLayer.TabIndex = 5;
             this.cmbNotesLayer.SelectedIndexChanged += new System.EventHandler(this.cmbNotesLayer_SelectedIndexChanged);
             // 
+            // adminTab_ProjectSettings
+            // 
+            this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolColorSlider);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolColorSlider);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolBorderColor);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolCap);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolSize);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolStyle);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolColor);
+            this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolSize);
+            this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolColor);
+            this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolStyle);
+            this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolGraphic);
+            this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolGraphic);
+            this.adminTab_ProjectSettings.Location = new System.Drawing.Point(4, 22);
+            this.adminTab_ProjectSettings.Name = "adminTab_ProjectSettings";
+            this.adminTab_ProjectSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.adminTab_ProjectSettings.Size = new System.Drawing.Size(609, 718);
+            this.adminTab_ProjectSettings.TabIndex = 5;
+            this.adminTab_ProjectSettings.Text = "Project Settings";
+            this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
+            // 
+            // ptSymbolColorSlider
+            // 
+            this.ptSymbolColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ptSymbolColorSlider.ColorButton = null;
+            this.ptSymbolColorSlider.FlipRamp = false;
+            this.ptSymbolColorSlider.FlipText = false;
+            this.ptSymbolColorSlider.InvertRamp = false;
+            this.ptSymbolColorSlider.Location = new System.Drawing.Point(148, 35);
+            this.ptSymbolColorSlider.Maximum = 1D;
+            this.ptSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
+            this.ptSymbolColorSlider.Minimum = 0D;
+            this.ptSymbolColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.ptSymbolColorSlider.Name = "ptSymbolColorSlider";
+            this.ptSymbolColorSlider.NumberFormat = "#%";
+            this.ptSymbolColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.ptSymbolColorSlider.RampRadius = 10F;
+            this.ptSymbolColorSlider.RampText = null;
+            this.ptSymbolColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ptSymbolColorSlider.RampTextBehindRamp = false;
+            this.ptSymbolColorSlider.RampTextColor = System.Drawing.Color.Black;
+            this.ptSymbolColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ptSymbolColorSlider.ShowMaximum = false;
+            this.ptSymbolColorSlider.ShowMinimum = false;
+            this.ptSymbolColorSlider.ShowTicks = true;
+            this.ptSymbolColorSlider.ShowValue = true;
+            this.ptSymbolColorSlider.Size = new System.Drawing.Size(122, 23);
+            this.ptSymbolColorSlider.SliderColor = System.Drawing.Color.Blue;
+            this.ptSymbolColorSlider.SliderRadius = 4F;
+            this.ptSymbolColorSlider.TabIndex = 47;
+            this.ptSymbolColorSlider.Text = "rampSlider1";
+            this.ptSymbolColorSlider.TickColor = System.Drawing.Color.DarkGray;
+            this.ptSymbolColorSlider.TickSpacing = 5F;
+            this.ptSymbolColorSlider.Value = 1D;
+            // 
+            // lineSymbolColorSlider
+            // 
+            this.lineSymbolColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.lineSymbolColorSlider.ColorButton = null;
+            this.lineSymbolColorSlider.FlipRamp = false;
+            this.lineSymbolColorSlider.FlipText = false;
+            this.lineSymbolColorSlider.InvertRamp = false;
+            this.lineSymbolColorSlider.Location = new System.Drawing.Point(148, 107);
+            this.lineSymbolColorSlider.Maximum = 1D;
+            this.lineSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
+            this.lineSymbolColorSlider.Minimum = 0D;
+            this.lineSymbolColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.lineSymbolColorSlider.Name = "lineSymbolColorSlider";
+            this.lineSymbolColorSlider.NumberFormat = "#%";
+            this.lineSymbolColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.lineSymbolColorSlider.RampRadius = 10F;
+            this.lineSymbolColorSlider.RampText = null;
+            this.lineSymbolColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lineSymbolColorSlider.RampTextBehindRamp = false;
+            this.lineSymbolColorSlider.RampTextColor = System.Drawing.Color.Black;
+            this.lineSymbolColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lineSymbolColorSlider.ShowMaximum = false;
+            this.lineSymbolColorSlider.ShowMinimum = false;
+            this.lineSymbolColorSlider.ShowTicks = true;
+            this.lineSymbolColorSlider.ShowValue = true;
+            this.lineSymbolColorSlider.Size = new System.Drawing.Size(143, 23);
+            this.lineSymbolColorSlider.SliderColor = System.Drawing.Color.Blue;
+            this.lineSymbolColorSlider.SliderRadius = 4F;
+            this.lineSymbolColorSlider.TabIndex = 46;
+            this.lineSymbolColorSlider.Text = "rampSlider1";
+            this.lineSymbolColorSlider.TickColor = System.Drawing.Color.DarkGray;
+            this.lineSymbolColorSlider.TickSpacing = 5F;
+            this.lineSymbolColorSlider.Value = 1D;
+            // 
+            // lineSymbolBorderColor
+            // 
+            this.lineSymbolBorderColor.Location = new System.Drawing.Point(93, 140);
+            this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
+            this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
+            this.lineSymbolBorderColor.TabIndex = 36;
+            // 
+            // lineSymbolCap
+            // 
+            this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lineSymbolCap.FormattingEnabled = true;
+            this.lineSymbolCap.Location = new System.Drawing.Point(148, 140);
+            this.lineSymbolCap.Name = "lineSymbolCap";
+            this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
+            this.lineSymbolCap.TabIndex = 35;
+            // 
+            // lineSymbolSize
+            // 
+            this.lineSymbolSize.Location = new System.Drawing.Point(547, 110);
+            this.lineSymbolSize.Name = "lineSymbolSize";
+            this.lineSymbolSize.Size = new System.Drawing.Size(46, 20);
+            this.lineSymbolSize.TabIndex = 34;
+            // 
+            // lineSymbolStyle
+            // 
+            this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.lineSymbolStyle.FormattingEnabled = true;
+            this.lineSymbolStyle.Location = new System.Drawing.Point(297, 109);
+            this.lineSymbolStyle.Name = "lineSymbolStyle";
+            this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
+            this.lineSymbolStyle.TabIndex = 33;
+            // 
+            // lineSymbolColor
+            // 
+            this.lineSymbolColor.Location = new System.Drawing.Point(93, 94);
+            this.lineSymbolColor.Name = "lineSymbolColor";
+            this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
+            this.lineSymbolColor.TabIndex = 32;
+            // 
+            // ptSymbolSize
+            // 
+            this.ptSymbolSize.Location = new System.Drawing.Point(491, 35);
+            this.ptSymbolSize.Name = "ptSymbolSize";
+            this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
+            this.ptSymbolSize.TabIndex = 31;
+            // 
+            // ptSymbolColor
+            // 
+            this.ptSymbolColor.Location = new System.Drawing.Point(120, 35);
+            this.ptSymbolColor.Name = "ptSymbolColor";
+            this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
+            this.ptSymbolColor.TabIndex = 30;
+            // 
+            // ptSymbolStyle
+            // 
+            this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ptSymbolStyle.FormattingEnabled = true;
+            this.ptSymbolStyle.Location = new System.Drawing.Point(280, 35);
+            this.ptSymbolStyle.Name = "ptSymbolStyle";
+            this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
+            this.ptSymbolStyle.TabIndex = 29;
+            // 
+            // lineSymbolGraphic
+            // 
+            this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lineSymbolGraphic.Location = new System.Drawing.Point(35, 85);
+            this.lineSymbolGraphic.Name = "lineSymbolGraphic";
+            this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
+            this.lineSymbolGraphic.TabIndex = 28;
+            // 
+            // ptSymbolGraphic
+            // 
+            this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptSymbolGraphic.Location = new System.Drawing.Point(35, 15);
+            this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
+            this.ptSymbolGraphic.Name = "ptSymbolGraphic";
+            this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
+            this.ptSymbolGraphic.TabIndex = 27;
+            // 
             // adminTab_ProgramManagement
             // 
             this.adminTab_ProgramManagement.Controls.Add(this.btnSaveHotKeys);
@@ -683,35 +885,35 @@
             this.dgvHotKeys.AllowUserToAddRows = false;
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle8;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
@@ -795,26 +997,114 @@
             this.txtPassword.Size = new System.Drawing.Size(168, 20);
             this.txtPassword.TabIndex = 0;
             // 
-            // adminTab_SearchProperties
+            // adminTab_SearchSettings
             // 
-            this.adminTab_SearchProperties.Controls.Add(this.chkEnableQueryParserLog);
-            this.adminTab_SearchProperties.Controls.Add(this.chkPretypes);
-            this.adminTab_SearchProperties.Controls.Add(this.btnRemoveIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.lstExistingIndexes);
-            this.adminTab_SearchProperties.Controls.Add(this.chkLayersToIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.btnAddIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.dgvLayerIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.btnDeleteIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.btnCreateIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.cmbLayerIndex);
-            this.adminTab_SearchProperties.Controls.Add(this.chkLayerIndex);
-            this.adminTab_SearchProperties.Location = new System.Drawing.Point(4, 22);
-            this.adminTab_SearchProperties.Name = "adminTab_SearchProperties";
-            this.adminTab_SearchProperties.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SearchProperties.Size = new System.Drawing.Size(609, 718);
-            this.adminTab_SearchProperties.TabIndex = 4;
-            this.adminTab_SearchProperties.Text = "Layer Search Properties";
-            this.adminTab_SearchProperties.UseVisualStyleBackColor = true;
+            this.adminTab_SearchSettings.Controls.Add(this.lblHydrantDist);
+            this.adminTab_SearchSettings.Controls.Add(this.lblZoomFactor);
+            this.adminTab_SearchSettings.Controls.Add(this.lblBufDist);
+            this.adminTab_SearchSettings.Controls.Add(this.lblHydrantCount);
+            this.adminTab_SearchSettings.Controls.Add(this.searchHydrantDistance);
+            this.adminTab_SearchSettings.Controls.Add(this.searchBufferDistance);
+            this.adminTab_SearchSettings.Controls.Add(this.searchZoomFactor);
+            this.adminTab_SearchSettings.Controls.Add(this.searchHydrantCount);
+            this.adminTab_SearchSettings.Controls.Add(this.chkEnableQueryParserLog);
+            this.adminTab_SearchSettings.Controls.Add(this.chkPretypes);
+            this.adminTab_SearchSettings.Controls.Add(this.btnRemoveIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.lstExistingIndexes);
+            this.adminTab_SearchSettings.Controls.Add(this.chkLayersToIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.btnAddIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.dgvLayerIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.btnDeleteIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.btnCreateIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.cmbLayerIndex);
+            this.adminTab_SearchSettings.Controls.Add(this.chkLayerIndex);
+            this.adminTab_SearchSettings.Location = new System.Drawing.Point(4, 22);
+            this.adminTab_SearchSettings.Name = "adminTab_SearchSettings";
+            this.adminTab_SearchSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.adminTab_SearchSettings.Size = new System.Drawing.Size(609, 718);
+            this.adminTab_SearchSettings.TabIndex = 4;
+            this.adminTab_SearchSettings.Text = "Search Settings";
+            this.adminTab_SearchSettings.UseVisualStyleBackColor = true;
+            // 
+            // lblHydrantDist
+            // 
+            this.lblHydrantDist.AutoSize = true;
+            this.lblHydrantDist.Location = new System.Drawing.Point(103, 616);
+            this.lblHydrantDist.Name = "lblHydrantDist";
+            this.lblHydrantDist.Size = new System.Drawing.Size(89, 13);
+            this.lblHydrantDist.TabIndex = 52;
+            this.lblHydrantDist.Text = "Hydrant Distance";
+            // 
+            // lblZoomFactor
+            // 
+            this.lblZoomFactor.AutoSize = true;
+            this.lblZoomFactor.Location = new System.Drawing.Point(199, 616);
+            this.lblZoomFactor.Name = "lblZoomFactor";
+            this.lblZoomFactor.Size = new System.Drawing.Size(67, 13);
+            this.lblZoomFactor.TabIndex = 51;
+            this.lblZoomFactor.Text = "Zoom Factor";
+            // 
+            // lblBufDist
+            // 
+            this.lblBufDist.AutoSize = true;
+            this.lblBufDist.Location = new System.Drawing.Point(365, 616);
+            this.lblBufDist.Name = "lblBufDist";
+            this.lblBufDist.Size = new System.Drawing.Size(117, 13);
+            this.lblBufDist.TabIndex = 50;
+            this.lblBufDist.Text = "Search Buffer Distance";
+            // 
+            // lblHydrantCount
+            // 
+            this.lblHydrantCount.AutoSize = true;
+            this.lblHydrantCount.Location = new System.Drawing.Point(284, 616);
+            this.lblHydrantCount.Name = "lblHydrantCount";
+            this.lblHydrantCount.Size = new System.Drawing.Size(75, 13);
+            this.lblHydrantCount.TabIndex = 49;
+            this.lblHydrantCount.Text = "Hydrant Count";
+            // 
+            // searchHydrantDistance
+            // 
+            this.searchHydrantDistance.Location = new System.Drawing.Point(106, 635);
+            this.searchHydrantDistance.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.searchHydrantDistance.Name = "searchHydrantDistance";
+            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
+            this.searchHydrantDistance.TabIndex = 48;
+            // 
+            // searchBufferDistance
+            // 
+            this.searchBufferDistance.Location = new System.Drawing.Point(373, 632);
+            this.searchBufferDistance.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.searchBufferDistance.Name = "searchBufferDistance";
+            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
+            this.searchBufferDistance.TabIndex = 47;
+            // 
+            // searchZoomFactor
+            // 
+            this.searchZoomFactor.DecimalPlaces = 2;
+            this.searchZoomFactor.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.searchZoomFactor.Location = new System.Drawing.Point(200, 632);
+            this.searchZoomFactor.Name = "searchZoomFactor";
+            this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
+            this.searchZoomFactor.TabIndex = 46;
+            // 
+            // searchHydrantCount
+            // 
+            this.searchHydrantCount.Location = new System.Drawing.Point(287, 632);
+            this.searchHydrantCount.Name = "searchHydrantCount";
+            this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
+            this.searchHydrantCount.TabIndex = 45;
             // 
             // chkEnableQueryParserLog
             // 
@@ -877,35 +1167,35 @@
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.AllowUserToDeleteRows = false;
             this.dgvLayerIndex.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle11;
             this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
@@ -949,53 +1239,32 @@
             this.chkLayerIndex.TabIndex = 0;
             this.chkLayerIndex.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chkLayerIndex_ItemCheck);
             // 
-            // adminTab_SymbologySettings
+            // adminTab_AliSettings
             // 
-            this.adminTab_SymbologySettings.Controls.Add(this.chkNetworkfleet);
-            this.adminTab_SymbologySettings.Controls.Add(this.pnlAliNetworkfleet);
-            this.adminTab_SymbologySettings.Controls.Add(this.btnAliValidate);
-            this.adminTab_SymbologySettings.Controls.Add(this.pnlAliEnterpol);
-            this.adminTab_SymbologySettings.Controls.Add(this.pnlAliGlobalCad);
-            this.adminTab_SymbologySettings.Controls.Add(this.pnlAliSdrAliServer);
-            this.adminTab_SymbologySettings.Controls.Add(this.cmbAliMode);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolColorSlider);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolColorSlider);
-            this.adminTab_SymbologySettings.Controls.Add(this.lblHydrantDist);
-            this.adminTab_SymbologySettings.Controls.Add(this.lblZoomFactor);
-            this.adminTab_SymbologySettings.Controls.Add(this.lblBufDist);
-            this.adminTab_SymbologySettings.Controls.Add(this.lblHydrantCount);
-            this.adminTab_SymbologySettings.Controls.Add(this.searchHydrantDistance);
-            this.adminTab_SymbologySettings.Controls.Add(this.searchBufferDistance);
-            this.adminTab_SymbologySettings.Controls.Add(this.searchZoomFactor);
-            this.adminTab_SymbologySettings.Controls.Add(this.searchHydrantCount);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolBorderColor);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolCap);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolSize);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolStyle);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolColor);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolSize);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolColor);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolStyle);
-            this.adminTab_SymbologySettings.Controls.Add(this.lineSymbolGraphic);
-            this.adminTab_SymbologySettings.Controls.Add(this.ptSymbolGraphic);
-            this.adminTab_SymbologySettings.Location = new System.Drawing.Point(4, 22);
-            this.adminTab_SymbologySettings.Name = "adminTab_SymbologySettings";
-            this.adminTab_SymbologySettings.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SymbologySettings.Size = new System.Drawing.Size(609, 718);
-            this.adminTab_SymbologySettings.TabIndex = 5;
-            this.adminTab_SymbologySettings.Text = "Project Settings";
-            this.adminTab_SymbologySettings.UseVisualStyleBackColor = true;
+            this.adminTab_AliSettings.Controls.Add(this.chkNetworkfleet);
+            this.adminTab_AliSettings.Controls.Add(this.pnlAliNetworkfleet);
+            this.adminTab_AliSettings.Controls.Add(this.btnAliValidate);
+            this.adminTab_AliSettings.Controls.Add(this.pnlAliEnterpol);
+            this.adminTab_AliSettings.Controls.Add(this.pnlAliGlobalCad);
+            this.adminTab_AliSettings.Controls.Add(this.pnlAliSdrAliServer);
+            this.adminTab_AliSettings.Controls.Add(this.cmbAliMode);
+            this.adminTab_AliSettings.Location = new System.Drawing.Point(4, 22);
+            this.adminTab_AliSettings.Name = "adminTab_AliSettings";
+            this.adminTab_AliSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.adminTab_AliSettings.Size = new System.Drawing.Size(609, 718);
+            this.adminTab_AliSettings.TabIndex = 6;
+            this.adminTab_AliSettings.Text = "ALI Settings";
+            this.adminTab_AliSettings.UseVisualStyleBackColor = true;
             // 
             // chkNetworkfleet
             // 
             this.chkNetworkfleet.AutoSize = true;
-            this.chkNetworkfleet.Location = new System.Drawing.Point(29, 328);
+            this.chkNetworkfleet.Location = new System.Drawing.Point(32, 120);
             this.chkNetworkfleet.Name = "chkNetworkfleet";
             this.chkNetworkfleet.Size = new System.Drawing.Size(146, 17);
-            this.chkNetworkfleet.TabIndex = 4;
+            this.chkNetworkfleet.TabIndex = 65;
             this.chkNetworkfleet.Text = "Use Verizon Networkfleet";
             this.chkNetworkfleet.UseVisualStyleBackColor = true;
-            this.chkNetworkfleet.CheckedChanged += new System.EventHandler(this.chkNetworkfleet_CheckedChanged);
             // 
             // pnlAliNetworkfleet
             // 
@@ -1009,10 +1278,10 @@
             this.pnlAliNetworkfleet.Controls.Add(this.label5);
             this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetUdpPort);
             this.pnlAliNetworkfleet.Controls.Add(this.txtAliNetworkfleetUdpHost);
-            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(8, 351);
+            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(11, 143);
             this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
             this.pnlAliNetworkfleet.Size = new System.Drawing.Size(196, 226);
-            this.pnlAliNetworkfleet.TabIndex = 64;
+            this.pnlAliNetworkfleet.TabIndex = 71;
             this.pnlAliNetworkfleet.Visible = false;
             // 
             // ptAliNetworkfleetColor
@@ -1048,7 +1317,6 @@
             this.btnAliNetworkfleetFont.TabIndex = 68;
             this.btnAliNetworkfleetFont.Text = "Font";
             this.btnAliNetworkfleetFont.UseVisualStyleBackColor = true;
-            this.btnAliNetworkfleetFont.Click += new System.EventHandler(this.btnAliNetworkfleetFont_Click);
             // 
             // ptAliNetworkfleetChar
             // 
@@ -1104,16 +1372,40 @@
             // 
             // btnAliValidate
             // 
-            this.btnAliValidate.Location = new System.Drawing.Point(129, 289);
+            this.btnAliValidate.Location = new System.Drawing.Point(132, 81);
             this.btnAliValidate.Name = "btnAliValidate";
             this.btnAliValidate.Size = new System.Drawing.Size(75, 23);
-            this.btnAliValidate.TabIndex = 63;
+            this.btnAliValidate.TabIndex = 70;
             this.btnAliValidate.Text = "Validate";
             this.btnAliValidate.UseVisualStyleBackColor = true;
-            this.btnAliValidate.Click += new System.EventHandler(this.btnAliValidate_Click);
             // 
             // pnlAliEnterpol
             // 
+            this.pnlAliEnterpol.Controls.Add(this.panel6);
+            this.pnlAliEnterpol.Controls.Add(this.panel5);
+            this.pnlAliEnterpol.Controls.Add(this.panel4);
+            this.pnlAliEnterpol.Controls.Add(this.label24);
+            this.pnlAliEnterpol.Controls.Add(this.label23);
+            this.pnlAliEnterpol.Controls.Add(this.textBox7);
+            this.pnlAliEnterpol.Controls.Add(this.textBox6);
+            this.pnlAliEnterpol.Controls.Add(this.textBox5);
+            this.pnlAliEnterpol.Controls.Add(this.button1);
+            this.pnlAliEnterpol.Controls.Add(this.panel3);
+            this.pnlAliEnterpol.Controls.Add(this.label22);
+            this.pnlAliEnterpol.Controls.Add(this.panel2);
+            this.pnlAliEnterpol.Controls.Add(this.numericUpDown5);
+            this.pnlAliEnterpol.Controls.Add(this.panel1);
+            this.pnlAliEnterpol.Controls.Add(this.label21);
+            this.pnlAliEnterpol.Controls.Add(this.numericUpDown4);
+            this.pnlAliEnterpol.Controls.Add(this.numericUpDown3);
+            this.pnlAliEnterpol.Controls.Add(this.numericUpDown2);
+            this.pnlAliEnterpol.Controls.Add(this.label20);
+            this.pnlAliEnterpol.Controls.Add(this.numericUpDown1);
+            this.pnlAliEnterpol.Controls.Add(this.label19);
+            this.pnlAliEnterpol.Controls.Add(this.label18);
+            this.pnlAliEnterpol.Controls.Add(this.label17);
+            this.pnlAliEnterpol.Controls.Add(this.textBox4);
+            this.pnlAliEnterpol.Controls.Add(this.label16);
             this.pnlAliEnterpol.Controls.Add(this.label10);
             this.pnlAliEnterpol.Controls.Add(this.textBox3);
             this.pnlAliEnterpol.Controls.Add(this.textBox2);
@@ -1125,37 +1417,141 @@
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolInitialCatalog);
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolDataSource);
             this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolTableName);
-            this.pnlAliEnterpol.Location = new System.Drawing.Point(210, 495);
+            this.pnlAliEnterpol.Location = new System.Drawing.Point(213, 247);
             this.pnlAliEnterpol.Name = "pnlAliEnterpol";
-            this.pnlAliEnterpol.Size = new System.Drawing.Size(379, 217);
-            this.pnlAliEnterpol.TabIndex = 62;
+            this.pnlAliEnterpol.Size = new System.Drawing.Size(379, 455);
+            this.pnlAliEnterpol.TabIndex = 69;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(254, 140);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(108, 13);
+            this.label22.TabIndex = 25;
+            this.label22.Text = "Read Frequency (ms)";
+            // 
+            // numericUpDown5
+            // 
+            this.numericUpDown5.Location = new System.Drawing.Point(267, 159);
+            this.numericUpDown5.Name = "numericUpDown5";
+            this.numericUpDown5.Size = new System.Drawing.Size(90, 20);
+            this.numericUpDown5.TabIndex = 24;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(29, 256);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(124, 13);
+            this.label21.TabIndex = 23;
+            this.label21.Text = "AVL Age Frequency (ms)";
+            // 
+            // numericUpDown4
+            // 
+            this.numericUpDown4.Location = new System.Drawing.Point(254, 281);
+            this.numericUpDown4.Name = "numericUpDown4";
+            this.numericUpDown4.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDown4.TabIndex = 22;
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Location = new System.Drawing.Point(125, 281);
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDown3.TabIndex = 21;
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(23, 281);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(84, 20);
+            this.numericUpDown2.TabIndex = 20;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(245, 182);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(117, 13);
+            this.label20.TabIndex = 19;
+            this.label20.Text = "Update Frequency (ms)";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(306, 199);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDown1.TabIndex = 18;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(24, 198);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(130, 13);
+            this.label19.TabIndex = 17;
+            this.label19.Text = "SetMyLocation Procedure";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(55, 228);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(100, 13);
+            this.label18.TabIndex = 16;
+            this.label18.Text = "WhoAmI Procedure";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(11, 179);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(0, 13);
+            this.label17.TabIndex = 15;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(161, 225);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(196, 20);
+            this.textBox4.TabIndex = 14;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(44, 124);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(84, 13);
+            this.label16.TabIndex = 13;
+            this.label16.Text = "Database Name";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(31, 110);
+            this.label10.Location = new System.Drawing.Point(14, 166);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(94, 13);
+            this.label10.Size = new System.Drawing.Size(89, 13);
             this.label10.TabIndex = 12;
-            this.label10.Text = "Active Units Table";
+            this.label10.Text = "Units Table/View";
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(125, 159);
+            this.textBox3.Location = new System.Drawing.Point(163, 198);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(206, 20);
+            this.textBox3.Size = new System.Drawing.Size(137, 20);
             this.textBox3.TabIndex = 11;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(125, 133);
+            this.textBox2.Location = new System.Drawing.Point(114, 159);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(206, 20);
+            this.textBox2.Size = new System.Drawing.Size(147, 20);
             this.textBox2.TabIndex = 10;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(125, 107);
+            this.textBox1.Location = new System.Drawing.Point(134, 117);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(206, 20);
             this.textBox1.TabIndex = 9;
@@ -1163,7 +1559,7 @@
             // chkAvl
             // 
             this.chkAvl.AutoSize = true;
-            this.chkAvl.Location = new System.Drawing.Point(15, 84);
+            this.chkAvl.Location = new System.Drawing.Point(24, 94);
             this.chkAvl.Name = "chkAvl";
             this.chkAvl.Size = new System.Drawing.Size(177, 17);
             this.chkAvl.TabIndex = 8;
@@ -1173,20 +1569,20 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(202, 50);
+            this.label13.Location = new System.Drawing.Point(211, 52);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(73, 13);
+            this.label13.Size = new System.Drawing.Size(108, 13);
             this.label13.TabIndex = 7;
-            this.label13.Text = "Initial Catalog:";
+            this.label13.Text = "Incidents Table/View";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(19, 52);
+            this.label12.Location = new System.Drawing.Point(9, 72);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(68, 13);
+            this.label12.Size = new System.Drawing.Size(87, 13);
             this.label12.TabIndex = 6;
-            this.label12.Text = "Table Name:";
+            this.label12.Text = "Database Name:";
             // 
             // label11
             // 
@@ -1199,7 +1595,7 @@
             // 
             // txtAliEnterpolInitialCatalog
             // 
-            this.txtAliEnterpolInitialCatalog.Location = new System.Drawing.Point(277, 47);
+            this.txtAliEnterpolInitialCatalog.Location = new System.Drawing.Point(214, 68);
             this.txtAliEnterpolInitialCatalog.Name = "txtAliEnterpolInitialCatalog";
             this.txtAliEnterpolInitialCatalog.Size = new System.Drawing.Size(91, 20);
             this.txtAliEnterpolInitialCatalog.TabIndex = 3;
@@ -1213,7 +1609,7 @@
             // 
             // txtAliEnterpolTableName
             // 
-            this.txtAliEnterpolTableName.Location = new System.Drawing.Point(92, 49);
+            this.txtAliEnterpolTableName.Location = new System.Drawing.Point(108, 68);
             this.txtAliEnterpolTableName.Name = "txtAliEnterpolTableName";
             this.txtAliEnterpolTableName.Size = new System.Drawing.Size(100, 20);
             this.txtAliEnterpolTableName.TabIndex = 1;
@@ -1229,10 +1625,10 @@
             this.pnlAliGlobalCad.Controls.Add(this.label14);
             this.pnlAliGlobalCad.Controls.Add(this.btnAliGlobalCadLogPathBrowse);
             this.pnlAliGlobalCad.Controls.Add(this.txtAliGlobalCadLogPath);
-            this.pnlAliGlobalCad.Location = new System.Drawing.Point(210, 376);
+            this.pnlAliGlobalCad.Location = new System.Drawing.Point(213, 132);
             this.pnlAliGlobalCad.Name = "pnlAliGlobalCad";
-            this.pnlAliGlobalCad.Size = new System.Drawing.Size(379, 113);
-            this.pnlAliGlobalCad.TabIndex = 61;
+            this.pnlAliGlobalCad.Size = new System.Drawing.Size(379, 109);
+            this.pnlAliGlobalCad.TabIndex = 68;
             // 
             // btnAliGlobalCadConfigIniBrowse
             // 
@@ -1242,7 +1638,6 @@
             this.btnAliGlobalCadConfigIniBrowse.TabIndex = 8;
             this.btnAliGlobalCadConfigIniBrowse.Text = "Browse";
             this.btnAliGlobalCadConfigIniBrowse.UseVisualStyleBackColor = true;
-            this.btnAliGlobalCadConfigIniBrowse.Click += new System.EventHandler(this.btnAliGlobalCadConfigIniBrowse_Click);
             // 
             // btnAliGlobalCadArchivePathBrowse
             // 
@@ -1252,7 +1647,6 @@
             this.btnAliGlobalCadArchivePathBrowse.TabIndex = 7;
             this.btnAliGlobalCadArchivePathBrowse.Text = "Browse";
             this.btnAliGlobalCadArchivePathBrowse.UseVisualStyleBackColor = true;
-            this.btnAliGlobalCadArchivePathBrowse.Click += new System.EventHandler(this.btnAliGlobalCadArchivePathBrowse_Click);
             // 
             // txtAliGlobalCadConfigIni
             // 
@@ -1303,7 +1697,6 @@
             this.btnAliGlobalCadLogPathBrowse.TabIndex = 1;
             this.btnAliGlobalCadLogPathBrowse.Text = "Browse";
             this.btnAliGlobalCadLogPathBrowse.UseVisualStyleBackColor = true;
-            this.btnAliGlobalCadLogPathBrowse.Click += new System.EventHandler(this.btnAliGlobalCadLogPathBrowse_Click);
             // 
             // txtAliGlobalCadLogPath
             // 
@@ -1321,10 +1714,10 @@
             this.pnlAliSdrAliServer.Controls.Add(this.txtAliInterfaceUdpHost);
             this.pnlAliSdrAliServer.Controls.Add(this.btnAliInterfaceDbPathBrowse);
             this.pnlAliSdrAliServer.Controls.Add(this.txtAliInterfaceDbPath);
-            this.pnlAliSdrAliServer.Location = new System.Drawing.Point(210, 254);
+            this.pnlAliSdrAliServer.Location = new System.Drawing.Point(213, 46);
             this.pnlAliSdrAliServer.Name = "pnlAliSdrAliServer";
-            this.pnlAliSdrAliServer.Size = new System.Drawing.Size(375, 116);
-            this.pnlAliSdrAliServer.TabIndex = 60;
+            this.pnlAliSdrAliServer.Size = new System.Drawing.Size(375, 80);
+            this.pnlAliSdrAliServer.TabIndex = 67;
             // 
             // numAliInterfaceUdpPort
             // 
@@ -1380,7 +1773,6 @@
             this.btnAliInterfaceDbPathBrowse.TabIndex = 1;
             this.btnAliInterfaceDbPathBrowse.Text = "Browse";
             this.btnAliInterfaceDbPathBrowse.UseVisualStyleBackColor = true;
-            this.btnAliInterfaceDbPathBrowse.Click += new System.EventHandler(this.btnAliInterfaceDbPathBrowse_Click);
             // 
             // txtAliInterfaceDbPath
             // 
@@ -1392,238 +1784,10 @@
             // cmbAliMode
             // 
             this.cmbAliMode.FormattingEnabled = true;
-            this.cmbAliMode.Location = new System.Drawing.Point(18, 262);
+            this.cmbAliMode.Location = new System.Drawing.Point(21, 54);
             this.cmbAliMode.Name = "cmbAliMode";
             this.cmbAliMode.Size = new System.Drawing.Size(186, 21);
-            this.cmbAliMode.TabIndex = 59;
-            this.cmbAliMode.SelectedIndexChanged += new System.EventHandler(this.cmbAliMode_SelectedIndexChanged);
-            // 
-            // ptSymbolColorSlider
-            // 
-            this.ptSymbolColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ptSymbolColorSlider.ColorButton = null;
-            this.ptSymbolColorSlider.FlipRamp = false;
-            this.ptSymbolColorSlider.FlipText = false;
-            this.ptSymbolColorSlider.InvertRamp = false;
-            this.ptSymbolColorSlider.Location = new System.Drawing.Point(148, 35);
-            this.ptSymbolColorSlider.Maximum = 1D;
-            this.ptSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
-            this.ptSymbolColorSlider.Minimum = 0D;
-            this.ptSymbolColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.ptSymbolColorSlider.Name = "ptSymbolColorSlider";
-            this.ptSymbolColorSlider.NumberFormat = "#%";
-            this.ptSymbolColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.ptSymbolColorSlider.RampRadius = 10F;
-            this.ptSymbolColorSlider.RampText = null;
-            this.ptSymbolColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ptSymbolColorSlider.RampTextBehindRamp = false;
-            this.ptSymbolColorSlider.RampTextColor = System.Drawing.Color.Black;
-            this.ptSymbolColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ptSymbolColorSlider.ShowMaximum = false;
-            this.ptSymbolColorSlider.ShowMinimum = false;
-            this.ptSymbolColorSlider.ShowTicks = true;
-            this.ptSymbolColorSlider.ShowValue = true;
-            this.ptSymbolColorSlider.Size = new System.Drawing.Size(122, 23);
-            this.ptSymbolColorSlider.SliderColor = System.Drawing.Color.Blue;
-            this.ptSymbolColorSlider.SliderRadius = 4F;
-            this.ptSymbolColorSlider.TabIndex = 47;
-            this.ptSymbolColorSlider.Text = "rampSlider1";
-            this.ptSymbolColorSlider.TickColor = System.Drawing.Color.DarkGray;
-            this.ptSymbolColorSlider.TickSpacing = 5F;
-            this.ptSymbolColorSlider.Value = 1D;
-            // 
-            // lineSymbolColorSlider
-            // 
-            this.lineSymbolColorSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.lineSymbolColorSlider.ColorButton = null;
-            this.lineSymbolColorSlider.FlipRamp = false;
-            this.lineSymbolColorSlider.FlipText = false;
-            this.lineSymbolColorSlider.InvertRamp = false;
-            this.lineSymbolColorSlider.Location = new System.Drawing.Point(148, 107);
-            this.lineSymbolColorSlider.Maximum = 1D;
-            this.lineSymbolColorSlider.MaximumColor = System.Drawing.Color.Green;
-            this.lineSymbolColorSlider.Minimum = 0D;
-            this.lineSymbolColorSlider.MinimumColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.lineSymbolColorSlider.Name = "lineSymbolColorSlider";
-            this.lineSymbolColorSlider.NumberFormat = "#%";
-            this.lineSymbolColorSlider.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.lineSymbolColorSlider.RampRadius = 10F;
-            this.lineSymbolColorSlider.RampText = null;
-            this.lineSymbolColorSlider.RampTextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lineSymbolColorSlider.RampTextBehindRamp = false;
-            this.lineSymbolColorSlider.RampTextColor = System.Drawing.Color.Black;
-            this.lineSymbolColorSlider.RampTextFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lineSymbolColorSlider.ShowMaximum = false;
-            this.lineSymbolColorSlider.ShowMinimum = false;
-            this.lineSymbolColorSlider.ShowTicks = true;
-            this.lineSymbolColorSlider.ShowValue = true;
-            this.lineSymbolColorSlider.Size = new System.Drawing.Size(143, 23);
-            this.lineSymbolColorSlider.SliderColor = System.Drawing.Color.Blue;
-            this.lineSymbolColorSlider.SliderRadius = 4F;
-            this.lineSymbolColorSlider.TabIndex = 46;
-            this.lineSymbolColorSlider.Text = "rampSlider1";
-            this.lineSymbolColorSlider.TickColor = System.Drawing.Color.DarkGray;
-            this.lineSymbolColorSlider.TickSpacing = 5F;
-            this.lineSymbolColorSlider.Value = 1D;
-            // 
-            // lblHydrantDist
-            // 
-            this.lblHydrantDist.AutoSize = true;
-            this.lblHydrantDist.Location = new System.Drawing.Point(26, 196);
-            this.lblHydrantDist.Name = "lblHydrantDist";
-            this.lblHydrantDist.Size = new System.Drawing.Size(89, 13);
-            this.lblHydrantDist.TabIndex = 44;
-            this.lblHydrantDist.Text = "Hydrant Distance";
-            // 
-            // lblZoomFactor
-            // 
-            this.lblZoomFactor.AutoSize = true;
-            this.lblZoomFactor.Location = new System.Drawing.Point(122, 196);
-            this.lblZoomFactor.Name = "lblZoomFactor";
-            this.lblZoomFactor.Size = new System.Drawing.Size(67, 13);
-            this.lblZoomFactor.TabIndex = 43;
-            this.lblZoomFactor.Text = "Zoom Factor";
-            // 
-            // lblBufDist
-            // 
-            this.lblBufDist.AutoSize = true;
-            this.lblBufDist.Location = new System.Drawing.Point(288, 196);
-            this.lblBufDist.Name = "lblBufDist";
-            this.lblBufDist.Size = new System.Drawing.Size(117, 13);
-            this.lblBufDist.TabIndex = 42;
-            this.lblBufDist.Text = "Search Buffer Distance";
-            // 
-            // lblHydrantCount
-            // 
-            this.lblHydrantCount.AutoSize = true;
-            this.lblHydrantCount.Location = new System.Drawing.Point(207, 196);
-            this.lblHydrantCount.Name = "lblHydrantCount";
-            this.lblHydrantCount.Size = new System.Drawing.Size(75, 13);
-            this.lblHydrantCount.TabIndex = 41;
-            this.lblHydrantCount.Text = "Hydrant Count";
-            // 
-            // searchHydrantDistance
-            // 
-            this.searchHydrantDistance.Location = new System.Drawing.Point(29, 215);
-            this.searchHydrantDistance.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.searchHydrantDistance.Name = "searchHydrantDistance";
-            this.searchHydrantDistance.Size = new System.Drawing.Size(78, 20);
-            this.searchHydrantDistance.TabIndex = 40;
-            // 
-            // searchBufferDistance
-            // 
-            this.searchBufferDistance.Location = new System.Drawing.Point(296, 212);
-            this.searchBufferDistance.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.searchBufferDistance.Name = "searchBufferDistance";
-            this.searchBufferDistance.Size = new System.Drawing.Size(77, 20);
-            this.searchBufferDistance.TabIndex = 39;
-            // 
-            // searchZoomFactor
-            // 
-            this.searchZoomFactor.DecimalPlaces = 2;
-            this.searchZoomFactor.Increment = new decimal(new int[] {
-            25,
-            0,
-            0,
-            131072});
-            this.searchZoomFactor.Location = new System.Drawing.Point(123, 212);
-            this.searchZoomFactor.Name = "searchZoomFactor";
-            this.searchZoomFactor.Size = new System.Drawing.Size(66, 20);
-            this.searchZoomFactor.TabIndex = 38;
-            // 
-            // searchHydrantCount
-            // 
-            this.searchHydrantCount.Location = new System.Drawing.Point(210, 212);
-            this.searchHydrantCount.Name = "searchHydrantCount";
-            this.searchHydrantCount.Size = new System.Drawing.Size(66, 20);
-            this.searchHydrantCount.TabIndex = 37;
-            // 
-            // lineSymbolBorderColor
-            // 
-            this.lineSymbolBorderColor.Location = new System.Drawing.Point(93, 140);
-            this.lineSymbolBorderColor.Name = "lineSymbolBorderColor";
-            this.lineSymbolBorderColor.Size = new System.Drawing.Size(34, 36);
-            this.lineSymbolBorderColor.TabIndex = 36;
-            // 
-            // lineSymbolCap
-            // 
-            this.lineSymbolCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.lineSymbolCap.FormattingEnabled = true;
-            this.lineSymbolCap.Location = new System.Drawing.Point(148, 140);
-            this.lineSymbolCap.Name = "lineSymbolCap";
-            this.lineSymbolCap.Size = new System.Drawing.Size(206, 21);
-            this.lineSymbolCap.TabIndex = 35;
-            // 
-            // lineSymbolSize
-            // 
-            this.lineSymbolSize.Location = new System.Drawing.Point(547, 110);
-            this.lineSymbolSize.Name = "lineSymbolSize";
-            this.lineSymbolSize.Size = new System.Drawing.Size(46, 20);
-            this.lineSymbolSize.TabIndex = 34;
-            // 
-            // lineSymbolStyle
-            // 
-            this.lineSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.lineSymbolStyle.FormattingEnabled = true;
-            this.lineSymbolStyle.Location = new System.Drawing.Point(297, 109);
-            this.lineSymbolStyle.Name = "lineSymbolStyle";
-            this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
-            this.lineSymbolStyle.TabIndex = 33;
-            // 
-            // lineSymbolColor
-            // 
-            this.lineSymbolColor.Location = new System.Drawing.Point(93, 94);
-            this.lineSymbolColor.Name = "lineSymbolColor";
-            this.lineSymbolColor.Size = new System.Drawing.Size(34, 36);
-            this.lineSymbolColor.TabIndex = 32;
-            // 
-            // ptSymbolSize
-            // 
-            this.ptSymbolSize.Location = new System.Drawing.Point(491, 35);
-            this.ptSymbolSize.Name = "ptSymbolSize";
-            this.ptSymbolSize.Size = new System.Drawing.Size(72, 20);
-            this.ptSymbolSize.TabIndex = 31;
-            // 
-            // ptSymbolColor
-            // 
-            this.ptSymbolColor.Location = new System.Drawing.Point(120, 35);
-            this.ptSymbolColor.Name = "ptSymbolColor";
-            this.ptSymbolColor.Size = new System.Drawing.Size(22, 24);
-            this.ptSymbolColor.TabIndex = 30;
-            // 
-            // ptSymbolStyle
-            // 
-            this.ptSymbolStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ptSymbolStyle.FormattingEnabled = true;
-            this.ptSymbolStyle.Location = new System.Drawing.Point(280, 35);
-            this.ptSymbolStyle.Name = "ptSymbolStyle";
-            this.ptSymbolStyle.Size = new System.Drawing.Size(205, 21);
-            this.ptSymbolStyle.TabIndex = 29;
-            // 
-            // lineSymbolGraphic
-            // 
-            this.lineSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lineSymbolGraphic.Location = new System.Drawing.Point(35, 85);
-            this.lineSymbolGraphic.Name = "lineSymbolGraphic";
-            this.lineSymbolGraphic.Size = new System.Drawing.Size(45, 45);
-            this.lineSymbolGraphic.TabIndex = 28;
-            // 
-            // ptSymbolGraphic
-            // 
-            this.ptSymbolGraphic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptSymbolGraphic.Location = new System.Drawing.Point(35, 15);
-            this.ptSymbolGraphic.Margin = new System.Windows.Forms.Padding(0);
-            this.ptSymbolGraphic.Name = "ptSymbolGraphic";
-            this.ptSymbolGraphic.Size = new System.Drawing.Size(45, 45);
-            this.ptSymbolGraphic.TabIndex = 27;
+            this.cmbAliMode.TabIndex = 66;
             // 
             // btnSplitSave
             // 
@@ -1652,6 +1816,96 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(165, 348);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(24, 24);
+            this.panel1.TabIndex = 72;
+            // 
+            // panel2
+            // 
+            this.panel2.Location = new System.Drawing.Point(165, 378);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(24, 23);
+            this.panel2.TabIndex = 73;
+            // 
+            // panel3
+            // 
+            this.panel3.Location = new System.Drawing.Point(165, 406);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(25, 22);
+            this.panel3.TabIndex = 74;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(58, 307);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 75;
+            this.button1.Text = "Font";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(214, 352);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(100, 20);
+            this.textBox5.TabIndex = 76;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(214, 378);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(94, 20);
+            this.textBox6.TabIndex = 77;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(209, 406);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(100, 20);
+            this.textBox7.TabIndex = 78;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(144, 313);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(59, 13);
+            this.label23.TabIndex = 79;
+            this.label23.Text = "Font Name";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(246, 317);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(51, 13);
+            this.label24.TabIndex = 80;
+            this.label24.Text = "Font Size";
+            // 
+            // panel4
+            // 
+            this.panel4.Location = new System.Drawing.Point(23, 339);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(52, 45);
+            this.panel4.TabIndex = 81;
+            // 
+            // panel5
+            // 
+            this.panel5.Location = new System.Drawing.Point(20, 401);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(55, 51);
+            this.panel5.TabIndex = 82;
+            // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(93, 362);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(60, 54);
+            this.panel6.TabIndex = 83;
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1663,7 +1917,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.adminTab_Control.ResumeLayout(false);
-            this.adminTab_LayerManagement.ResumeLayout(false);
+            this.adminTab_MapConfiguration.ResumeLayout(false);
             this.adminLayerSplitter.Panel1.ResumeLayout(false);
             this.adminLayerSplitter.Panel2.ResumeLayout(false);
             this.adminLayerSplitter.Panel2.PerformLayout();
@@ -1677,30 +1931,36 @@
             this.panelRadKeyLocations.PerformLayout();
             this.panelRadAddress.ResumeLayout(false);
             this.panelRadAddress.PerformLayout();
+            this.adminTab_ProjectSettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
             this.adminTab_ProgramManagement.ResumeLayout(false);
             this.adminTab_ProgramManagement.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHotKeys)).EndInit();
-            this.adminTab_SearchProperties.ResumeLayout(false);
-            this.adminTab_SearchProperties.PerformLayout();
+            this.adminTab_SearchSettings.ResumeLayout(false);
+            this.adminTab_SearchSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
-            this.adminTab_SymbologySettings.ResumeLayout(false);
-            this.adminTab_SymbologySettings.PerformLayout();
+            this.adminTab_AliSettings.ResumeLayout(false);
+            this.adminTab_AliSettings.PerformLayout();
             this.pnlAliNetworkfleet.ResumeLayout(false);
             this.pnlAliNetworkfleet.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).EndInit();
             this.pnlAliEnterpol.ResumeLayout(false);
             this.pnlAliEnterpol.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.pnlAliGlobalCad.ResumeLayout(false);
             this.pnlAliGlobalCad.PerformLayout();
             this.pnlAliSdrAliServer.ResumeLayout(false);
             this.pnlAliSdrAliServer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantDistance)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchBufferDistance)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchZoomFactor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1711,7 +1971,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.TabControl adminTab_Control;
-        private System.Windows.Forms.TabPage adminTab_LayerManagement;
+        private System.Windows.Forms.TabPage adminTab_MapConfiguration;
         private System.Windows.Forms.SplitContainer adminLayerSplitter;
         private System.Windows.Forms.SplitContainer legendSplitter;
         private System.Windows.Forms.TableLayoutPanel legendButtonTable;
@@ -1747,7 +2007,7 @@
         private System.Windows.Forms.CheckedListBox chkRoadLayers;
         private System.Windows.Forms.CheckedListBox chkAddressLayers;
         private System.Windows.Forms.ComboBox cmbNotesLayer;
-        private System.Windows.Forms.TabPage adminTab_SearchProperties;
+        private System.Windows.Forms.TabPage adminTab_SearchSettings;
         private System.Windows.Forms.DataGridView dgvLayerIndex;
         private System.Windows.Forms.Button btnCreateIndex;
         private System.Windows.Forms.ComboBox cmbLayerIndex;
@@ -1771,11 +2031,7 @@
         private System.Windows.Forms.Button btnSaveHotKeys;
         private System.Windows.Forms.CheckBox chkPretypes;
         private System.Windows.Forms.CheckBox chkEnableQueryParserLog;
-        private System.Windows.Forms.TabPage adminTab_SymbologySettings;
-        private System.Windows.Forms.NumericUpDown searchHydrantDistance;
-        private System.Windows.Forms.NumericUpDown searchBufferDistance;
-        private System.Windows.Forms.NumericUpDown searchZoomFactor;
-        private System.Windows.Forms.NumericUpDown searchHydrantCount;
+        private System.Windows.Forms.TabPage adminTab_ProjectSettings;
         private System.Windows.Forms.Panel lineSymbolBorderColor;
         private System.Windows.Forms.ComboBox lineSymbolCap;
         private System.Windows.Forms.NumericUpDown lineSymbolSize;
@@ -1786,56 +2042,86 @@
         private System.Windows.Forms.ComboBox ptSymbolStyle;
         private System.Windows.Forms.Panel lineSymbolGraphic;
         private System.Windows.Forms.Panel ptSymbolGraphic;
+        private DotSpatial.Symbology.Forms.RampSlider lineSymbolColorSlider;
+        private DotSpatial.Symbology.Forms.RampSlider ptSymbolColorSlider;
         private System.Windows.Forms.Label lblHydrantDist;
         private System.Windows.Forms.Label lblZoomFactor;
         private System.Windows.Forms.Label lblBufDist;
         private System.Windows.Forms.Label lblHydrantCount;
-        private DotSpatial.Symbology.Forms.RampSlider lineSymbolColorSlider;
-        private DotSpatial.Symbology.Forms.RampSlider ptSymbolColorSlider;
-        private System.Windows.Forms.Panel pnlAliEnterpol;
-        private System.Windows.Forms.TextBox txtAliEnterpolInitialCatalog;
-        private System.Windows.Forms.TextBox txtAliEnterpolDataSource;
-        private System.Windows.Forms.TextBox txtAliEnterpolTableName;
-        private System.Windows.Forms.Panel pnlAliGlobalCad;
-        private System.Windows.Forms.Button btnAliGlobalCadLogPathBrowse;
-        private System.Windows.Forms.TextBox txtAliGlobalCadLogPath;
-        private System.Windows.Forms.Panel pnlAliSdrAliServer;
-        private System.Windows.Forms.TextBox txtAliInterfaceUdpHost;
-        private System.Windows.Forms.Button btnAliInterfaceDbPathBrowse;
-        private System.Windows.Forms.TextBox txtAliInterfaceDbPath;
-        private System.Windows.Forms.ComboBox cmbAliMode;
-        private System.Windows.Forms.NumericUpDown numAliInterfaceUdpPort;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button btnAliValidate;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox txtAliGlobalCadArchivePath;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox txtAliGlobalCadConfigIni;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnAliGlobalCadConfigIniBrowse;
-        private System.Windows.Forms.Button btnAliGlobalCadArchivePathBrowse;
+        private System.Windows.Forms.NumericUpDown searchHydrantDistance;
+        private System.Windows.Forms.NumericUpDown searchBufferDistance;
+        private System.Windows.Forms.NumericUpDown searchZoomFactor;
+        private System.Windows.Forms.NumericUpDown searchHydrantCount;
+        private System.Windows.Forms.TabPage adminTab_AliSettings;
+        private System.Windows.Forms.CheckBox chkNetworkfleet;
         private System.Windows.Forms.Panel pnlAliNetworkfleet;
+        private System.Windows.Forms.Panel ptAliNetworkfleetColor;
+        private System.Windows.Forms.Label ptAliNetworkfleetSize;
+        private System.Windows.Forms.Label ptAliNetworkfleetFont;
+        private System.Windows.Forms.Button btnAliNetworkfleetFont;
+        private System.Windows.Forms.TextBox ptAliNetworkfleetChar;
+        private System.Windows.Forms.Panel ptAliNetworkfleetGraphic;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numAliNetworkfleetUdpPort;
         private System.Windows.Forms.TextBox txtAliNetworkfleetUdpHost;
-        private System.Windows.Forms.CheckBox chkNetworkfleet;
-        private System.Windows.Forms.Panel ptAliNetworkfleetGraphic;
-        private System.Windows.Forms.TextBox ptAliNetworkfleetChar;
-        private System.Windows.Forms.Label ptAliNetworkfleetFont;
-        private System.Windows.Forms.Button btnAliNetworkfleetFont;
-        private System.Windows.Forms.Label ptAliNetworkfleetSize;
-        private System.Windows.Forms.Panel ptAliNetworkfleetColor;
+        private System.Windows.Forms.Button btnAliValidate;
+        private System.Windows.Forms.Panel pnlAliEnterpol;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckBox chkAvl;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox txtAliEnterpolInitialCatalog;
+        private System.Windows.Forms.TextBox txtAliEnterpolDataSource;
+        private System.Windows.Forms.TextBox txtAliEnterpolTableName;
+        private System.Windows.Forms.Panel pnlAliGlobalCad;
+        private System.Windows.Forms.Button btnAliGlobalCadConfigIniBrowse;
+        private System.Windows.Forms.Button btnAliGlobalCadArchivePathBrowse;
+        private System.Windows.Forms.TextBox txtAliGlobalCadConfigIni;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtAliGlobalCadArchivePath;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btnAliGlobalCadLogPathBrowse;
+        private System.Windows.Forms.TextBox txtAliGlobalCadLogPath;
+        private System.Windows.Forms.Panel pnlAliSdrAliServer;
+        private System.Windows.Forms.NumericUpDown numAliInterfaceUdpPort;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtAliInterfaceUdpHost;
+        private System.Windows.Forms.Button btnAliInterfaceDbPathBrowse;
+        private System.Windows.Forms.TextBox txtAliInterfaceDbPath;
+        private System.Windows.Forms.ComboBox cmbAliMode;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.NumericUpDown numericUpDown4;
+        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.NumericUpDown numericUpDown5;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }

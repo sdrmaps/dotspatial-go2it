@@ -51,6 +51,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.GraphicPointColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.GraphicPointSize = 18;
             Properties.ProjectSettings.Default.GraphicPointStyle = "Triangle";
+
             Properties.ProjectSettings.Default.HydrantSearchCount = 3;
             Properties.ProjectSettings.Default.HydrantSearchDistance = 250;
             Properties.ProjectSettings.Default.SearchUsePretypes = false;
@@ -60,7 +61,7 @@ namespace SDR.Configuration.Project
 
             Properties.ProjectSettings.Default.AliMode = "Disabled";
             Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
-            Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = string.Empty;
+            Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = "SDRCADInterface";
             Properties.ProjectSettings.Default.AliEnterpolTableName = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadLogPath = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadArchivePath = string.Empty;
@@ -69,15 +70,29 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliSdrServerUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliSdrServerUdpPort = 777;
 
-
-
             Properties.ProjectSettings.Default.AliUseNetworkfleet = false;
             Properties.ProjectSettings.Default.AliNetworkfleetUdpHost = "127.0.0.1";
             Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;
-
             Properties.ProjectSettings.Default.AliNetworkfleetPointChar = 'n';
             Properties.ProjectSettings.Default.AliNetworkfleetPointColor = Color.DarkTurquoise;
             Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 20);
+
+            Properties.ProjectSettings.Default.AliUseEnterpolAVL = false;
+            Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView = "SDRActiveUnitsView";
+            Properties.ProjectSettings.Default.AliEnterpolAVLSetMyLocProc = "SDR_SetMyLocation";
+            Properties.ProjectSettings.Default.AliEnterpolAVLWhoAmIProc = "SDR_WhoAmI";
+            Properties.ProjectSettings.Default.AliEnterpolAVLUpdateFreq = 5000;
+            Properties.ProjectSettings.Default.AliEnterpolAVLAge1Freq = 2;
+            Properties.ProjectSettings.Default.AliEnterpolAVLAge2Freq = 5;
+            Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq = 60;
+            Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq = 50000;
+            Properties.ProjectSettings.Default.AliEnterpolAVLFont = new Font("Microsoft Sans Serif", 8);
+            Properties.ProjectSettings.Default.AliEnterpolAVLLEChars = "PD";
+            Properties.ProjectSettings.Default.AliEnterpolAVLFDChars = "FD";
+            Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars = "EMS";
+            Properties.ProjectSettings.Default.AliEnterpolAVLLEColor = Color.Cyan;
+            Properties.ProjectSettings.Default.AliEnterpolAVLFDColor = Color.Red;
+            Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = Color.LimeGreen;
         }
 
         /// <summary>
@@ -615,6 +630,310 @@ namespace SDR.Configuration.Project
         {
             if (AliEnterpolInitialCatalogChanged != null)
                 AliEnterpolInitialCatalogChanged(this, e);
+        }
+
+        public event EventHandler AliUseEnterpolAvlChanged;
+        public bool AliUseEnterpolAvl
+        {
+            get { return Properties.ProjectSettings.Default.AliUseEnterpolAVL; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliUseNetworkfleet != value)
+                {
+                    Properties.ProjectSettings.Default.AliUseEnterpolAVL = value;
+                    OnAliUseEnterpolAvlChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliUseEnterpolAvlChanged(EventArgs e)
+        {
+            if (AliUseEnterpolAvlChanged != null)
+                AliUseEnterpolAvlChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlUnitsViewChanged;
+        public string AliEnterpolAvlUnitsView
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView = value;
+                    OnAliEnterpolAvlUnitsViewChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlUnitsViewChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlUnitsViewChanged != null)
+                AliEnterpolAvlUnitsViewChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlSetMyLocProcChanged;
+        public string AliEnterpolAvlSetMyLocProc
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLSetMyLocProc; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLSetMyLocProc != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLSetMyLocProc = value;
+                    OnAliEnterpolAvlSetMyLocProcChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlSetMyLocProcChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlSetMyLocProcChanged != null)
+                AliEnterpolAvlSetMyLocProcChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlWhoAmIProcChanged;
+        public string AliEnterpolAvlWhoAmIProc
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLWhoAmIProc; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLWhoAmIProc != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLWhoAmIProc = value;
+                    OnAliEnterpolAvlWhoAmIProcChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlWhoAmIProcChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlWhoAmIProcChanged != null)
+                AliEnterpolAvlWhoAmIProcChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlUpdateFreqChanged;
+        public int AliEnterpolAvlUpdateFreq
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLUpdateFreq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLUpdateFreq != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLUpdateFreq = value;
+                    OnAliEnterpolAvlUpdateFreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlUpdateFreqChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlUpdateFreqChanged != null)
+                AliEnterpolAvlUpdateFreqChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlAge1FreqChanged;
+        public int AliEnterpolAvlAge1Freq
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLAge1Freq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLAge1Freq != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLAge1Freq = value;
+                    OnAliEnterpolAvlAge1FreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlAge1FreqChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlAge1FreqChanged != null)
+                AliEnterpolAvlAge1FreqChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlAge2FreqChanged;
+        public int AliEnterpolAvlAge2Freq
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLAge2Freq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLAge2Freq != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLAge2Freq = value;
+                    OnAliEnterpolAvlAge2FreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlAge2FreqChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlAge2FreqChanged != null)
+                AliEnterpolAvlAge2FreqChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlAge3FreqChanged;
+        public int AliEnterpolAvlAge3Freq
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq = value;
+                    OnAliEnterpolAvlAge3FreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlAge3FreqChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlAge3FreqChanged != null)
+                AliEnterpolAvlAge3FreqChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlReadFreqChanged;
+        public int AliEnterpolAvlReadFreq
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq = value;
+                    OnAliEnterpolAvlReadFreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlReadFreqChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlReadFreqChanged != null)
+                AliEnterpolAvlReadFreqChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlFontChanged;
+        public Font AliEnterpolAvlFont
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLFont; }
+            set
+            {
+                if (!Equals(Properties.ProjectSettings.Default.AliEnterpolAVLFont, value))
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLFont = value;
+                    OnAliEnterpolAvlFontChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlFontChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlFontChanged != null)
+                AliEnterpolAvlFontChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlLeColorChanged;
+        public Color AliEnterpolAvlLeColor
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLEColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLLEColor != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLEColor = value;
+                    OnAliEnterpolAvlLeColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlLeColorChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlLeColorChanged != null)
+                AliEnterpolAvlLeColorChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlEmsColorChanged;
+        public Color AliEnterpolAvlEmsColor
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = value;
+                    OnAliEnterpolAvlEmsColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlEmsColorChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlEmsColorChanged != null)
+                AliEnterpolAvlEmsColorChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlFdColorChanged;
+        public Color AliEnterpolAvlFdColor
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLFDColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLFDColor != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLFDColor = value;
+                    OnAliEnterpolAvlFdColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlFdColorChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlFdColorChanged != null)
+                AliEnterpolAvlFdColorChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlLeCharsChanged;
+        public String AliEnterpolAvlLeChars
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLEChars; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLLEChars != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLEChars = value;
+                    OnAliEnterpolAvlLeCharsChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlLeCharsChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlLeCharsChanged != null)
+                AliEnterpolAvlLeCharsChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlEmsCharsChanged;
+        public String AliEnterpolAvlEmsChars
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars = value;
+                    OnAliEnterpolAvlEmsCharsChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlEmsCharsChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlEmsCharsChanged != null)
+                AliEnterpolAvlEmsCharsChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlFdCharsChanged;
+        public String AliEnterpolAvlFdChars
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLFDChars; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLFDChars != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLFDChars = value;
+                    OnAliEnterpolAvlFdCharsChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlFdCharsChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlFdCharsChanged != null)
+                AliEnterpolAvlFdCharsChanged(this, e);
         }
     }
 }
