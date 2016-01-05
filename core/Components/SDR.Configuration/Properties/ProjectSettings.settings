@@ -140,8 +140,8 @@
     <Setting Name="AliUseEnterpolAVL" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AliEnterpolAVLUnitsView" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SDRActiveUnitsView</Value>
+    <Setting Name="AliEnterpolAVLTableName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AliEnterpolAVLSetMyLocProc" Type="System.String" Scope="User">
       <Value Profile="(Default)">SDR_SetMyLocation</Value>
@@ -167,14 +167,14 @@
     <Setting Name="AliEnterpolAVLFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
     </Setting>
-    <Setting Name="AliEnterpolAVLLEChars" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PD</Value>
+    <Setting Name="AliEnterpolAVLLEChar" Type="System.Char" Scope="User">
+      <Value Profile="(Default)">P</Value>
     </Setting>
-    <Setting Name="AliEnterpolAVLEMSChars" Type="System.String" Scope="User">
-      <Value Profile="(Default)">EMS</Value>
+    <Setting Name="AliEnterpolAVLEMSChar" Type="System.Char" Scope="User">
+      <Value Profile="(Default)">E</Value>
     </Setting>
-    <Setting Name="AliEnterpolAVLFDChars" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FD</Value>
+    <Setting Name="AliEnterpolAVLFDChar" Type="System.Char" Scope="User">
+      <Value Profile="(Default)">F</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLEColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Cyan</Value>
@@ -184,6 +184,9 @@
     </Setting>
     <Setting Name="AliEnterpolAVLFDColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLInitialCatalog" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SDRActiveUnitsView</Value>
     </Setting>
   </Settings>
 </SettingsFile>

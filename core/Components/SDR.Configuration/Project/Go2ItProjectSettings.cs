@@ -61,8 +61,8 @@ namespace SDR.Configuration.Project
 
             Properties.ProjectSettings.Default.AliMode = "Disabled";
             Properties.ProjectSettings.Default.AliEnterpolDataSource = string.Empty;
-            Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = "SDRCADInterface";
             Properties.ProjectSettings.Default.AliEnterpolTableName = string.Empty;
+            Properties.ProjectSettings.Default.AliEnterpolInitialCatalog = "SDRCADInterface";
             Properties.ProjectSettings.Default.AliGlobalCadLogPath = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadArchivePath = string.Empty;
             Properties.ProjectSettings.Default.AliGlobalCadConfigPath = string.Empty;
@@ -78,7 +78,8 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 20);
 
             Properties.ProjectSettings.Default.AliUseEnterpolAVL = false;
-            Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView = "SDRActiveUnitsView";
+            Properties.ProjectSettings.Default.AliEnterpolAVLTableName = string.Empty;
+            Properties.ProjectSettings.Default.AliEnterpolAVLInitialCatalog = "SDRActiveUnitsView";
             Properties.ProjectSettings.Default.AliEnterpolAVLSetMyLocProc = "SDR_SetMyLocation";
             Properties.ProjectSettings.Default.AliEnterpolAVLWhoAmIProc = "SDR_WhoAmI";
             Properties.ProjectSettings.Default.AliEnterpolAVLUpdateFreq = 5000;
@@ -87,9 +88,9 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq = 60;
             Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq = 50000;
             Properties.ProjectSettings.Default.AliEnterpolAVLFont = new Font("Microsoft Sans Serif", 8);
-            Properties.ProjectSettings.Default.AliEnterpolAVLLEChars = "PD";
-            Properties.ProjectSettings.Default.AliEnterpolAVLFDChars = "FD";
-            Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars = "EMS";
+            Properties.ProjectSettings.Default.AliEnterpolAVLLEChar = 'p';
+            Properties.ProjectSettings.Default.AliEnterpolAVLFDChar = 'f';
+            Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar = 'e';
             Properties.ProjectSettings.Default.AliEnterpolAVLLEColor = Color.Cyan;
             Properties.ProjectSettings.Default.AliEnterpolAVLFDColor = Color.Red;
             Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = Color.LimeGreen;
@@ -651,23 +652,42 @@ namespace SDR.Configuration.Project
                 AliUseEnterpolAvlChanged(this, e);
         }
 
-        public event EventHandler AliEnterpolAvlUnitsViewChanged;
-        public string AliEnterpolAvlUnitsView
+        public event EventHandler AliEnterpolAvlInitialCatalogChanged;
+        public string AliEnterpolAvlInitialCatalog
         {
-            get { return Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView; }
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLInitialCatalog; }
             set
             {
-                if (Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView != value)
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLInitialCatalog != value)
                 {
-                    Properties.ProjectSettings.Default.AliEnterpolAVLUnitsView = value;
-                    OnAliEnterpolAvlUnitsViewChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliEnterpolAVLInitialCatalog = value;
+                    OnAliEnterpolAvlInitialCatalogChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliEnterpolAvlUnitsViewChanged(EventArgs e)
+        protected virtual void OnAliEnterpolAvlInitialCatalogChanged(EventArgs e)
         {
-            if (AliEnterpolAvlUnitsViewChanged != null)
-                AliEnterpolAvlUnitsViewChanged(this, e);
+            if (AliEnterpolAvlInitialCatalogChanged != null)
+                AliEnterpolAvlInitialCatalogChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlTableNameChanged;
+        public string AliEnterpolAvlTableName
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLTableName; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLTableName != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLTableName = value;
+                    OnAliEnterpolAvlTableNameChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlTableNameChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlTableNameChanged != null)
+                AliEnterpolAvlTableNameChanged(this, e);
         }
 
         public event EventHandler AliEnterpolAvlSetMyLocProcChanged;
@@ -879,61 +899,61 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlFdColorChanged(this, e);
         }
 
-        public event EventHandler AliEnterpolAvlLeCharsChanged;
-        public String AliEnterpolAvlLeChars
+        public event EventHandler AliEnterpolAvlLeCharChanged;
+        public Char AliEnterpolAvlLeChar
         {
-            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLEChars; }
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLEChar; }
             set
             {
-                if (Properties.ProjectSettings.Default.AliEnterpolAVLLEChars != value)
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLLEChar != value)
                 {
-                    Properties.ProjectSettings.Default.AliEnterpolAVLLEChars = value;
-                    OnAliEnterpolAvlLeCharsChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLEChar = value;
+                    OnAliEnterpolAvlLeCharChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliEnterpolAvlLeCharsChanged(EventArgs e)
+        protected virtual void OnAliEnterpolAvlLeCharChanged(EventArgs e)
         {
-            if (AliEnterpolAvlLeCharsChanged != null)
-                AliEnterpolAvlLeCharsChanged(this, e);
+            if (AliEnterpolAvlLeCharChanged != null)
+                AliEnterpolAvlLeCharChanged(this, e);
         }
 
-        public event EventHandler AliEnterpolAvlEmsCharsChanged;
-        public String AliEnterpolAvlEmsChars
+        public event EventHandler AliEnterpolAvlEmsCharChanged;
+        public Char AliEnterpolAvlEmsChar
         {
-            get { return Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars; }
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar; }
             set
             {
-                if (Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars != value)
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar != value)
                 {
-                    Properties.ProjectSettings.Default.AliEnterpolAVLEMSChars = value;
-                    OnAliEnterpolAvlEmsCharsChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar = value;
+                    OnAliEnterpolAvlEmsCharChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliEnterpolAvlEmsCharsChanged(EventArgs e)
+        protected virtual void OnAliEnterpolAvlEmsCharChanged(EventArgs e)
         {
-            if (AliEnterpolAvlEmsCharsChanged != null)
-                AliEnterpolAvlEmsCharsChanged(this, e);
+            if (AliEnterpolAvlEmsCharChanged != null)
+                AliEnterpolAvlEmsCharChanged(this, e);
         }
 
-        public event EventHandler AliEnterpolAvlFdCharsChanged;
-        public String AliEnterpolAvlFdChars
+        public event EventHandler AliEnterpolAvlFdCharChanged;
+        public Char AliEnterpolAvlFdChar
         {
-            get { return Properties.ProjectSettings.Default.AliEnterpolAVLFDChars; }
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLFDChar; }
             set
             {
-                if (Properties.ProjectSettings.Default.AliEnterpolAVLFDChars != value)
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLFDChar != value)
                 {
-                    Properties.ProjectSettings.Default.AliEnterpolAVLFDChars = value;
-                    OnAliEnterpolAvlFdCharsChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliEnterpolAVLFDChar = value;
+                    OnAliEnterpolAvlFdCharChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliEnterpolAvlFdCharsChanged(EventArgs e)
+        protected virtual void OnAliEnterpolAvlFdCharChanged(EventArgs e)
         {
-            if (AliEnterpolAvlFdCharsChanged != null)
-                AliEnterpolAvlFdCharsChanged(this, e);
+            if (AliEnterpolAvlFdCharChanged != null)
+                AliEnterpolAvlFdCharChanged(this, e);
         }
     }
 }

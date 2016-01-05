@@ -274,7 +274,8 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "ali_networkfleet_udpport", "NUMERIC"), Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_use_networkfleet", "TEXT"), Go2ItProjectSettings.Instance.AliUseNetworkfleet.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_use_enterpol_avl", "TEXT"), Go2ItProjectSettings.Instance.AliUseEnterpolAvl.ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_unitsview", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlUnitsView.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_tablename", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlTableName.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_initcatalog", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_setcurlocproc", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProc.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_whoamiproc", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProc.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_updatefreq", "NUMERIC"), Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreq.ToString(CultureInfo.InvariantCulture)},
@@ -313,9 +314,9 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_lecolor", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_fdcolor", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_emscolor", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_lechars", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlLeChars.ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_fdchars", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlFdChars.ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_emschars", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChars.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_lechar", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_fdchar", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_emschar", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar.ToString(CultureInfo.InvariantCulture)},
             };
             k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM GraphicSettings limit 1");
             if (k.Length == 0)
@@ -425,7 +426,8 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliUseNetworkfleet = AttachSetting("ali_use_networkfleet", Go2ItProjectSettings.Instance.AliUseNetworkfleet, p);
 
             Go2ItProjectSettings.Instance.AliUseEnterpolAvl = AttachSetting("ali_use_enterpol_avl", Go2ItProjectSettings.Instance.AliUseEnterpolAvl, p);
-            Go2ItProjectSettings.Instance.AliEnterpolAvlUnitsView = AttachSetting("ali_enterpol_avl_unitsview", Go2ItProjectSettings.Instance.AliEnterpolAvlUnitsView, p);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlTableName = AttachSetting("ali_enterpol_avl_tablename", Go2ItProjectSettings.Instance.AliEnterpolAvlTableName, p);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog = AttachSetting("ali_enterpol_avl_initcatalog", Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog, p);
             Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProc = AttachSetting("ali_enterpol_avl_setcurlocproc", Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProc, p);
             Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProc = AttachSetting("ali_enterpol_avl_whoamiproc", Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProc, p);
             Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreq = AttachSetting("ali_enterpol_avl_updatefreq", Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreq, p);
@@ -453,11 +455,11 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliNetworkfleetFont = AttachSetting("ali_networkfleet_font", Go2ItProjectSettings.Instance.AliNetworkfleetFont, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlFont = AttachSetting("ali_enterpol_avl_font", Go2ItProjectSettings.Instance.AliEnterpolAvlFont, g);
 
-            Go2ItProjectSettings.Instance.AliEnterpolAvlFdChars = AttachSetting("ali_enterpol_avl_fdchars", Go2ItProjectSettings.Instance.AliEnterpolAvlFdChars, g);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar = AttachSetting("ali_enterpol_avl_fdchar", Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor = AttachSetting("ali_enterpol_avl_fdcolor", Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor, g);
-            Go2ItProjectSettings.Instance.AliEnterpolAvlLeChars = AttachSetting("ali_enterpol_avl_lechars", Go2ItProjectSettings.Instance.AliEnterpolAvlLeChars, g);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar = AttachSetting("ali_enterpol_avl_lechar", Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor = AttachSetting("ali_enterpol_avl_lecolor", Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor, g);
-            Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChars = AttachSetting("ali_enterpol_avl_emschars", Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChars, g);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar = AttachSetting("ali_enterpol_avl_emschar", Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor = AttachSetting("ali_enterpol_avl_emscolor", Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor, g);
 
             const string lyrQuery = "SELECT * FROM Layers";  // assign all layers to their proper lookup 'type'

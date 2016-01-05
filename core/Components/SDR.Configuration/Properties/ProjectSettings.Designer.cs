@@ -568,13 +568,13 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SDRActiveUnitsView")]
-        public string AliEnterpolAVLUnitsView {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AliEnterpolAVLTableName {
             get {
-                return ((string)(this["AliEnterpolAVLUnitsView"]));
+                return ((string)(this["AliEnterpolAVLTableName"]));
             }
             set {
-                this["AliEnterpolAVLUnitsView"] = value;
+                this["AliEnterpolAVLTableName"] = value;
             }
         }
         
@@ -676,37 +676,37 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PD")]
-        public string AliEnterpolAVLLEChars {
+        [global::System.Configuration.DefaultSettingValueAttribute("P")]
+        public char AliEnterpolAVLLEChar {
             get {
-                return ((string)(this["AliEnterpolAVLLEChars"]));
+                return ((char)(this["AliEnterpolAVLLEChar"]));
             }
             set {
-                this["AliEnterpolAVLLEChars"] = value;
+                this["AliEnterpolAVLLEChar"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("EMS")]
-        public string AliEnterpolAVLEMSChars {
+        [global::System.Configuration.DefaultSettingValueAttribute("E")]
+        public char AliEnterpolAVLEMSChar {
             get {
-                return ((string)(this["AliEnterpolAVLEMSChars"]));
+                return ((char)(this["AliEnterpolAVLEMSChar"]));
             }
             set {
-                this["AliEnterpolAVLEMSChars"] = value;
+                this["AliEnterpolAVLEMSChar"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FD")]
-        public string AliEnterpolAVLFDChars {
+        [global::System.Configuration.DefaultSettingValueAttribute("F")]
+        public char AliEnterpolAVLFDChar {
             get {
-                return ((string)(this["AliEnterpolAVLFDChars"]));
+                return ((char)(this["AliEnterpolAVLFDChar"]));
             }
             set {
-                this["AliEnterpolAVLFDChars"] = value;
+                this["AliEnterpolAVLFDChar"] = value;
             }
         }
         
@@ -743,6 +743,18 @@ namespace SDR.Configuration.Properties {
             }
             set {
                 this["AliEnterpolAVLFDColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SDRActiveUnitsView")]
+        public string AliEnterpolAVLInitialCatalog {
+            get {
+                return ((string)(this["AliEnterpolAVLInitialCatalog"]));
+            }
+            set {
+                this["AliEnterpolAVLInitialCatalog"] = value;
             }
         }
     }
