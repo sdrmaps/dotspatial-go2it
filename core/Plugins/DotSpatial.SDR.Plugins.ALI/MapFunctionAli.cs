@@ -353,12 +353,12 @@ namespace DotSpatial.SDR.Plugins.ALI
 
             if (!SqlServerHelper.TableExists(connString, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog))
             {
-                var m = @"Initial catalog " +
+                var m = @"Table/View " +
                         SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog +
                         " does not exist in the database " +
                         SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
 
-                var ex = new ArgumentException(m, "initial_catalog", null);
+                var ex = new ArgumentException(m, "table/view", null);
                 throw ex;
             }
             return connString;

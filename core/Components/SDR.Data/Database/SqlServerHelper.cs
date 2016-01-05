@@ -50,5 +50,40 @@ namespace SDR.Data.Database
                 return dTable.Rows.Count > 0;
             }
         }
+
+        /// <summary>
+        /// Check if a StoredProcedure exists in a database
+        /// </summary>
+        /// <param name="connStr"></param>
+        /// <param name="proc"></param>
+        /// <returns></returns>
+        public static bool StoredProcedureExists(string connStr, string proc)
+        {
+            if (String.IsNullOrEmpty(connStr))
+                throw new ArgumentException("Connection string is null or empty.", connStr);
+
+            if (String.IsNullOrEmpty(proc))
+                throw new ArgumentException("StoredProcedure name is null or empty.", proc);
+
+            var query = "SELECT * FROM sysobjects WHERE type = 'P' AND name = '" + proc + "'";
+            var exists = false;
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    
+                }
+            }
+            return exists;
+        }
     }
 }

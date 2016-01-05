@@ -197,6 +197,8 @@ namespace Go2It
             InitializeSaveSplitButton();
             InitializeAliModesDict();
 
+            HandleApplicationModeDiffs();
+
             // assign all the admin form elements
             _appManager = app;
             
@@ -272,6 +274,18 @@ namespace Go2It
 
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = true;
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
+        }
+
+        private void HandleApplicationModeDiffs()
+        {
+            if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Dispatch) return;
+            // disable the responder aspects of the enterpol avl component
+            lblAliEnterpolAVLSetLocProc.Visible = false;
+            txtAliEnterpolAVLSetLocProc.Visible = false;
+            lblAliEnterpolAVLUpdateFreq.Visible = false;
+            numAliEnterpolAVLUpdateFreq.Visible = false;
+            lblAliEnterpolAVLWhoAmIProc.Visible = false;
+            txtAliEnterpolAVLWhoAmIProc.Visible = false;
         }
 
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
@@ -1100,7 +1114,7 @@ namespace Go2It
 
             chkEnterpolAvl.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl;
             txtAliEnterpolAVLTableName.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName;
-            txtAliEnterpolAVLInitialCatalog.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog;
+            txtAliEnterpolAVLInitialCatalog.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog;
             numAliEnterpolAVLReadFreq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
             txtAliEnterpolAVLSetLocProc.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProc;
             numAliEnterpolAVLUpdateFreq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreq;
@@ -3120,7 +3134,25 @@ namespace Go2It
                         txtAliEnterpolTableName.Text,
                         txtAliEnterpolInitialCatalog.Text))
                     {
-                        MessageBox.Show(stat + @"Enterpol Database settings Validated");
+                        // if avl is active validate it now
+                        if (chkEnterpolAvl.Checked)
+                        {
+                            if (!ValidateEnterpolAvlInput(
+                                txtAliEnterpolDataSource.Text,
+                                txtAliEnterpolAVLTableName.Text,
+                                txtAliEnterpolAVLInitialCatalog.Text,
+                                txtAliEnterpolAVLSetLocProc.Text,
+                                txtAliEnterpolAVLWhoAmIProc.Text
+                                ))
+                            {
+                                return;
+                            }
+                            MessageBox.Show(@"Enterpol Database/AVL settings Validated");
+                        }
+                        else
+                        {
+                            MessageBox.Show(stat + @"Enterpol Database settings Validated");
+                        }
                     }
                     return;
                 default: // disabled or if stat is > 0 then its network fleet validation
@@ -3132,7 +3164,69 @@ namespace Go2It
             }
         }
 
-        private bool ValidateEnterpolInput(string server,  string database,  string table)
+        private static bool ValidateEnterpolAvlInput(string server, string database, string table, string setLocProc, string whoAmIProc)
+        {
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            if (database.Length == 0)
+            {
+                MessageBox.Show(@"Database name value is null");
+                return false;
+            }
+            if (table.Length == 0)
+            {
+                MessageBox.Show(@"Table/View value is null");
+                return false;
+            }
+            if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
+            {
+                if (setLocProc.Length == 0)
+                {
+                    MessageBox.Show(@"StoredProcedure 'SetMyLocation' value is null");
+                    return false;
+                }
+                if (whoAmIProc.Length == 0)
+                {
+                    MessageBox.Show(@"StoredProcedure 'WhoAmI' value is null");
+                    return false;
+                }
+            }
+            try
+            {
+                // generate proper conn string and validate it
+                var conn = SqlServerHelper.GetSqlServerConnectionString(
+                    "Server=" + server + ";" +
+                    "Database=" + database + ";" +
+                    "Integrated Security=SSPI;" +
+                    "connection timeout=15");
+
+                if (!SqlServerHelper.TableExists(conn, table))
+                {
+                    msg.Warn(@"Table/View: " + table + " does not exist in the database: " + database);
+                    return false;
+                }
+                if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
+                {
+                    if (!SqlServerHelper.StoredProcedureExists(conn, setLocProc))
+                    {
+                        msg.Warn(@"StoredProcedure: " + setLocProc + " does not exist in the database: " + database);
+                        return false;
+                    }
+                    if (!SqlServerHelper.StoredProcedureExists(conn, whoAmIProc))
+                    {
+                        msg.Warn(@"StoredProcedure: " + whoAmIProc + " does not exist in the database: " + database);
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+                return false;
+            }
+            return true;
+        }
+
+        private static bool ValidateEnterpolInput(string server,  string database,  string table)
         {
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (server.Length == 0)
@@ -3147,7 +3241,7 @@ namespace Go2It
             }
             if (table.Length == 0)
             {
-                MessageBox.Show(@"Initial Catalog value is null");
+                MessageBox.Show(@"Table/View value is null");
                 return false;
             }
             try
@@ -3161,7 +3255,7 @@ namespace Go2It
 
                 if (!SqlServerHelper.TableExists(conn, table))
                 {
-                    msg.Warn(@"Initial catalog " + table + " does not exist in the database " + database);
+                    msg.Warn(@"Table/View: " + table + " does not exist in the database: " + database);
                     return false;
                 }
             }
@@ -3173,7 +3267,7 @@ namespace Go2It
             return true;
         }
 
-        private bool ValidateNetworkfleetInput(string udpHost, int udpPort)
+        private static bool ValidateNetworkfleetInput(string udpHost, int udpPort)
         {
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (udpHost.Length == 0)
@@ -3193,7 +3287,7 @@ namespace Go2It
             return true;
         }
 
-        private bool ValidateGlobalCadInput(string logPath, string archivePath, string configPath)
+        private static bool ValidateGlobalCadInput(string logPath, string archivePath, string configPath)
         {
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (archivePath.Length == 0)
@@ -3257,7 +3351,7 @@ namespace Go2It
             return true;
         }
 
-        private bool ValidateSdrServerInput(string mdbPath, string udpHost, int udpPort)
+        private static bool ValidateSdrServerInput(string mdbPath, string udpHost, int udpPort)
         {
             var msg = AppContext.Instance.Get<IUserMessage>();
             if (mdbPath.Length == 0)
@@ -3343,15 +3437,27 @@ namespace Go2It
         private void chkNetworkfleet_CheckedChanged(object sender, EventArgs e)
         {
             var chk = (CheckBox)sender;
+            if (chk.Checked)
+            {
+                if (chkEnterpolAvl.Checked)
+                {
+                    chkEnterpolAvl.Checked = false;
+                }
+            }
             pnlAliNetworkfleet.Visible = chk.Checked;
-            pnlAliEnterpolAvl.Visible = !chk.Checked;
         }
 
         private void chkAvl_CheckedChanged(object sender, EventArgs e)
         {
             var chk = (CheckBox)sender;
+            if (chk.Checked)
+            {
+                if (chkNetworkfleet.Checked)
+                {
+                    chkNetworkfleet.Checked = false;
+                }
+            }
             pnlAliEnterpolAvl.Visible = chk.Checked;
-            pnlAliNetworkfleet.Visible = !chk.Checked;
         }
 
         private void btnAliEnterpolAVLFont_Click(object sender, EventArgs e)
@@ -3370,11 +3476,6 @@ namespace Go2It
             DrawCharacterGraphic(pnlAliEnterpolAVLEmsGraphic, pnlAliEnterpolAVLEmsColor.BackColor, txtAliEnterpolAVLEmsChars.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLPdGraphic, pnlAliEnterpolAVLPdColor.BackColor, txtAliEnterpolAVLPdChars.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLFdGraphic, pnlAliEnterpolAVLFdColor.BackColor, txtAliEnterpolAVLFdChars.Text);
-        }
-
-        private void adminTab_AliSettings_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

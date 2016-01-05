@@ -11,8 +11,7 @@
     public enum AliAvl
     {
         Disabled,
-        Enterpoldispatch,
-        Enterpolresponder,
+        Enterpolavl,
         Networkfleet,
     }
 }
