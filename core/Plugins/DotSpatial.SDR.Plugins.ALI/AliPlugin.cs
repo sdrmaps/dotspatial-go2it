@@ -39,11 +39,19 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        public static bool UseNetworkfleet
+        public static AliAvl CurrentAliAvl
         {
             get
             {
-                return SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet;
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
+                {
+                    return AliAvl.Networkfleet;
+                }
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
+                {
+                    return AliAvl.Enterpolavl;
+                }
+                return AliAvl.Disabled;
             }
         }
         #endregion
@@ -52,17 +60,17 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             // watch for the change of alimode/networkfleet to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
+            // TODO investigate plus other change
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliModeChanged;
 
             // determine if the plugin is currently activated or not
-            if (CurrentAliMode != AliMode.Disabled || UseNetworkfleet)
+            if (CurrentAliMode != AliMode.Disabled || CurrentAliAvl != AliAvl.Disabled)
             {
                 ActivateAliPlugin();  // go ahead and activate the plugin now
             }
             if (_mapFunction != null)
             {
-                _mapFunction.ConfigureAliClient(CurrentAliMode);  // configure the ali client for mode type
-                _mapFunction.ConfigureInterface(UseNetworkfleet); 
+                _mapFunction.ConfigureAliClient(CurrentAliMode, CurrentAliAvl);  // configure the ali client for mode type
             }
             base.Activate();
         }
@@ -93,7 +101,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         public override void Deactivate()
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
             
             if (_isPluginActive)
             {
@@ -116,7 +124,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void OnAliModeChanged(object sender, EventArgs eventArgs)
         {
-            if (CurrentAliMode != AliMode.Disabled || UseNetworkfleet)
+            if (CurrentAliMode != AliMode.Disabled || CurrentAliAvl != AliAvl.Disabled)
             {
                 if (!_isPluginActive)  // check if it has already been activated
                 {
@@ -124,8 +132,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 if (_mapFunction != null)
                 {
-                    _mapFunction.ConfigureAliClient(CurrentAliMode);  // configure the ali client for mode type
-                    _mapFunction.ConfigureInterface(UseNetworkfleet);  // display interface accordingly
+                    _mapFunction.ConfigureAliClient(CurrentAliMode, CurrentAliAvl);
                 }
             }
             else  // ali interface mode has been set to disabled

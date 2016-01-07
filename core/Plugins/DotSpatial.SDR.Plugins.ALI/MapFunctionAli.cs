@@ -28,12 +28,12 @@ namespace DotSpatial.SDR.Plugins.ALI
     {
         private AliPanel _aliPanel;
         private AliMode _currentAliMode = AliMode.Disabled;
-        // private NetworkFleet _networkFleet = NetworkFleet.Null;  // set to null on startup only
+        private AliAvl _currentAliAvl = AliAvl.Disabled;
 
         // specific interface variables
-        private AliServerClient _aliServerClient;  // handles SDR AliServer Interface
-        private FileSystemWatcher _globalCadArkWatch;  // archive watcher for global cad
-        private FileSystemWatcher _globalCadLogWatch;  // active log watcher for global cad
+        private AliServerClient _aliServerClient;  // sdr ali server communication client
+        private FileSystemWatcher _globalCadArkWatch;  // archive directory watcher for global cad
+        private FileSystemWatcher _globalCadLogWatch;  // active log file watcher for global cad
 
         #region Constructors
 
@@ -92,7 +92,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         //    SqlDependency.Stop(conn);
         //}
 
-        private void DisableCurrentAliMode()
+        private void DisableCurrentAliModeEventHandlers()
         {
             if (_currentAliMode == AliMode.Sdraliserver)
             {
@@ -120,7 +120,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePathChanged -= InstanceOnAliGlobalCadArchivePathChanged;
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPathChanged -= InstanceOnAliGlobalCadLogPathChanged;
-                _aliPanel.GlobalCadComLogs.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
+                _aliPanel.ComLogsComboBox.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
             }
             if (_currentAliMode == AliMode.Enterpol)
             {
@@ -130,6 +130,17 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        private void DisableCurrentAliAvlEventHandlers()
+        {
+            if (_currentAliAvl == AliAvl.Enterpolavl)
+            {
+                // TODO: disable
+            }
+            if (_currentAliAvl == AliAvl.Networkfleet)
+            {
+                // TODO: disable
+            }
+        }
         private void GlobalCadComLogsOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             try
@@ -307,7 +318,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             _aliServerClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
             _aliServerClient.Login();
             _aliServerClient.PacketReceieved += AliServerClientOnPacketReceieved;
-            if (_aliServerClient.Ping())  // if the server is not responding notify the user
+            if (!_aliServerClient.Ping())  // if the server is not responding notify the user
             {
                 msg.Warn(@"AliServer is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
             }
@@ -323,7 +334,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        private void HandleEnterpolDbView()
+        private void HandleEnterpolIncidentsView()
         {
             // validate our connection, table, and init catalog are valid
             var msg = AppContext.Instance.Get<IUserMessage>();
@@ -341,6 +352,26 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 msg.Error(ex.Message, ex);
             }
+        }
+
+        private void HandleEnterpolAvlView()
+        {
+            // validate our connection, table, and init catalog are valid
+            //var msg = AppContext.Instance.Get<IUserMessage>();
+            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolDataSourceChanged;
+            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged += InstanceOnAliEnterpolInitialCatalogChanged;
+            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged += InstanceOnAliEnterpolTableNameChanged;
+
+            //try
+            //{
+            //    var conn = GetEnterpolConnString();
+            //    PopulateEnterpolDbDgv(conn);
+            //    // StartSqlServerDependencyWatcher();
+            //}
+            //catch (Exception ex)
+            //{
+            //    msg.Error(ex.Message, ex);
+            //}
         }
 
         private string GetEnterpolConnString()
@@ -447,16 +478,16 @@ namespace DotSpatial.SDR.Plugins.ALI
             // populate the combobox with files now
             _aliPanel.PopulateComboBox();
             // set up the event handler for the combobox index change
-            _aliPanel.GlobalCadComLogs.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
+            _aliPanel.ComLogsComboBox.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
             // set the selection initiating the datagridview columns
-            _aliPanel.GlobalCadComLogs.SelectedIndex = _aliPanel.GlobalCadComLogs.FindStringExact(PluginSettings.Instance.ActiveGlobalCadCommLog);
+            _aliPanel.ComLogsComboBox.SelectedIndex = _aliPanel.ComLogsComboBox.FindStringExact(PluginSettings.Instance.ActiveGlobalCadCommLog);
         }
 
         private void OnGlobalCadArchiveChanged(object source, FileSystemEventArgs e)
         {
-            _aliPanel.GlobalCadComLogs.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
+            _aliPanel.ComLogsComboBox.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
             _aliPanel.PopulateComboBox();
-            _aliPanel.GlobalCadComLogs.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
+            _aliPanel.ComLogsComboBox.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
         }
 
         private void OnGlobalCadFileChanged(object source, FileSystemEventArgs e)
@@ -758,90 +789,103 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        // this is called on startup as well as everytime the ali mode changes
-        public void ConfigureAliClient(AliMode am)
+        private void ConfigureAliPanelInterface()
         {
-            if (_currentAliMode == am) return;  // no need to update anything no change was made
-            DisableCurrentAliMode();
-            _currentAliMode = am; // update the current alimode
-            switch (am)
+            if (_currentAliAvl == AliAvl.Networkfleet)
             {
-                case AliMode.Sdraliserver:
-                    HandleAliServerClient();
-                    break;
-                case AliMode.Globalcad:
-                    HandleGlobalCadFiles();
-                    break;
-                case AliMode.Enterpol:
-                    HandleEnterpolDbView();
-                    break;
-            }
-        }
-
-        public void ConfigureInterface(bool nf)
-        {
-            if (nf)
-            {
-                // if (_networkFleet == NetworkFleet.Active) return;  // it has already been activated no need to repeat
-                // _networkFleet = NetworkFleet.Active;
                 switch (_currentAliMode)
                 {
+                    case AliMode.Enterpol:
                     case AliMode.Sdraliserver:
-                        _aliPanel.DisplayNetworkfleetInterface();
+                        _aliPanel.DisplayAvlListInterface("Networkfleet Vehicles", true);
                         break;
                     case AliMode.Globalcad:
-                        _aliPanel.DisplayNetworkfleetAndGlobalInterface();
+                        _aliPanel.DisplayAvlListAndCommLogInterface("Networkfleet Vehicles", "Active Comm Log");
                         break;
-                    case AliMode.Enterpol:
-                        _aliPanel.DisplayNetworkfleetInterface();
-                        break;
-                    default: // disabled alimode use networkfleet independantly
-                        HandleNetworkFleetClient();
-                        _aliPanel.DisplayNetworkfleetInterface();
+                    default:
+                        _aliPanel.DisplayAvlListInterface("Networkfleet Vehicles", false);
                         break;
                 }
             }
             else
             {
-                // TODO: validate these are actually causing issues (not needed)
-                // if (_networkFleet == NetworkFleet.Disabled) return;
-                // _networkFleet = NetworkFleet.Disabled;
                 switch (_currentAliMode)
                 {
-                    case AliMode.Sdraliserver:
-                        _aliPanel.DisplayStandardInterface();
+                    case AliMode.Enterpol:
+                        if (_currentAliAvl == AliAvl.Enterpolavl) // enterpol avl can only be used enterpol interface
+                        {
+                            _aliPanel.DisplayAvlListInterface("Enterpol AVL Vehicles", true);
+                        }
+                        else
+                        {
+                            _aliPanel.DisplayStandardInterface();
+                        }
                         break;
                     case AliMode.Globalcad:
-                        _aliPanel.DisplayGlobalInterface();
+                        _aliPanel.DisplayCommLogInterface("Active Comm Log");
                         break;
-                    case AliMode.Enterpol:
+                    default:
                         _aliPanel.DisplayStandardInterface();
-                        break;
-                    default: // disabled
-                        // DisableNetworkFleet();
                         break;
                 }
             }
         }
 
+        // this is called on startup as well as everytime the ali mode changes
+        public void ConfigureAliClient(AliMode am, AliAvl avl)
+        {
+            if (_currentAliMode == am && _currentAliAvl == avl) return;  // no need to update anything no change was made
+
+            if (_currentAliMode != am)
+            {
+                DisableCurrentAliModeEventHandlers();
+                switch (am)
+                {
+                    case AliMode.Enterpol:
+                        HandleEnterpolIncidentsView();
+                        break;
+                    case AliMode.Globalcad:
+                        HandleGlobalCadFiles();
+                        break;
+                    case AliMode.Sdraliserver:
+                        HandleAliServerClient();
+                        break;
+                }
+            }
+            if (_currentAliAvl != avl)
+            {
+                DisableCurrentAliAvlEventHandlers();
+                switch (avl)
+                {
+                    case AliAvl.Enterpolavl:
+                        HandleEnterpolAvlView();
+                        break;
+                    case AliAvl.Networkfleet:
+                        HandleNetworkFleetClient();
+                        break;
+                }
+            }
+            // update the current avl and mode
+            _currentAliMode = am;
+            _currentAliAvl = avl;
+            // update interface display to alipanel
+            ConfigureAliPanelInterface();
+        }
+
         private void InstanceOnAliGlobalCadLogPathChanged(object sender, EventArgs eventArgs)
         {
-            if (_currentAliMode == AliMode.Globalcad)
-            {
-                _globalCadLogWatch.EnableRaisingEvents = false;
-                _globalCadLogWatch.Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath);
-                _globalCadLogWatch.EnableRaisingEvents = true;
-            }
+            if (_currentAliMode != AliMode.Globalcad) return;
+            _globalCadLogWatch.EnableRaisingEvents = false;
+            _globalCadLogWatch.Path = Path.GetDirectoryName(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath);
+            _globalCadLogWatch.EnableRaisingEvents = true;
         }
 
         private void InstanceOnAliGlobalCadArchivePathChanged(object sender, EventArgs eventArgs)
         {
-            if (_currentAliMode == AliMode.Globalcad)
-            {
-                _globalCadArkWatch.EnableRaisingEvents = false;
-                _globalCadArkWatch.Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
-                _globalCadArkWatch.EnableRaisingEvents = true;
-            }
+            if (_currentAliMode != AliMode.Globalcad) return;
+            _globalCadArkWatch.EnableRaisingEvents = false;
+            _globalCadArkWatch.Path = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath;
+            _globalCadArkWatch.EnableRaisingEvents = true;
         }
 
         /// <summary>
@@ -858,21 +902,21 @@ namespace DotSpatial.SDR.Plugins.ALI
             base.OnActivate();
         }
 
-        /// <summary>
-        /// Allows for new behavior during deactivation.
-        /// </summary>
-        protected override void OnDeactivate()
-        {
-            base.OnDeactivate();
-        }
+        ///// <summary>
+        ///// Allows for new behavior during deactivation.
+        ///// </summary>
+        //protected override void OnDeactivate()
+        //{
+        //    base.OnDeactivate();
+        //}
 
-        /// <summary>
-        /// Occurs when this function is removed.
-        /// </summary>
-        protected override void OnUnload()
-        {
-            base.OnUnload();
-        }
+        ///// <summary>
+        ///// Occurs when this function is removed.
+        ///// </summary>
+        //protected override void OnUnload()
+        //{
+        //    base.OnUnload();
+        //}
         #endregion
     }
 }

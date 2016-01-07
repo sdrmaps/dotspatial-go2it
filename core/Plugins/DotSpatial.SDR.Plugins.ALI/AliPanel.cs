@@ -26,27 +26,13 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return aliDGV; }
         }
-        public ComboBox GlobalCadComLogs  // combobox used to select active globalcad comm log // used for index change events on mapfunction
+        public ComboBox ComLogsComboBox  // combobox used to select active globalcad comm log // used for index change events on mapfunction
         {
             get { return cmbAliCommLog; }
         }
         #endregion
 
         #region Methods
-
-        public void DisablePanelInterface()
-        {
-            tsbAliLocate.Enabled = false;
-            tsbAliUpdate.Enabled = false;
-            cmbAliCommLog.Enabled = false;
-        }
-
-        public void EnablePanelInterface()
-        {
-            tsbAliLocate.Enabled = true;
-            tsbAliUpdate.Enabled = true;
-            cmbAliCommLog.Enabled = true;
-        }
 
         delegate void SetDgvDataSourceCallback(GlobalCadRecord[]source);
         public void SetDgvDataSource(GlobalCadRecord[] source)
@@ -68,9 +54,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         public delegate void SetDgvBindingSourceCallback(BindingSource source);
         public void SetDgvBindingSource(BindingSource source)
         {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
             if (aliDGV.InvokeRequired)
             {
                 var cb = new SetDgvBindingSourceCallback(SetDgvBindingSource);
@@ -110,8 +93,24 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        //public void DisablePanelInterface()
+        //{
+        //    tsbAliLocate.Enabled = false;
+        //    tsbAliUpdate.Enabled = false;
+        //    cmbAliCommLog.Enabled = false;
+        //}
+
+        //public void EnablePanelInterface()
+        //{
+        //    tsbAliLocate.Enabled = true;
+        //    tsbAliUpdate.Enabled = true;
+        //    cmbAliCommLog.Enabled = true;
+        //}
+
         public void DisplayStandardInterface()
         {
+            tsbAliLocate.Enabled = true;
+            tsbAliUpdate.Enabled = true;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 100;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
@@ -120,8 +119,10 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[2].Width = 0;
         }
 
-        public void DisplayNetworkfleetInterface()
+        public void DisplayAvlListInterface(string listTitle, bool enableFunctions)
         {
+            tsbAliLocate.Enabled = enableFunctions;
+            tsbAliUpdate.Enabled = enableFunctions;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 75;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -130,8 +131,10 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[2].Width = 0;
         }
 
-        public void DisplayNetworkfleetAndGlobalInterface()
+        public void DisplayAvlListAndCommLogInterface(string listTitle, string logTitle)
         {
+            tsbAliLocate.Enabled = true;
+            tsbAliUpdate.Enabled = true;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 60;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -140,8 +143,10 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[2].Width = 20;
         }
 
-        public void DisplayGlobalInterface()
+        public void DisplayCommLogInterface(string logTitle)
         {
+            tsbAliLocate.Enabled = true;
+            tsbAliUpdate.Enabled = true;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 75;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;

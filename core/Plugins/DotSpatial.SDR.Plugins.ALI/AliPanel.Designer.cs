@@ -36,8 +36,8 @@
             this.aliDGV = new System.Windows.Forms.DataGridView();
             this.aliTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.cmbAliCommLog = new System.Windows.Forms.ComboBox();
-            this.chkNetworkfleetVehicles = new System.Windows.Forms.CheckedListBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.chkFleetList = new System.Windows.Forms.CheckedListBox();
+            this.lblFleetList = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.aliDGV)).BeginInit();
             this.aliTableLayoutPanel.SuspendLayout();
@@ -116,9 +116,9 @@
             this.aliTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.aliTableLayoutPanel.Controls.Add(this.aliDGV, 0, 0);
             this.aliTableLayoutPanel.Controls.Add(this.cmbAliCommLog, 2, 1);
-            this.aliTableLayoutPanel.Controls.Add(this.chkNetworkfleetVehicles, 1, 1);
+            this.aliTableLayoutPanel.Controls.Add(this.chkFleetList, 1, 1);
             this.aliTableLayoutPanel.Controls.Add(this.lblCommLog, 2, 0);
-            this.aliTableLayoutPanel.Controls.Add(this.label1, 1, 0);
+            this.aliTableLayoutPanel.Controls.Add(this.lblFleetList, 1, 0);
             this.aliTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.aliTableLayoutPanel.Location = new System.Drawing.Point(0, 48);
             this.aliTableLayoutPanel.Name = "aliTableLayoutPanel";
@@ -139,24 +139,24 @@
             this.cmbAliCommLog.Size = new System.Drawing.Size(192, 21);
             this.cmbAliCommLog.TabIndex = 5;
             // 
-            // chkNetworkfleetVehicles
+            // chkFleetList
             // 
-            this.chkNetworkfleetVehicles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkNetworkfleetVehicles.FormattingEnabled = true;
-            this.chkNetworkfleetVehicles.Location = new System.Drawing.Point(398, 16);
-            this.chkNetworkfleetVehicles.Name = "chkNetworkfleetVehicles";
-            this.chkNetworkfleetVehicles.Size = new System.Drawing.Size(191, 115);
-            this.chkNetworkfleetVehicles.TabIndex = 4;
+            this.chkFleetList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkFleetList.FormattingEnabled = true;
+            this.chkFleetList.Location = new System.Drawing.Point(398, 16);
+            this.chkFleetList.Name = "chkFleetList";
+            this.chkFleetList.Size = new System.Drawing.Size(191, 115);
+            this.chkFleetList.TabIndex = 4;
             // 
-            // label1
+            // lblFleetList
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label1.Location = new System.Drawing.Point(398, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Networkfleet Vehicles";
+            this.lblFleetList.AutoSize = true;
+            this.lblFleetList.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblFleetList.Location = new System.Drawing.Point(398, 0);
+            this.lblFleetList.Name = "lblFleetList";
+            this.lblFleetList.Size = new System.Drawing.Size(110, 13);
+            this.lblFleetList.TabIndex = 3;
+            this.lblFleetList.Text = "Networkfleet Vehicles";
             // 
             // AliPanel
             // 
@@ -184,8 +184,8 @@
         private System.Windows.Forms.Label lblCommLog;
         private System.Windows.Forms.DataGridView aliDGV;
         private System.Windows.Forms.TableLayoutPanel aliTableLayoutPanel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckedListBox chkNetworkfleetVehicles;
+        private System.Windows.Forms.Label lblFleetList;
+        private System.Windows.Forms.CheckedListBox chkFleetList;
         private System.Windows.Forms.ComboBox cmbAliCommLog;
     }
 }
