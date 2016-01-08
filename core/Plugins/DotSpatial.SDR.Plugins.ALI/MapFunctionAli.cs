@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -124,9 +125,9 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             if (_currentAliMode == AliMode.Enterpol)
             {
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolDataSourceChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged -= InstanceOnAliEnterpolInitialCatalogChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged -= InstanceOnAliEnterpolTableNameChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
             }
         }
 
@@ -167,7 +168,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        private void PopulateEnterpolDbDgv(string  conn)
+        private void PopulateEnterpolIncidentsDgv(string  conn)
         {
             // lets update the dgv column order if needed
             if (_aliPanel.DataGridDisplay.ColumnCount == PluginSettings.Instance.EnterpolDgvSortOrder.Count)
@@ -186,6 +187,39 @@ namespace DotSpatial.SDR.Plugins.ALI
             var sql = ConstructEnterpolSqlQuery();
             BindDataGridViewToSqlServer(conn, sql);
             HumanizeCamelCasedDgvHeaders();
+        }
+
+        private void SetCheckedItemsAndEventsForListBox()
+        {
+            foreach (var item in _aliPanel.VehicleFleetListBox.Items)
+            {
+                
+                
+            }
+        }
+
+        private void PopulateEnterpolAvlCheckedListBox(string conn)
+        {
+            var sql = ConstructEnterpolAvlVehicleListSqlQuery();
+            BindCheckedListBoxToSqlServer(conn, sql);
+            SetCheckedItemsAndEventsForListBox();
+        }
+
+        private void BindCheckedListBoxToSqlServer(string connString, string sqlString)
+        {
+            try
+            {
+                var dbAdapter = new SqlDataAdapter(sqlString, connString);
+                var dbTable = new DataTable { Locale = System.Globalization.CultureInfo.InvariantCulture };
+                dbAdapter.Fill(dbTable);
+                var bindingSource = new BindingSource { DataSource = dbTable };
+                _aliPanel.SetCheckedListBoxBindingSource(bindingSource);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error("Database table binding failed", ex);
+            }
         }
 
         private void PopulateSdrAliServerDgv(string conn)
@@ -244,6 +278,27 @@ namespace DotSpatial.SDR.Plugins.ALI
                 var msg = AppContext.Instance.Get<IUserMessage>();
                 msg.Error("Database table binding failed", ex);
             }
+        }
+
+        private static string ConstructEnterpolAvlVehicleListSqlQuery()
+        {
+            string sql = "SELECT";
+            string[] columns = EnterpolAvlConfig.Default.UnitDisplayQuery.Split(',');
+
+            for (int i = 0; i <= columns.Length - 1; i++)
+            {
+                if (i != columns.Length - 1)
+                {
+                    sql = sql + " ISNULL([" + columns[i].Trim() + "], '') + SPACE(1) + ";
+                }
+                else
+                {
+                    sql = sql + " ISNULL([" + columns[i].Trim() + "], '')";
+                    
+                }
+            }
+            sql = sql + " As Unit FROM [" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName  +  "].[dbo].[" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog + "]";
+            return sql;
         }
 
         private static string ConstructEnterpolSqlQuery()
@@ -338,14 +393,14 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             // validate our connection, table, and init catalog are valid
             var msg = AppContext.Instance.Get<IUserMessage>();
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolDataSourceChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged += InstanceOnAliEnterpolInitialCatalogChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged += InstanceOnAliEnterpolTableNameChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolIncidentsDbParamsChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged += InstanceOnAliEnterpolIncidentsDbParamsChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged += InstanceOnAliEnterpolIncidentsDbParamsChanged;
 
             try
             {
-                var conn = GetEnterpolConnString();
-                PopulateEnterpolDbDgv(conn);
+                var conn = GetEnterpolIncidentsConnString();
+                PopulateEnterpolIncidentsDgv(conn);
                 // StartSqlServerDependencyWatcher();
             }
             catch (Exception ex)
@@ -357,24 +412,110 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void HandleEnterpolAvlView()
         {
             // validate our connection, table, and init catalog are valid
-            //var msg = AppContext.Instance.Get<IUserMessage>();
-            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolDataSourceChanged;
-            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged += InstanceOnAliEnterpolInitialCatalogChanged;
-            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged += InstanceOnAliEnterpolTableNameChanged;
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsCharChanged += InstanceOnAliEnterpolAvlEmsSymbolChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColorChanged += InstanceOnAliEnterpolAvlEmsSymbolChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeCharChanged += InstanceOnAliEnterpolAvlLeSymbolChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged += InstanceOnAliEnterpolAvlLeSymbolChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged += InstanceOnAliEnterpolAvlFdSymbolChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged += InstanceOnAliEnterpolAvlFdSymbolChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged += InstanceOnAliEnterpolAvlFontChanged;  // update all symbols
+            if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
+            {
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged += InstanceOnAliEnterpolAvlSetMyLocProcChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged += InstanceOnAliEnterpolAvlWhoAmIProcChanged;
+            }
 
-            //try
-            //{
-            //    var conn = GetEnterpolConnString();
-            //    PopulateEnterpolDbDgv(conn);
-            //    // StartSqlServerDependencyWatcher();
-            //}
-            //catch (Exception ex)
-            //{
-            //    msg.Error(ex.Message, ex);
-            //}
+            try
+            {
+                var conn = GetEnterpolAvlConnString();
+                PopulateEnterpolAvlCheckedListBox(conn);
+            }
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+            }
         }
 
-        private string GetEnterpolConnString()
+        private void InstanceOnAliEnterpolAvlWhoAmIProcChanged(object sender, EventArgs eventArgs)
+        {
+                
+        }
+
+        private void InstanceOnAliEnterpolAvlSetMyLocProcChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlFdSymbolChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlLeSymbolChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlFontChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlEmsSymbolChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlAgeFreqChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlReadFreqChanged(object sender, EventArgs eventArgs)
+        {
+
+        }
+
+        private void InstanceOnAliEnterpolAvlDbParamsChanged(object sender, EventArgs eventArgs)
+        {
+            try
+            {
+                var conn = GetEnterpolAvlConnString();
+                PopulateEnterpolAvlCheckedListBox(conn);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Error(ex.Message, ex);
+            }
+        }
+
+        private string GetEnterpolAvlConnString()
+        {
+            var connString = SqlServerHelper.GetSqlServerConnectionString(
+                "Server=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource + ";" +
+                "Database=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName + ";" +
+                "Integrated Security=SSPI;" +
+                "connection timeout=15");
+
+            if (!SqlServerHelper.TableExists(connString, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog))
+            {
+                var m = @"Table/View " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog + " does not exist in the database " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName;
+                var ex = new ArgumentException(m, "table/view", null);
+                throw ex;
+            }
+            return connString;
+        }
+
+        private string GetEnterpolIncidentsConnString()
         {
             var connString = SqlServerHelper.GetSqlServerConnectionString(
                 "Server=" + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSource + ";" +
@@ -384,51 +525,19 @@ namespace DotSpatial.SDR.Plugins.ALI
 
             if (!SqlServerHelper.TableExists(connString, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog))
             {
-                var m = @"Table/View " +
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog +
-                        " does not exist in the database " +
-                        SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
-
+                var m = @"Table/View " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog + " does not exist in the database " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName;
                 var ex = new ArgumentException(m, "table/view", null);
                 throw ex;
             }
             return connString;
         }
 
-        private void InstanceOnAliEnterpolTableNameChanged(object sender, EventArgs eventArgs)
+        private void InstanceOnAliEnterpolIncidentsDbParamsChanged(object sender, EventArgs eventArgs)
         {
             try
             {
-                var conn = GetEnterpolConnString();
-                PopulateEnterpolDbDgv(conn);
-            }
-            catch (Exception ex)
-            {
-                var msg = AppContext.Instance.Get<IUserMessage>();
-                msg.Error(ex.Message, ex);
-            }
-        }
-
-        private void InstanceOnAliEnterpolInitialCatalogChanged(object sender, EventArgs eventArgs)
-        {
-            try
-            {
-                var conn = GetEnterpolConnString();
-                PopulateEnterpolDbDgv(conn);
-            }
-            catch (Exception ex)
-            {
-                var msg = AppContext.Instance.Get<IUserMessage>();
-                msg.Error(ex.Message, ex);
-            }
-        }
-
-        private void InstanceOnAliEnterpolDataSourceChanged(object sender, EventArgs eventArgs)
-        {
-            try
-            {
-                var conn = GetEnterpolConnString();
-                PopulateEnterpolDbDgv(conn);
+                var conn = GetEnterpolIncidentsConnString();
+                PopulateEnterpolIncidentsDgv(conn);
             }
             catch (Exception ex)
             {

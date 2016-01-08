@@ -60,8 +60,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             // watch for the change of alimode/networkfleet to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
-            // TODO investigate plus other change
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliModeChanged;
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged += OnAliModeChanged;
 
             // determine if the plugin is currently activated or not
             if (CurrentAliMode != AliMode.Disabled || CurrentAliAvl != AliAvl.Disabled)
@@ -101,7 +101,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         public override void Deactivate()
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
-            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged -= OnAliModeChanged;
             
             if (_isPluginActive)
             {
@@ -118,7 +119,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             App.DockManager.ActivePanelChanged -= DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden -= DockManagerOnPanelHidden;
 
-            // TODO: do we need to set _isFunctionActive flag here or will the events handle it??
             _isPluginActive = false;  // set our status flag back to false
         }
 

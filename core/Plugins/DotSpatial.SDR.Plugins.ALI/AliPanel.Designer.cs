@@ -67,6 +67,7 @@
             this.tsbAliLocate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.tsbAliLocate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.tsbAliLocate.ToolTipText = "Locate Selected Record";
+            this.tsbAliLocate.Click += new System.EventHandler(this.tsbAliLocate_Click);
             // 
             // tsbAliUpdate
             // 
@@ -87,7 +88,7 @@
             this.lblCommLog.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblCommLog.Location = new System.Drawing.Point(595, 0);
             this.lblCommLog.Name = "lblCommLog";
-            this.lblCommLog.Size = new System.Drawing.Size(90, 13);
+            this.lblCommLog.Size = new System.Drawing.Size(90, 20);
             this.lblCommLog.TabIndex = 2;
             this.lblCommLog.Text = "Active Comm Log";
             // 
@@ -123,7 +124,7 @@
             this.aliTableLayoutPanel.Location = new System.Drawing.Point(0, 48);
             this.aliTableLayoutPanel.Name = "aliTableLayoutPanel";
             this.aliTableLayoutPanel.RowCount = 2;
-            this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.aliTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.aliTableLayoutPanel.Size = new System.Drawing.Size(790, 134);
             this.aliTableLayoutPanel.TabIndex = 1;
@@ -133,7 +134,7 @@
             this.cmbAliCommLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbAliCommLog.FormattingEnabled = true;
-            this.cmbAliCommLog.Location = new System.Drawing.Point(595, 16);
+            this.cmbAliCommLog.Location = new System.Drawing.Point(595, 23);
             this.cmbAliCommLog.MaxDropDownItems = 35;
             this.cmbAliCommLog.Name = "cmbAliCommLog";
             this.cmbAliCommLog.Size = new System.Drawing.Size(192, 21);
@@ -143,9 +144,9 @@
             // 
             this.chkFleetList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkFleetList.FormattingEnabled = true;
-            this.chkFleetList.Location = new System.Drawing.Point(398, 16);
+            this.chkFleetList.Location = new System.Drawing.Point(398, 23);
             this.chkFleetList.Name = "chkFleetList";
-            this.chkFleetList.Size = new System.Drawing.Size(191, 115);
+            this.chkFleetList.Size = new System.Drawing.Size(191, 108);
             this.chkFleetList.TabIndex = 4;
             // 
             // lblFleetList
@@ -154,7 +155,7 @@
             this.lblFleetList.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblFleetList.Location = new System.Drawing.Point(398, 0);
             this.lblFleetList.Name = "lblFleetList";
-            this.lblFleetList.Size = new System.Drawing.Size(110, 13);
+            this.lblFleetList.Size = new System.Drawing.Size(110, 20);
             this.lblFleetList.TabIndex = 3;
             this.lblFleetList.Text = "Networkfleet Vehicles";
             // 

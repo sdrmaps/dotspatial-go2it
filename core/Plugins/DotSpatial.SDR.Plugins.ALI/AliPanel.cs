@@ -26,9 +26,13 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return aliDGV; }
         }
-        public ComboBox ComLogsComboBox  // combobox used to select active globalcad comm log // used for index change events on mapfunction
+        public ComboBox ComLogsComboBox
         {
             get { return cmbAliCommLog; }
+        }
+        public CheckedListBox VehicleFleetListBox
+        {
+            get { return chkFleetList;  }
         }
         #endregion
 
@@ -65,6 +69,22 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        public delegate void SetCheckedListBoxBindingSourceCallback(BindingSource source);
+        public void SetCheckedListBoxBindingSource(BindingSource source)
+        {
+            if (chkFleetList.InvokeRequired)
+            {
+                var cb = new SetCheckedListBoxBindingSourceCallback(SetCheckedListBoxBindingSource);
+                Invoke(cb, new object[] { source });
+            }
+            else
+            {
+                chkFleetList.DataSource = source;
+                chkFleetList.ValueMember = "Unit";
+                // check all values or values that have been set
+            }
+        }
+
         delegate void FillComboBoxCallback(string[] array);
         private void FillComboBox(string[] array)
         {
@@ -92,20 +112,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                 cmbAliCommLog.Items.Clear();
             }
         }
-
-        //public void DisablePanelInterface()
-        //{
-        //    tsbAliLocate.Enabled = false;
-        //    tsbAliUpdate.Enabled = false;
-        //    cmbAliCommLog.Enabled = false;
-        //}
-
-        //public void EnablePanelInterface()
-        //{
-        //    tsbAliLocate.Enabled = true;
-        //    tsbAliUpdate.Enabled = true;
-        //    cmbAliCommLog.Enabled = true;
-        //}
 
         public void DisplayStandardInterface()
         {
@@ -181,6 +187,11 @@ namespace DotSpatial.SDR.Plugins.ALI
         #endregion
 
         private void tsbAliUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsbAliLocate_Click(object sender, EventArgs e)
         {
 
         }

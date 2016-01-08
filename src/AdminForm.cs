@@ -1632,7 +1632,7 @@ namespace Go2It
             // set ali enterpol avl options
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl = chkEnterpolAvl.Checked;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName = txtAliEnterpolAVLTableName.Text;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolAVLInitialCatalog.Text;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog = txtAliEnterpolAVLInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq = (int)numAliEnterpolAVLReadFreq.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProc = txtAliEnterpolAVLSetLocProc.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreq = (int)numAliEnterpolAVLUpdateFreq.Value;
