@@ -81,7 +81,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 chkFleetList.DataSource = source;
                 chkFleetList.ValueMember = "Unit";
-                // check all values or values that have been set
             }
         }
 

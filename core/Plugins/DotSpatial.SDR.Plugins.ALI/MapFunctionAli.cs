@@ -35,6 +35,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         private AliServerClient _aliServerClient;  // sdr ali server communication client
         private FileSystemWatcher _globalCadArkWatch;  // archive directory watcher for global cad
         private FileSystemWatcher _globalCadLogWatch;  // active log file watcher for global cad
+        private Dictionary<string, bool> _vehicleCheckState; // track visible state of avl vehicles
+        private System.Timers.Timer _avlReadIntervalTimer;  // timer that reads avl update on interval
 
         #region Constructors
 
@@ -135,11 +137,29 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             if (_currentAliAvl == AliAvl.Enterpolavl)
             {
-                // TODO: disable
+                _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged -= InstanceOnAliEnterpolAvlReadFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsCharChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColorChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeCharChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged -= InstanceOnAliEnterpolAvlFontChanged;
+                if (_avlReadIntervalTimer != null) _avlReadIntervalTimer.Enabled = false;
+                if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Responder) return;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged -= InstanceOnAliEnterpolAvlSetMyLocProcChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged -= InstanceOnAliEnterpolAvlWhoAmIProcChanged;
             }
             if (_currentAliAvl == AliAvl.Networkfleet)
             {
-                // TODO: disable
+                // TODO
             }
         }
         private void GlobalCadComLogsOnSelectedIndexChanged(object sender, EventArgs eventArgs)
@@ -189,20 +209,45 @@ namespace DotSpatial.SDR.Plugins.ALI
             HumanizeCamelCasedDgvHeaders();
         }
 
-        private void SetCheckedItemsAndEventsForListBox()
+        private void SetCheckedItemsForListBox()
         {
-            foreach (var item in _aliPanel.VehicleFleetListBox.Items)
+            if (_vehicleCheckState == null)
             {
-                
-                
+                _vehicleCheckState = new Dictionary<string, bool>();
+                for (int i = 0; i <= _aliPanel.VehicleFleetListBox.Items.Count - 1; i++)
+                {
+                    _aliPanel.VehicleFleetListBox.SetItemChecked(i, true);
+                    var item = _aliPanel.VehicleFleetListBox.Items[i] as DataRowView;
+                    if (item != null) _vehicleCheckState.Add(item[0].ToString(), true);
+                }
+                _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
             }
+            else
+            {
+                _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
+                for (int i = 0; i <= _aliPanel.VehicleFleetListBox.Items.Count - 1; i++)
+                {
+                    var item = _aliPanel.VehicleFleetListBox.Items[i] as DataRowView;
+                    var chkState = true;
+                    if (item != null) _vehicleCheckState.TryGetValue(item[0].ToString(), out chkState);
+                    _aliPanel.VehicleFleetListBox.SetItemChecked(i, chkState);
+                }
+                _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
+            }
+        }
+
+        private void VehicleFleetListBoxOnItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            var item = _aliPanel.VehicleFleetListBox.Items[e.Index] as DataRowView;
+            if (item != null) _vehicleCheckState[item[0].ToString()] = _aliPanel.VehicleFleetListBox.GetItemChecked(e.Index);
+            UpdateAvlFleetPositions();
         }
 
         private void PopulateEnterpolAvlCheckedListBox(string conn)
         {
             var sql = ConstructEnterpolAvlVehicleListSqlQuery();
             BindCheckedListBoxToSqlServer(conn, sql);
-            SetCheckedItemsAndEventsForListBox();
+            SetCheckedItemsForListBox();
         }
 
         private void BindCheckedListBoxToSqlServer(string connString, string sqlString)
@@ -415,8 +460,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             var msg = AppContext.Instance.Get<IUserMessage>();
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged += InstanceOnAliEnterpolAvlDbParamsChanged; 
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
@@ -432,16 +476,75 @@ namespace DotSpatial.SDR.Plugins.ALI
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged += InstanceOnAliEnterpolAvlSetMyLocProcChanged;
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged += InstanceOnAliEnterpolAvlWhoAmIProcChanged;
             }
-
             try
             {
                 var conn = GetEnterpolAvlConnString();
                 PopulateEnterpolAvlCheckedListBox(conn);
+                InitiateAvlTimers();
             }
             catch (Exception ex)
             {
                 msg.Error(ex.Message, ex);
             }
+        }
+
+        private void InitiateAvlTimers()
+        {
+            if (_avlReadIntervalTimer == null)
+            {
+                var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
+                _avlReadIntervalTimer = new System.Timers.Timer(interval) { AutoReset = true };
+                _avlReadIntervalTimer.Elapsed += delegate
+                {
+                    UpdateAvlFleetPositions();
+                };
+            }
+            else
+            {
+                _avlReadIntervalTimer.Enabled = false;
+                _avlReadIntervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
+            }
+            _avlReadIntervalTimer.Enabled = true;
+        }
+
+        private void UpdateAvlFleetPositions()
+        {
+            var conn = GetEnterpolAvlConnString();
+            PopulateEnterpolAvlCheckedListBox(conn);
+            AssignFleetPositions(conn);
+            if (Map != null)
+            {
+                // paint the map with updated avl positions
+                Map.Invalidate();
+            }
+        }
+
+        private void AssignFleetPositions(string conn)
+        {
+            // assign all our positions and colors for the pain event
+            // var sql = ConstructEnterpolAvlVehicleListSqlQuery();
+            // BindCheckedListBoxToSqlServer(conn, sql);
+            // SetCheckedItemsForListBox();
+        }
+        private void MapOnPaint(object sender, PaintEventArgs paintEventArgs)
+        {
+            Debug.WriteLine("map paint event");
+        }
+
+        public void AddAvlMapPaintEvent()
+        {
+            if (Map == null) return;
+            var map = Map as Map;
+            if (map != null) map.Paint += MapOnPaint;
+            UpdateAvlFleetPositions();
+        }
+
+        public void RemoveAvlMapPaintEvent()
+        {
+            if (Map == null) return;
+            var map = Map as Map;
+            if (map != null) map.Paint -= MapOnPaint;
         }
 
         private void InstanceOnAliEnterpolAvlWhoAmIProcChanged(object sender, EventArgs eventArgs)
@@ -481,7 +584,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void InstanceOnAliEnterpolAvlReadFreqChanged(object sender, EventArgs eventArgs)
         {
-
+            InitiateAvlTimers();
         }
 
         private void InstanceOnAliEnterpolAvlDbParamsChanged(object sender, EventArgs eventArgs)

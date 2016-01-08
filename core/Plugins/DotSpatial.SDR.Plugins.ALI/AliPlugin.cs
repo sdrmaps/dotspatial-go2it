@@ -188,6 +188,11 @@ namespace DotSpatial.SDR.Plugins.ALI
                 AddAliMapFunction();
                 // event binding to watch for function mode changes (to deactivate the tool)
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
+                // if avl is activated then assign the paint event
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
+                {
+                    _mapFunction.AddAvlMapPaintEvent();
+                }
                 // check that this tool is the active tool of the map now
                 if (App.Map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
@@ -228,7 +233,11 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 // remove the event binding on this map (since its being hidden) on function mode changes
                 map.FunctionModeChanged -= MapOnFunctionModeChanged;
-
+                // if avl is activated remove the paint event from this map
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
+                {
+                    _mapFunction.RemoveAvlMapPaintEvent();
+                }
                 // lets look and see if this tool is currently the active tool and deactivate it if so
                 if (map.FunctionMode == FunctionMode.None &&
                     SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel == PluginKey)
