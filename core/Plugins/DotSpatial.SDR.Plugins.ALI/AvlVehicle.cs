@@ -9,6 +9,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             CurrentInterval = 0;
             Visible = true;
             UnitType = AvlVehicleType.None;
+            IgnoreActiveHide = false;
         }
         public bool Visible { get; set; }
         public int CurrentInterval { get; set; }
@@ -18,7 +19,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public DateTime UpdateTime { get; set; }
-}
+        public bool IgnoreActiveHide { get; set; }
+    }
 
     public enum AvlVehicleType
     {
