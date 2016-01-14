@@ -2,8 +2,44 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DotSpatial.SDR.Plugins.ALI.Properties" GeneratedClassName="EnterpolAvlConfig">
   <Profiles />
   <Settings>
-    <Setting Name="UnitDisplayQuery" Type="System.String" Scope="Application">
+    <Setting Name="UnitLabelQuery" Type="System.String" Scope="Application">
       <Value Profile="(Default)">UnitName, UnitVehicleNumber</Value>
+    </Setting>
+    <Setting Name="UnitIdQuery" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ActiveUnitID</Value>
+    </Setting>
+    <Setting Name="UnitTypeQuery" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">UnitTypeID</Value>
+    </Setting>
+    <Setting Name="UnitLatitudeQuery" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Latitude</Value>
+    </Setting>
+    <Setting Name="UnitLongitudeQuery" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Longitude</Value>
+    </Setting>
+    <Setting Name="UnitPositionTime" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PositionTime</Value>
+    </Setting>
+    <Setting Name="UnitTypeFdLookup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="UnitTypeEmsLookup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="UnitTypePdLookup" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AvlIntervalAlpha1" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="AvlIntervalAlpha2" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">125</Value>
+    </Setting>
+    <Setting Name="AvlInactiveAlpha" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">75</Value>
+    </Setting>
+    <Setting Name="AvlInactiveColor" Type="System.Drawing.Color" Scope="Application">
+      <Value Profile="(Default)">Gray</Value>
     </Setting>
   </Settings>
 </SettingsFile>

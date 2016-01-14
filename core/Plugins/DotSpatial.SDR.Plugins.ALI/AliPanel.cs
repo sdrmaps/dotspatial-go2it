@@ -80,7 +80,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             else
             {
                 chkFleetList.DataSource = source;
-                chkFleetList.ValueMember = "Unit";
+                chkFleetList.DisplayMember = "UnitLabel";
+                chkFleetList.ValueMember = "UnitId";
             }
         }
 
@@ -128,6 +129,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             tsbAliLocate.Enabled = enableFunctions;
             tsbAliUpdate.Enabled = enableFunctions;
+            lblFleetList.Text = listTitle;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 75;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -140,6 +142,8 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             tsbAliLocate.Enabled = true;
             tsbAliUpdate.Enabled = true;
+            lblFleetList.Text = listTitle;
+            lblCommLog.Text = logTitle;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 60;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -152,6 +156,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             tsbAliLocate.Enabled = true;
             tsbAliUpdate.Enabled = true;
+            lblCommLog.Text = logTitle;
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 75;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;

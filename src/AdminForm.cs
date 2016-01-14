@@ -1122,7 +1122,8 @@ namespace Go2It
             numAliEnterpolAVLAge1Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq;
             numAliEnterpolAVLAge2Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq;
             numAliEnterpolAVLAge3Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq;
-            
+            chkAutoHideInactiveUnits.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits;
+
             // populate all the ali interfaces to the combobox
             foreach (var aliInterface in _aliInterfaces)
             {
@@ -1640,6 +1641,8 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq = (int)numAliEnterpolAVLAge1Freq.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq = (int)numAliEnterpolAVLAge2Freq.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq = (int)numAliEnterpolAVLAge3Freq.Value;
+            // avl autohide inactive units
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits = chkAutoHideInactiveUnits.Checked;
             // ali enterpol avl graphic settings
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFont = _enterpolAvlFont;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar = char.Parse(txtAliEnterpolAVLFdChars.Text.ToString(CultureInfo.InvariantCulture));

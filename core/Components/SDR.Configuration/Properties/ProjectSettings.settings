@@ -188,5 +188,8 @@
     <Setting Name="AliEnterpolAVLInitialCatalog" Type="System.String" Scope="User">
       <Value Profile="(Default)">SDRActiveUnitsView</Value>
     </Setting>
+    <Setting Name="AliAvlAutoHideInactiveUnits" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

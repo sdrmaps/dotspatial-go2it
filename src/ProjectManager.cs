@@ -283,6 +283,7 @@ namespace Go2It
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_age1freq", "NUMERIC"), Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_age2freq", "NUMERIC"), Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "ProjectSettings", "ali_enterpol_avl_age3freq", "NUMERIC"), Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "ProjectSettings", "ali_avl_autohideinactive", "TEXT"), Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits.ToString(CultureInfo.InvariantCulture)},
             };
             var k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM ProjectSettings limit 1");
             if (k.Length == 0)
@@ -435,6 +436,8 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq = AttachSetting("ali_enterpol_avl_age1freq", Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq, p);
             Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq = AttachSetting("ali_enterpol_avl_age2freq", Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq, p);
             Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq = AttachSetting("ali_enterpol_avl_age3freq", Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq, p);
+
+            Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits = AttachSetting("ali_avl_autohideinactive", Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits, p);
 
             // needs to be final ali setting loaded as it fires a change event
             Go2ItProjectSettings.Instance.AliMode = AttachSetting("ali_mode", Go2ItProjectSettings.Instance.AliMode, p);

@@ -757,5 +757,17 @@ namespace SDR.Configuration.Properties {
                 this["AliEnterpolAVLInitialCatalog"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AliAvlAutoHideInactiveUnits {
+            get {
+                return ((bool)(this["AliAvlAutoHideInactiveUnits"]));
+            }
+            set {
+                this["AliAvlAutoHideInactiveUnits"] = value;
+            }
+        }
     }
 }

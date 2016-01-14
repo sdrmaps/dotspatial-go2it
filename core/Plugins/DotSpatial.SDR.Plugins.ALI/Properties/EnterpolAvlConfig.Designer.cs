@@ -26,9 +26,117 @@ namespace DotSpatial.SDR.Plugins.ALI.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("UnitName, UnitVehicleNumber")]
-        public string UnitDisplayQuery {
+        public string UnitLabelQuery {
             get {
-                return ((string)(this["UnitDisplayQuery"]));
+                return ((string)(this["UnitLabelQuery"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ActiveUnitID")]
+        public string UnitIdQuery {
+            get {
+                return ((string)(this["UnitIdQuery"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UnitTypeID")]
+        public string UnitTypeQuery {
+            get {
+                return ((string)(this["UnitTypeQuery"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Latitude")]
+        public string UnitLatitudeQuery {
+            get {
+                return ((string)(this["UnitLatitudeQuery"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Longitude")]
+        public string UnitLongitudeQuery {
+            get {
+                return ((string)(this["UnitLongitudeQuery"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PositionTime")]
+        public string UnitPositionTime {
+            get {
+                return ((string)(this["UnitPositionTime"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string UnitTypeFdLookup {
+            get {
+                return ((string)(this["UnitTypeFdLookup"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public string UnitTypeEmsLookup {
+            get {
+                return ((string)(this["UnitTypeEmsLookup"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string UnitTypePdLookup {
+            get {
+                return ((string)(this["UnitTypePdLookup"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int AvlIntervalAlpha1 {
+            get {
+                return ((int)(this["AvlIntervalAlpha1"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("125")]
+        public int AvlIntervalAlpha2 {
+            get {
+                return ((int)(this["AvlIntervalAlpha2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int AvlInactiveAlpha {
+            get {
+                return ((int)(this["AvlInactiveAlpha"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
+        public global::System.Drawing.Color AvlInactiveColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AvlInactiveColor"]));
             }
         }
     }
