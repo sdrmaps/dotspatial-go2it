@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -23,7 +22,6 @@ using SDR.Data.Files;
 using SDR.Network;
 using SdrConfig = SDR.Configuration;
 using System.IO;
-using Point = System.Drawing.Point;
 
 namespace DotSpatial.SDR.Plugins.ALI
 {
@@ -231,111 +229,81 @@ namespace DotSpatial.SDR.Plugins.ALI
             return AvlVehicleType.None;
         }
 
-        // TODO: rework on startup for visibility purposes
-        private void CreateInitialAvlVehicleDictionary()
-        {
-            _avlVehicles = new Dictionary<string, AvlVehicle>();
-            for (var i = 0; i <= _aliPanel.VehicleFleetListBox.Items.Count - 1; i++)
-            {
-                _aliPanel.VehicleFleetListBox.SetItemChecked(i, true);
-                var item = _aliPanel.VehicleFleetListBox.Items[i] as DataRowView;
-                if (item == null) continue;
-                var avlVehicle = new AvlVehicle
-                {
-                    Visible = true,
-                    UnitLabel = item[0].ToString(),
-                    UnitId = item[1].ToString(),
-                    UnitType = SetAvlVehicleType(item[2].ToString()),
-                    UpdateTime = DateTime.Parse(item[3].ToString()),
-                    Latitude = Convert.ToDouble(item[4].ToString()),
-                    Longitude = Convert.ToDouble(item[5].ToString())
-                };
-                _avlVehicles.Add(avlVehicle.UnitId, avlVehicle);
-            }
-        }
-
         private void UpdateItemStateAndListBox()
         {
             if (_avlVehicles == null)  // first run through go ahead and generate our avl vehicle dictionary
             {
-                CreateInitialAvlVehicleDictionary();
-            }
-            else  // update the avl vehicles as needed
-            {
-                _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
-                var removeList = _avlVehicles.Keys.ToList();  // when complete remove any vehicles present here, as they are no longer in query
-                for (var i = 0; i <= _aliPanel.VehicleFleetListBox.Items.Count - 1; i++)
-                {
-                    var item = _aliPanel.VehicleFleetListBox.Items[i] as DataRowView;
-                    if (item == null) continue;
-                    AvlVehicle avlVehicle;  // attempt to get the unit by the unit id
-                    _avlVehicles.TryGetValue(item[1].ToString(), out avlVehicle);
-                    if (avlVehicle != null)
-                    {
-                        removeList.Remove(avlVehicle.UnitId);  // vehicle is valid, no need to remove it from the drawing functions
-                        // update the check state of listbox if need be
-                        _aliPanel.VehicleFleetListBox.SetItemChecked(i, avlVehicle.Visible);
-                        // update any lat/long/updatetime
-                        if (avlVehicle.Latitude.Equals(Convert.ToDouble(item[4].ToString())) &&
-                            avlVehicle.Longitude.Equals(Convert.ToDouble(item[5].ToString())))
-                        {
-                            // the vehicle position has not moved, no need to update time, lat or long, adjust the UpdateInterval as needed for display purposes
-                            var diff = DateTime.Now.Subtract(avlVehicle.UpdateTime);
-                            if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq)
-                            {
-                                avlVehicle.CurrentInterval = 0;
-                            } else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq)
-                            {
-                                avlVehicle.CurrentInterval = 1;
-                            } else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq)
-                            {
-                                avlVehicle.CurrentInterval = 2;
-                            }
-                            else  // in this case the value is older than the last age frequency, check if we need to auto hide it
-                            {
-                                avlVehicle.CurrentInterval = 3;  // this is inactive mode
-                                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits)
-                                {
-                                    avlVehicle.Visible = false;
-                                    _aliPanel.VehicleFleetListBox.SetItemChecked(i, false);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            avlVehicle.Latitude = Convert.ToDouble(item[4].ToString());
-                            avlVehicle.Longitude = Convert.ToDouble(item[5].ToString());
-                            avlVehicle.UpdateTime = DateTime.Parse(item[3].ToString());
-                            avlVehicle.CurrentInterval = 0;
-                        }
-                        avlVehicle.UnitLabel = item[0].ToString();
-                        avlVehicle.UnitType = SetAvlVehicleType(item[2].ToString());
-                    }
-                    else  // a new avl vehicle has appeared add it to our tracking last for drawing
-                    {
-                        var newVehicle = new AvlVehicle
-                        {
-                            Visible = true,
-                            UnitLabel = item[0].ToString(),
-                            UnitId = item[1].ToString(),
-                            UnitType = SetAvlVehicleType(item[2].ToString()),
-                            UpdateTime = DateTime.Parse(item[3].ToString()),
-                            Latitude = Convert.ToDouble(item[4].ToString()),
-                            Longitude = Convert.ToDouble(item[5].ToString())
-                        };
-                        _avlVehicles.Add(newVehicle.UnitId, newVehicle);
-                    }
-                }
-                if (removeList.Count > 0)
-                {
-                    // anything that remains in the list is no longer part of the query and should be removed
-                    foreach (string item in removeList)
-                    {
-                        _avlVehicles.Remove(item);
-                    }
-                }
+                _avlVehicles = new Dictionary<string, AvlVehicle>();
                 _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
             }
+            _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;  // disable item-check event handling temporarily
+            var removeList = _avlVehicles.Keys.ToList();  // when complete remove any vehicles present here, as they are no longer in query
+            for (var i = 0; i <= _aliPanel.VehicleFleetListBox.Items.Count - 1; i++)
+            {
+                var item = _aliPanel.VehicleFleetListBox.Items[i] as DataRowView;
+                if (item == null) continue;
+                AvlVehicle avlVehicle;  // attempt to get the unit by the unit id
+                _avlVehicles.TryGetValue(item[1].ToString(), out avlVehicle);
+                if (avlVehicle == null)
+                {
+                    avlVehicle = new AvlVehicle
+                    {
+                        UnitId = item[1].ToString(),
+                        UpdateTime = DateTime.Parse(item[3].ToString()),
+                        Latitude = Convert.ToDouble(item[4].ToString()),
+                        Longitude = Convert.ToDouble(item[5].ToString())
+                    };
+                    _avlVehicles.Add(avlVehicle.UnitId, avlVehicle);
+                }
+                removeList.Remove(avlVehicle.UnitId);  // vehicle is valid, no need to remove it from the drawing functions
+                // update any lat/long/updatetime
+                if (avlVehicle.Latitude.Equals(Convert.ToDouble(item[4].ToString())) &&
+                    avlVehicle.Longitude.Equals(Convert.ToDouble(item[5].ToString())))
+                {
+                    // the vehicle position has not moved, no need to update time, lat or long, adjust the UpdateInterval as needed for display purposes
+                    var diff = DateTime.Now.Subtract(avlVehicle.UpdateTime);
+                    if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq)
+                    {
+                        avlVehicle.CurrentInterval = 0;
+                    }
+                    else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq)
+                    {
+                        avlVehicle.CurrentInterval = 1;
+                    }
+                    else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq)
+                    {
+                        avlVehicle.CurrentInterval = 2;
+                    }
+                    else  // in this case the value is older than the last age frequency, check if we need to auto hide it
+                    {
+                        avlVehicle.CurrentInterval = 3;  // this is inactive mode
+                        if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits)
+                        {
+                            avlVehicle.Visible = false;
+                        }
+                    }
+                }
+                else  // we have a change in lat/long position
+                {
+                    avlVehicle.UpdateTime = DateTime.Parse(item[3].ToString());
+                    avlVehicle.Latitude = Convert.ToDouble(item[4].ToString());
+                    avlVehicle.Longitude = Convert.ToDouble(item[5].ToString());
+                    avlVehicle.CurrentInterval = 0;
+                }
+                avlVehicle.UnitLabel = item[0].ToString();
+                avlVehicle.UnitType = SetAvlVehicleType(item[2].ToString());
+                _aliPanel.VehicleFleetListBox.SetItemChecked(i, avlVehicle.Visible);
+            }
+            if (removeList.Count > 0)
+            {
+                // anything that remains in the list is no longer part of the query and should be removed
+                foreach (string item in removeList)
+                {
+                    _avlVehicles.Remove(item);
+                }
+            }
+            // reenable checkbox event handling
+            _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
         }
 
         private void VehicleFleetListBoxOnItemCheck(object sender, ItemCheckEventArgs e)
@@ -619,6 +587,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        // TODO: reimplement timers
         private void InitiateAvlTimers()
         {
             if (_avlReadIntervalTimer == null)
@@ -643,10 +612,38 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             var conn = GetEnterpolAvlConnString();
             PopulateEnterpolAvlCheckedListBox(conn);
-            //if (Map != null)
-            //{
-            //    Map.Invalidate();  // paint the map with updated avl positions
-            //}
+            if (Map != null)
+            {
+                Map.Invalidate();  // paint the map with updated avl positions (calls MapOnPaint)
+            }
+        }
+
+        // overriddeen paint event for rendering avl vehicle positions
+        private void MapOnPaint(object sender, PaintEventArgs e)
+        {
+            foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
+            {
+                var cv = kv.Value;
+                if (cv.Visible)
+                {
+                    DrawAvlIcon(cv, e.Graphics);
+                }
+            }
+        }
+
+        public void AddAvlMapPaintEvent()
+        {
+            if (Map == null) return;
+            var map = Map as Map;
+            if (map != null) map.Paint += MapOnPaint;
+            UpdateAvlFleetPositions();
+        }
+
+        public void RemoveAvlMapPaintEvent()
+        {
+            if (Map == null) return;
+            var map = Map as Map;
+            if (map != null) map.Paint -= MapOnPaint;
         }
 
         private void DrawAvlIcon(AvlVehicle v, Graphics g)
@@ -722,30 +719,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             b = new SolidBrush(c);
             g.DrawString(i.ToString(CultureInfo.InvariantCulture), f, b, p);
-        }
-
-        private void MapOnPaint(object sender, PaintEventArgs e)
-        {
-            foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
-            {
-                var cv = kv.Value;
-                DrawAvlIcon(cv, e.Graphics);
-            }
-        }
-
-        public void AddAvlMapPaintEvent()
-        {
-            if (Map == null) return;
-            var map = Map as Map;
-            if (map != null) map.Paint += MapOnPaint;
-            UpdateAvlFleetPositions();
-        }
-
-        public void RemoveAvlMapPaintEvent()
-        {
-            if (Map == null) return;
-            var map = Map as Map;
-            if (map != null) map.Paint -= MapOnPaint;
         }
 
         private void InstanceOnAliEnterpolAvlWhoAmIProcChanged(object sender, EventArgs eventArgs)
