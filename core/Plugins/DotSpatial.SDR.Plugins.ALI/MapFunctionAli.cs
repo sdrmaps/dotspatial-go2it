@@ -11,7 +11,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.SDR.Plugins.ALI.Properties;
 using DotSpatial.Topology;
@@ -295,14 +294,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                         avlVehicle.CurrentInterval = 3;  // set to inactive mode
                         if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits)
                         {
-                            if (avlVehicle.IgnoreActiveHide)
-                            {
-                                avlVehicle.Visible = true;
-                            }
-                            else
-                            {
-                                avlVehicle.Visible = false;
-                            }
+                            avlVehicle.Visible = avlVehicle.IgnoreActiveHide;
                         }
                     }
                 }
@@ -341,14 +333,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 if (avlVehicle.CurrentInterval.Equals(3))
                 {
-                    if (CheckState.Checked == e.NewValue)
-                    {
-                        avlVehicle.IgnoreActiveHide = true;
-                    }
-                    else
-                    {
-                        avlVehicle.IgnoreActiveHide = false;
-                    }
+                    avlVehicle.IgnoreActiveHide = CheckState.Checked == e.NewValue;
                 }   
             }
             UpdateAvlFleetPositions();
@@ -359,7 +344,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             try
             {
                 var dbAdapter = new SqlDataAdapter(sqlString, connString);
-                var dbTable = new DataTable { Locale = System.Globalization.CultureInfo.InvariantCulture };
+                var dbTable = new DataTable { Locale = CultureInfo.InvariantCulture };
                 dbAdapter.Fill(dbTable);
                 var bindingSource = new BindingSource { DataSource = dbTable };
                 _aliPanel.SetCheckedListBoxBindingSource(bindingSource);
@@ -417,7 +402,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             try
             {
                 var dbAdapter = new SqlDataAdapter(sqlString, connString);
-                var dbTable = new DataTable {Locale = System.Globalization.CultureInfo.InvariantCulture};
+                var dbTable = new DataTable {Locale = CultureInfo.InvariantCulture};
                 dbAdapter.Fill(dbTable);
                 var bindingSource = new BindingSource { DataSource = dbTable };
                 _aliPanel.SetDgvBindingSource(bindingSource);
@@ -606,8 +591,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             try
             {
-                // TODO: validate we no longer need these here
-                // InitiateAvlTimers();
+                InitiateAvlTimers();
             }
             catch (Exception ex)
             {
@@ -615,25 +599,25 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        // TODO: reimplement timers
         private void InitiateAvlTimers()
         {
-            if (_avlReadIntervalTimer == null)
-            {
-                var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
-                _avlReadIntervalTimer = new System.Timers.Timer(interval) { AutoReset = true };
-                _avlReadIntervalTimer.Elapsed += delegate
-                {
-                    UpdateAvlFleetPositions();
-                };
-            }
-            else
-            {
-                _avlReadIntervalTimer.Enabled = false;
-                _avlReadIntervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
-            }
-            _avlReadIntervalTimer.Enabled = true;
+            // TODO: revalidate and put back in
+            //if (_avlReadIntervalTimer == null)
+            //{
+            //    var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
+            //    _avlReadIntervalTimer = new System.Timers.Timer(interval) { AutoReset = true };
+            //    _avlReadIntervalTimer.Elapsed += delegate
+            //    {
+            //        UpdateAvlFleetPositions();
+            //    };
+            //}
+            //else
+            //{
+            //    _avlReadIntervalTimer.Enabled = false;
+            //    _avlReadIntervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
+            //}
+            //_avlReadIntervalTimer.Enabled = true;
         }
 
         private void UpdateAvlFleetPositions()
@@ -655,14 +639,14 @@ namespace DotSpatial.SDR.Plugins.ALI
         // overriddeen paint event for rendering avl vehicle positions
         private void MapOnPaint(object sender, PaintEventArgs e)
         {
-            //foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
-            //{
-            //    var cv = kv.Value;
-            //    if (cv.Visible)
-            //    {
-            //        DrawAvlIcon(cv, e.Graphics);
-            //    }
-            //}
+            foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
+            {
+                var cv = kv.Value;
+                if (cv.Visible)
+                {
+                    DrawAvlIcon(cv, e.Graphics);
+                }
+            }
         }
 
         public void AddAvlMapPaintEvent()
@@ -682,7 +666,6 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void DrawAvlIcon(AvlVehicle v, Graphics g)
         {
-            SolidBrush b = null;
             var i = '\0';   // icon to display
             var f = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFont;
             var c = new Color();
@@ -711,7 +694,9 @@ namespace DotSpatial.SDR.Plugins.ALI
                     break;
                 case AvlVehicleType.LawEnforcement:
                     i = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar;
+                    // TODO: reset back to proper functionality
                     c = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor;
+
                     //if (v.CurrentInterval == 0)
                     //{
                     //    c = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor;
@@ -728,6 +713,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                     //{
                     //    c = Color.FromArgb(EnterpolAvlConfig.Default.AvlInactiveAlpha, EnterpolAvlConfig.Default.AvlInactiveColor);
                     //}
+
                     break;
                 case AvlVehicleType.EmergencyMedicalService:
                     i = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar;
@@ -752,7 +738,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                     // TODO: handle networkfleet options in here??
                     break;
             }
-            b = new SolidBrush(c);
+            var b = new SolidBrush(c);
             g.DrawString(i.ToString(CultureInfo.InvariantCulture), f, b, p);
         }
 
