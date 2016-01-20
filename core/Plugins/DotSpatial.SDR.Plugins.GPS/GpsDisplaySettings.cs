@@ -144,12 +144,10 @@ namespace DotSpatial.SDR.Plugins.GPS
         {
             PointShape ptShape;  // parse out point shape style
             Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out ptShape);
-            // Enum.TryParse(gpsSymbolStyle.SelectedItem.ToString(), true, out ptShape);
             var pLyr = map.MapFrame.DrawingLayers[0] as MapPointLayer;
             if (pLyr != null)
             {
                 pLyr.Symbolizer = new PointSymbolizer(PluginSettings.Instance.GpsPointColor, ptShape, PluginSettings.Instance.GpsPointSize);
-                // pLyr.Symbolizer = new PointSymbolizer(gpsSymbolColor.BackColor, ptShape, Convert.ToInt32(gpsSymbolSize.Text));
             }
             Color mapColor = SdrConfig.Project.Go2ItProjectSettings.Instance.MapBgColor;
             map.BackColor = mapColor;

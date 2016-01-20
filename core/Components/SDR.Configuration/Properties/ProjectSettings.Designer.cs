@@ -769,5 +769,17 @@ namespace SDR.Configuration.Properties {
                 this["AliAvlAutoHideInactiveUnits"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Fuchsia")]
+        public global::System.Drawing.Color AliEnterpolAVLMyVehicleColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliEnterpolAVLMyVehicleColor"]));
+            }
+            set {
+                this["AliEnterpolAVLMyVehicleColor"] = value;
+            }
+        }
     }
 }

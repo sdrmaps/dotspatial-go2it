@@ -70,5 +70,17 @@ namespace SDR.Configuration.Properties {
                 this["AdminModeActive"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ResponderUnitLocation {
+            get {
+                return ((string)(this["ResponderUnitLocation"]));
+            }
+            set {
+                this["ResponderUnitLocation"] = value;
+            }
+        }
     }
 }

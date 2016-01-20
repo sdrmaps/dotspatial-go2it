@@ -2,25 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Primitives;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
@@ -137,7 +128,7 @@ namespace Go2It
             {
                 // attempt to get a list of security permissions from the folder. 
                 // this will raise an exception if the path is read only or does not have access to view the permissions.
-                System.IO.Directory.GetAccessControl(folderPath);
+                Directory.GetAccessControl(folderPath);
                 return true;
             }
             catch (UnauthorizedAccessException)
@@ -157,10 +148,10 @@ namespace Go2It
 
         private static void CheckDirectory(string directoryName)
         {
-            if (System.IO.Directory.Exists(directoryName)) return;
+            if (Directory.Exists(directoryName)) return;
             try
             {
-                System.IO.Directory.CreateDirectory(directoryName);
+                Directory.CreateDirectory(directoryName);
             }
             catch (Exception ex)
             {
@@ -286,6 +277,8 @@ namespace Go2It
             numAliEnterpolAVLUpdateFreq.Visible = false;
             lblAliEnterpolAVLWhoAmIProc.Visible = false;
             txtAliEnterpolAVLWhoAmIProc.Visible = false;
+            pnlAliEnterpolAVLMyVehicleColor.Visible = false;
+            lblAliEnterpolAVLMyVehicleColor.Visible = false;
         }
 
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
@@ -307,21 +300,21 @@ namespace Go2It
                     }
                     // check if this index type exists in the temp dir
                     var tdir = Path.Combine(TempIndexDir, "_indexes", idxType);
-                    if (System.IO.Directory.Exists(tdir))
+                    if (Directory.Exists(tdir))
                     {
-                        System.IO.Directory.Delete(tdir, true);
+                        Directory.Delete(tdir, true);
                     }
                     // check if it exists in the project storage dir
                     var pdir = Path.Combine(_projectManager.CurrentProjectDirectory, projectName + "_indexes", idxType);
-                    if (System.IO.Directory.Exists(pdir))
+                    if (Directory.Exists(pdir))
                     {
-                        System.IO.Directory.Delete(pdir, true);
+                        Directory.Delete(pdir, true);
                         // remove the whole index dir if there are no indexes present
                         var intdir = Path.Combine(_projectManager.CurrentProjectDirectory, projectName + "_indexes");
-                        var dirarr = System.IO.Directory.GetDirectories(intdir);
+                        var dirarr = Directory.GetDirectories(intdir);
                         if (dirarr.Length == 0)
                         {
-                            System.IO.Directory.Delete(intdir);
+                            Directory.Delete(intdir);
                         }
                     }
                 }
@@ -357,11 +350,11 @@ namespace Go2It
                 var src = Path.Combine(TempIndexDir, "_indexes", idxType);
                 var dst = Path.Combine(_projectManager.CurrentProjectDirectory, projectName + "_indexes", idxType);
                 // if the idxType is in the temp dir, move it now
-                if (System.IO.Directory.Exists(src))
+                if (Directory.Exists(src))
                 {
-                    if (System.IO.Directory.Exists(dst))
+                    if (Directory.Exists(dst))
                     {
-                        System.IO.Directory.Delete(dst, true);
+                        Directory.Delete(dst, true);
                     }
                     DirectoryCopy(src, dst, true);
                 }
@@ -381,9 +374,9 @@ namespace Go2It
                     + sourceDirName);
             }
             // If the destination directory doesn't exist, create it. 
-            if (!System.IO.Directory.Exists(destDirName))
+            if (!Directory.Exists(destDirName))
             {
-                System.IO.Directory.CreateDirectory(destDirName);
+                Directory.CreateDirectory(destDirName);
             }
             // Get the files in the directory and copy them to the new location.
             FileInfo[] files = dir.GetFiles();
@@ -474,12 +467,13 @@ namespace Go2It
             lineSymbolStyle.SelectedIndexChanged -= LineSymbolStyleOnSelectedIndexChanged;
             ptAliNetworkfleetColor.Click -= CharGraphicColorPanelOnClick;
             ptAliNetworkfleetChar.TextChanged -= CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLEmsColor.Click += CharGraphicColorPanelOnClick;
-            txtAliEnterpolAVLEmsChars.TextChanged += CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLFdColor.Click += CharGraphicColorPanelOnClick;
-            txtAliEnterpolAVLFdChars.TextChanged += CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLPdColor.Click += CharGraphicColorPanelOnClick;
-            txtAliEnterpolAVLPdChars.TextChanged += CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLEmsColor.Click -= CharGraphicColorPanelOnClick;
+            txtAliEnterpolAVLEmsChars.TextChanged -= CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLFdColor.Click -= CharGraphicColorPanelOnClick;
+            txtAliEnterpolAVLFdChars.TextChanged -= CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLPdColor.Click -= CharGraphicColorPanelOnClick;
+            txtAliEnterpolAVLPdChars.TextChanged -= CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLMyVehicleColor.Click -= CharGraphicColorPanelOnClick;
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
@@ -762,6 +756,9 @@ namespace Go2It
             ptAliNetworkfleetFont.Font = _networkFleetFont;
             ptAliNetworkfleetSize.Text = _networkFleetFont.Size.ToString(CultureInfo.InvariantCulture);
             // enterpol avl char graphics
+            Color avlMyColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor;
+            pnlAliEnterpolAVLMyVehicleColor.BackColor = avlMyColor;
+            pnlAliEnterpolAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
             Color avlEmsColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor;
             pnlAliEnterpolAVLEmsColor.BackColor = avlEmsColor;
             pnlAliEnterpolAVLEmsColor.Click += CharGraphicColorPanelOnClick;
@@ -873,14 +870,7 @@ namespace Go2It
                 var c = ptMap.PixelToProj(new Point(x, y));
                 ftSet.AddFeature(new DotSpatial.Topology.Point(c));
             }
-            if (panel == ptAliNetworkfleetGraphic)
-            {
-                UpdateCharacterGraphic(ptMap, _networkFleetFont, color, chars);
-            }
-            else
-            {
-                UpdateCharacterGraphic(ptMap, _enterpolAvlFont, color, chars);
-            }
+            UpdateCharacterGraphic(ptMap, panel == ptAliNetworkfleetGraphic ? _networkFleetFont : _enterpolAvlFont, color, chars);
         }
 
         private void UpdateCharacterGraphic(Map map, Font font, Color color, String chars)
@@ -921,6 +911,11 @@ namespace Go2It
             {
                 pnlAliEnterpolAVLPdColor.BackColor = nColor;
                 DrawCharacterGraphic(pnlAliEnterpolAVLPdGraphic, pnlAliEnterpolAVLPdColor.BackColor, txtAliEnterpolAVLPdChars.Text);
+            }
+            else if (pnl == pnlAliEnterpolAVLMyVehicleColor)
+            {
+                pnlAliEnterpolAVLMyVehicleColor.BackColor = nColor;
+                // no character to update on this color selection
             }
             else  // networkfleet panel backcolor
             {
@@ -1538,15 +1533,7 @@ namespace Go2It
             if (_idxWorker.IsBusy != true)
                 if (btnSplitSave.Text == @"Save")
                 {
-                    bool result;
-                    if (String.IsNullOrEmpty(_projectManager.CurrentProjectFile))
-                    {
-                        result = SaveProjectAs();
-                    }
-                    else
-                    {
-                        result = SaveProject(_projectManager.CurrentProjectFile);
-                    }
+                    bool result = String.IsNullOrEmpty(_projectManager.CurrentProjectFile) ? SaveProjectAs() : SaveProject(_projectManager.CurrentProjectFile);
                     if (result)
                     {
                         Close();
@@ -1651,6 +1638,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor = pnlAliEnterpolAVLPdColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar = char.Parse(txtAliEnterpolAVLEmsChars.Text.ToString(CultureInfo.InvariantCulture));
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor = pnlAliEnterpolAVLEmsColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor = pnlAliEnterpolAVLMyVehicleColor.BackColor;
 
             string aliValue;  // swap key and value positions to use the friendly label as a lookup key for the enum string value
             var swapDict = _aliInterfaces.ToDictionary(e => e.Value, e => e.Key);

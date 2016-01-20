@@ -5,7 +5,6 @@ using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
-using DotSpatial.Topology;
 
 namespace Go2It
 {
@@ -117,7 +116,7 @@ namespace Go2It
             }
 
             var mouseLocation = new System.Drawing.Point {X = e.X, Y = e.Y};
-            Coordinate projCor = _map.PixelToProj(mouseLocation);
+            var projCor = _map.PixelToProj(mouseLocation);
 
             var xy = new double[2];
             xy[0] = projCor.X;
@@ -129,7 +128,7 @@ namespace Go2It
                 Reproject.ReprojectPoints(xy, z, _currentMapProjection, _wgs84Projection, 0, 1);
             }
 
-            // convert to Degrees Minutes Seconds
+            // convert to degrees, minutes, seconds
             var coord = new double[2];
             coord[0] = Math.Abs(xy[0]);
             coord[1] = Math.Abs(xy[1]);

@@ -76,13 +76,15 @@ namespace DotSpatial.SDR.Plugins.GPS
         /// </summary>
         private void HandleNmeaEvents()
         {
-            _nmeaInterpreter.BearingChanged += delegate(object sender, AzimuthEventArgs args) { _gpsPanel.NmeaBearingChanged(sender, args); };
-            _nmeaInterpreter.AltitudeChanged += delegate(object sender, DistanceEventArgs args) { _gpsPanel.NmeaAltitudeChanged(sender, args); };
-            _nmeaInterpreter.SpeedChanged += delegate(object sender, SpeedEventArgs args) { _gpsPanel.NmeaSpeedChanged(sender, args); };
-            _nmeaInterpreter.DateTimeChanged += delegate(object sender, DateTimeEventArgs args) { _gpsPanel.NmeaDateTimeChanged(sender, args); };
+            _nmeaInterpreter.BearingChanged += (sender, args) => _gpsPanel.NmeaBearingChanged(sender, args);
+            _nmeaInterpreter.AltitudeChanged += (sender, args) => _gpsPanel.NmeaAltitudeChanged(sender, args);
+            _nmeaInterpreter.SpeedChanged += (sender, args) => _gpsPanel.NmeaSpeedChanged(sender, args);
+            _nmeaInterpreter.DateTimeChanged += (sender, args) => _gpsPanel.NmeaDateTimeChanged(sender, args);
             _nmeaInterpreter.PositionChanged += delegate(object sender, PositionEventArgs args)
             {
                 _gpsPanel.NmeaPositionChanged(sender, args);
+                var x = sender.ToString();
+                var z = args.ToString();
                 PlotGpsPointToMap(args);
             };
             _nmeaInterpreter.Started += delegate(object sender, EventArgs args)
@@ -95,15 +97,12 @@ namespace DotSpatial.SDR.Plugins.GPS
                 _gpsPanel.NmeaStopped(sender, args);
                 ClearGpsTrail();
             };
-            _nmeaInterpreter.ExceptionOccurred += delegate(object sender, ExceptionEventArgs args)
-            {
-                _gpsPanel.NmeaExceptionOccured(sender, args);
-            };
-            _nmeaInterpreter.FixLost += delegate(object sender, EventArgs args) { _gpsPanel.NmeaFixLost(sender, args); };
-            _nmeaInterpreter.FixAcquired += delegate(object sender, EventArgs args) { _gpsPanel.NmeaFixAcquired(sender, args); };
-            _nmeaInterpreter.ConnectionLost += delegate(object sender, ExceptionEventArgs args) { _gpsPanel.NmeaConnectionLost(sender, args); };
-            _nmeaInterpreter.Paused += delegate(object sender, EventArgs args) { _gpsPanel.NmeaPaused(sender, args); };
-            _nmeaInterpreter.Resumed += delegate(object sender, EventArgs args) { _gpsPanel.NmeaResumed(sender, args); };
+            _nmeaInterpreter.ExceptionOccurred += (sender, args) => _gpsPanel.NmeaExceptionOccured(sender, args);
+            _nmeaInterpreter.FixLost += (sender, args) => _gpsPanel.NmeaFixLost(sender, args);
+            _nmeaInterpreter.FixAcquired += (sender, args) => _gpsPanel.NmeaFixAcquired(sender, args);
+            _nmeaInterpreter.ConnectionLost += (sender, args) => _gpsPanel.NmeaConnectionLost(sender, args);
+            _nmeaInterpreter.Paused += (sender, args) => _gpsPanel.NmeaPaused(sender, args);
+            _nmeaInterpreter.Resumed += (sender, args) => _gpsPanel.NmeaResumed(sender, args);
         }
 
         private Coordinate ConvertLatLonToMap(double lon, double lat)
@@ -111,7 +110,7 @@ namespace DotSpatial.SDR.Plugins.GPS
             if (!Map.Projection.Equals(KnownCoordinateSystems.Geographic.World.WGS1984))
             {
                 ProjectionInfo mapProjInfo = ProjectionInfo.FromEsriString(Map.Projection.ToEsriString());
-                double[] xy = new double[2];
+                var xy = new double[2];
                 xy[0] = lon;
                 xy[1] = lat;
                 var z = new double[1];

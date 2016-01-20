@@ -30,6 +30,16 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
+        public int EnterpolAvlMyVehicle
+        {
+            get { return UserSettings.Default.EnterpolAVLMyVehicle; }
+            set
+            {
+                UserSettings.Default.EnterpolAVLMyVehicle = value;
+                UserSettings.Default.Save();
+            }
+        }
+
         public StringCollection SdrAliServerDgvSortOrder
         {
             get { return UserSettings.Default.SdrAliServerDgvSortOrder; }

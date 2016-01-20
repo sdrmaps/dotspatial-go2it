@@ -318,6 +318,7 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_lechar", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_fdchar", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_emschar", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_mycolor", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
             };
             k = SQLiteHelper.ExecuteScalar(conn, "SELECT key FROM GraphicSettings limit 1");
             if (k.Length == 0)
@@ -464,6 +465,7 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor = AttachSetting("ali_enterpol_avl_lecolor", Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar = AttachSetting("ali_enterpol_avl_emschar", Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor = AttachSetting("ali_enterpol_avl_emscolor", Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor, g);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor = AttachSetting("ali_enterpol_avl_mycolor", Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor, g);
 
             const string lyrQuery = "SELECT * FROM Layers";  // assign all layers to their proper lookup 'type'
             DataTable lyrTable = SQLiteHelper.GetDataTable(conn, lyrQuery);

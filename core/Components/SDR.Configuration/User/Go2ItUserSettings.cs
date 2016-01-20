@@ -62,5 +62,15 @@ namespace SDR.Configuration.User
                 UserSettings.Default.Save();
             }
         }
+
+        public string ResponderUnitLocation
+        {
+            get { return UserSettings.Default.ResponderUnitLocation; }
+            set
+            {
+                UserSettings.Default.ResponderUnitLocation = value;
+                UserSettings.Default.Save();
+            }
+        }
     }
 }
