@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -71,6 +72,22 @@ namespace DotSpatial.SDR.Plugins.GPS
             Devices.DeviceDetected += DevicesOnDeviceDetected;
         }
 
+        private void UpdateSettings_ResponderPosition(NmeaInterpreter nmea)
+        {
+            if (nmea.Position.IsInvalid || nmea.Position.IsEmpty) return;
+            if (double.IsNaN(nmea.Position.Latitude.DecimalDegrees) ||
+                double.IsNaN(nmea.Position.Longitude.DecimalDegrees)) return;
+
+            var xmlDict = new SdrConfig.XmlSerializableDictionary<string, string>
+            {
+                {"latitude", nmea.Position.Latitude.DecimalDegrees.ToString(CultureInfo.InvariantCulture)},
+                {"longitude", nmea.Position.Longitude.DecimalDegrees.ToString(CultureInfo.InvariantCulture)},
+                {"timestamp", nmea.DateTime.ToString(CultureInfo.InvariantCulture)}
+            };
+            // update application level user config setting to store responder unit location with timestamp
+            SdrConfig.User.Go2ItUserSettings.Instance.ResponderUnitLocation = xmlDict;
+        }
+
         /// <summary>
         /// Handle all NMEA events and pass them along to the Panel for display
         /// </summary>
@@ -83,8 +100,8 @@ namespace DotSpatial.SDR.Plugins.GPS
             _nmeaInterpreter.PositionChanged += delegate(object sender, PositionEventArgs args)
             {
                 _gpsPanel.NmeaPositionChanged(sender, args);
-                var x = sender.ToString();
-                var z = args.ToString();
+                var nmea = sender as NmeaInterpreter;
+                UpdateSettings_ResponderPosition(nmea);
                 PlotGpsPointToMap(args);
             };
             _nmeaInterpreter.Started += delegate(object sender, EventArgs args)

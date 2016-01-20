@@ -1,6 +1,9 @@
 ﻿// serializable dictionary to XML string, which is in turn stored to user settings file
 
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace SDR.Configuration
@@ -9,10 +12,39 @@ namespace SDR.Configuration
     {
         public System.Xml.Schema.XmlSchema GetSchema()
         {
+            // TODO: 
             return null;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader)
+        public string ToXmlString()
+        {
+            using (TextWriter writer = new Utf8StringWriter())
+            {
+                using (var xmlWriter = XmlWriter.Create(writer))
+                {
+                    WriteXml(xmlWriter);
+                    xmlWriter.Close();
+                }
+                var str = writer.ToString();
+                writer.Close();
+                return str;
+            }
+        }
+
+        public void FromXmlString(string xmlString)
+        {
+            using (TextReader reader = new StringReader(xmlString))
+            {
+                using (XmlReader xmlReader = XmlReader.Create(reader))
+                {
+                    ReadXml(xmlReader);
+                    xmlReader.Close();
+                }
+                reader.Close();
+            }
+        }
+
+        public void ReadXml(XmlReader reader)
         {
             var keySerializer = new XmlSerializer(typeof(TKey));
             var valueSerializer = new XmlSerializer(typeof(TValue));
@@ -44,7 +76,7 @@ namespace SDR.Configuration
             reader.ReadEndElement();
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer)
+        public void WriteXml(XmlWriter writer)
         {
             var keySerializer = new XmlSerializer(typeof(TKey));
             var valueSerializer = new XmlSerializer(typeof(TValue));

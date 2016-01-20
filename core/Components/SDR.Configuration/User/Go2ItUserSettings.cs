@@ -63,12 +63,18 @@ namespace SDR.Configuration.User
             }
         }
 
-        public string ResponderUnitLocation
+        public XmlSerializableDictionary<string, string> ResponderUnitLocation
         {
-            get { return UserSettings.Default.ResponderUnitLocation; }
+            get
+            {
+                var xmlString = UserSettings.Default.ResponderUnitLocation;
+                var xmlDict = new XmlSerializableDictionary<string, string>();
+                xmlDict.FromXmlString(xmlString);
+                return xmlDict;
+            }
             set
             {
-                UserSettings.Default.ResponderUnitLocation = value;
+                UserSettings.Default.ResponderUnitLocation = value.ToXmlString();
                 UserSettings.Default.Save();
             }
         }

@@ -657,9 +657,14 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void UpdateMyVehiclePosition()
         {
-            PluginInfo pi = new PluginInfo();
-            
-                //using (var conn = new SqlConnection(GetEnterpolAvlConnString()))
+            var item = SdrConfig.User.Go2ItUserSettings.Instance.ResponderUnitLocation;
+            var x = item;
+            // var xmlString = SdrConfig.User.Go2ItUserSettings.Instance.ResponderUnitLocation;
+            // Debug.WriteLine(xmlString);
+
+            // PluginInfo pi = new PluginInfo();
+
+            //using (var conn = new SqlConnection(GetEnterpolAvlConnString()))
             //using (var command = new SqlCommand(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProc, conn)
             //{
             //    CommandType = CommandType.StoredProcedure
