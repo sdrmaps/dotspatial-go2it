@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using SDR.Configuration.Properties;
+﻿using SDR.Configuration.Properties;
 
 namespace SDR.Configuration.User
 {

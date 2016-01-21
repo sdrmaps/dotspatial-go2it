@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -56,7 +55,7 @@ namespace SDR.Configuration
                 return;
 
             reader.ReadStartElement("Dictionary");
-            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            while (reader.NodeType != XmlNodeType.EndElement)
             {
                 reader.ReadStartElement("KeyValuePair");
 

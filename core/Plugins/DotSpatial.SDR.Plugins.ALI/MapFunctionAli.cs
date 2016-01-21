@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.Controls;
-using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.ALI.Properties;
 using DotSpatial.Topology;
@@ -598,7 +597,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged += InstanceOnAliEnterpolAvlMyColorChanged;
                 try
                 {
-                    FetchMyVehicleId();
+                    FetchWhoAmI();
                     InitiateAvlUpdateTimer();
                 }
                 catch (Exception ex)
@@ -616,7 +615,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        private void FetchMyVehicleId()
+        private void FetchWhoAmI()
         {
             using (var conn = new SqlConnection(GetEnterpolAvlConnString()))
             using (var comm = new SqlCommand(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProc, conn)
@@ -658,22 +657,35 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void UpdateMyVehiclePosition()
         {
             var item = SdrConfig.User.Go2ItUserSettings.Instance.ResponderUnitLocation;
-            var x = item;
-            // var xmlString = SdrConfig.User.Go2ItUserSettings.Instance.ResponderUnitLocation;
-            // Debug.WriteLine(xmlString);
+            if (item == null || item.Count <= 0) return;
 
-            // PluginInfo pi = new PluginInfo();
+            string latStr;
+            item.TryGetValue("latitude", out latStr);
+            if (latStr == null) return;
+            var latitude = Double.Parse(latStr);
 
-            //using (var conn = new SqlConnection(GetEnterpolAvlConnString()))
-            //using (var command = new SqlCommand(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProc, conn)
-            //{
-            //    CommandType = CommandType.StoredProcedure
-            //})
-            //{
-            //    conn.Open();
-            //    _myUnitId = Convert.ToInt32(command.ExecuteScalar());
-            //    conn.Close();
-            //}
+            string lonStr;
+            item.TryGetValue("longitude", out lonStr);
+            if (lonStr == null) return;
+            var longitude = Double.Parse(lonStr);
+
+            string stampStr;
+            item.TryGetValue("timestamp", out stampStr);
+            var timestamp = DateTime.Parse(stampStr);
+
+            using (var conn = new SqlConnection(GetEnterpolAvlConnString()))
+            {
+                using (var cmd = new SqlCommand(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProc, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@Latitude", latitude));
+                    cmd.Parameters.Add(new SqlParameter("@Longitude", longitude));
+                    cmd.Parameters.Add(new SqlParameter("@PosTime", timestamp));
+                    conn.Open();
+                    cmd.BeginExecuteNonQuery();
+                    conn.Close();
+                }
+            }
         }
 
         private void InstanceOnAliEnterpolAvlUpdateFreqChanged(object sender, EventArgs eventArgs)

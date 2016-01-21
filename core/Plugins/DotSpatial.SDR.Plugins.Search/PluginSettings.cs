@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DotSpatial.SDR.Plugins.Search.Properties;
 using SDR.Configuration;
-using System.Xml;
 
 namespace DotSpatial.SDR.Plugins.Search
 {
@@ -97,39 +94,20 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private static string DictionarySettingsString(Dictionary<string, string> settings)
         {
-            var newDict = settings;
             var xmlDict = new XmlSerializableDictionary<string, string>();
-            foreach (KeyValuePair<string, string> kvPair in newDict)
+            foreach (KeyValuePair<string, string> kvPair in settings)
             {
                 xmlDict.Add(kvPair.Key, kvPair.Value);
             }
-            using (TextWriter writer = new Utf8StringWriter())
-            {
-                using (XmlWriter xmlWriter = XmlWriter.Create(writer))
-                {
-                    xmlDict.WriteXml(xmlWriter);
-                    xmlWriter.Close();
-                }
-                var str = writer.ToString();
-                writer.Close();
-                return str;
-            }
+            return xmlDict.ToXmlString();
         }
 
         private static Dictionary<string, string> FetchDictionarySetting(string setting)
         {
             if (setting.Length <= 0) return null; // no setting currently exists
             var xmlDict = new XmlSerializableDictionary<string, string>();
-            using (TextReader reader = new StringReader(setting))
-            {
-                using (XmlReader xmlReader = XmlReader.Create(reader))
-                {
-                    xmlDict.ReadXml(xmlReader);
-                    xmlReader.Close();
-                }
-                reader.Close();
-            }
-            return xmlDict.ToDictionary(kvPair => kvPair.Key, kvPair => kvPair.Value);
+            xmlDict.FromXmlString(setting);
+            return xmlDict;
         }
     }
 }
