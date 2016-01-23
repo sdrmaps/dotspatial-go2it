@@ -194,5 +194,8 @@
     <Setting Name="AliEnterpolAVLMyVehicleColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Fuchsia</Value>
     </Setting>
+    <Setting Name="AliAVLInactiveColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Gray</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

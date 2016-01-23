@@ -37,6 +37,29 @@ namespace DotSpatial.SDR.Plugins.ALI
         #endregion
 
         #region Methods
+        public delegate void SelectAvlVehicleRowCallback(int id);
+        public void SelectAvlVehicleRow(int id)
+        {
+            if (chkFleetList.InvokeRequired)
+            {
+                var cb = new SelectAvlVehicleRowCallback(SelectAvlVehicleRow);
+                Invoke(cb, new object[] { id });
+            }
+            else
+            {
+                chkFleetList.SelectedIndex = id;
+            }
+        }
+
+        public delegate int GetSelectedAvlVehicleRowCallback();
+        public int GetSelectedAvlVehicleRow()
+        {
+            if (chkFleetList.InvokeRequired)
+            {
+                return (int)chkFleetList.Invoke(new GetSelectedAvlVehicleRowCallback(GetSelectedAvlVehicleRow));
+            }
+            return chkFleetList.SelectedIndex;
+        }
 
         delegate void SetDgvDataSourceCallback(GlobalCadRecord[]source);
         public void SetDgvDataSource(GlobalCadRecord[] source)

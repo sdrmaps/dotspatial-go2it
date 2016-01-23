@@ -755,6 +755,10 @@ namespace Go2It
             ptAliNetworkfleetFont.Text = _networkFleetFont.Name;
             ptAliNetworkfleetFont.Font = _networkFleetFont;
             ptAliNetworkfleetSize.Text = _networkFleetFont.Size.ToString(CultureInfo.InvariantCulture);
+            // avl inactive vehicle color
+            Color avlInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor;
+            pnlAliAVLInactiveColor.BackColor = avlInactive;
+            pnlAliEnterpolAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
             // enterpol avl char graphics
             Color avlMyColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor;
             pnlAliEnterpolAVLMyVehicleColor.BackColor = avlMyColor;
@@ -915,6 +919,11 @@ namespace Go2It
             else if (pnl == pnlAliEnterpolAVLMyVehicleColor)
             {
                 pnlAliEnterpolAVLMyVehicleColor.BackColor = nColor;
+                // no character to update on this color selection
+            }
+            else if (pnl == pnlAliAVLInactiveColor)
+            {
+                pnlAliAVLInactiveColor.BackColor = nColor;
                 // no character to update on this color selection
             }
             else  // networkfleet panel backcolor
@@ -1616,7 +1625,9 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadConfigPath = txtAliGlobalCadConfigIni.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort =Convert.ToInt32(numAliInterfaceUdpPort.Value);
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort = Convert.ToInt32(numAliInterfaceUdpPort.Value);
+            // set inactive avl vehicle color
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor = pnlAliAVLInactiveColor.BackColor;
             // set ali enterpol avl options
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl = chkEnterpolAvl.Checked;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName = txtAliEnterpolAVLTableName.Text;

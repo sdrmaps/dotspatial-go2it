@@ -95,6 +95,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLFDColor = Color.Red;
             Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.AliEnterpolAVLMyVehicleColor = Color.Fuchsia;
+            Properties.ProjectSettings.Default.AliAVLInactiveColor = Color.Gray;
 
             Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = true;
         }
@@ -996,6 +997,25 @@ namespace SDR.Configuration.Project
         {
             if (AliEnterpolAvlMyColorChanged != null)
                 AliEnterpolAvlMyColorChanged(this, e);
+        }
+
+        public event EventHandler AliAvlInactiveColorChanged;
+        public Color AliAvlInactiveColor
+        {
+            get { return Properties.ProjectSettings.Default.AliAVLInactiveColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliAVLInactiveColor != value)
+                {
+                    Properties.ProjectSettings.Default.AliAVLInactiveColor = value;
+                    OnAliAvlInactiveColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliAvlInactiveColorChanged(EventArgs e)
+        {
+            if (AliAvlInactiveColorChanged != null)
+                AliAvlInactiveColorChanged(this, e);
         }
     }
 }

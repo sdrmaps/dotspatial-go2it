@@ -130,14 +130,5 @@ namespace DotSpatial.SDR.Plugins.ALI.Properties {
                 return ((int)(this["AvlInactiveAlpha"]));
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
-        public global::System.Drawing.Color AvlInactiveColor {
-            get {
-                return ((global::System.Drawing.Color)(this["AvlInactiveColor"]));
-            }
-        }
     }
 }

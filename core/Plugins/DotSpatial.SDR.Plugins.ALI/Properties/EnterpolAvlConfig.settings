@@ -38,8 +38,5 @@
     <Setting Name="AvlInactiveAlpha" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">75</Value>
     </Setting>
-    <Setting Name="AvlInactiveColor" Type="System.Drawing.Color" Scope="Application">
-      <Value Profile="(Default)">Gray</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

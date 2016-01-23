@@ -781,5 +781,17 @@ namespace SDR.Configuration.Properties {
                 this["AliEnterpolAVLMyVehicleColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
+        public global::System.Drawing.Color AliAVLInactiveColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliAVLInactiveColor"]));
+            }
+            set {
+                this["AliAVLInactiveColor"] = value;
+            }
+        }
     }
 }

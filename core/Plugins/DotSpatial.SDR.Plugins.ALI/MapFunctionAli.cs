@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -23,6 +24,7 @@ using SDR.Data.Files;
 using SDR.Network;
 using SdrConfig = SDR.Configuration;
 using System.IO;
+using Point = System.Drawing.Point;
 
 namespace DotSpatial.SDR.Plugins.ALI
 {
@@ -43,7 +45,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         private System.Timers.Timer _avlReadIntervalTimer;  // reads avl update on user specified interval
         private System.Timers.Timer _avlUpdateIntervalTimer; // in responder mode sends vehicle position to database
         private Dictionary<string, AvlVehicle> _avlVehicles;  // track all avl vehicle states
-        private int _avlVehicleRowSelected;  // actively selected row - used to reselect item on binding update
         private int _myUnitId;   // in responder mode this holds the unit id of the user
 
         #region Constructors
@@ -66,7 +67,19 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void HandleAliPanelEvents()
         {
             _aliPanel.DataGridDisplay.CellClick += DataGridDisplayOnCellClick;
+            //_aliPanel.VehicleFleetListBox.SelectedIndexChanged += delegate(object sender, EventArgs args)
+            //{
+            //    var x = sender as ListBox;
+            //    Debug.WriteLine("Selected Index Changed :: " + x.SelectedIndex);
+            //};
         }
+
+        //private void VehicleFleetListBoxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        //{
+        //    Debug.WriteLine("-------------------------------------------");
+        //    var x = sender as ListBox;
+        //    Debug.WriteLine("Selected Index Changed :: " + x.SelectedIndex);
+        //}
 
         private void DataGridDisplayOnCellClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
         {
@@ -143,36 +156,36 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void DisableCurrentAliAvlEventHandlers()
         {
-            if (_currentAliAvl == AliAvl.Enterpolavl)
-            {
-                // TODO: review to make sure we got them all
-                _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged -= InstanceOnAliEnterpolAvlReadFreqChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsCharChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColorChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeCharChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged -= InstanceOnAliEnterpolAvlFontChanged;
-                if (_avlReadIntervalTimer != null) _avlReadIntervalTimer.Enabled = false;
-                if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Responder) return;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged -= InstanceOnAliEnterpolAvlSetMyLocProcChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged -= InstanceOnAliEnterpolAvlWhoAmIProcChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreqChanged -= InstanceOnAliEnterpolAvlUpdateFreqChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged -= InstanceOnAliEnterpolAvlMyColorChanged;
-                if (_avlUpdateIntervalTimer != null) _avlUpdateIntervalTimer.Enabled = false;
-            }
-            if (_currentAliAvl == AliAvl.Networkfleet)
-            {
-                // TODO
-            }
+            //if (_currentAliAvl == AliAvl.Enterpolavl)
+            //{
+            //    // TODO: review to make sure we got them all
+            //    _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged -= InstanceOnAliEnterpolAvlReadFreqChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsCharChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColorChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeCharChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged -= InstanceOnAliEnterpolAvlFontChanged;
+            //    if (_avlReadIntervalTimer != null) _avlReadIntervalTimer.Enabled = false;
+            //    if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Responder) return;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged -= InstanceOnAliEnterpolAvlSetMyLocProcChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged -= InstanceOnAliEnterpolAvlWhoAmIProcChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreqChanged -= InstanceOnAliEnterpolAvlUpdateFreqChanged;
+            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged -= InstanceOnAliEnterpolAvlMyColorChanged;
+            //    if (_avlUpdateIntervalTimer != null) _avlUpdateIntervalTimer.Enabled = false;
+            //}
+            //if (_currentAliAvl == AliAvl.Networkfleet)
+            //{
+            //    // TODO
+            //}
         }
         private void GlobalCadComLogsOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
@@ -261,11 +274,6 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void UpdateItemStateAndListBox()
         {
-            if (_avlVehicles == null)  // first run through... go ahead and generate our avl vehicle dictionary
-            {
-                _avlVehicles = new Dictionary<string, AvlVehicle>();
-                _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
-            }
             _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;  // disable item-check event handling temporarily
             var removeList = _avlVehicles.Keys.ToList();  // on method completion, remove any vehicles that remain on this list from drawing dictionary
             for (var i = 0; i <= _aliPanel.VehicleFleetListBox.Items.Count - 1; i++)
@@ -317,7 +325,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                 avlVehicle.UnitType = SetAvlVehicleType(item[2].ToString());
                 _aliPanel.VehicleFleetListBox.SetItemChecked(i, avlVehicle.Visible);
             }
-            _aliPanel.VehicleFleetListBox.SelectedIndex = _avlVehicleRowSelected;
             if (removeList.Count > 0)  // anything that remains in the list is no longer part of the query and should be removed
             {
                 foreach (string item in removeList)
@@ -343,6 +350,8 @@ namespace DotSpatial.SDR.Plugins.ALI
                     avlVehicle.IgnoreActiveHide = CheckState.Checked == e.NewValue;
                 }   
             }
+            // TODO:
+            Debug.WriteLine("VehicleFleetListBoxOnItemCheck - UpdateAvlFleetPositions");
             UpdateAvlFleetPositions();
         }
 
@@ -579,7 +588,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             var msg = AppContext.Instance.Get<IUserMessage>();
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged += InstanceOnAliEnterpolAvlDbParamsChanged; 
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged += InstanceOnAliEnterpolAvlDbParamsChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged += InstanceOnAliEnterpolAvlAgeFreqChanged;
@@ -597,8 +606,8 @@ namespace DotSpatial.SDR.Plugins.ALI
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged += InstanceOnAliEnterpolAvlMyColorChanged;
                 try
                 {
-                    FetchWhoAmI();
-                    InitiateAvlUpdateTimer();
+                    // FetchWhoAmI();
+                    // InitiateAvlUpdateTimer();
                 }
                 catch (Exception ex)
                 {
@@ -715,14 +724,28 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void UpdateAvlFleetPositions()
         {
-            if (_aliPanel.VehicleFleetListBox.SelectedIndex >= 0)
+            int avlRowSelected = 0;
+            if (_avlVehicles == null) // check for out avlVehicle dict (?first run through)
             {
-                _avlVehicleRowSelected = _aliPanel.VehicleFleetListBox.SelectedIndex;
+                _avlVehicles = new Dictionary<string, AvlVehicle>();
+                _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
+            }
+            else
+            {
+                // get the currently selected row in the listbox, restore the selection after rebinding
+                if (_aliPanel.VehicleFleetListBox.Items.Count >= 0)
+                {
+                    avlRowSelected = _aliPanel.GetSelectedAvlVehicleRow();
+                }
             }
             var conn = GetEnterpolAvlConnString();
             var sql = ConstructEnterpolAvlVehicleListSqlQuery();
             BindCheckedListBoxToSqlServer(conn, sql);
             UpdateItemStateAndListBox();
+            if (_aliPanel.VehicleFleetListBox.Items.Count >= avlRowSelected)
+            {
+                _aliPanel.SelectAvlVehicleRow(avlRowSelected);
+            }
             if (Map != null)
             {
                 Map.Invalidate();  // paint the map with updated avl positions (calls MapOnPaint)
@@ -732,14 +755,15 @@ namespace DotSpatial.SDR.Plugins.ALI
         // overriddeen paint event for rendering avl vehicle positions
         private void MapOnPaint(object sender, PaintEventArgs e)
         {
-            foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
-            {
-                var cv = kv.Value;
-                if (cv.Visible)
-                {
-                    DrawAvlIcon(cv, e.Graphics);
-                }
-            }
+            // TODO
+            //foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
+            //{
+            //    var cv = kv.Value;
+            //    if (cv.Visible)
+            //    {
+            //        DrawAvlIcon(cv, e.Graphics);
+            //    }
+            //}
         }
 
         public void AddAvlMapPaintEvent()
@@ -770,77 +794,99 @@ namespace DotSpatial.SDR.Plugins.ALI
             return new Coordinate(xy[0], xy[1]);
         }
 
+        private static int SetAlphaLevel(int cInterval)
+        {
+            switch (cInterval)
+            {
+                case 1:
+                    return EnterpolAvlConfig.Default.AvlIntervalAlpha1;
+                case 2:
+                    return EnterpolAvlConfig.Default.AvlIntervalAlpha2;
+                case 3:
+                    return EnterpolAvlConfig.Default.AvlInactiveAlpha;
+                default:
+                    return 255;
+            }
+        }
+
+        private static char SetUnitTypeChar(AvlVehicleType uType)
+        {
+            switch (uType)
+            {
+                case AvlVehicleType.EmergencyMedicalService:
+                    return SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar;
+                case AvlVehicleType.FireDepartment:
+                    return SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar;
+                case AvlVehicleType.LawEnforcement:
+                    return SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar;
+                default:
+                    return '\0';
+            }
+        }
+
+        private Coordinate ParseMyGpsCoordinate(AvlVehicle v)
+        {
+            try
+            {
+                var gpsCoord = SdrConfig.User.Go2ItUserSettings.Instance.ResponderUnitLocation;
+                string stampStr;
+                gpsCoord.TryGetValue("timestamp", out stampStr);
+                var timestamp = DateTime.Parse(stampStr);
+                if (timestamp > v.UpdateTime) // validate the GPS position is newer than the db stored value
+                {
+                    string latStr;
+                    gpsCoord.TryGetValue("latitude", out latStr);
+                    string lonStr;
+                    gpsCoord.TryGetValue("longitude", out lonStr);
+                    var latitude = Double.Parse(latStr);
+                    var longitude = Double.Parse(lonStr);
+                    return ConvertLatLonToMap(latitude, longitude);
+                }
+            }
+            catch
+            {
+                return ConvertLatLonToMap(v.Latitude, v.Longitude);
+            }
+            return ConvertLatLonToMap(v.Latitude, v.Longitude);
+        }
+
         private void DrawAvlIcon(AvlVehicle v, Graphics g)
         {
-            var i = '\0';   // icon to display  (char from font)
             var f = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFont;
+            var i = SetUnitTypeChar(v.UnitType);
+            var a = SetAlphaLevel(v.CurrentInterval);
             var c = new Color();
-            var d = ConvertLatLonToMap(v.Latitude, v.Longitude);
-            var p = Map.ProjToPixel(d);
-
-            switch (v.UnitType)
+            var d = new Coordinate();
+            var p = new Point();
+            //if (Convert.ToInt32(v.UnitId) == _myUnitId)  // if this is 'my unit' then use myColor and more accurate GPS position
+            //{
+            //    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor);
+            //    d = ParseMyGpsCoordinate(v);
+            //}
+            //else
+            //{
+                switch (v.UnitType)
+                {
+                    case AvlVehicleType.FireDepartment:
+                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
+                        break;
+                    case AvlVehicleType.LawEnforcement:
+                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
+                        break;
+                    case AvlVehicleType.EmergencyMedicalService:
+                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
+                        break;
+                    default:
+                        // TODO: handle networkfleet coloring here?
+                        break;
+                }
+                d = ConvertLatLonToMap(v.Latitude, v.Longitude);
+            //}
+            if (v.CurrentInterval == 3)  // inactive unit use inactive unit color
             {
-                case AvlVehicleType.FireDepartment:
-                    i = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar;
-                    if (v.CurrentInterval == 0)
-                    {
-                        c = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor;
-                    }
-                    if (v.CurrentInterval == 1)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlIntervalAlpha1, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
-                    }
-                    if (v.CurrentInterval == 2)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlIntervalAlpha2, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
-                    }
-                    if (v.CurrentInterval == 3)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlInactiveAlpha, EnterpolAvlConfig.Default.AvlInactiveColor);
-                    }
-                    break;
-                case AvlVehicleType.LawEnforcement:
-                    i = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar;
-                    if (v.CurrentInterval == 0)
-                    {
-                        c = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor;
-                    }
-                    if (v.CurrentInterval == 1)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlIntervalAlpha1, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
-                    }
-                    if (v.CurrentInterval == 2)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlIntervalAlpha2, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
-                    }
-                    if (v.CurrentInterval == 3)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlInactiveAlpha, EnterpolAvlConfig.Default.AvlInactiveColor);
-                    }
-                    break;
-                case AvlVehicleType.EmergencyMedicalService:
-                    i = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar;
-                    if (v.CurrentInterval == 0)
-                    {
-                        c = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor;
-                    }
-                    if (v.CurrentInterval == 1)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlIntervalAlpha1, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
-                    }
-                    if (v.CurrentInterval == 2)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlIntervalAlpha2, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
-                    }
-                    if (v.CurrentInterval == 3)
-                    {
-                        c = Color.FromArgb(EnterpolAvlConfig.Default.AvlInactiveAlpha, EnterpolAvlConfig.Default.AvlInactiveColor);
-                    }
-                    break;
-                default:
-                    // TODO: handle networkfleet options in here??
-                    break;
+                c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
             }
+            p = Map.ProjToPixel(d);
             var b = new SolidBrush(c);
             g.DrawString(i.ToString(CultureInfo.InvariantCulture), f, b, p);
         }

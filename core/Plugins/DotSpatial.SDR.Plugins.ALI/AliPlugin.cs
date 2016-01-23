@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -236,6 +237,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 // if avl is activated remove the paint event from this map
                 if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
                 {
+                    Debug.WriteLine("-- AliPlugin.DockManagerOnPanelHidden -- RemoveAvlMapPaintEvent()");
                     _mapFunction.RemoveAvlMapPaintEvent();
                 }
                 // lets look and see if this tool is currently the active tool and deactivate it if so
