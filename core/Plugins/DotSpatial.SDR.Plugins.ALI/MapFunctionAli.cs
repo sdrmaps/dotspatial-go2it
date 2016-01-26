@@ -881,14 +881,14 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 d = ConvertLatLonToMap(v.Latitude, v.Longitude);
             }
-            if (v.CurrentInterval == 3)  // inactive unit use inactive unit color
-            {
-                c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
-            }
+            //if (v.CurrentInterval == 3)  // inactive unit use inactive unit color
+            //{
+            //    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
+            //}
             p = Map.ProjToPixel(d);
-            
             var b = new SolidBrush(c);
             g.DrawString(i.ToString(CultureInfo.InvariantCulture), f, b, p);
+            g.DrawString(v.UnitLabel, f, b, p.X - 25, p.Y - 15);
         }
 
         private void InstanceOnAliEnterpolAvlWhoAmIProcChanged(object sender, EventArgs eventArgs)

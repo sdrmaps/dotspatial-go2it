@@ -164,7 +164,7 @@
     <Setting Name="AliEnterpolAVLReadFreq" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">50000</Value>
     </Setting>
-    <Setting Name="AliEnterpolAVLFont" Type="System.Drawing.Font" Scope="User">
+    <Setting Name="AliEnterpolAVLSymbolFont" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLEChar" Type="System.Char" Scope="User">
@@ -196,6 +196,18 @@
     </Setting>
     <Setting Name="AliAVLInactiveColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Gray</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLLabelFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLLabelAlignment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Above</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLLabelXOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="AliEnterpolAVLLabelYOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
     </Setting>
   </Settings>
 </SettingsFile>

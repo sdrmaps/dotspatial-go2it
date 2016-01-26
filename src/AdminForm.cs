@@ -53,7 +53,8 @@ namespace Go2It
 
         private Dictionary<string, string> _aliInterfaces;
         private Font _networkFleetFont;
-        private Font _enterpolAvlFont;
+        private Font _enterpolAvlSymbolFont;
+        private Font _enterpolAvlLabelFont;
 
         // name of the initial map tab, if no map tabs currently exist
         private const string MapTabDefaultCaption = "My Map";
@@ -778,10 +779,19 @@ namespace Go2It
             pnlAliEnterpolAVLPdColor.Click += CharGraphicColorPanelOnClick;
             txtAliEnterpolAVLPdChars.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar.ToString(CultureInfo.InvariantCulture);
             txtAliEnterpolAVLPdChars.TextChanged += CharGraphicCharsOnTextChanged;
-            _enterpolAvlFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFont;
-            lblAliEnterpolAVLFontName.Text = _enterpolAvlFont.Name;
-            lblAliEnterpolAVLFontName.Font = _enterpolAvlFont;
-            lblAliEnterpolAVLFontSize.Text = _enterpolAvlFont.Size.ToString(CultureInfo.InvariantCulture);
+            _enterpolAvlSymbolFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont;
+            lblAliEnterpolAVLSymbolFontName.Text = _enterpolAvlSymbolFont.Name;
+            lblAliEnterpolAVLSymbolFontName.Font = _enterpolAvlSymbolFont;
+            lblAliEnterpolAVLSymbolFontSize.Text = _enterpolAvlSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
+            _enterpolAvlLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
+            lblAliEnterpolAVLLabelFontName.Text = _enterpolAvlLabelFont.Name;
+            lblAliEnterpolAVLLabelFontName.Font = _enterpolAvlLabelFont;
+            lblAliEnterpolAVLLabelFontSize.Text = _enterpolAvlLabelFont.Size.ToString(CultureInfo.InvariantCulture);
+
+            numAliEnterpolAVLLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
+            numAliEnterpolAVLLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset;
+            cmbAliEnterpolAVLLabelAlignment.SelectedIndex = cmbAliEnterpolAVLLabelAlignment.Items.IndexOf(
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment);
             DrawAllCharGraphics(); // draw all char based graphics ie: networkfleet, fd_avl, ems_avl, and le_avl
 
             // point symbology for graphics rendering
@@ -1642,7 +1652,11 @@ namespace Go2It
             // avl autohide inactive units
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits = chkAutoHideInactiveUnits.Checked;
             // ali enterpol avl graphic settings
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFont = _enterpolAvlFont;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont = _enterpolAvlSymbolFont;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont = _enterpolAvlLabelFont;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment = cmbAliEnterpolAVLLabelAlignment.SelectedItem.ToString();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset = (int)numAliEnterpolAVLLabelXOffset.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset = (int)numAliEnterpolAVLLabelYOffset.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar = char.Parse(txtAliEnterpolAVLFdChars.Text.ToString(CultureInfo.InvariantCulture));
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor = pnlAliEnterpolAVLFdColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeChar = char.Parse(txtAliEnterpolAVLPdChars.Text.ToString(CultureInfo.InvariantCulture));
@@ -3467,9 +3481,9 @@ namespace Go2It
             var fd = new FontDialog();
             if (fd.ShowDialog() != DialogResult.OK) return;
 
-            lblAliEnterpolAVLFontName.Text = fd.Font.Name;
-            lblAliEnterpolAVLFontName.Font = fd.Font;
-            lblAliEnterpolAVLFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            lblAliEnterpolAVLSymbolFontName.Text = fd.Font.Name;
+            lblAliEnterpolAVLSymbolFontName.Font = fd.Font;
+            lblAliEnterpolAVLSymbolFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
             if (!Equals(fd.Font, _enterpolAvlFont))
             {
                 _projectManager.IsDirty = true;

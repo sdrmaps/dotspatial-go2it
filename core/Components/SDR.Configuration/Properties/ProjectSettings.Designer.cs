@@ -665,12 +665,12 @@ namespace SDR.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
-        public global::System.Drawing.Font AliEnterpolAVLFont {
+        public global::System.Drawing.Font AliEnterpolAVLSymbolFont {
             get {
-                return ((global::System.Drawing.Font)(this["AliEnterpolAVLFont"]));
+                return ((global::System.Drawing.Font)(this["AliEnterpolAVLSymbolFont"]));
             }
             set {
-                this["AliEnterpolAVLFont"] = value;
+                this["AliEnterpolAVLSymbolFont"] = value;
             }
         }
         
@@ -791,6 +791,54 @@ namespace SDR.Configuration.Properties {
             }
             set {
                 this["AliAVLInactiveColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        public global::System.Drawing.Font AliEnterpolAVLLabelFont {
+            get {
+                return ((global::System.Drawing.Font)(this["AliEnterpolAVLLabelFont"]));
+            }
+            set {
+                this["AliEnterpolAVLLabelFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Above")]
+        public string AliEnterpolAVLLabelAlignment {
+            get {
+                return ((string)(this["AliEnterpolAVLLabelAlignment"]));
+            }
+            set {
+                this["AliEnterpolAVLLabelAlignment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int AliEnterpolAVLLabelXOffset {
+            get {
+                return ((int)(this["AliEnterpolAVLLabelXOffset"]));
+            }
+            set {
+                this["AliEnterpolAVLLabelXOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int AliEnterpolAVLLabelYOffset {
+            get {
+                return ((int)(this["AliEnterpolAVLLabelYOffset"]));
+            }
+            set {
+                this["AliEnterpolAVLLabelYOffset"] = value;
             }
         }
     }

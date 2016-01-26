@@ -87,7 +87,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLAge2Freq = 5;
             Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq = 60;
             Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq = 50000;
-            Properties.ProjectSettings.Default.AliEnterpolAVLFont = new Font("Microsoft Sans Serif", 8);
+            Properties.ProjectSettings.Default.AliEnterpolAVLSymbolFont = new Font("Microsoft Sans Serif", 8);
             Properties.ProjectSettings.Default.AliEnterpolAVLLEChar = 'p';
             Properties.ProjectSettings.Default.AliEnterpolAVLFDChar = 'f';
             Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar = 'e';
@@ -96,6 +96,10 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.AliEnterpolAVLMyVehicleColor = Color.Fuchsia;
             Properties.ProjectSettings.Default.AliAVLInactiveColor = Color.Gray;
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont = new Font("Microsoft Sans Serif", 8);
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset = 25;
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = 15;
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = "Above";
 
             Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = true;
         }
@@ -827,23 +831,99 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlReadFreqChanged(this, e);
         }
 
-        public event EventHandler AliEnterpolAvlFontChanged;
-        public Font AliEnterpolAvlFont
+        public event EventHandler AliEnterpolAvlSymbolFontChanged;
+        public Font AliEnterpolAvlSymbolFont
         {
-            get { return Properties.ProjectSettings.Default.AliEnterpolAVLFont; }
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLSymbolFont; }
             set
             {
-                if (!Equals(Properties.ProjectSettings.Default.AliEnterpolAVLFont, value))
+                if (!Equals(Properties.ProjectSettings.Default.AliEnterpolAVLSymbolFont, value))
                 {
-                    Properties.ProjectSettings.Default.AliEnterpolAVLFont = value;
-                    OnAliEnterpolAvlFontChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliEnterpolAVLSymbolFont = value;
+                    OnAliEnterpolAvlSymbolFontChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliEnterpolAvlFontChanged(EventArgs e)
+        protected virtual void OnAliEnterpolAvlSymbolFontChanged(EventArgs e)
         {
-            if (AliEnterpolAvlFontChanged != null)
-                AliEnterpolAvlFontChanged(this, e);
+            if (AliEnterpolAvlSymbolFontChanged != null)
+                AliEnterpolAvlSymbolFontChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlLabelFontChanged;
+        public Font AliEnterpolAvlLabelFont
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont; }
+            set
+            {
+                if (!Equals(Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont, value))
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont = value;
+                    OnAliEnterpolAvlLabelFontChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlLabelFontChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlLabelFontChanged != null)
+                AliEnterpolAvlLabelFontChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlLabelXOffsetChanged;
+        public int AliEnterpolAvlLabelXOffset
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset = value;
+                    OnAliEnterpolAvlLabelXOffsetChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlLabelXOffsetChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlLabelXOffsetChanged != null)
+                AliEnterpolAvlLabelXOffsetChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlLabelYOffsetChanged;
+        public int AliEnterpolAvlLabelYOffset
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = value;
+                    OnAliEnterpolAvlLabelYOffsetChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlLabelYOffsetChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlLabelYOffsetChanged != null)
+                AliEnterpolAvlLabelYOffsetChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlLabelAlignmentChanged;
+        public string AliEnterpolAvlLabelAlignment
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = value;
+                    OnAliEnterpolAvlLabelAlignmentChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlLabelAlignmentChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlLabelAlignmentChanged != null)
+                AliEnterpolAvlLabelAlignmentChanged(this, e);
         }
 
         public event EventHandler AliAvlAutoHideInactiveUnitsChanged;
@@ -864,7 +944,6 @@ namespace SDR.Configuration.Project
             if (AliAvlAutoHideInactiveUnitsChanged != null)
                 AliAvlAutoHideInactiveUnitsChanged(this, e);
         }
-
 
         public event EventHandler AliEnterpolAvlLeColorChanged;
         public Color AliEnterpolAvlLeColor
