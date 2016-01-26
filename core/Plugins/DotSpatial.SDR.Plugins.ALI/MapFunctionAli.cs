@@ -45,7 +45,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         private System.Timers.Timer _avlReadIntervalTimer;  // reads avl update on user specified interval
         private System.Timers.Timer _avlUpdateIntervalTimer; // in responder mode sends vehicle position to database
         private Dictionary<string, AvlVehicle> _avlVehicles;  // track all avl vehicle states
-        private int _myUnitId;   // in responder mode this holds the unit id of the user
+        private int _myUnitId = -1;  // in responder mode this holds the unit id of the user
 
         #region Constructors
 
@@ -755,15 +755,14 @@ namespace DotSpatial.SDR.Plugins.ALI
         // overriddeen paint event for rendering avl vehicle positions
         private void MapOnPaint(object sender, PaintEventArgs e)
         {
-            // TODO
-            //foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
-            //{
-            //    var cv = kv.Value;
-            //    if (cv.Visible)
-            //    {
-            //        DrawAvlIcon(cv, e.Graphics);
-            //    }
-            //}
+            foreach (KeyValuePair<string, AvlVehicle> kv in _avlVehicles)
+            {
+                var cv = kv.Value;
+                if (cv.Visible)
+                {
+                    DrawAvlIcon(cv, e.Graphics);
+                }
+            }
         }
 
         public void AddAvlMapPaintEvent()
@@ -858,35 +857,36 @@ namespace DotSpatial.SDR.Plugins.ALI
             var c = new Color();
             var d = new Coordinate();
             var p = new Point();
-            //if (Convert.ToInt32(v.UnitId) == _myUnitId)  // if this is 'my unit' then use myColor and more accurate GPS position
-            //{
-            //    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor);
-            //    d = ParseMyGpsCoordinate(v);
-            //}
-            //else
-            //{
-                switch (v.UnitType)
-                {
-                    case AvlVehicleType.FireDepartment:
-                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
-                        break;
-                    case AvlVehicleType.LawEnforcement:
-                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
-                        break;
-                    case AvlVehicleType.EmergencyMedicalService:
-                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
-                        break;
-                    default:
-                        // TODO: handle networkfleet coloring here?
-                        break;
+            if (Convert.ToInt32(v.UnitId) == _myUnitId)  // if this is 'my unit' then use myColor and more accurate GPS position
+            {
+                c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor);
+                d = ParseMyGpsCoordinate(v);
+            }
+            else
+            {
+            switch (v.UnitType)
+            {
+                case AvlVehicleType.FireDepartment:
+                    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
+                    break;
+                case AvlVehicleType.LawEnforcement:
+                    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
+                    break;
+                case AvlVehicleType.EmergencyMedicalService:
+                    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
+                    break;
+                default:
+                    // TODO: handle networkfleet coloring here?
+                    break;
                 }
                 d = ConvertLatLonToMap(v.Latitude, v.Longitude);
-            //}
+            }
             if (v.CurrentInterval == 3)  // inactive unit use inactive unit color
             {
                 c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
             }
             p = Map.ProjToPixel(d);
+            
             var b = new SolidBrush(c);
             g.DrawString(i.ToString(CultureInfo.InvariantCulture), f, b, p);
         }
