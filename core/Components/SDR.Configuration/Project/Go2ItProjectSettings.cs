@@ -98,7 +98,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliAVLInactiveColor = Color.Gray;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont = new Font("Microsoft Sans Serif", 16);
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset = 0;
-            Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = 25;
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = -5;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = "Above";
 
             Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = true;

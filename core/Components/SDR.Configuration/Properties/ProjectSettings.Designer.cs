@@ -832,7 +832,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        [global::System.Configuration.DefaultSettingValueAttribute("-5")]
         public int AliEnterpolAVLLabelYOffset {
             get {
                 return ((int)(this["AliEnterpolAVLLabelYOffset"]));

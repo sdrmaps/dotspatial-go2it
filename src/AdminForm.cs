@@ -788,10 +788,10 @@ namespace Go2It
             lblAliEnterpolAVLLabelFontName.Font = _enterpolAvlLabelFont;
             lblAliEnterpolAVLLabelFontSize.Text = _enterpolAvlLabelFont.Size.ToString(CultureInfo.InvariantCulture);
 
+            cmbAliEnterpolAVLLabelAlignment.SelectedIndex = cmbAliEnterpolAVLLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment);
+            // set after the alignment to replace any defaults set by the selection changed event on the combobox
             numAliEnterpolAVLLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
             numAliEnterpolAVLLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset;
-            cmbAliEnterpolAVLLabelAlignment.SelectedIndex = cmbAliEnterpolAVLLabelAlignment.Items.IndexOf(
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment);
             DrawAllCharGraphics(); // draw all char based graphics ie: networkfleet, fd_avl, ems_avl, and le_avl
 
             // point symbology for graphics rendering
@@ -3507,7 +3507,26 @@ namespace Go2It
                 _projectManager.IsDirty = true;
             }
             _enterpolAvlLabelFont = fd.Font;
-            // TODO: add the label rendering to the symbology display. this will require q rework of the existing code.
+            // TODO: add the label rendering to the symbology display. this will require rework of the existing code.
+        }
+
+        private void cmbAliEnterpolAVLLabelAlignment_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // auto-set the default "best" offsets for each label alignment type
+            var cmb = (ComboBox)sender;
+            switch (cmb.SelectedItem.ToString())
+            {
+                case "Above":
+                    numAliEnterpolAVLLabelXOffset.Value = 0;
+                    numAliEnterpolAVLLabelYOffset.Value = -5;
+                    break;
+                default:
+                    numAliEnterpolAVLLabelXOffset.Value = 0;
+                    numAliEnterpolAVLLabelYOffset.Value = 0;
+                    break;
+            }
+            // TODO: really should come up with a way of validating isDirty before setting it
+            _projectManager.IsDirty = true;
         }
     }
 }

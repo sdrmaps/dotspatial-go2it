@@ -849,49 +849,46 @@ namespace DotSpatial.SDR.Plugins.ALI
             return ConvertLatLonToMap(v.Latitude, v.Longitude);
         }
 
-        private Point GetLabelOffsetPoint(Point unitPxPos, string unitLabel)
+        private Point GetLabelOffsetPoint(Point unitPxPos, string unitSymbol, string unitLabel)
         {
+            var symFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont;
+            var symSize = TextRenderer.MeasureText(unitSymbol, symFont);  // size of symbol graphic
+
             var lblFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
-            var lblSize = TextRenderer.MeasureText(unitLabel, lblFont);
+            var lblSize = TextRenderer.MeasureText(unitLabel, lblFont);  // size of label graphic
 
-            // offset required to place label centrally over the x/y point of the unit
-            var yCenter = lblSize.Height/2;
-            var xCenter = lblSize.Width/2;
-
-            // additional offsets combined with central offsets to properly place the label to the unit
             var xOffset = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
             var yOffset = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset;
 
-            var newY = yCenter + yOffset;
-            var newX = xCenter + xOffset;
+            int startY;
+            int startX;
 
-            var p  = new Point(unitPxPos.X - newX, unitPxPos.Y - newY);
-
-            // now perform the required operation to place the label
             switch (SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment)
             {
-                case "Below":  // subtract both  x and y
-                    break;
                 case "Left":
-                    break;
+                    startY = (lblSize.Height/2) + yOffset;
+                    startX = (symSize.Width / 2) + lblSize.Width - xOffset;
+                    return new Point(unitPxPos.X - startX, unitPxPos.Y - startY);
                 case "Right":
-                    break;
-                default:  // add both x and y
-                    //p.X = unitPxPos.X - xOffset;
-                    break;
+                    startY = (lblSize.Height/2) + yOffset;
+                    startX = (symSize.Width / 2) + xOffset;
+                    return new Point(unitPxPos.X + startX, unitPxPos.Y - startY);
+                case "Below":
+                    startY = (symSize.Height/2) - yOffset;
+                    startX = (lblSize.Width/2) - xOffset;
+                    return new Point(unitPxPos.X - startX, unitPxPos.Y + startY);
+                default:  // "Above"
+                    startY = (symSize.Height/2) + lblSize.Height + yOffset;
+                    startX = (lblSize.Width/2)- xOffset;
+                    return new Point(unitPxPos.X - startX, unitPxPos.Y - startY);
             }
-            return p;
         }
 
         private void DrawAvlIcon(AvlVehicle v, Graphics g)
         {
-            var sf = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont;
-            var lf = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
-            var i = SetUnitTypeChar(v.UnitType);
-            var a = SetAlphaLevel(v.CurrentInterval);
+            Coordinate d;
             var c = new Color();
-            var d = new Coordinate();
-            var sp = new Point();
+            var a = SetAlphaLevel(v.CurrentInterval);
             if (Convert.ToInt32(v.UnitId) == _myUnitId)  // if this is 'my unit' then use myColor and more accurate GPS position (if available)
             {
                 c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor);
@@ -921,18 +918,19 @@ namespace DotSpatial.SDR.Plugins.ALI
             //{
             //    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
             //}
-
-            sp = Map.ProjToPixel(d);  // convert that shit to pixels yo
+            var sp = Map.ProjToPixel(d);
             var b = new SolidBrush(c);
-            // draw our unit symbol aligning it to the center of the lat/lon point
+            var us = SetUnitTypeChar(v.UnitType).ToString(CultureInfo.InvariantCulture);
+            // generate the unit graphic centered over the lat/long coordinate
             using (var strformat = new StringFormat())
             {
                 strformat.LineAlignment = StringAlignment.Center;
                 strformat.Alignment = StringAlignment.Center;
-                g.DrawString(i.ToString(CultureInfo.InvariantCulture), sf, b, sp.X, sp.Y, strformat);
+                g.DrawString(us, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont, b, sp.X, sp.Y, strformat);
             }
-            var lp = GetLabelOffsetPoint(sp, v.UnitLabel);
-            g.DrawString(v.UnitLabel, lf, b, lp.X, lp.Y);
+            // draw the label for the unit according to the alignment
+            var lp = GetLabelOffsetPoint(sp, us, v.UnitLabel);
+            g.DrawString(v.UnitLabel, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont, b, lp.X, lp.Y);
         }
 
         private void InstanceOnAliEnterpolAvlWhoAmIProcChanged(object sender, EventArgs eventArgs)

@@ -120,6 +120,9 @@
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.adminTab_AliSettings = new System.Windows.Forms.TabPage();
             this.pnlAliEnterpolAvl = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.lblAliEnterpolAVLLabelAlignment = new System.Windows.Forms.Label();
@@ -205,9 +208,6 @@
             this.cmbAliMode = new System.Windows.Forms.ComboBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_MapConfiguration.SuspendLayout();
@@ -1342,6 +1342,33 @@
             this.pnlAliEnterpolAvl.TabIndex = 72;
             this.pnlAliEnterpolAvl.Visible = false;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(18, 247);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(58, 13);
+            this.label9.TabIndex = 100;
+            this.label9.Text = "FD Symbol";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(19, 206);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.TabIndex = 99;
+            this.label8.Text = "LE Symbol";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(15, 164);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(67, 13);
+            this.label7.TabIndex = 98;
+            this.label7.Text = "EMS Symbol";
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -1372,6 +1399,11 @@
             // numAliEnterpolAVLLabelYOffset
             // 
             this.numAliEnterpolAVLLabelYOffset.Location = new System.Drawing.Point(375, 390);
+            this.numAliEnterpolAVLLabelYOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.numAliEnterpolAVLLabelYOffset.Name = "numAliEnterpolAVLLabelYOffset";
             this.numAliEnterpolAVLLabelYOffset.Size = new System.Drawing.Size(76, 20);
             this.numAliEnterpolAVLLabelYOffset.TabIndex = 94;
@@ -1379,6 +1411,11 @@
             // numAliEnterpolAVLLabelXOffset
             // 
             this.numAliEnterpolAVLLabelXOffset.Location = new System.Drawing.Point(280, 394);
+            this.numAliEnterpolAVLLabelXOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.numAliEnterpolAVLLabelXOffset.Name = "numAliEnterpolAVLLabelXOffset";
             this.numAliEnterpolAVLLabelXOffset.Size = new System.Drawing.Size(66, 20);
             this.numAliEnterpolAVLLabelXOffset.TabIndex = 93;
@@ -1395,6 +1432,7 @@
             this.cmbAliEnterpolAVLLabelAlignment.Name = "cmbAliEnterpolAVLLabelAlignment";
             this.cmbAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(121, 21);
             this.cmbAliEnterpolAVLLabelAlignment.TabIndex = 92;
+            this.cmbAliEnterpolAVLLabelAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAliEnterpolAVLLabelAlignment_SelectedIndexChanged);
             // 
             // lblAliEnterpolAVLLabelFontSize
             // 
@@ -2122,33 +2160,6 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 164);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(67, 13);
-            this.label7.TabIndex = 98;
-            this.label7.Text = "EMS Symbol";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(19, 206);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
-            this.label8.TabIndex = 99;
-            this.label8.Text = "LE Symbol";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(18, 247);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(58, 13);
-            this.label9.TabIndex = 100;
-            this.label9.Text = "FD Symbol";
             // 
             // AdminForm
             // 
