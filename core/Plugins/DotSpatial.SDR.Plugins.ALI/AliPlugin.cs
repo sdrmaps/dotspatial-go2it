@@ -103,6 +103,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
+            // TODO:
             // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged -= OnAliModeChanged;
             
             if (_isPluginActive)

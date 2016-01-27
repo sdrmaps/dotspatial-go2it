@@ -532,7 +532,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ESRI Transportation & Civic, 20.2499981pt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ESRI Transportation & Civic, 24pt")]
         public global::System.Drawing.Font AliNetworkfleetPointFont {
             get {
                 return ((global::System.Drawing.Font)(this["AliNetworkfleetPointFont"]));
@@ -664,7 +664,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ESRI Transportation & Civic, 24pt")]
         public global::System.Drawing.Font AliEnterpolAVLSymbolFont {
             get {
                 return ((global::System.Drawing.Font)(this["AliEnterpolAVLSymbolFont"]));
@@ -676,7 +676,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("P")]
+        [global::System.Configuration.DefaultSettingValueAttribute("j")]
         public char AliEnterpolAVLLEChar {
             get {
                 return ((char)(this["AliEnterpolAVLLEChar"]));
@@ -688,7 +688,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E")]
+        [global::System.Configuration.DefaultSettingValueAttribute("d")]
         public char AliEnterpolAVLEMSChar {
             get {
                 return ((char)(this["AliEnterpolAVLEMSChar"]));
@@ -700,7 +700,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("F")]
+        [global::System.Configuration.DefaultSettingValueAttribute("m")]
         public char AliEnterpolAVLFDChar {
             get {
                 return ((char)(this["AliEnterpolAVLFDChar"]));
@@ -796,7 +796,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 15.75pt")]
         public global::System.Drawing.Font AliEnterpolAVLLabelFont {
             get {
                 return ((global::System.Drawing.Font)(this["AliEnterpolAVLLabelFont"]));
@@ -820,7 +820,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int AliEnterpolAVLLabelXOffset {
             get {
                 return ((int)(this["AliEnterpolAVLLabelXOffset"]));
@@ -832,7 +832,7 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int AliEnterpolAVLLabelYOffset {
             get {
                 return ((int)(this["AliEnterpolAVLLabelYOffset"]));

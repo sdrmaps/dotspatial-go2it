@@ -27,7 +27,7 @@ namespace SDR.Configuration.Project
             Instance = new Go2ItProjectSettings();
         }
 
-        public void ResetProjectSettings()
+        public void ResetProjectSettingsToDefaults()
         {
             Properties.ProjectSettings.Default.AddressesLayers.Clear();
             Properties.ProjectSettings.Default.RoadsLayers.Clear();
@@ -75,7 +75,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliNetworkfleetUdpPort = 1111;
             Properties.ProjectSettings.Default.AliNetworkfleetPointChar = 'n';
             Properties.ProjectSettings.Default.AliNetworkfleetPointColor = Color.DarkTurquoise;
-            Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 20);
+            Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 24);
 
             Properties.ProjectSettings.Default.AliUseEnterpolAVL = false;
             Properties.ProjectSettings.Default.AliEnterpolAVLTableName = string.Empty;
@@ -87,18 +87,18 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLAge2Freq = 5;
             Properties.ProjectSettings.Default.AliEnterpolAVLAge3Freq = 60;
             Properties.ProjectSettings.Default.AliEnterpolAVLReadFreq = 50000;
-            Properties.ProjectSettings.Default.AliEnterpolAVLSymbolFont = new Font("Microsoft Sans Serif", 8);
-            Properties.ProjectSettings.Default.AliEnterpolAVLLEChar = 'p';
-            Properties.ProjectSettings.Default.AliEnterpolAVLFDChar = 'f';
-            Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar = 'e';
+            Properties.ProjectSettings.Default.AliEnterpolAVLSymbolFont = new Font("ESRI Transportation & Civic", 24);
+            Properties.ProjectSettings.Default.AliEnterpolAVLLEChar = 'j';
+            Properties.ProjectSettings.Default.AliEnterpolAVLFDChar = 'm';
+            Properties.ProjectSettings.Default.AliEnterpolAVLEMSChar = 'd';
             Properties.ProjectSettings.Default.AliEnterpolAVLLEColor = Color.Cyan;
             Properties.ProjectSettings.Default.AliEnterpolAVLFDColor = Color.Red;
             Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.AliEnterpolAVLMyVehicleColor = Color.Fuchsia;
             Properties.ProjectSettings.Default.AliAVLInactiveColor = Color.Gray;
-            Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont = new Font("Microsoft Sans Serif", 8);
-            Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset = 25;
-            Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = 15;
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont = new Font("Microsoft Sans Serif", 16);
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset = 0;
+            Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = 25;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = "Above";
 
             Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = true;

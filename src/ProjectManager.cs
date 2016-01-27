@@ -97,7 +97,7 @@ namespace Go2It
             }
             // set the new project directory and reset all project settings preparing for load
             SetCurrentProjectDirectory(file);
-            Go2ItProjectSettings.Instance.ResetProjectSettings();
+            Go2ItProjectSettings.Instance.ResetProjectSettingsToDefaults();
             // reset or create a dockcontroller to handle the map tabs
             if (Dock == null)
             {
@@ -466,7 +466,7 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont = AttachSetting("ali_enterpol_avl_symbol_font", Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont = AttachSetting("ali_enterpol_avl_label_font", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment = AttachSetting("ali_enterpol_avl_label_alignment", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment, g);
-            Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset = AttachSetting("ali_enterpol_avl_label_xoffset_", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset, g);
+            Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset = AttachSetting("ali_enterpol_avl_label_xoffset", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset = AttachSetting("ali_enterpol_avl_label_yoffset", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset, g);
 
             Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar = AttachSetting("ali_enterpol_avl_fdchar", Go2ItProjectSettings.Instance.AliEnterpolAvlFdChar, g);
@@ -788,12 +788,14 @@ namespace Go2It
             }
             catch (UnauthorizedAccessException ex)
             {
+                // TODO: replace debug with proper logging
                 Debug.WriteLine("Error creating the database " + dbPath +
                     ". Please check your write permissions. " + ex.Message);
                 return false;
             }
             catch (Exception ex)
             {
+                // TODO: replace debug with proper logging
                 Debug.WriteLine("Error creating the default database " + dbPath +
                     ". Error details: " + ex.Message);
                 return false;

@@ -598,7 +598,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged += InstanceOnAliEnterpolAvlLeSymbolChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged += InstanceOnAliEnterpolAvlFdSymbolChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged += InstanceOnAliEnterpolAvlFdSymbolChanged;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged += InstanceOnAliEnterpolAvlFontChanged;  // update all symbols
+           // SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged += InstanceOnAliEnterpolAvlFontChanged;  // update all symbols
             if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
             {
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged += InstanceOnAliEnterpolAvlSetMyLocProcChanged;
@@ -849,46 +849,90 @@ namespace DotSpatial.SDR.Plugins.ALI
             return ConvertLatLonToMap(v.Latitude, v.Longitude);
         }
 
+        private Point GetLabelOffsetPoint(Point unitPxPos, string unitLabel)
+        {
+            var lblFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
+            var lblSize = TextRenderer.MeasureText(unitLabel, lblFont);
+
+            // offset required to place label centrally over the x/y point of the unit
+            var yCenter = lblSize.Height/2;
+            var xCenter = lblSize.Width/2;
+
+            // additional offsets combined with central offsets to properly place the label to the unit
+            var xOffset = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
+            var yOffset = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset;
+
+            var newY = yCenter + yOffset;
+            var newX = xCenter + xOffset;
+
+            var p  = new Point(unitPxPos.X - newX, unitPxPos.Y - newY);
+
+            // now perform the required operation to place the label
+            switch (SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment)
+            {
+                case "Below":  // subtract both  x and y
+                    break;
+                case "Left":
+                    break;
+                case "Right":
+                    break;
+                default:  // add both x and y
+                    //p.X = unitPxPos.X - xOffset;
+                    break;
+            }
+            return p;
+        }
+
         private void DrawAvlIcon(AvlVehicle v, Graphics g)
         {
-            var f = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFont;
+            var sf = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont;
+            var lf = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
             var i = SetUnitTypeChar(v.UnitType);
             var a = SetAlphaLevel(v.CurrentInterval);
             var c = new Color();
             var d = new Coordinate();
-            var p = new Point();
-            if (Convert.ToInt32(v.UnitId) == _myUnitId)  // if this is 'my unit' then use myColor and more accurate GPS position
+            var sp = new Point();
+            if (Convert.ToInt32(v.UnitId) == _myUnitId)  // if this is 'my unit' then use myColor and more accurate GPS position (if available)
             {
                 c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor);
                 d = ParseMyGpsCoordinate(v);
             }
             else
             {
-            switch (v.UnitType)
-            {
-                case AvlVehicleType.FireDepartment:
-                    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
-                    break;
-                case AvlVehicleType.LawEnforcement:
-                    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
-                    break;
-                case AvlVehicleType.EmergencyMedicalService:
-                    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
-                    break;
-                default:
-                    // TODO: handle networkfleet coloring here?
-                    break;
+                switch (v.UnitType)
+                {
+                    case AvlVehicleType.FireDepartment:
+                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColor);
+                        break;
+                    case AvlVehicleType.LawEnforcement:
+                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor);
+                        break;
+                    case AvlVehicleType.EmergencyMedicalService:
+                        c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor);
+                        break;
+                    default:
+                        // TODO: handle networkfleet coloring here?
+                        break;
                 }
                 d = ConvertLatLonToMap(v.Latitude, v.Longitude);
             }
+            // TODO: add this back in
             //if (v.CurrentInterval == 3)  // inactive unit use inactive unit color
             //{
             //    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
             //}
-            p = Map.ProjToPixel(d);
+
+            sp = Map.ProjToPixel(d);  // convert that shit to pixels yo
             var b = new SolidBrush(c);
-            g.DrawString(i.ToString(CultureInfo.InvariantCulture), f, b, p);
-            g.DrawString(v.UnitLabel, f, b, p.X - 25, p.Y - 15);
+            // draw our unit symbol aligning it to the center of the lat/lon point
+            using (var strformat = new StringFormat())
+            {
+                strformat.LineAlignment = StringAlignment.Center;
+                strformat.Alignment = StringAlignment.Center;
+                g.DrawString(i.ToString(CultureInfo.InvariantCulture), sf, b, sp.X, sp.Y, strformat);
+            }
+            var lp = GetLabelOffsetPoint(sp, v.UnitLabel);
+            g.DrawString(v.UnitLabel, lf, b, lp.X, lp.Y);
         }
 
         private void InstanceOnAliEnterpolAvlWhoAmIProcChanged(object sender, EventArgs eventArgs)

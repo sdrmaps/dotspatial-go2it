@@ -884,7 +884,7 @@ namespace Go2It
                 var c = ptMap.PixelToProj(new Point(x, y));
                 ftSet.AddFeature(new DotSpatial.Topology.Point(c));
             }
-            UpdateCharacterGraphic(ptMap, panel == ptAliNetworkfleetGraphic ? _networkFleetFont : _enterpolAvlFont, color, chars);
+            UpdateCharacterGraphic(ptMap, panel == ptAliNetworkfleetGraphic ? _networkFleetFont : _enterpolAvlSymbolFont, color, chars);
         }
 
         private void UpdateCharacterGraphic(Map map, Font font, Color color, String chars)
@@ -1417,7 +1417,7 @@ namespace Go2It
         private void SetNoProject()
         {
             _dockingControl.ResetLayout();  // remove all maptabs now
-            SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettings();  // set all project settings to defaults
+            SdrConfig.Project.Go2ItProjectSettings.Instance.ResetProjectSettingsToDefaults();  // set all project settings to defaults
             // SdrConfig.Settings.Instance.ProjectRepoConnectionString = null;  // clear any repo connection string available
             _appManager.Map = null;  // remove the appmanager map
             Cursor = Cursors.Default;  
@@ -3478,20 +3478,36 @@ namespace Go2It
 
         private void btnAliEnterpolAVLFont_Click(object sender, EventArgs e)
         {
-            var fd = new FontDialog();
+            var fd = new FontDialog {Font = _enterpolAvlSymbolFont};
             if (fd.ShowDialog() != DialogResult.OK) return;
 
             lblAliEnterpolAVLSymbolFontName.Text = fd.Font.Name;
             lblAliEnterpolAVLSymbolFontName.Font = fd.Font;
             lblAliEnterpolAVLSymbolFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
-            if (!Equals(fd.Font, _enterpolAvlFont))
+            if (!Equals(fd.Font, _enterpolAvlSymbolFont))
             {
                 _projectManager.IsDirty = true;
             }
-            _enterpolAvlFont = fd.Font;
+            _enterpolAvlSymbolFont = fd.Font;
             DrawCharacterGraphic(pnlAliEnterpolAVLEmsGraphic, pnlAliEnterpolAVLEmsColor.BackColor, txtAliEnterpolAVLEmsChars.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLPdGraphic, pnlAliEnterpolAVLPdColor.BackColor, txtAliEnterpolAVLPdChars.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLFdGraphic, pnlAliEnterpolAVLFdColor.BackColor, txtAliEnterpolAVLFdChars.Text);
+        }
+
+        private void btnAliEnterpolAVLLabelFont_Click(object sender, EventArgs e)
+        {
+            var fd = new FontDialog {Font = _enterpolAvlLabelFont};
+            if (fd.ShowDialog() != DialogResult.OK) return;
+
+            lblAliEnterpolAVLLabelFontName.Text = fd.Font.Name;
+            lblAliEnterpolAVLLabelFontName.Font = fd.Font;
+            lblAliEnterpolAVLLabelFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            if (!Equals(fd.Font, _enterpolAvlLabelFont))
+            {
+                _projectManager.IsDirty = true;
+            }
+            _enterpolAvlLabelFont = fd.Font;
+            // TODO: add the label rendering to the symbology display. this will require q rework of the existing code.
         }
     }
 }

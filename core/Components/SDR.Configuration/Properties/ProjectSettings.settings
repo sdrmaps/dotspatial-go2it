@@ -132,7 +132,7 @@
       <Value Profile="(Default)">DarkTurquoise</Value>
     </Setting>
     <Setting Name="AliNetworkfleetPointFont" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">ESRI Transportation &amp; Civic, 20.2499981pt</Value>
+      <Value Profile="(Default)">ESRI Transportation &amp; Civic, 24pt</Value>
     </Setting>
     <Setting Name="AliNetworkfleetPointChar" Type="System.Char" Scope="User">
       <Value Profile="(Default)">n</Value>
@@ -165,16 +165,16 @@
       <Value Profile="(Default)">50000</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLSymbolFont" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
+      <Value Profile="(Default)">ESRI Transportation &amp; Civic, 24pt</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLEChar" Type="System.Char" Scope="User">
-      <Value Profile="(Default)">P</Value>
+      <Value Profile="(Default)">j</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLEMSChar" Type="System.Char" Scope="User">
-      <Value Profile="(Default)">E</Value>
+      <Value Profile="(Default)">d</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLFDChar" Type="System.Char" Scope="User">
-      <Value Profile="(Default)">F</Value>
+      <Value Profile="(Default)">m</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLEColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Cyan</Value>
@@ -198,16 +198,16 @@
       <Value Profile="(Default)">Gray</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLabelFont" Type="System.Drawing.Font" Scope="User">
-      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
+      <Value Profile="(Default)">Microsoft Sans Serif, 15.75pt</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLabelAlignment" Type="System.String" Scope="User">
       <Value Profile="(Default)">Above</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLabelXOffset" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">25</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLabelYOffset" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">25</Value>
     </Setting>
   </Settings>
 </SettingsFile>
