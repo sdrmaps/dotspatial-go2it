@@ -40,6 +40,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         // specific interface variables
         private AliServerClient _aliServerClient;  // sdr ali server client
+        private AliServerClient _networkFleetClient; // verizon network fleet client
         private FileSystemWatcher _globalCadArkWatch;  // watches archive directory global cad interface updates
         private FileSystemWatcher _globalCadLogWatch;  // watches log file for global cad interface updates
         private System.Timers.Timer _avlReadIntervalTimer;  // reads avl update on user specified interval
@@ -325,7 +326,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 avlVehicle.UnitType = SetAvlVehicleType(item[2].ToString());
                 _aliPanel.VehicleFleetListBox.SetItemChecked(i, avlVehicle.Visible);
             }
-            if (removeList.Count > 0)  // anything that remains in the list is no longer part of the query and should be removed
+            if (removeList.Count > 0)  // anything that remains on the list is no longer part of the query and should be removed
             {
                 foreach (string item in removeList)
                 {
@@ -350,8 +351,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                     avlVehicle.IgnoreActiveHide = CheckState.Checked == e.NewValue;
                 }   
             }
-            // TODO:
-            Debug.WriteLine("VehicleFleetListBoxOnItemCheck - UpdateAvlFleetPositions");
             UpdateAvlFleetPositions();
         }
 
@@ -550,7 +549,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 msg.Warn(@"AliServer is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
             }
-
             try
             {
                 var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
@@ -598,7 +596,9 @@ namespace DotSpatial.SDR.Plugins.ALI
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged += InstanceOnAliEnterpolAvlLeSymbolChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged += InstanceOnAliEnterpolAvlFdSymbolChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged += InstanceOnAliEnterpolAvlFdSymbolChanged;
-           // SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged += InstanceOnAliEnterpolAvlFontChanged;  // update all symbols
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFontChanged += InstanceOnAliEnterpolAvlSymbolFontChanged;  // update all symbols
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFontChanged += InstanceOnAliEnterpolAvlLabelFontChanged;
+            // check for responder application mode
             if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
             {
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged += InstanceOnAliEnterpolAvlSetMyLocProcChanged;
@@ -606,8 +606,8 @@ namespace DotSpatial.SDR.Plugins.ALI
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged += InstanceOnAliEnterpolAvlMyColorChanged;
                 try
                 {
-                    // FetchWhoAmI();
-                    // InitiateAvlUpdateTimer();
+                    FetchWhoAmI();
+                    InitiateAvlUpdateTimer();
                 }
                 catch (Exception ex)
                 {
@@ -622,6 +622,16 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 msg.Error(ex.Message, ex);
             }
+        }
+
+        private void InstanceOnAliEnterpolAvlLabelFontChanged(object sender, EventArgs eventArgs)
+        {
+                
+        }
+
+        private void InstanceOnAliEnterpolAvlSymbolFontChanged(object sender, EventArgs eventArgs)
+        {
+            
         }
 
         private void FetchWhoAmI()
@@ -641,6 +651,26 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void InstanceOnAliEnterpolAvlMyColorChanged(object sender, EventArgs eventArgs)
         {
             // TODO:
+        }
+
+        private void InitiateAvlReadTimer()
+        {
+            if (_avlReadIntervalTimer == null)
+            {
+                var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
+                _avlReadIntervalTimer = new System.Timers.Timer(interval) { AutoReset = true };
+                _avlReadIntervalTimer.Elapsed += delegate
+                {
+                    UpdateAvlFleetPositions();
+                };
+            }
+            else
+            {
+                _avlReadIntervalTimer.Enabled = false;
+                _avlReadIntervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
+            }
+            _avlReadIntervalTimer.Enabled = true;
         }
 
         private void InitiateAvlUpdateTimer()
@@ -702,26 +732,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             // TODO:
         }
 
-        private void InitiateAvlReadTimer()
-        {
-            if (_avlReadIntervalTimer == null)
-            {
-                var interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged += InstanceOnAliEnterpolAvlReadFreqChanged;
-                _avlReadIntervalTimer = new System.Timers.Timer(interval) { AutoReset = true };
-                _avlReadIntervalTimer.Elapsed += delegate
-                {
-                    UpdateAvlFleetPositions();
-                };
-            }
-            else
-            {
-                _avlReadIntervalTimer.Enabled = false;
-                _avlReadIntervalTimer.Interval = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreq;
-            }
-            _avlReadIntervalTimer.Enabled = true;
-        }
-
         private void UpdateAvlFleetPositions()
         {
             int avlRowSelected = 0;
@@ -732,7 +742,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             else
             {
-                // get the currently selected row in the listbox, restore the selection after rebinding
+                // get the currently selected row in the listbox (for restoring the selection after rebinding)
                 if (_aliPanel.VehicleFleetListBox.Items.Count >= 0)
                 {
                     avlRowSelected = _aliPanel.GetSelectedAvlVehicleRow();
@@ -804,7 +814,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 case 3:
                     return EnterpolAvlConfig.Default.AvlInactiveAlpha;
                 default:
-                    return 255;
+                    return 255;  // no transparency
             }
         }
 
@@ -913,11 +923,10 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 d = ConvertLatLonToMap(v.Latitude, v.Longitude);
             }
-            // TODO: add this back in
-            //if (v.CurrentInterval == 3)  // inactive unit use inactive unit color
-            //{
-            //    c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
-            //}
+            if (v.CurrentInterval == 3)  // inactive unit: use inactive unit color
+            {
+                c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
+            }
             var sp = Map.ProjToPixel(d);
             var b = new SolidBrush(c);
             var us = SetUnitTypeChar(v.UnitType).ToString(CultureInfo.InvariantCulture);
@@ -928,7 +937,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 strformat.Alignment = StringAlignment.Center;
                 g.DrawString(us, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont, b, sp.X, sp.Y, strformat);
             }
-            // draw the label for the unit according to the alignment
+            // draw the label for the unit according to the chosen alignment and offset
             var lp = GetLabelOffsetPoint(sp, us, v.UnitLabel);
             g.DrawString(v.UnitLabel, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont, b, lp.X, lp.Y);
         }
@@ -949,11 +958,6 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         private void InstanceOnAliEnterpolAvlLeSymbolChanged(object sender, EventArgs eventArgs)
-        {
-
-        }
-
-        private void InstanceOnAliEnterpolAvlFontChanged(object sender, EventArgs eventArgs)
         {
 
         }
@@ -1247,14 +1251,57 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void HandleNetworkFleetClient()
         {
-            //_aliServerClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort);
-            //_aliServerClient.Login();
-            //_aliServerClient.PacketReceieved += AliServerClientOnPacketReceieved;
-            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPathChanged += InstanceOnAliSdrServerDbPathChanged;
-            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
-            //SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
-            //_aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
-            //PopulateSdrAliServerDgv();
+            /* ------------------------------
+             * VERIZON NETWORK FLEET FORMAT
+            ---------------------------------
+            messageTime: 2014-04-17T21:56:43Z
+            satellite: false
+            latitude: 36.420978
+            longitude: -94.798436
+            accuracy: 0.0
+            keyOn: false
+            parked: false
+            lastSpeed: 0
+            avgSpeed: 1
+            maxSpeed: 4
+            heading:
+            vehicleId: 371861
+            ------------------------------ */
+
+            var msg = AppContext.Instance.Get<IUserMessage>();
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
+            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
+
+            _networkFleetClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort);
+            _networkFleetClient.Login();
+            _networkFleetClient.PacketReceieved += NetworkFleetClientOnPacketReceieved;
+            if (!_aliServerClient.Ping())  // if the server is not responding notify the user
+            {
+                msg.Warn(@"NetworkFleet is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort);
+            }
+            try
+            {
+                // var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
+                // PopulateSdrAliServerDgv(aliServerDbConnString);
+            }
+            catch (Exception ex)
+            {
+                msg.Error(ex.Message, ex);
+            }
+        }
+
+        private void NetworkFleetClientOnPacketReceieved(object sender, AliServerDataPacket packet)
+        {
+            //try
+            //{
+            //    var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
+            //    PopulateSdrAliServerDgv(aliServerDbConnString);
+            //}
+            //catch (Exception ex)
+            //{
+            //    var msg = AppContext.Instance.Get<IUserMessage>();
+            //    msg.Error(ex.Message, ex);
+            //}
         }
 
         private void HumanizeCamelCasedDgvHeaders()
