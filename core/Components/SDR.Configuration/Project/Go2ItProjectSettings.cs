@@ -29,6 +29,10 @@ namespace SDR.Configuration.Project
 
         public void ResetProjectSettingsToDefaults()
         {
+            if (Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup != null)
+            {
+                Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Clear();
+            }
             Properties.ProjectSettings.Default.AddressesLayers.Clear();
             Properties.ProjectSettings.Default.RoadsLayers.Clear();
             Properties.ProjectSettings.Default.KeyLocationsLayers.Clear();
@@ -106,6 +110,35 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = "Above";
 
             Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = true;
+        }
+
+        /// <summary>
+        /// Gets/sets the list of label lookups for network fleet
+        /// </summary>
+        public System.Collections.Specialized.StringCollection NetworkfleetLabels
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup; }
+            set { Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup = value; }
+        }
+
+        /// <summary>
+        /// Add a networkfleet label lookup to the current list of label lookups
+        /// </summary>
+        public void AddNetworkfleetLabel(int vehicleId, string vehicleLabel)
+        {
+            string record = vehicleId + "=" + vehicleLabel;
+            if (!Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Contains(record))
+            {
+                Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Add(record);
+            }
+        }
+
+        /// <summary>
+        /// clears the list of networkfleet label lookups
+        /// </summary>
+        public void ClearNetworkfleetLabels()
+        {
+            Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Clear();
         }
 
         /// <summary>

@@ -1273,14 +1273,16 @@ namespace DotSpatial.SDR.Plugins.ALI
             // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
 
             _networkFleetClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort);
-            _networkFleetClient.Login();
-            _networkFleetClient.PacketReceieved += NetworkFleetClientOnPacketReceieved;
             if (!_networkFleetClient.Ping())  // if the server is not responding notify the user
             {
                 msg.Warn(@"NetworkFleet is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort);
             }
             try
             {
+                _networkFleetClient.PacketReceieved += NetworkFleetClientOnPacketReceieved;
+                _networkFleetClient.Login();
+                
+                // todo: populate the initial list? or just do a query which is recieved on startup
                 // populate the vehicle list now
                 // var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
                 // PopulateSdrAliServerDgv(aliServerDbConnString);
@@ -1293,6 +1295,12 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void NetworkFleetClientOnPacketReceieved(object sender, AliServerDataPacket packet)
         {
+            Debug.WriteLine("-----------------------");
+            Debug.WriteLine(packet.Command);
+            Debug.WriteLine(packet.Name);
+            Debug.WriteLine(packet.Message);
+            Debug.WriteLine("_______________________");
+            //Debug.WriteLine("--> Start PacketRecieved");
             //try
             //{
             //    var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
@@ -1303,6 +1311,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             //    var msg = AppContext.Instance.Get<IUserMessage>();
             //    msg.Error(ex.Message, ex);
             //}
+            //Debug.WriteLine("--> End PacketRecieved");
         }
 
         private void HumanizeCamelCasedDgvHeaders()

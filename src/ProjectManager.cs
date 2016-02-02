@@ -351,6 +351,32 @@ namespace Go2It
             SaveLayerCollection(Go2ItProjectSettings.Instance.ParcelsLayer, LayerTypeParcel, conn);
             SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
             SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
+
+            // handle the networkfleet label lookups
+            //if (SQLiteHelper.TableExists(conn, "NetworkfleetLabels"))
+            //{
+            //    SQLiteHelper.ClearTable(conn, "NetworkfleetLabels");
+            //}
+            //else
+            //{
+            //    var labelLookup = new Dictionary<string, string>
+            //    {
+            //        {"key", "INTEGER PRIMARY KEY"},
+            //        {"vehicle_id", "NUMERIC"},
+            //        {"vehicle_label", "TEXT"}
+            //    };
+            //    SQLiteHelper.CreateTable(conn, "NetworkfleetLabels", labelLookup);
+            //}
+            //// now populate any networkfleet labels that may be set
+            //foreach (var nfLabel in Go2ItProjectSettings.Instance.NetworkfleetLabels)
+            //{
+            //    var arr = nfLabel.Split('=');
+            //    Dictionary<string, string> lblDict = CreateLayerDictionary(arr[0], arr[1]);
+            //    if (lblDict != null)
+            //    {
+            //        SQLiteHelper.Insert(conn, "NetworkfleetLabels", lblDict);
+            //    }
+            //}
         }
 
         private static string AttachSetting(string key, string setting, DataTable dt)
@@ -491,6 +517,24 @@ namespace Go2It
             const string lyrQuery = "SELECT * FROM Layers";  // assign all layers to their proper lookup 'type'
             DataTable lyrTable = SQLiteHelper.GetDataTable(conn, lyrQuery);
             LoadLayerCollections(lyrTable);
+
+            // handle the networkfleet label lookups
+            const string lblQuery = "SELECT * FROM NetworkfleetLabels";
+            if (SQLiteHelper.TableExists(conn, "NetworkfleetLabels"))
+            {
+                DataTable lblTable = SQLiteHelper.GetDataTable(conn, lblQuery);
+                LoadNetworkfleetLabels(lblTable);
+            }            
+        }
+
+        private static void LoadNetworkfleetLabels(DataTable lblTable)
+        {
+            foreach (DataRow row in lblTable.Rows)
+            {
+                string id = row["vehicle_id"].ToString();
+                string label = row["vehicle_label"].ToString();
+                Go2ItProjectSettings.Instance.AddNetworkfleetLabel(int.Parse(id), label);
+            }
         }
 
         /// <summary>

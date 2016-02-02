@@ -889,5 +889,16 @@ namespace SDR.Configuration.Properties {
                 this["AliNetworkfleetLabelYOffset"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection AliNetworkfleetLabelLookup {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["AliNetworkfleetLabelLookup"]));
+            }
+            set {
+                this["AliNetworkfleetLabelLookup"] = value;
+            }
+        }
     }
 }

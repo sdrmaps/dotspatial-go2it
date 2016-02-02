@@ -184,6 +184,17 @@ namespace Go2It
             _aliInterfaces = SdrConfig.Plugins.GetPluginApplicationConfigSectionAsDict(AliPlugin, "AliInterfaceModes");
         }
 
+        private void PopulateNetworkFleetLabels()
+        {
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels == null) return;
+            foreach (var nfLabel in SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels)
+            {
+                var arr = nfLabel.Split('=');
+                object[] row = { arr[0], arr[1] };
+                dgvNetworkfleetLabelLookup.Rows.Add(row);
+            }
+        }
+
         public AdminForm(AppManager app)
         {
             InitializeComponent();
@@ -250,6 +261,7 @@ namespace Go2It
             PopulateUsersToForm();
             PopulateHotKeysToForm();
             PopulateGraphicsToForm();
+            PopulateNetworkFleetLabels();
 
             // watch for changes of index on the pull down map tab change
             cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
@@ -1641,6 +1653,13 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment = cmbAliNetworkfleetLabelAlignment.SelectedItem.ToString();
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset = (int)numAliNetworkfleetLabelXOffset.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset = (int)numAliNetworkfleetLabelYOffset.Value;
+            // convert networkfleet labels back to list for storage
+            foreach (DataGridViewRow row in dgvNetworkfleetLabelLookup.Rows)
+            {
+                // TODO handle an empty row
+                var record = row.Cells[0].ToString() + "=" + row.Cells[1].ToString();
+                // SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Add(record);
+            }
 
             // setup ali interface configuration
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
@@ -3452,7 +3471,7 @@ namespace Go2It
 
         private void btnAliNetworkfleetFont_Click(object sender, EventArgs e)
         {
-            var fd = new FontDialog();
+            var fd = new FontDialog { Font = _networkFleetSymbolFont };
             if (fd.ShowDialog() != DialogResult.OK) return;
 
             ptAliNetworkfleetFont.Text = fd.Font.Name;
@@ -3578,7 +3597,6 @@ namespace Go2It
             }
             _networkFleetLabelFont = fd.Font;
             // TODO: add the label rendering to the symbology display. this will require rework of the existing code.
-
         }
     }
 }
