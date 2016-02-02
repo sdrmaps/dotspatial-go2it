@@ -209,5 +209,17 @@
     <Setting Name="AliEnterpolAVLLabelYOffset" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-5</Value>
     </Setting>
+    <Setting Name="AliNetworkfleetLabelFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif, 15.75pt</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetLabelAlignment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Above</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetLabelXOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetLabelYOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-5</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

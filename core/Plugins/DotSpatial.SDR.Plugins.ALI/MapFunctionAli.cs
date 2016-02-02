@@ -1275,12 +1275,13 @@ namespace DotSpatial.SDR.Plugins.ALI
             _networkFleetClient = new AliServerClient(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost, SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort);
             _networkFleetClient.Login();
             _networkFleetClient.PacketReceieved += NetworkFleetClientOnPacketReceieved;
-            if (!_aliServerClient.Ping())  // if the server is not responding notify the user
+            if (!_networkFleetClient.Ping())  // if the server is not responding notify the user
             {
                 msg.Warn(@"NetworkFleet is not responding at host: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost + @" port: " + SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort);
             }
             try
             {
+                // populate the vehicle list now
                 // var aliServerDbConnString = MdbHelper.GetMdbConnectionString(SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath);
                 // PopulateSdrAliServerDgv(aliServerDbConnString);
             }

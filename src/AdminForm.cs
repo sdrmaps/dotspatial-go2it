@@ -52,7 +52,8 @@ namespace Go2It
         private const string AliPlugin = "DotSpatial.SDR.Plugins.ALI";
 
         private Dictionary<string, string> _aliInterfaces;
-        private Font _networkFleetFont;
+        private Font _networkFleetSymbolFont;
+        private Font _networkFleetLabelFont;
         private Font _enterpolAvlSymbolFont;
         private Font _enterpolAvlLabelFont;
 
@@ -752,10 +753,10 @@ namespace Go2It
             ptAliNetworkfleetColor.Click += CharGraphicColorPanelOnClick;
             ptAliNetworkfleetChar.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString(CultureInfo.InvariantCulture);
             ptAliNetworkfleetChar.TextChanged += CharGraphicCharsOnTextChanged;
-            _networkFleetFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont;
-            ptAliNetworkfleetFont.Text = _networkFleetFont.Name;
-            ptAliNetworkfleetFont.Font = _networkFleetFont;
-            ptAliNetworkfleetSize.Text = _networkFleetFont.Size.ToString(CultureInfo.InvariantCulture);
+            _networkFleetSymbolFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont;
+            ptAliNetworkfleetFont.Text = _networkFleetSymbolFont.Name;
+            ptAliNetworkfleetFont.Font = _networkFleetSymbolFont;
+            ptAliNetworkfleetSize.Text = _networkFleetSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
             // avl inactive vehicle color
             Color avlInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor;
             pnlAliAVLInactiveColor.BackColor = avlInactive;
@@ -783,15 +784,25 @@ namespace Go2It
             lblAliEnterpolAVLSymbolFontName.Text = _enterpolAvlSymbolFont.Name;
             lblAliEnterpolAVLSymbolFontName.Font = _enterpolAvlSymbolFont;
             lblAliEnterpolAVLSymbolFontSize.Text = _enterpolAvlSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
+            
             _enterpolAvlLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
             lblAliEnterpolAVLLabelFontName.Text = _enterpolAvlLabelFont.Name;
             lblAliEnterpolAVLLabelFontName.Font = _enterpolAvlLabelFont;
             lblAliEnterpolAVLLabelFontSize.Text = _enterpolAvlLabelFont.Size.ToString(CultureInfo.InvariantCulture);
-
             cmbAliEnterpolAVLLabelAlignment.SelectedIndex = cmbAliEnterpolAVLLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment);
             // set after the alignment to replace any defaults set by the selection changed event on the combobox
             numAliEnterpolAVLLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
             numAliEnterpolAVLLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset;
+
+            _networkFleetLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont;
+            lblAliNetworkfleetLabelFont.Text = _networkFleetLabelFont.Name;
+            lblAliNetworkfleetLabelFont.Font = _networkFleetLabelFont;
+            lblAliNetworkfleetLabelFontSize.Text = _networkFleetLabelFont.Size.ToString(CultureInfo.InvariantCulture);
+            cmbAliNetworkfleetLabelAlignment.SelectedIndex = cmbAliNetworkfleetLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment);
+            // set after the alignment to replace any defaults set by the selection changed event on the combobox
+            numAliNetworkfleetLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset;
+            numAliNetworkfleetLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset;
+
             DrawAllCharGraphics(); // draw all char based graphics ie: networkfleet, fd_avl, ems_avl, and le_avl
 
             // point symbology for graphics rendering
@@ -884,7 +895,7 @@ namespace Go2It
                 var c = ptMap.PixelToProj(new Point(x, y));
                 ftSet.AddFeature(new DotSpatial.Topology.Point(c));
             }
-            UpdateCharacterGraphic(ptMap, panel == ptAliNetworkfleetGraphic ? _networkFleetFont : _enterpolAvlSymbolFont, color, chars);
+            UpdateCharacterGraphic(ptMap, panel == ptAliNetworkfleetGraphic ? _networkFleetSymbolFont : _enterpolAvlSymbolFont, color, chars);
         }
 
         private void UpdateCharacterGraphic(Map map, Font font, Color color, String chars)
@@ -1623,9 +1634,14 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet = chkNetworkfleet.Checked;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost = txtAliNetworkfleetUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort = (int)numAliNetworkfleetUdpPort.Value;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont = _networkFleetFont;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont = _networkFleetSymbolFont;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar = char.Parse(ptAliNetworkfleetChar.Text.ToString(CultureInfo.InvariantCulture));
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetColor = ptAliNetworkfleetColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont = _networkFleetLabelFont;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment = cmbAliNetworkfleetLabelAlignment.SelectedItem.ToString();
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset = (int)numAliNetworkfleetLabelXOffset.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset = (int)numAliNetworkfleetLabelYOffset.Value;
+
             // setup ali interface configuration
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
@@ -3442,11 +3458,11 @@ namespace Go2It
             ptAliNetworkfleetFont.Text = fd.Font.Name;
             ptAliNetworkfleetFont.Font = fd.Font;
             ptAliNetworkfleetSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
-            if (!Equals(fd.Font, _networkFleetFont))
+            if (!Equals(fd.Font, _networkFleetSymbolFont))
             {
                 _projectManager.IsDirty = true;
             }
-            _networkFleetFont = fd.Font;
+            _networkFleetSymbolFont = fd.Font;
             DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, ptAliNetworkfleetChar.Text);
         }
 
@@ -3527,6 +3543,42 @@ namespace Go2It
             }
             // TODO: really should come up with a way of validating isDirty before setting it
             _projectManager.IsDirty = true;
+        }
+
+        private void cmbAliNetworkfleetLabelAlignment_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // auto-set the default "best" offsets for each label alignment type
+            var cmb = (ComboBox)sender;
+            switch (cmb.SelectedItem.ToString())
+            {
+                case "Above":
+                    numAliNetworkfleetLabelXOffset.Value = 0;
+                    numAliNetworkfleetLabelYOffset.Value = -5;
+                    break;
+                default:
+                    numAliNetworkfleetLabelXOffset.Value = 0;
+                    numAliNetworkfleetLabelYOffset.Value = 0;
+                    break;
+            }
+            // TODO: really should come up with a way of validating isDirty before setting it
+            _projectManager.IsDirty = true;
+        }
+
+        private void btnAliNetworkfleetLabelFont_Click(object sender, EventArgs e)
+        {
+            var fd = new FontDialog { Font = _networkFleetLabelFont };
+            if (fd.ShowDialog() != DialogResult.OK) return;
+
+            lblAliNetworkfleetLabelFont.Text = fd.Font.Name;
+            lblAliNetworkfleetLabelFont.Font = fd.Font;
+            lblAliNetworkfleetLabelFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            if (!Equals(fd.Font, _networkFleetLabelFont))
+            {
+                _projectManager.IsDirty = true;
+            }
+            _networkFleetLabelFont = fd.Font;
+            // TODO: add the label rendering to the symbology display. this will require rework of the existing code.
+
         }
     }
 }

@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
             this.adminTab_MapConfiguration = new System.Windows.Forms.TabPage();
@@ -168,6 +168,15 @@
             this.lblAliEnterpolAVLAgeFreq = new System.Windows.Forms.Label();
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.pnlAliNetworkfleet = new System.Windows.Forms.Panel();
+            this.lblAliNetworkfleetLabelFontSize = new System.Windows.Forms.Label();
+            this.lblAliNetworkfleetLabelFont = new System.Windows.Forms.Label();
+            this.btnAliNetworkfleetLabelFont = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.numAliNetworkfleetLabelYOffset = new System.Windows.Forms.NumericUpDown();
+            this.numAliNetworkfleetLabelXOffset = new System.Windows.Forms.NumericUpDown();
+            this.cmbAliNetworkfleetLabelAlignment = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.ptAliNetworkfleetColor = new System.Windows.Forms.Panel();
             this.ptAliNetworkfleetSize = new System.Windows.Forms.Label();
             this.ptAliNetworkfleetFont = new System.Windows.Forms.Label();
@@ -243,6 +252,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLReadFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).BeginInit();
             this.pnlAliNetworkfleet.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).BeginInit();
             this.pnlAliEnterpol.SuspendLayout();
             this.pnlAliGlobalCad.SuspendLayout();
@@ -918,35 +929,35 @@
             this.dgvHotKeys.AllowUserToAddRows = false;
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle8;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
@@ -1200,35 +1211,35 @@
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.AllowUserToDeleteRows = false;
             this.dgvLayerIndex.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle11;
             this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
@@ -1338,9 +1349,9 @@
             this.pnlAliEnterpolAvl.Controls.Add(this.numAliEnterpolAVLAge3Freq);
             this.pnlAliEnterpolAvl.Controls.Add(this.pnlAliEnterpolAVLEmsColor);
             this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLAgeFreq);
-            this.pnlAliEnterpolAvl.Location = new System.Drawing.Point(98, 335);
+            this.pnlAliEnterpolAvl.Location = new System.Drawing.Point(107, 372);
             this.pnlAliEnterpolAvl.Name = "pnlAliEnterpolAvl";
-            this.pnlAliEnterpolAvl.Size = new System.Drawing.Size(479, 424);
+            this.pnlAliEnterpolAvl.Size = new System.Drawing.Size(479, 400);
             this.pnlAliEnterpolAvl.TabIndex = 72;
             this.pnlAliEnterpolAvl.Visible = false;
             // 
@@ -1348,7 +1359,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label12.Location = new System.Drawing.Point(14, 275);
+            this.label12.Location = new System.Drawing.Point(26, 255);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(264, 13);
             this.label12.TabIndex = 101;
@@ -1357,7 +1368,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(18, 247);
+            this.label9.Location = new System.Drawing.Point(30, 227);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(58, 13);
             this.label9.TabIndex = 100;
@@ -1366,7 +1377,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(19, 206);
+            this.label8.Location = new System.Drawing.Point(31, 186);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(57, 13);
             this.label8.TabIndex = 99;
@@ -1375,7 +1386,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 164);
+            this.label7.Location = new System.Drawing.Point(27, 144);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(67, 13);
             this.label7.TabIndex = 98;
@@ -1384,7 +1395,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(375, 374);
+            this.label11.Location = new System.Drawing.Point(387, 354);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(74, 13);
             this.label11.TabIndex = 97;
@@ -1393,7 +1404,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(276, 377);
+            this.label10.Location = new System.Drawing.Point(288, 357);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(74, 13);
             this.label10.TabIndex = 96;
@@ -1402,7 +1413,7 @@
             // lblAliEnterpolAVLLabelAlignment
             // 
             this.lblAliEnterpolAVLLabelAlignment.AutoSize = true;
-            this.lblAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(47, 396);
+            this.lblAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(59, 376);
             this.lblAliEnterpolAVLLabelAlignment.Name = "lblAliEnterpolAVLLabelAlignment";
             this.lblAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(82, 13);
             this.lblAliEnterpolAVLLabelAlignment.TabIndex = 95;
@@ -1410,7 +1421,7 @@
             // 
             // numAliEnterpolAVLLabelYOffset
             // 
-            this.numAliEnterpolAVLLabelYOffset.Location = new System.Drawing.Point(375, 390);
+            this.numAliEnterpolAVLLabelYOffset.Location = new System.Drawing.Point(387, 370);
             this.numAliEnterpolAVLLabelYOffset.Minimum = new decimal(new int[] {
             100,
             0,
@@ -1422,7 +1433,7 @@
             // 
             // numAliEnterpolAVLLabelXOffset
             // 
-            this.numAliEnterpolAVLLabelXOffset.Location = new System.Drawing.Point(280, 394);
+            this.numAliEnterpolAVLLabelXOffset.Location = new System.Drawing.Point(292, 374);
             this.numAliEnterpolAVLLabelXOffset.Minimum = new decimal(new int[] {
             100,
             0,
@@ -1440,7 +1451,7 @@
             "Below",
             "Right",
             "Left"});
-            this.cmbAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(132, 393);
+            this.cmbAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(144, 373);
             this.cmbAliEnterpolAVLLabelAlignment.Name = "cmbAliEnterpolAVLLabelAlignment";
             this.cmbAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(121, 21);
             this.cmbAliEnterpolAVLLabelAlignment.TabIndex = 92;
@@ -1449,7 +1460,7 @@
             // lblAliEnterpolAVLLabelFontSize
             // 
             this.lblAliEnterpolAVLLabelFontSize.AutoSize = true;
-            this.lblAliEnterpolAVLLabelFontSize.Location = new System.Drawing.Point(184, 372);
+            this.lblAliEnterpolAVLLabelFontSize.Location = new System.Drawing.Point(196, 352);
             this.lblAliEnterpolAVLLabelFontSize.Name = "lblAliEnterpolAVLLabelFontSize";
             this.lblAliEnterpolAVLLabelFontSize.Size = new System.Drawing.Size(51, 13);
             this.lblAliEnterpolAVLLabelFontSize.TabIndex = 91;
@@ -1458,7 +1469,7 @@
             // lblAliEnterpolAVLLabelFontName
             // 
             this.lblAliEnterpolAVLLabelFontName.AutoSize = true;
-            this.lblAliEnterpolAVLLabelFontName.Location = new System.Drawing.Point(206, 351);
+            this.lblAliEnterpolAVLLabelFontName.Location = new System.Drawing.Point(218, 331);
             this.lblAliEnterpolAVLLabelFontName.Name = "lblAliEnterpolAVLLabelFontName";
             this.lblAliEnterpolAVLLabelFontName.Size = new System.Drawing.Size(59, 13);
             this.lblAliEnterpolAVLLabelFontName.TabIndex = 90;
@@ -1466,7 +1477,7 @@
             // 
             // btnAliEnterpolAVLLabelFont
             // 
-            this.btnAliEnterpolAVLLabelFont.Location = new System.Drawing.Point(122, 346);
+            this.btnAliEnterpolAVLLabelFont.Location = new System.Drawing.Point(134, 326);
             this.btnAliEnterpolAVLLabelFont.Name = "btnAliEnterpolAVLLabelFont";
             this.btnAliEnterpolAVLLabelFont.Size = new System.Drawing.Size(75, 23);
             this.btnAliEnterpolAVLLabelFont.TabIndex = 89;
@@ -1477,7 +1488,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(327, 156);
+            this.label5.Location = new System.Drawing.Point(339, 136);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(110, 13);
             this.label5.TabIndex = 88;
@@ -1485,7 +1496,7 @@
             // 
             // pnlAliAVLInactiveColor
             // 
-            this.pnlAliAVLInactiveColor.Location = new System.Drawing.Point(355, 172);
+            this.pnlAliAVLInactiveColor.Location = new System.Drawing.Point(367, 152);
             this.pnlAliAVLInactiveColor.Name = "pnlAliAVLInactiveColor";
             this.pnlAliAVLInactiveColor.Size = new System.Drawing.Size(44, 44);
             this.pnlAliAVLInactiveColor.TabIndex = 87;
@@ -1493,7 +1504,7 @@
             // lblAliEnterpolAVLMyVehicleColor
             // 
             this.lblAliEnterpolAVLMyVehicleColor.AutoSize = true;
-            this.lblAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(345, 220);
+            this.lblAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(357, 200);
             this.lblAliEnterpolAVLMyVehicleColor.Name = "lblAliEnterpolAVLMyVehicleColor";
             this.lblAliEnterpolAVLMyVehicleColor.Size = new System.Drawing.Size(86, 13);
             this.lblAliEnterpolAVLMyVehicleColor.TabIndex = 86;
@@ -1501,7 +1512,7 @@
             // 
             // pnlAliEnterpolAVLMyVehicleColor
             // 
-            this.pnlAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(375, 241);
+            this.pnlAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(387, 221);
             this.pnlAliEnterpolAVLMyVehicleColor.Name = "pnlAliEnterpolAVLMyVehicleColor";
             this.pnlAliEnterpolAVLMyVehicleColor.Size = new System.Drawing.Size(29, 30);
             this.pnlAliEnterpolAVLMyVehicleColor.TabIndex = 85;
@@ -1509,7 +1520,7 @@
             // chkAutoHideInactiveUnits
             // 
             this.chkAutoHideInactiveUnits.AutoSize = true;
-            this.chkAutoHideInactiveUnits.Location = new System.Drawing.Point(308, 74);
+            this.chkAutoHideInactiveUnits.Location = new System.Drawing.Point(320, 54);
             this.chkAutoHideInactiveUnits.Name = "chkAutoHideInactiveUnits";
             this.chkAutoHideInactiveUnits.Size = new System.Drawing.Size(136, 17);
             this.chkAutoHideInactiveUnits.TabIndex = 84;
@@ -1518,7 +1529,7 @@
             // 
             // pnlAliEnterpolAVLPdGraphic
             // 
-            this.pnlAliEnterpolAVLPdGraphic.Location = new System.Drawing.Point(89, 194);
+            this.pnlAliEnterpolAVLPdGraphic.Location = new System.Drawing.Point(101, 174);
             this.pnlAliEnterpolAVLPdGraphic.Name = "pnlAliEnterpolAVLPdGraphic";
             this.pnlAliEnterpolAVLPdGraphic.Size = new System.Drawing.Size(62, 39);
             this.pnlAliEnterpolAVLPdGraphic.TabIndex = 83;
@@ -1526,7 +1537,7 @@
             // lblAliEnterpolAVLTableName
             // 
             this.lblAliEnterpolAVLTableName.AutoSize = true;
-            this.lblAliEnterpolAVLTableName.Location = new System.Drawing.Point(129, 10);
+            this.lblAliEnterpolAVLTableName.Location = new System.Drawing.Point(39, 6);
             this.lblAliEnterpolAVLTableName.Name = "lblAliEnterpolAVLTableName";
             this.lblAliEnterpolAVLTableName.Size = new System.Drawing.Size(84, 13);
             this.lblAliEnterpolAVLTableName.TabIndex = 13;
@@ -1534,28 +1545,28 @@
             // 
             // pnlAliEnterpolAVLFdGraphic
             // 
-            this.pnlAliEnterpolAVLFdGraphic.Location = new System.Drawing.Point(89, 235);
+            this.pnlAliEnterpolAVLFdGraphic.Location = new System.Drawing.Point(101, 215);
             this.pnlAliEnterpolAVLFdGraphic.Name = "pnlAliEnterpolAVLFdGraphic";
             this.pnlAliEnterpolAVLFdGraphic.Size = new System.Drawing.Size(62, 40);
             this.pnlAliEnterpolAVLFdGraphic.TabIndex = 82;
             // 
             // txtAliEnterpolAVLTableName
             // 
-            this.txtAliEnterpolAVLTableName.Location = new System.Drawing.Point(219, 3);
+            this.txtAliEnterpolAVLTableName.Location = new System.Drawing.Point(129, 3);
             this.txtAliEnterpolAVLTableName.Name = "txtAliEnterpolAVLTableName";
             this.txtAliEnterpolAVLTableName.Size = new System.Drawing.Size(206, 20);
             this.txtAliEnterpolAVLTableName.TabIndex = 9;
             // 
             // pnlAliEnterpolAVLEmsGraphic
             // 
-            this.pnlAliEnterpolAVLEmsGraphic.Location = new System.Drawing.Point(89, 144);
+            this.pnlAliEnterpolAVLEmsGraphic.Location = new System.Drawing.Point(101, 124);
             this.pnlAliEnterpolAVLEmsGraphic.Name = "pnlAliEnterpolAVLEmsGraphic";
             this.pnlAliEnterpolAVLEmsGraphic.Size = new System.Drawing.Size(61, 44);
             this.pnlAliEnterpolAVLEmsGraphic.TabIndex = 81;
             // 
             // txtAliEnterpolAVLInitialCatalog
             // 
-            this.txtAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(199, 45);
+            this.txtAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(211, 25);
             this.txtAliEnterpolAVLInitialCatalog.Name = "txtAliEnterpolAVLInitialCatalog";
             this.txtAliEnterpolAVLInitialCatalog.Size = new System.Drawing.Size(147, 20);
             this.txtAliEnterpolAVLInitialCatalog.TabIndex = 10;
@@ -1563,7 +1574,7 @@
             // lblAliEnterpolAVLSymbolFontSize
             // 
             this.lblAliEnterpolAVLSymbolFontSize.AutoSize = true;
-            this.lblAliEnterpolAVLSymbolFontSize.Location = new System.Drawing.Point(202, 150);
+            this.lblAliEnterpolAVLSymbolFontSize.Location = new System.Drawing.Point(214, 130);
             this.lblAliEnterpolAVLSymbolFontSize.Name = "lblAliEnterpolAVLSymbolFontSize";
             this.lblAliEnterpolAVLSymbolFontSize.Size = new System.Drawing.Size(51, 13);
             this.lblAliEnterpolAVLSymbolFontSize.TabIndex = 80;
@@ -1571,7 +1582,7 @@
             // 
             // txtAliEnterpolAVLSetLocProc
             // 
-            this.txtAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(234, 300);
+            this.txtAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(246, 280);
             this.txtAliEnterpolAVLSetLocProc.Name = "txtAliEnterpolAVLSetLocProc";
             this.txtAliEnterpolAVLSetLocProc.Size = new System.Drawing.Size(137, 20);
             this.txtAliEnterpolAVLSetLocProc.TabIndex = 11;
@@ -1579,7 +1590,7 @@
             // lblAliEnterpolAVLSymbolFontName
             // 
             this.lblAliEnterpolAVLSymbolFontName.AutoSize = true;
-            this.lblAliEnterpolAVLSymbolFontName.Location = new System.Drawing.Point(243, 129);
+            this.lblAliEnterpolAVLSymbolFontName.Location = new System.Drawing.Point(255, 109);
             this.lblAliEnterpolAVLSymbolFontName.Name = "lblAliEnterpolAVLSymbolFontName";
             this.lblAliEnterpolAVLSymbolFontName.Size = new System.Drawing.Size(59, 13);
             this.lblAliEnterpolAVLSymbolFontName.TabIndex = 79;
@@ -1588,7 +1599,7 @@
             // lblAliEnterpolAVLInitialCatalog
             // 
             this.lblAliEnterpolAVLInitialCatalog.AutoSize = true;
-            this.lblAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(99, 52);
+            this.lblAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(111, 32);
             this.lblAliEnterpolAVLInitialCatalog.Name = "lblAliEnterpolAVLInitialCatalog";
             this.lblAliEnterpolAVLInitialCatalog.Size = new System.Drawing.Size(89, 13);
             this.lblAliEnterpolAVLInitialCatalog.TabIndex = 12;
@@ -1597,7 +1608,7 @@
             // lblAliEnterpolAVLUpdateFreq
             // 
             this.lblAliEnterpolAVLUpdateFreq.AutoSize = true;
-            this.lblAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(342, 284);
+            this.lblAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(354, 264);
             this.lblAliEnterpolAVLUpdateFreq.Name = "lblAliEnterpolAVLUpdateFreq";
             this.lblAliEnterpolAVLUpdateFreq.Size = new System.Drawing.Size(117, 13);
             this.lblAliEnterpolAVLUpdateFreq.TabIndex = 19;
@@ -1605,7 +1616,7 @@
             // 
             // numAliEnterpolAVLUpdateFreq
             // 
-            this.numAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(377, 301);
+            this.numAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(389, 281);
             this.numAliEnterpolAVLUpdateFreq.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1617,21 +1628,21 @@
             // 
             // txtAliEnterpolAVLFdChars
             // 
-            this.txtAliEnterpolAVLFdChars.Location = new System.Drawing.Point(209, 235);
+            this.txtAliEnterpolAVLFdChars.Location = new System.Drawing.Point(221, 215);
             this.txtAliEnterpolAVLFdChars.Name = "txtAliEnterpolAVLFdChars";
             this.txtAliEnterpolAVLFdChars.Size = new System.Drawing.Size(100, 20);
             this.txtAliEnterpolAVLFdChars.TabIndex = 78;
             // 
             // txtAliEnterpolAVLWhoAmIProc
             // 
-            this.txtAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(235, 318);
+            this.txtAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(247, 298);
             this.txtAliEnterpolAVLWhoAmIProc.Name = "txtAliEnterpolAVLWhoAmIProc";
             this.txtAliEnterpolAVLWhoAmIProc.Size = new System.Drawing.Size(196, 20);
             this.txtAliEnterpolAVLWhoAmIProc.TabIndex = 14;
             // 
             // txtAliEnterpolAVLPdChars
             // 
-            this.txtAliEnterpolAVLPdChars.Location = new System.Drawing.Point(215, 196);
+            this.txtAliEnterpolAVLPdChars.Location = new System.Drawing.Point(227, 176);
             this.txtAliEnterpolAVLPdChars.Name = "txtAliEnterpolAVLPdChars";
             this.txtAliEnterpolAVLPdChars.Size = new System.Drawing.Size(94, 20);
             this.txtAliEnterpolAVLPdChars.TabIndex = 77;
@@ -1639,7 +1650,7 @@
             // lblAliEnterpolAVLSetLocProc
             // 
             this.lblAliEnterpolAVLSetLocProc.AutoSize = true;
-            this.lblAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(95, 300);
+            this.lblAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(107, 280);
             this.lblAliEnterpolAVLSetLocProc.Name = "lblAliEnterpolAVLSetLocProc";
             this.lblAliEnterpolAVLSetLocProc.Size = new System.Drawing.Size(130, 13);
             this.lblAliEnterpolAVLSetLocProc.TabIndex = 17;
@@ -1647,7 +1658,7 @@
             // 
             // txtAliEnterpolAVLEmsChars
             // 
-            this.txtAliEnterpolAVLEmsChars.Location = new System.Drawing.Point(215, 168);
+            this.txtAliEnterpolAVLEmsChars.Location = new System.Drawing.Point(227, 148);
             this.txtAliEnterpolAVLEmsChars.Name = "txtAliEnterpolAVLEmsChars";
             this.txtAliEnterpolAVLEmsChars.Size = new System.Drawing.Size(100, 20);
             this.txtAliEnterpolAVLEmsChars.TabIndex = 76;
@@ -1655,7 +1666,7 @@
             // lblAliEnterpolAVLWhoAmIProc
             // 
             this.lblAliEnterpolAVLWhoAmIProc.AutoSize = true;
-            this.lblAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(129, 321);
+            this.lblAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(141, 301);
             this.lblAliEnterpolAVLWhoAmIProc.Name = "lblAliEnterpolAVLWhoAmIProc";
             this.lblAliEnterpolAVLWhoAmIProc.Size = new System.Drawing.Size(100, 13);
             this.lblAliEnterpolAVLWhoAmIProc.TabIndex = 16;
@@ -1663,7 +1674,7 @@
             // 
             // btnAliEnterpolAVLSymbolFont
             // 
-            this.btnAliEnterpolAVLSymbolFont.Location = new System.Drawing.Point(162, 124);
+            this.btnAliEnterpolAVLSymbolFont.Location = new System.Drawing.Point(174, 104);
             this.btnAliEnterpolAVLSymbolFont.Name = "btnAliEnterpolAVLSymbolFont";
             this.btnAliEnterpolAVLSymbolFont.Size = new System.Drawing.Size(75, 23);
             this.btnAliEnterpolAVLSymbolFont.TabIndex = 75;
@@ -1673,7 +1684,7 @@
             // 
             // pnlAliEnterpolAVLFdColor
             // 
-            this.pnlAliEnterpolAVLFdColor.Location = new System.Drawing.Point(165, 235);
+            this.pnlAliEnterpolAVLFdColor.Location = new System.Drawing.Point(177, 215);
             this.pnlAliEnterpolAVLFdColor.Name = "pnlAliEnterpolAVLFdColor";
             this.pnlAliEnterpolAVLFdColor.Size = new System.Drawing.Size(25, 22);
             this.pnlAliEnterpolAVLFdColor.TabIndex = 74;
@@ -1681,7 +1692,7 @@
             // lblAliEnterpolAVLReadFreq
             // 
             this.lblAliEnterpolAVLReadFreq.AutoSize = true;
-            this.lblAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(339, 26);
+            this.lblAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(351, 6);
             this.lblAliEnterpolAVLReadFreq.Name = "lblAliEnterpolAVLReadFreq";
             this.lblAliEnterpolAVLReadFreq.Size = new System.Drawing.Size(108, 13);
             this.lblAliEnterpolAVLReadFreq.TabIndex = 25;
@@ -1689,7 +1700,7 @@
             // 
             // numAliEnterpolAVLAge1Freq
             // 
-            this.numAliEnterpolAVLAge1Freq.Location = new System.Drawing.Point(113, 97);
+            this.numAliEnterpolAVLAge1Freq.Location = new System.Drawing.Point(125, 77);
             this.numAliEnterpolAVLAge1Freq.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1701,14 +1712,14 @@
             // 
             // pnlAliEnterpolAVLPdColor
             // 
-            this.pnlAliEnterpolAVLPdColor.Location = new System.Drawing.Point(166, 196);
+            this.pnlAliEnterpolAVLPdColor.Location = new System.Drawing.Point(178, 176);
             this.pnlAliEnterpolAVLPdColor.Name = "pnlAliEnterpolAVLPdColor";
             this.pnlAliEnterpolAVLPdColor.Size = new System.Drawing.Size(24, 23);
             this.pnlAliEnterpolAVLPdColor.TabIndex = 73;
             // 
             // numAliEnterpolAVLAge2Freq
             // 
-            this.numAliEnterpolAVLAge2Freq.Location = new System.Drawing.Point(215, 97);
+            this.numAliEnterpolAVLAge2Freq.Location = new System.Drawing.Point(227, 77);
             this.numAliEnterpolAVLAge2Freq.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1720,7 +1731,7 @@
             // 
             // numAliEnterpolAVLReadFreq
             // 
-            this.numAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(352, 45);
+            this.numAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(364, 25);
             this.numAliEnterpolAVLReadFreq.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1732,7 +1743,7 @@
             // 
             // numAliEnterpolAVLAge3Freq
             // 
-            this.numAliEnterpolAVLAge3Freq.Location = new System.Drawing.Point(344, 97);
+            this.numAliEnterpolAVLAge3Freq.Location = new System.Drawing.Point(356, 77);
             this.numAliEnterpolAVLAge3Freq.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1744,7 +1755,7 @@
             // 
             // pnlAliEnterpolAVLEmsColor
             // 
-            this.pnlAliEnterpolAVLEmsColor.Location = new System.Drawing.Point(166, 164);
+            this.pnlAliEnterpolAVLEmsColor.Location = new System.Drawing.Point(178, 144);
             this.pnlAliEnterpolAVLEmsColor.Name = "pnlAliEnterpolAVLEmsColor";
             this.pnlAliEnterpolAVLEmsColor.Size = new System.Drawing.Size(24, 24);
             this.pnlAliEnterpolAVLEmsColor.TabIndex = 72;
@@ -1752,7 +1763,7 @@
             // lblAliEnterpolAVLAgeFreq
             // 
             this.lblAliEnterpolAVLAgeFreq.AutoSize = true;
-            this.lblAliEnterpolAVLAgeFreq.Location = new System.Drawing.Point(119, 72);
+            this.lblAliEnterpolAVLAgeFreq.Location = new System.Drawing.Point(131, 52);
             this.lblAliEnterpolAVLAgeFreq.Name = "lblAliEnterpolAVLAgeFreq";
             this.lblAliEnterpolAVLAgeFreq.Size = new System.Drawing.Size(116, 13);
             this.lblAliEnterpolAVLAgeFreq.TabIndex = 23;
@@ -1771,6 +1782,15 @@
             // 
             // pnlAliNetworkfleet
             // 
+            this.pnlAliNetworkfleet.Controls.Add(this.lblAliNetworkfleetLabelFontSize);
+            this.pnlAliNetworkfleet.Controls.Add(this.lblAliNetworkfleetLabelFont);
+            this.pnlAliNetworkfleet.Controls.Add(this.btnAliNetworkfleetLabelFont);
+            this.pnlAliNetworkfleet.Controls.Add(this.label15);
+            this.pnlAliNetworkfleet.Controls.Add(this.label14);
+            this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetLabelYOffset);
+            this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetLabelXOffset);
+            this.pnlAliNetworkfleet.Controls.Add(this.cmbAliNetworkfleetLabelAlignment);
+            this.pnlAliNetworkfleet.Controls.Add(this.label13);
             this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetColor);
             this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetSize);
             this.pnlAliNetworkfleet.Controls.Add(this.ptAliNetworkfleetFont);
@@ -1781,15 +1801,93 @@
             this.pnlAliNetworkfleet.Controls.Add(this.lblAliNetworkfleetUdpHost);
             this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetUdpPort);
             this.pnlAliNetworkfleet.Controls.Add(this.txtAliNetworkfleetUdpHost);
-            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(13, 103);
+            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(6, 103);
             this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
-            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(196, 226);
+            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(203, 263);
             this.pnlAliNetworkfleet.TabIndex = 71;
             this.pnlAliNetworkfleet.Visible = false;
             // 
+            // lblAliNetworkfleetLabelFontSize
+            // 
+            this.lblAliNetworkfleetLabelFontSize.AutoSize = true;
+            this.lblAliNetworkfleetLabelFontSize.Location = new System.Drawing.Point(87, 242);
+            this.lblAliNetworkfleetLabelFontSize.Name = "lblAliNetworkfleetLabelFontSize";
+            this.lblAliNetworkfleetLabelFontSize.Size = new System.Drawing.Size(48, 13);
+            this.lblAliNetworkfleetLabelFontSize.TabIndex = 79;
+            this.lblAliNetworkfleetLabelFontSize.Text = "FontSize";
+            // 
+            // lblAliNetworkfleetLabelFont
+            // 
+            this.lblAliNetworkfleetLabelFont.AutoSize = true;
+            this.lblAliNetworkfleetLabelFont.Location = new System.Drawing.Point(69, 221);
+            this.lblAliNetworkfleetLabelFont.Name = "lblAliNetworkfleetLabelFont";
+            this.lblAliNetworkfleetLabelFont.Size = new System.Drawing.Size(105, 13);
+            this.lblAliNetworkfleetLabelFont.TabIndex = 78;
+            this.lblAliNetworkfleetLabelFont.Text = "This is the font name";
+            // 
+            // btnAliNetworkfleetLabelFont
+            // 
+            this.btnAliNetworkfleetLabelFont.Location = new System.Drawing.Point(21, 216);
+            this.btnAliNetworkfleetLabelFont.Name = "btnAliNetworkfleetLabelFont";
+            this.btnAliNetworkfleetLabelFont.Size = new System.Drawing.Size(44, 23);
+            this.btnAliNetworkfleetLabelFont.TabIndex = 77;
+            this.btnAliNetworkfleetLabelFont.Text = "Font";
+            this.btnAliNetworkfleetLabelFont.UseVisualStyleBackColor = true;
+            this.btnAliNetworkfleetLabelFont.Click += new System.EventHandler(this.btnAliNetworkfleetLabelFont_Click);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(98, 186);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(31, 13);
+            this.label15.TabIndex = 76;
+            this.label15.Text = "Y Off";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(98, 158);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(31, 13);
+            this.label14.TabIndex = 75;
+            this.label14.Text = "X Off";
+            // 
+            // numAliNetworkfleetLabelYOffset
+            // 
+            this.numAliNetworkfleetLabelYOffset.Location = new System.Drawing.Point(135, 183);
+            this.numAliNetworkfleetLabelYOffset.Name = "numAliNetworkfleetLabelYOffset";
+            this.numAliNetworkfleetLabelYOffset.Size = new System.Drawing.Size(65, 20);
+            this.numAliNetworkfleetLabelYOffset.TabIndex = 74;
+            // 
+            // numAliNetworkfleetLabelXOffset
+            // 
+            this.numAliNetworkfleetLabelXOffset.Location = new System.Drawing.Point(135, 156);
+            this.numAliNetworkfleetLabelXOffset.Name = "numAliNetworkfleetLabelXOffset";
+            this.numAliNetworkfleetLabelXOffset.Size = new System.Drawing.Size(65, 20);
+            this.numAliNetworkfleetLabelXOffset.TabIndex = 73;
+            // 
+            // cmbAliNetworkfleetLabelAlignment
+            // 
+            this.cmbAliNetworkfleetLabelAlignment.FormattingEnabled = true;
+            this.cmbAliNetworkfleetLabelAlignment.Location = new System.Drawing.Point(8, 183);
+            this.cmbAliNetworkfleetLabelAlignment.Name = "cmbAliNetworkfleetLabelAlignment";
+            this.cmbAliNetworkfleetLabelAlignment.Size = new System.Drawing.Size(87, 21);
+            this.cmbAliNetworkfleetLabelAlignment.TabIndex = 72;
+            this.cmbAliNetworkfleetLabelAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAliNetworkfleetLabelAlignment_SelectedIndexChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(5, 167);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(82, 13);
+            this.label13.TabIndex = 71;
+            this.label13.Text = "Label Alignment";
+            // 
             // ptAliNetworkfleetColor
             // 
-            this.ptAliNetworkfleetColor.Location = new System.Drawing.Point(85, 101);
+            this.ptAliNetworkfleetColor.Location = new System.Drawing.Point(90, 79);
             this.ptAliNetworkfleetColor.Name = "ptAliNetworkfleetColor";
             this.ptAliNetworkfleetColor.Size = new System.Drawing.Size(24, 23);
             this.ptAliNetworkfleetColor.TabIndex = 70;
@@ -1797,7 +1895,7 @@
             // ptAliNetworkfleetSize
             // 
             this.ptAliNetworkfleetSize.AutoSize = true;
-            this.ptAliNetworkfleetSize.Location = new System.Drawing.Point(118, 187);
+            this.ptAliNetworkfleetSize.Location = new System.Drawing.Point(87, 112);
             this.ptAliNetworkfleetSize.Name = "ptAliNetworkfleetSize";
             this.ptAliNetworkfleetSize.Size = new System.Drawing.Size(48, 13);
             this.ptAliNetworkfleetSize.TabIndex = 65;
@@ -1806,7 +1904,7 @@
             // ptAliNetworkfleetFont
             // 
             this.ptAliNetworkfleetFont.AutoSize = true;
-            this.ptAliNetworkfleetFont.Location = new System.Drawing.Point(62, 167);
+            this.ptAliNetworkfleetFont.Location = new System.Drawing.Point(66, 138);
             this.ptAliNetworkfleetFont.Name = "ptAliNetworkfleetFont";
             this.ptAliNetworkfleetFont.Size = new System.Drawing.Size(105, 13);
             this.ptAliNetworkfleetFont.TabIndex = 69;
@@ -1814,7 +1912,7 @@
             // 
             // btnAliNetworkfleetFont
             // 
-            this.btnAliNetworkfleetFont.Location = new System.Drawing.Point(14, 162);
+            this.btnAliNetworkfleetFont.Location = new System.Drawing.Point(8, 133);
             this.btnAliNetworkfleetFont.Name = "btnAliNetworkfleetFont";
             this.btnAliNetworkfleetFont.Size = new System.Drawing.Size(44, 23);
             this.btnAliNetworkfleetFont.TabIndex = 68;
@@ -1824,7 +1922,7 @@
             // 
             // ptAliNetworkfleetChar
             // 
-            this.ptAliNetworkfleetChar.Location = new System.Drawing.Point(115, 101);
+            this.ptAliNetworkfleetChar.Location = new System.Drawing.Point(120, 79);
             this.ptAliNetworkfleetChar.MaxLength = 1;
             this.ptAliNetworkfleetChar.Name = "ptAliNetworkfleetChar";
             this.ptAliNetworkfleetChar.Size = new System.Drawing.Size(34, 20);
@@ -1832,7 +1930,7 @@
             // 
             // ptAliNetworkfleetGraphic
             // 
-            this.ptAliNetworkfleetGraphic.Location = new System.Drawing.Point(16, 99);
+            this.ptAliNetworkfleetGraphic.Location = new System.Drawing.Point(21, 77);
             this.ptAliNetworkfleetGraphic.Name = "ptAliNetworkfleetGraphic";
             this.ptAliNetworkfleetGraphic.Size = new System.Drawing.Size(53, 50);
             this.ptAliNetworkfleetGraphic.TabIndex = 4;
@@ -1857,7 +1955,7 @@
             // 
             // numAliNetworkfleetUdpPort
             // 
-            this.numAliNetworkfleetUdpPort.Location = new System.Drawing.Point(10, 69);
+            this.numAliNetworkfleetUdpPort.Location = new System.Drawing.Point(48, 51);
             this.numAliNetworkfleetUdpPort.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -2225,6 +2323,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).EndInit();
             this.pnlAliNetworkfleet.ResumeLayout(false);
             this.pnlAliNetworkfleet.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).EndInit();
             this.pnlAliEnterpol.ResumeLayout(false);
             this.pnlAliEnterpol.PerformLayout();
@@ -2414,6 +2514,15 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown numAliNetworkfleetLabelYOffset;
+        private System.Windows.Forms.NumericUpDown numAliNetworkfleetLabelXOffset;
+        private System.Windows.Forms.ComboBox cmbAliNetworkfleetLabelAlignment;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lblAliNetworkfleetLabelFontSize;
+        private System.Windows.Forms.Label lblAliNetworkfleetLabelFont;
+        private System.Windows.Forms.Button btnAliNetworkfleetLabelFont;
 
     }
 }

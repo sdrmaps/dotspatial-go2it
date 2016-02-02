@@ -76,6 +76,10 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliNetworkfleetPointChar = 'n';
             Properties.ProjectSettings.Default.AliNetworkfleetPointColor = Color.DarkTurquoise;
             Properties.ProjectSettings.Default.AliNetworkfleetPointFont = new Font("ESRI Transportation & Civic", 24);
+            Properties.ProjectSettings.Default.AliNetworkfleetLabelFont = new Font("Microsoft Sans Serif", 16);
+            Properties.ProjectSettings.Default.AliNetworkfleetLabelXOffset = 0;
+            Properties.ProjectSettings.Default.AliNetworkfleetLabelYOffset = -5;
+            Properties.ProjectSettings.Default.AliNetworkfleetLabelAlignment = "Above";
 
             Properties.ProjectSettings.Default.AliUseEnterpolAVL = false;
             Properties.ProjectSettings.Default.AliEnterpolAVLTableName = string.Empty;
@@ -869,6 +873,25 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlLabelFontChanged(this, e);
         }
 
+        public event EventHandler AliNetworkfleetLabelFontChanged;
+        public Font AliNetworkfleetLabelFont
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetLabelFont; }
+            set
+            {
+                if (!Equals(Properties.ProjectSettings.Default.AliNetworkfleetLabelFont, value))
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetLabelFont = value;
+                    OnAliNetworkfleetLabelFontChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetLabelFontChanged(EventArgs e)
+        {
+            if (AliNetworkfleetLabelFontChanged != null)
+                AliNetworkfleetLabelFontChanged(this, e);
+        }
+
         public event EventHandler AliEnterpolAvlLabelXOffsetChanged;
         public int AliEnterpolAvlLabelXOffset
         {
@@ -888,6 +911,45 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlLabelXOffsetChanged(this, e);
         }
 
+        public event EventHandler AliNetworkfleetLabelXOffsetChanged;
+        public int AliNetworkfleetLabelXOffset
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetLabelXOffset; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetLabelXOffset != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetLabelXOffset = value;
+                    OnAliNetworkfleetLabelXOffsetChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetLabelXOffsetChanged(EventArgs e)
+        {
+            if (AliNetworkfleetLabelXOffsetChanged != null)
+                AliNetworkfleetLabelXOffsetChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetLabelYOffsetChanged;
+        public int AliNetworkfleetLabelYOffset
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetLabelYOffset; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetLabelYOffset != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetLabelYOffset = value;
+                    OnAliNetworkfleetLabelYOffsetChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetLabelYOffsetChanged(EventArgs e)
+        {
+            if (AliNetworkfleetLabelYOffsetChanged != null)
+                AliNetworkfleetLabelYOffsetChanged(this, e);
+        }
+
+
         public event EventHandler AliEnterpolAvlLabelYOffsetChanged;
         public int AliEnterpolAvlLabelYOffset
         {
@@ -905,6 +967,25 @@ namespace SDR.Configuration.Project
         {
             if (AliEnterpolAvlLabelYOffsetChanged != null)
                 AliEnterpolAvlLabelYOffsetChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetLabelAlignmentChanged;
+        public string AliNetworkfleetLabelAlignment
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetLabelAlignment; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetLabelAlignment != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetLabelAlignment = value;
+                    OnAliNetworkfleetLabelAlignmentChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetLabelAlignmentChanged(EventArgs e)
+        {
+            if (AliNetworkfleetLabelAlignmentChanged != null)
+                AliNetworkfleetLabelAlignmentChanged(this, e);
         }
 
         public event EventHandler AliEnterpolAvlLabelAlignmentChanged;

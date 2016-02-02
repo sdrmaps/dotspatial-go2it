@@ -296,7 +296,8 @@ namespace Go2It
             }
 
             TypeConverter converter = TypeDescriptor.GetConverter(typeof(Font));
-            string networkFleetFont = converter.ConvertToString(Go2ItProjectSettings.Instance.AliNetworkfleetFont);
+            string networkFleetSymbolFont = converter.ConvertToString(Go2ItProjectSettings.Instance.AliNetworkfleetFont);
+            string networkFleetLabelFont = converter.ConvertToString(Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont);
             string enterpolAvlSymbolFont = converter.ConvertToString(Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont);
             string enterpolAvlLabelFont = converter.ConvertToString(Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont);
             var g = new Dictionary<string, string>
@@ -310,8 +311,12 @@ namespace Go2It
                 { ValidateColumn(conn, "GraphicSettings", "line_cap", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineCap},
                 { ValidateColumn(conn, "GraphicSettings", "line_style", "TEXT"), Go2ItProjectSettings.Instance.GraphicLineStyle},
                 { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_color", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
-                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_font", "TEXT"), networkFleetFont},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_font", "TEXT"), networkFleetSymbolFont},
                 { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_char", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_label_font", "TEXT"), networkFleetLabelFont},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_label_alignment", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_label_xoffset", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset.ToString(CultureInfo.InvariantCulture)},
+                { ValidateColumn(conn, "GraphicSettings", "ali_networkfleet_label_yoffset", "TEXT"), Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset.ToString(CultureInfo.InvariantCulture)},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_symbol_font", "TEXT"), enterpolAvlSymbolFont},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_label_font", "TEXT"), enterpolAvlLabelFont},
                 { ValidateColumn(conn, "GraphicSettings", "ali_enterpol_avl_lecolor", "TEXT"), Go2ItProjectSettings.Instance.AliEnterpolAvlLeColor.ToArgb().ToString(CultureInfo.InvariantCulture)},
@@ -463,6 +468,11 @@ namespace Go2It
             Go2ItProjectSettings.Instance.AliNetworkfleetColor = AttachSetting("ali_networkfleet_color", Go2ItProjectSettings.Instance.AliNetworkfleetColor, g);
             Go2ItProjectSettings.Instance.AliNetworkfleetChar = AttachSetting("ali_networkfleet_char", Go2ItProjectSettings.Instance.AliNetworkfleetChar, g);
             Go2ItProjectSettings.Instance.AliNetworkfleetFont = AttachSetting("ali_networkfleet_font", Go2ItProjectSettings.Instance.AliNetworkfleetFont, g);
+            Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont = AttachSetting("ali_networkfleet_label_font", Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont, g);
+            Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment = AttachSetting("ali_networkfleet_label_alignment", Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment, g);
+            Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset = AttachSetting("ali_networkfleet_label_xoffset", Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset, g);
+            Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset = AttachSetting("ali_networkfleet_label_yoffset", Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset, g);
+
             Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont = AttachSetting("ali_enterpol_avl_symbol_font", Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont = AttachSetting("ali_enterpol_avl_label_font", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont, g);
             Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment = AttachSetting("ali_enterpol_avl_label_alignment", Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment, g);
