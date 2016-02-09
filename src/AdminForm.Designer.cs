@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
             this.adminTab_MapConfiguration = new System.Windows.Forms.TabPage();
@@ -168,6 +168,15 @@
             this.lblAliEnterpolAVLAgeFreq = new System.Windows.Forms.Label();
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.pnlAliNetworkfleet = new System.Windows.Forms.Panel();
+            this.chkAutoHideInactiveUnitsNetworkfleet = new System.Windows.Forms.CheckBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.pnlAliNetworkfleetAVLMyVehicleColor = new System.Windows.Forms.Panel();
+            this.pnlAliNetworkfleetAVLInactiveColor = new System.Windows.Forms.Panel();
+            this.numAliNetworkfleetAVLAge3Freq = new System.Windows.Forms.NumericUpDown();
+            this.numAliNetworkfleetAVLAge2Freq = new System.Windows.Forms.NumericUpDown();
+            this.numAliNetworkfleetAVLAge1Freq = new System.Windows.Forms.NumericUpDown();
             this.dgvNetworkfleetLabelLookup = new System.Windows.Forms.DataGridView();
             this.vehicle_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.vehicle_label = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -255,6 +264,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLReadFreq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).BeginInit();
             this.pnlAliNetworkfleet.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge3Freq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge2Freq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge1Freq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNetworkfleetLabelLookup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).BeginInit();
@@ -933,35 +945,35 @@
             this.dgvHotKeys.AllowUserToAddRows = false;
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle26.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
@@ -1215,35 +1227,35 @@
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.AllowUserToDeleteRows = false;
             this.dgvLayerIndex.AllowUserToResizeRows = false;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
@@ -1786,6 +1798,15 @@
             // 
             // pnlAliNetworkfleet
             // 
+            this.pnlAliNetworkfleet.Controls.Add(this.chkAutoHideInactiveUnitsNetworkfleet);
+            this.pnlAliNetworkfleet.Controls.Add(this.label19);
+            this.pnlAliNetworkfleet.Controls.Add(this.label18);
+            this.pnlAliNetworkfleet.Controls.Add(this.label16);
+            this.pnlAliNetworkfleet.Controls.Add(this.pnlAliNetworkfleetAVLMyVehicleColor);
+            this.pnlAliNetworkfleet.Controls.Add(this.pnlAliNetworkfleetAVLInactiveColor);
+            this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetAVLAge3Freq);
+            this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetAVLAge2Freq);
+            this.pnlAliNetworkfleet.Controls.Add(this.numAliNetworkfleetAVLAge1Freq);
             this.pnlAliNetworkfleet.Controls.Add(this.dgvNetworkfleetLabelLookup);
             this.pnlAliNetworkfleet.Controls.Add(this.lblAliNetworkfleetLabelFontSize);
             this.pnlAliNetworkfleet.Controls.Add(this.lblAliNetworkfleetLabelFont);
@@ -1808,9 +1829,82 @@
             this.pnlAliNetworkfleet.Controls.Add(this.txtAliNetworkfleetUdpHost);
             this.pnlAliNetworkfleet.Location = new System.Drawing.Point(12, 68);
             this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
-            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(256, 520);
+            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(256, 713);
             this.pnlAliNetworkfleet.TabIndex = 71;
             this.pnlAliNetworkfleet.Visible = false;
+            this.pnlAliNetworkfleet.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlAliNetworkfleet_Paint);
+            // 
+            // chkAutoHideInactiveUnitsNetworkfleet
+            // 
+            this.chkAutoHideInactiveUnitsNetworkfleet.AutoSize = true;
+            this.chkAutoHideInactiveUnitsNetworkfleet.Location = new System.Drawing.Point(75, 331);
+            this.chkAutoHideInactiveUnitsNetworkfleet.Name = "chkAutoHideInactiveUnitsNetworkfleet";
+            this.chkAutoHideInactiveUnitsNetworkfleet.Size = new System.Drawing.Size(136, 17);
+            this.chkAutoHideInactiveUnitsNetworkfleet.TabIndex = 93;
+            this.chkAutoHideInactiveUnitsNetworkfleet.Text = "Autohide Inactive Units";
+            this.chkAutoHideInactiveUnitsNetworkfleet.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(135, 277);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(86, 13);
+            this.label19.TabIndex = 92;
+            this.label19.Text = "My Vehicle Color";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(19, 277);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(110, 13);
+            this.label18.TabIndex = 91;
+            this.label18.Text = "Inactive Vehicle Color";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(36, 232);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(116, 13);
+            this.label16.TabIndex = 90;
+            this.label16.Text = "AVL Age Frequency (s)";
+            // 
+            // pnlAliNetworkfleetAVLMyVehicleColor
+            // 
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Location = new System.Drawing.Point(160, 295);
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Name = "pnlAliNetworkfleetAVLMyVehicleColor";
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Size = new System.Drawing.Size(29, 30);
+            this.pnlAliNetworkfleetAVLMyVehicleColor.TabIndex = 89;
+            // 
+            // pnlAliNetworkfleetAVLInactiveColor
+            // 
+            this.pnlAliNetworkfleetAVLInactiveColor.Location = new System.Drawing.Point(22, 295);
+            this.pnlAliNetworkfleetAVLInactiveColor.Name = "pnlAliNetworkfleetAVLInactiveColor";
+            this.pnlAliNetworkfleetAVLInactiveColor.Size = new System.Drawing.Size(44, 44);
+            this.pnlAliNetworkfleetAVLInactiveColor.TabIndex = 88;
+            // 
+            // numAliNetworkfleetAVLAge3Freq
+            // 
+            this.numAliNetworkfleetAVLAge3Freq.Location = new System.Drawing.Point(135, 249);
+            this.numAliNetworkfleetAVLAge3Freq.Name = "numAliNetworkfleetAVLAge3Freq";
+            this.numAliNetworkfleetAVLAge3Freq.Size = new System.Drawing.Size(54, 20);
+            this.numAliNetworkfleetAVLAge3Freq.TabIndex = 83;
+            // 
+            // numAliNetworkfleetAVLAge2Freq
+            // 
+            this.numAliNetworkfleetAVLAge2Freq.Location = new System.Drawing.Point(75, 249);
+            this.numAliNetworkfleetAVLAge2Freq.Name = "numAliNetworkfleetAVLAge2Freq";
+            this.numAliNetworkfleetAVLAge2Freq.Size = new System.Drawing.Size(55, 20);
+            this.numAliNetworkfleetAVLAge2Freq.TabIndex = 82;
+            // 
+            // numAliNetworkfleetAVLAge1Freq
+            // 
+            this.numAliNetworkfleetAVLAge1Freq.Location = new System.Drawing.Point(22, 249);
+            this.numAliNetworkfleetAVLAge1Freq.Name = "numAliNetworkfleetAVLAge1Freq";
+            this.numAliNetworkfleetAVLAge1Freq.Size = new System.Drawing.Size(47, 20);
+            this.numAliNetworkfleetAVLAge1Freq.TabIndex = 81;
             // 
             // dgvNetworkfleetLabelLookup
             // 
@@ -1818,7 +1912,7 @@
             this.dgvNetworkfleetLabelLookup.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.vehicle_id,
             this.vehicle_label});
-            this.dgvNetworkfleetLabelLookup.Location = new System.Drawing.Point(3, 237);
+            this.dgvNetworkfleetLabelLookup.Location = new System.Drawing.Point(3, 354);
             this.dgvNetworkfleetLabelLookup.Name = "dgvNetworkfleetLabelLookup";
             this.dgvNetworkfleetLabelLookup.Size = new System.Drawing.Size(247, 283);
             this.dgvNetworkfleetLabelLookup.TabIndex = 80;
@@ -1845,7 +1939,7 @@
             // lblAliNetworkfleetLabelFont
             // 
             this.lblAliNetworkfleetLabelFont.AutoSize = true;
-            this.lblAliNetworkfleetLabelFont.Location = new System.Drawing.Point(70, 195);
+            this.lblAliNetworkfleetLabelFont.Location = new System.Drawing.Point(84, 195);
             this.lblAliNetworkfleetLabelFont.Name = "lblAliNetworkfleetLabelFont";
             this.lblAliNetworkfleetLabelFont.Size = new System.Drawing.Size(105, 13);
             this.lblAliNetworkfleetLabelFont.TabIndex = 78;
@@ -1853,11 +1947,11 @@
             // 
             // btnAliNetworkfleetLabelFont
             // 
-            this.btnAliNetworkfleetLabelFont.Location = new System.Drawing.Point(22, 190);
+            this.btnAliNetworkfleetLabelFont.Location = new System.Drawing.Point(9, 190);
             this.btnAliNetworkfleetLabelFont.Name = "btnAliNetworkfleetLabelFont";
-            this.btnAliNetworkfleetLabelFont.Size = new System.Drawing.Size(44, 23);
+            this.btnAliNetworkfleetLabelFont.Size = new System.Drawing.Size(72, 23);
             this.btnAliNetworkfleetLabelFont.TabIndex = 77;
-            this.btnAliNetworkfleetLabelFont.Text = "Font";
+            this.btnAliNetworkfleetLabelFont.Text = "Label Font";
             this.btnAliNetworkfleetLabelFont.UseVisualStyleBackColor = true;
             this.btnAliNetworkfleetLabelFont.Click += new System.EventHandler(this.btnAliNetworkfleetLabelFont_Click);
             // 
@@ -2364,6 +2458,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).EndInit();
             this.pnlAliNetworkfleet.ResumeLayout(false);
             this.pnlAliNetworkfleet.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge3Freq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge2Freq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge1Freq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNetworkfleetLabelLookup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).EndInit();
@@ -2568,6 +2665,15 @@
         private System.Windows.Forms.DataGridView dgvNetworkfleetLabelLookup;
         private System.Windows.Forms.DataGridViewTextBoxColumn vehicle_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn vehicle_label;
+        private System.Windows.Forms.Panel pnlAliNetworkfleetAVLMyVehicleColor;
+        private System.Windows.Forms.Panel pnlAliNetworkfleetAVLInactiveColor;
+        private System.Windows.Forms.NumericUpDown numAliNetworkfleetAVLAge3Freq;
+        private System.Windows.Forms.NumericUpDown numAliNetworkfleetAVLAge2Freq;
+        private System.Windows.Forms.NumericUpDown numAliNetworkfleetAVLAge1Freq;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox chkAutoHideInactiveUnitsNetworkfleet;
 
     }
 }

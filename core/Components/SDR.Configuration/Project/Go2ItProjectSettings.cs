@@ -29,10 +29,7 @@ namespace SDR.Configuration.Project
 
         public void ResetProjectSettingsToDefaults()
         {
-            if (Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup != null)
-            {
-                Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Clear();
-            }
+            Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Clear();
             Properties.ProjectSettings.Default.AddressesLayers.Clear();
             Properties.ProjectSettings.Default.RoadsLayers.Clear();
             Properties.ProjectSettings.Default.KeyLocationsLayers.Clear();
@@ -84,6 +81,12 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliNetworkfleetLabelXOffset = 0;
             Properties.ProjectSettings.Default.AliNetworkfleetLabelYOffset = -5;
             Properties.ProjectSettings.Default.AliNetworkfleetLabelAlignment = "Above";
+            Properties.ProjectSettings.Default.AliNetworkfleetAvlAutoHideInactiveUnits = true;
+            Properties.ProjectSettings.Default.AliNetworkfleetAVLAge1Freq = 2;
+            Properties.ProjectSettings.Default.AliNetworkfleetAVLAge2Freq = 5;
+            Properties.ProjectSettings.Default.AliNetworkfleetAVLAge3Freq = 60;
+            Properties.ProjectSettings.Default.AliNetworkfleetAVLMyVehicleColor = Color.Fuchsia;
+            Properties.ProjectSettings.Default.AliNetworkfleetAVLInactiveColor = Color.Gray;
 
             Properties.ProjectSettings.Default.AliUseEnterpolAVL = false;
             Properties.ProjectSettings.Default.AliEnterpolAVLTableName = string.Empty;
@@ -103,13 +106,12 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLFDColor = Color.Red;
             Properties.ProjectSettings.Default.AliEnterpolAVLEMSColor = Color.LimeGreen;
             Properties.ProjectSettings.Default.AliEnterpolAVLMyVehicleColor = Color.Fuchsia;
-            Properties.ProjectSettings.Default.AliAVLInactiveColor = Color.Gray;
+            Properties.ProjectSettings.Default.AliEnterpolAVLInactiveColor = Color.Gray;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelFont = new Font("Microsoft Sans Serif", 16);
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelXOffset = 0;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = -5;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = "Above";
-
-            Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = true;
+            Properties.ProjectSettings.Default.AliEnterpolAvlAutoHideInactiveUnits = true;
         }
 
         /// <summary>
@@ -811,6 +813,63 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlAge1FreqChanged(this, e);
         }
 
+        public event EventHandler AliNetworkfleetAvlAge1FreqChanged;
+        public int AliNetworkfleetAvlAge1Freq
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetAVLAge1Freq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetAVLAge1Freq != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetAVLAge1Freq = value;
+                    OnAliNetworkfleetAvlAge1FreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetAvlAge1FreqChanged(EventArgs e)
+        {
+            if (AliNetworkfleetAvlAge1FreqChanged != null)
+                AliNetworkfleetAvlAge1FreqChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetAvlAge2FreqChanged;
+        public int AliNetworkfleetAvlAge2Freq
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetAVLAge2Freq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetAVLAge2Freq != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetAVLAge2Freq = value;
+                    OnAliNetworkfleetAvlAge2FreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetAvlAge2FreqChanged(EventArgs e)
+        {
+            if (AliNetworkfleetAvlAge2FreqChanged != null)
+                AliNetworkfleetAvlAge2FreqChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetAvlAge3FreqChanged;
+        public int AliNetworkfleetAvlAge3Freq
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetAVLAge3Freq; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetAVLAge3Freq != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetAVLAge3Freq = value;
+                    OnAliNetworkfleetAvlAge3FreqChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetAvlAge3FreqChanged(EventArgs e)
+        {
+            if (AliNetworkfleetAvlAge3FreqChanged != null)
+                AliNetworkfleetAvlAge3FreqChanged(this, e);
+        }
+
         public event EventHandler AliEnterpolAvlAge2FreqChanged;
         public int AliEnterpolAvlAge2Freq
         {
@@ -1040,23 +1099,43 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlLabelAlignmentChanged(this, e);
         }
 
-        public event EventHandler AliAvlAutoHideInactiveUnitsChanged;
-        public bool AliAvlAutoHideInactiveUnits
+        public event EventHandler AliEnterpolAvlAutoHideInactiveUnitsChanged;
+        public bool AliEnterpolAvlAutoHideInactiveUnits
         {
-            get { return Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits; }
+            get { return Properties.ProjectSettings.Default.AliEnterpolAvlAutoHideInactiveUnits; }
             set
             {
-                if (Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits != value)
+                if (Properties.ProjectSettings.Default.AliEnterpolAvlAutoHideInactiveUnits != value)
                 {
-                    Properties.ProjectSettings.Default.AliAvlAutoHideInactiveUnits = value;
-                    OnAliEnterpolAvlLeColorChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliEnterpolAvlAutoHideInactiveUnits = value;
+                    OnAliEnterpolAvlAutoHideInactiveUnitsChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliAvlAutoHideInactiveUnitsChanged(EventArgs e)
+        protected virtual void OnAliEnterpolAvlAutoHideInactiveUnitsChanged(EventArgs e)
         {
-            if (AliAvlAutoHideInactiveUnitsChanged != null)
-                AliAvlAutoHideInactiveUnitsChanged(this, e);
+            if (AliEnterpolAvlAutoHideInactiveUnitsChanged != null)
+                AliEnterpolAvlAutoHideInactiveUnitsChanged(this, e);
+        }
+
+
+        public event EventHandler AliNetworkfleetAvlAutoHideInactiveUnitsChanged;
+        public bool AliNetworkfleetAvlAutoHideInactiveUnits
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetAvlAutoHideInactiveUnits; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetAvlAutoHideInactiveUnits != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetAvlAutoHideInactiveUnits = value;
+                    OnAliNetworkfleetAvlAutoHideInactiveUnitsChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetAvlAutoHideInactiveUnitsChanged(EventArgs e)
+        {
+            if (AliNetworkfleetAvlAutoHideInactiveUnitsChanged != null)
+                AliNetworkfleetAvlAutoHideInactiveUnitsChanged(this, e);
         }
 
         public event EventHandler AliEnterpolAvlLeColorChanged;
@@ -1192,23 +1271,61 @@ namespace SDR.Configuration.Project
                 AliEnterpolAvlMyColorChanged(this, e);
         }
 
-        public event EventHandler AliAvlInactiveColorChanged;
-        public Color AliAvlInactiveColor
+        public event EventHandler AliNetworkfleetAvlMyColorChanged;
+        public Color AliNetworkfleetAvlMyColor
         {
-            get { return Properties.ProjectSettings.Default.AliAVLInactiveColor; }
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetAVLMyVehicleColor; }
             set
             {
-                if (Properties.ProjectSettings.Default.AliAVLInactiveColor != value)
+                if (Properties.ProjectSettings.Default.AliNetworkfleetAVLMyVehicleColor != value)
                 {
-                    Properties.ProjectSettings.Default.AliAVLInactiveColor = value;
-                    OnAliAvlInactiveColorChanged(EventArgs.Empty);
+                    Properties.ProjectSettings.Default.AliNetworkfleetAVLMyVehicleColor = value;
+                    OnAliNetworkfleetAvlMyColorChanged(EventArgs.Empty);
                 }
             }
         }
-        protected virtual void OnAliAvlInactiveColorChanged(EventArgs e)
+        protected virtual void OnAliNetworkfleetAvlMyColorChanged(EventArgs e)
         {
-            if (AliAvlInactiveColorChanged != null)
-                AliAvlInactiveColorChanged(this, e);
+            if (AliNetworkfleetAvlMyColorChanged != null)
+                AliNetworkfleetAvlMyColorChanged(this, e);
+        }
+
+        public event EventHandler AliEnterpolAvlInactiveColorChanged;
+        public Color AliEnterpolAvlInactiveColor
+        {
+            get { return Properties.ProjectSettings.Default.AliEnterpolAVLInactiveColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliEnterpolAVLInactiveColor != value)
+                {
+                    Properties.ProjectSettings.Default.AliEnterpolAVLInactiveColor = value;
+                    OnAliEnterpolAvlInactiveColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliEnterpolAvlInactiveColorChanged(EventArgs e)
+        {
+            if (AliEnterpolAvlInactiveColorChanged != null)
+                AliEnterpolAvlInactiveColorChanged(this, e);
+        }
+
+        public event EventHandler AliNetworkfleetAvlInactiveColorChanged;
+        public Color AliNetworkfleetAvlInactiveColor
+        {
+            get { return Properties.ProjectSettings.Default.AliNetworkfleetAVLInactiveColor; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.AliNetworkfleetAVLInactiveColor != value)
+                {
+                    Properties.ProjectSettings.Default.AliNetworkfleetAVLInactiveColor = value;
+                    OnAliNetworkfleetAvlInactiveColorChanged(EventArgs.Empty);
+                }
+            }
+        }
+        protected virtual void OnAliNetworkfleetAvlInactiveColorChanged(EventArgs e)
+        {
+            if (AliNetworkfleetAvlInactiveColorChanged != null)
+                AliNetworkfleetAvlInactiveColorChanged(this, e);
         }
     }
 }

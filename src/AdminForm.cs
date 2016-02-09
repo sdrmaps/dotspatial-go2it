@@ -186,7 +186,7 @@ namespace Go2It
 
         private void PopulateNetworkFleetLabels()
         {
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels == null) return;
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Count <= 0) return;
             foreach (var nfLabel in SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels)
             {
                 var arr = nfLabel.Split('=');
@@ -769,11 +769,17 @@ namespace Go2It
             ptAliNetworkfleetFont.Text = _networkFleetSymbolFont.Name;
             ptAliNetworkfleetFont.Font = _networkFleetSymbolFont;
             ptAliNetworkfleetSize.Text = _networkFleetSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
-            // avl inactive vehicle color
-            Color avlInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor;
+            Color avlNfInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlInactiveColor;
+            pnlAliNetworkfleetAVLInactiveColor.BackColor = avlNfInactive;
+            pnlAliNetworkfleetAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
+            Color avlNfMyColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlMyColor;
+            pnlAliNetworkfleetAVLMyVehicleColor.BackColor = avlNfMyColor;
+            pnlAliNetworkfleetAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
+
+            // enterpol avl char graphics
+            Color avlInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInactiveColor;
             pnlAliAVLInactiveColor.BackColor = avlInactive;
             pnlAliEnterpolAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
-            // enterpol avl char graphics
             Color avlMyColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor;
             pnlAliEnterpolAVLMyVehicleColor.BackColor = avlMyColor;
             pnlAliEnterpolAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
@@ -957,6 +963,16 @@ namespace Go2It
             else if (pnl == pnlAliAVLInactiveColor)
             {
                 pnlAliAVLInactiveColor.BackColor = nColor;
+                // no character to update on this color selection
+            }
+            else if (pnl == pnlAliNetworkfleetAVLMyVehicleColor)
+            {
+                pnlAliNetworkfleetAVLMyVehicleColor.BackColor = nColor;
+                // no character to update on this color selection
+            }
+            else if (pnl == pnlAliNetworkfleetAVLInactiveColor)
+            {
+                pnlAliNetworkfleetAVLInactiveColor.BackColor = nColor;
                 // no character to update on this color selection
             }
             else  // networkfleet panel backcolor
@@ -1147,6 +1163,10 @@ namespace Go2It
 
             txtAliNetworkfleetUdpHost.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost;
             numAliNetworkfleetUdpPort.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort;
+            numAliNetworkfleetAVLAge1Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge1Freq;
+            numAliNetworkfleetAVLAge2Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge2Freq;
+            numAliNetworkfleetAVLAge3Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge3Freq;
+            chkAutoHideInactiveUnitsNetworkfleet.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAutoHideInactiveUnits;
             chkNetworkfleet.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet;
 
             chkEnterpolAvl.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl;
@@ -1159,7 +1179,7 @@ namespace Go2It
             numAliEnterpolAVLAge1Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq;
             numAliEnterpolAVLAge2Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq;
             numAliEnterpolAVLAge3Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq;
-            chkAutoHideInactiveUnits.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits;
+            chkAutoHideInactiveUnits.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAutoHideInactiveUnits;
 
             // populate all the ali interfaces to the combobox
             foreach (var aliInterface in _aliInterfaces)
@@ -1653,14 +1673,22 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment = cmbAliNetworkfleetLabelAlignment.SelectedItem.ToString();
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset = (int)numAliNetworkfleetLabelXOffset.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset = (int)numAliNetworkfleetLabelYOffset.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge1Freq = (int)numAliNetworkfleetAVLAge1Freq.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge2Freq = (int)numAliNetworkfleetAVLAge2Freq.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge3Freq = (int)numAliNetworkfleetAVLAge3Freq.Value;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAutoHideInactiveUnits = chkAutoHideInactiveUnitsNetworkfleet.Checked;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlMyColor = pnlAliNetworkfleetAVLMyVehicleColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlInactiveColor = pnlAliNetworkfleetAVLInactiveColor.BackColor;
             // convert networkfleet labels back to list for storage
             foreach (DataGridViewRow row in dgvNetworkfleetLabelLookup.Rows)
             {
-                // TODO handle an empty row
-                var record = row.Cells[0].ToString() + "=" + row.Cells[1].ToString();
-                // SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Add(record);
+                if (row.Cells[0].Value == null || row.Cells[1].Value == null) continue;
+                var record = row.Cells[0].Value.ToString() + "=" + row.Cells[1].Value.ToString();
+                if (record.Length > 1)
+                {
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Add(record);
+                }
             }
-
             // setup ali interface configuration
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
@@ -1671,8 +1699,6 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPath = txtAliInterfaceDbPath.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHost = txtAliInterfaceUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPort = Convert.ToInt32(numAliInterfaceUdpPort.Value);
-            // set inactive avl vehicle color
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor = pnlAliAVLInactiveColor.BackColor;
             // set ali enterpol avl options
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl = chkEnterpolAvl.Checked;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName = txtAliEnterpolAVLTableName.Text;
@@ -1684,9 +1710,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq = (int)numAliEnterpolAVLAge1Freq.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq = (int)numAliEnterpolAVLAge2Freq.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq = (int)numAliEnterpolAVLAge3Freq.Value;
-            // avl autohide inactive units
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits = chkAutoHideInactiveUnits.Checked;
-            // ali enterpol avl graphic settings
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAutoHideInactiveUnits = chkAutoHideInactiveUnits.Checked;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont = _enterpolAvlSymbolFont;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont = _enterpolAvlLabelFont;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment = cmbAliEnterpolAVLLabelAlignment.SelectedItem.ToString();
@@ -1699,6 +1723,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsChar = char.Parse(txtAliEnterpolAVLEmsChars.Text.ToString(CultureInfo.InvariantCulture));
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColor = pnlAliEnterpolAVLEmsColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor = pnlAliEnterpolAVLMyVehicleColor.BackColor;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInactiveColor = pnlAliAVLInactiveColor.BackColor;
 
             string aliValue;  // swap key and value positions to use the friendly label as a lookup key for the enum string value
             var swapDict = _aliInterfaces.ToDictionary(e => e.Value, e => e.Key);
@@ -3597,6 +3622,11 @@ namespace Go2It
             }
             _networkFleetLabelFont = fd.Font;
             // TODO: add the label rendering to the symbology display. this will require rework of the existing code.
+        }
+
+        private void pnlAliNetworkfleet_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

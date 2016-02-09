@@ -59,10 +59,10 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public override void Activate()
         {
-            // watch for the change of alimode/networkfleet to activate/deactivate this plugin as needed
+            // watch for the change of alimode/aliavl to activate/deactivate this plugin as needed
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged += OnAliModeChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged += OnAliModeChanged;
-            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged += OnAliModeChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged += OnAliModeChanged;
 
             // determine if the plugin is currently activated or not
             if (CurrentAliMode != AliMode.Disabled || CurrentAliAvl != AliAvl.Disabled)
@@ -191,7 +191,8 @@ namespace DotSpatial.SDR.Plugins.ALI
                 // event binding to watch for function mode changes (to deactivate the tool)
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
                 // if avl is activated then assign the paint event
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl) // ||
+                    // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
                 {
                     _mapFunction.AddAvlMapPaintEvent();
                 }
@@ -236,9 +237,9 @@ namespace DotSpatial.SDR.Plugins.ALI
                 // remove the event binding on this map (since its being hidden) on function mode changes
                 map.FunctionModeChanged -= MapOnFunctionModeChanged;
                 // if avl is activated remove the paint event from this map
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl) // ||
+                    // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
                 {
-                    Debug.WriteLine("-- AliPlugin.DockManagerOnPanelHidden -- RemoveAvlMapPaintEvent()");
                     _mapFunction.RemoveAvlMapPaintEvent();
                 }
                 // lets look and see if this tool is currently the active tool and deactivate it if so

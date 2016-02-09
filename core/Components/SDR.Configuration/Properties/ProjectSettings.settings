@@ -188,13 +188,13 @@
     <Setting Name="AliEnterpolAVLInitialCatalog" Type="System.String" Scope="User">
       <Value Profile="(Default)">SDRActiveUnitsView</Value>
     </Setting>
-    <Setting Name="AliAvlAutoHideInactiveUnits" Type="System.Boolean" Scope="User">
+    <Setting Name="AliEnterpolAvlAutoHideInactiveUnits" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLMyVehicleColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Fuchsia</Value>
     </Setting>
-    <Setting Name="AliAVLInactiveColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="AliEnterpolAVLInactiveColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Gray</Value>
     </Setting>
     <Setting Name="AliEnterpolAVLLabelFont" Type="System.Drawing.Font" Scope="User">
@@ -222,7 +222,26 @@
       <Value Profile="(Default)">-5</Value>
     </Setting>
     <Setting Name="AliNetworkfleetLabelLookup" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetAVLAge1Freq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetAVLAge2Freq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetAVLAge3Freq" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetAVLMyVehicleColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Fuchsia</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetAvlAutoHideInactiveUnits" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AliNetworkfleetAVLInactiveColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Gray</Value>
     </Setting>
   </Settings>
 </SettingsFile>

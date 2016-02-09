@@ -761,12 +761,12 @@ namespace SDR.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AliAvlAutoHideInactiveUnits {
+        public bool AliEnterpolAvlAutoHideInactiveUnits {
             get {
-                return ((bool)(this["AliAvlAutoHideInactiveUnits"]));
+                return ((bool)(this["AliEnterpolAvlAutoHideInactiveUnits"]));
             }
             set {
-                this["AliAvlAutoHideInactiveUnits"] = value;
+                this["AliEnterpolAvlAutoHideInactiveUnits"] = value;
             }
         }
         
@@ -785,12 +785,12 @@ namespace SDR.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
-        public global::System.Drawing.Color AliAVLInactiveColor {
+        public global::System.Drawing.Color AliEnterpolAVLInactiveColor {
             get {
-                return ((global::System.Drawing.Color)(this["AliAVLInactiveColor"]));
+                return ((global::System.Drawing.Color)(this["AliEnterpolAVLInactiveColor"]));
             }
             set {
-                this["AliAVLInactiveColor"] = value;
+                this["AliEnterpolAVLInactiveColor"] = value;
             }
         }
         
@@ -892,12 +892,86 @@ namespace SDR.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
         public global::System.Collections.Specialized.StringCollection AliNetworkfleetLabelLookup {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["AliNetworkfleetLabelLookup"]));
             }
             set {
                 this["AliNetworkfleetLabelLookup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int AliNetworkfleetAVLAge1Freq {
+            get {
+                return ((int)(this["AliNetworkfleetAVLAge1Freq"]));
+            }
+            set {
+                this["AliNetworkfleetAVLAge1Freq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int AliNetworkfleetAVLAge2Freq {
+            get {
+                return ((int)(this["AliNetworkfleetAVLAge2Freq"]));
+            }
+            set {
+                this["AliNetworkfleetAVLAge2Freq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int AliNetworkfleetAVLAge3Freq {
+            get {
+                return ((int)(this["AliNetworkfleetAVLAge3Freq"]));
+            }
+            set {
+                this["AliNetworkfleetAVLAge3Freq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Fuchsia")]
+        public global::System.Drawing.Color AliNetworkfleetAVLMyVehicleColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliNetworkfleetAVLMyVehicleColor"]));
+            }
+            set {
+                this["AliNetworkfleetAVLMyVehicleColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AliNetworkfleetAvlAutoHideInactiveUnits {
+            get {
+                return ((bool)(this["AliNetworkfleetAvlAutoHideInactiveUnits"]));
+            }
+            set {
+                this["AliNetworkfleetAvlAutoHideInactiveUnits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
+        public global::System.Drawing.Color AliNetworkfleetAVLInactiveColor {
+            get {
+                return ((global::System.Drawing.Color)(this["AliNetworkfleetAVLInactiveColor"]));
+            }
+            set {
+                this["AliNetworkfleetAVLInactiveColor"] = value;
             }
         }
     }
