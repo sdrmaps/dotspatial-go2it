@@ -251,7 +251,19 @@ namespace DotSpatial.SDR.Plugins.ALI
             return AvlVehicleType.None;
         }
 
-        private static AvlVehicle CreateNewAvlVehicle(DataRowView item)
+        private bool CheckAutoHideStatus()
+        {
+            switch (_currentAliAvl)
+            {
+                case AliAvl.Enterpolavl:
+                    return SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAutoHideInactiveUnits;
+                case AliAvl.Networkfleet:
+                    return SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAutoHideInactiveUnits;
+            }
+            return false;
+        }
+
+        private AvlVehicle CreateNewAvlVehicle(DataRowView item)
         {
             var avlVehicle = new AvlVehicle
             {
@@ -261,7 +273,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 Longitude = Convert.ToDouble(item[5].ToString())
             };
             // if the current state is inactive and auto-hide function is enabled
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits)
+            if (CheckAutoHideStatus())
             {
                 var diff = DateTime.Now.Subtract(avlVehicle.UpdateTime);
                 if (diff.TotalSeconds > SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq)
@@ -280,7 +292,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             _avlVehicles.TryGetValue(item[1].ToString(), out avlVehicle);
             if (avlVehicle == null) return;
             avlVehicle.Visible = e.NewValue == CheckState.Checked;
-            if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits)
+            if (CheckAutoHideStatus())
             {
                 if (avlVehicle.CurrentInterval.Equals(3))
                 {
@@ -831,7 +843,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
             if (v.CurrentInterval == 3)  // inactive unit: use inactive unit color
             {
-                c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlInactiveColor);
+                // TODO: this currently only handle enterpol
+                c = Color.FromArgb(a, SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInactiveColor);
             }
             var sp = Map.ProjToPixel(d);
             var b = new SolidBrush(c);
@@ -1280,7 +1293,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                     else  // in this case we are setting the vehicle to "inactive" display state
                     {
                         avlVehicle.CurrentInterval = 3;  // set to inactive mode
-                        if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliAvlAutoHideInactiveUnits)
+                        if (CheckAutoHideStatus())
                         {
                             avlVehicle.Visible = avlVehicle.IgnoreActiveHide;
                         }
