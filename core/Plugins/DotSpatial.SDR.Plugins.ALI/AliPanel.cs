@@ -37,6 +37,20 @@ namespace DotSpatial.SDR.Plugins.ALI
         #endregion
 
         #region Methods
+        public delegate void SetAvlVehicleCheckStateCallback(int id, bool status);
+        public void SetAvlVehicleCheckState(int id, bool status)
+        {
+            if (chkFleetList.InvokeRequired)
+            {
+                var cb = new SetAvlVehicleCheckStateCallback(SetAvlVehicleCheckState);
+                Invoke(cb, new object[] { id, status });
+            }
+            else
+            {
+                chkFleetList.SetItemChecked(id, status);
+            }
+        }
+
         public delegate void SelectAvlVehicleRowCallback(int id);
         public void SelectAvlVehicleRow(int id)
         {

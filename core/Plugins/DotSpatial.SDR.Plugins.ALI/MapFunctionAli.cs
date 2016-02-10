@@ -1326,8 +1326,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 avlVehicle.Longitude = Convert.ToDouble(msgLon);
                 avlVehicle.CurrentInterval = 0;
                 avlVehicle.IgnoreActiveHide = false;
-                // TODO: THIS IS CAUSING CROSS-THREAD ISSUES
-                _aliPanel.VehicleFleetListBox.SetItemChecked(idx, avlVehicle.Visible);
+                _aliPanel.SetAvlVehicleCheckState(idx, avlVehicle.Visible);
             }
             _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
             if (Map != null)
@@ -1387,7 +1386,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 }
                 avlVehicle.UnitLabel = item[0].ToString();
                 avlVehicle.UnitType = SetAvlVehicleType(item[2].ToString());
-                _aliPanel.VehicleFleetListBox.SetItemChecked(i, avlVehicle.Visible);
+                _aliPanel.SetAvlVehicleCheckState(i, avlVehicle.Visible);
             }
             if (removeList.Count > 0)  // anything that remains on the list is no longer part of the query and should be removed
             {
