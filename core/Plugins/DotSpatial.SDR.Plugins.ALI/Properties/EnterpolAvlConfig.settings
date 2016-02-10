@@ -29,14 +29,5 @@
     <Setting Name="UnitTypePdLookup" Type="System.String" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="AvlIntervalAlpha1" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">200</Value>
-    </Setting>
-    <Setting Name="AvlIntervalAlpha2" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">125</Value>
-    </Setting>
-    <Setting Name="AvlInactiveAlpha" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">75</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

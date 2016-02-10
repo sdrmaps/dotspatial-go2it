@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -103,8 +102,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliModeChanged -= OnAliModeChanged;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleetChanged -= OnAliModeChanged;
-            // TODO:
-            // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged -= OnAliModeChanged;
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvlChanged -= OnAliModeChanged;
             
             if (_isPluginActive)
             {
@@ -191,8 +189,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 // event binding to watch for function mode changes (to deactivate the tool)
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
                 // if avl is activated then assign the paint event
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl) // ||
-                    // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl || SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
                 {
                     _mapFunction.AddAvlMapPaintEvent();
                 }
@@ -237,8 +234,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 // remove the event binding on this map (since its being hidden) on function mode changes
                 map.FunctionModeChanged -= MapOnFunctionModeChanged;
                 // if avl is activated remove the paint event from this map
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl) // ||
-                    // SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl || SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet)
                 {
                     _mapFunction.RemoveAvlMapPaintEvent();
                 }

@@ -103,6 +103,11 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="AvlConfig.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>AvlConfig.settings</DependentUpon>
+    </Compile>
     <Compile Include="AvlVehicle.cs" />
     <Compile Include="Properties\EnterpolAvlConfig.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -161,6 +166,10 @@
     </None>
     <None Include="AliPlugin-ConfigExamples\GlobalCAD-LogParser.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AvlConfig.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>AvlConfig.Designer.cs</LastGenOutput>
     </None>
     <None Include="Properties\EnterpolAvlConfig.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
