@@ -11,7 +11,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.ALI.Properties;
@@ -287,6 +286,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void VehicleFleetListBoxOnItemCheck(object sender, ItemCheckEventArgs e)
         {
+            // TODO: update this to handle networkfleet
             var item = _aliPanel.VehicleFleetListBox.Items[e.Index] as DataRowView;
             if (item == null) return;
             AvlVehicle avlVehicle;  // attempt to get the unit by the unit id
@@ -1233,7 +1233,6 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void NetworkFleetClientOnPacketReceieved(object sender, AliServerDataPacket packet)
         {
-            Debug.WriteLine("packet received");
             /* ------------------------------
              * VERIZON NETWORK FLEET FORMAT
             ---------------------------------
@@ -1327,6 +1326,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 avlVehicle.Longitude = Convert.ToDouble(msgLon);
                 avlVehicle.CurrentInterval = 0;
                 avlVehicle.IgnoreActiveHide = false;
+                // TODO: THIS IS CAUSING CROSS-THREAD ISSUES
                 _aliPanel.VehicleFleetListBox.SetItemChecked(idx, avlVehicle.Visible);
             }
             _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;

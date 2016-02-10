@@ -459,6 +459,7 @@ namespace Go2It
             _idxWorker.RunWorkerCompleted -= idx_RunWorkerCompleted;
             FormClosing -= AdminForm_Closing;
             FormClosed -= AdminFormClosed;
+            cmbActiveMapTab.SelectedIndexChanged -= CmbActiveMapTabOnSelectedIndexChanged;
             UnbindGraphicElementEvents();
 
             legendSplitter.Panel1.Controls.Remove(_adminLegend);
@@ -469,25 +470,28 @@ namespace Go2It
 
         private void UnbindGraphicElementEvents()
         {
-            ptSymbolColorSlider.ValueChanged -= PtSymbolColorSliderOnValueChanged;
-            ptSymbolColor.Click -= PtSymbolColorOnClick;
-            ptSymbolSize.ValueChanged -= PtSymbolSizeOnValueChanged;
-            ptSymbolStyle.SelectedIndexChanged -= PtSymbolStyleOnSelectedIndexChanged;
-            lineSymbolBorderColor.Click -= LineSymbolBorderColorOnClick;
-            lineSymbolColorSlider.ValueChanged -= LineSymbolColorSliderOnValueChanged;
-            lineSymbolColor.Click -= LineSymbolColorOnClick;
-            lineSymbolSize.ValueChanged -= LineSymbolSizeOnValueChanged;
-            lineSymbolCap.SelectedIndexChanged -= LineSymbolCapOnSelectedIndexChanged;
             lineSymbolStyle.SelectedIndexChanged -= LineSymbolStyleOnSelectedIndexChanged;
+            lineSymbolCap.SelectedIndexChanged -= LineSymbolCapOnSelectedIndexChanged;
+            lineSymbolSize.ValueChanged -= LineSymbolSizeOnValueChanged;
+            lineSymbolColor.Click -= LineSymbolColorOnClick;
+            lineSymbolColorSlider.ValueChanged -= LineSymbolColorSliderOnValueChanged;
+            lineSymbolBorderColor.Click -= LineSymbolBorderColorOnClick;
+            ptSymbolStyle.SelectedIndexChanged -= PtSymbolStyleOnSelectedIndexChanged;
+            ptSymbolSize.ValueChanged -= PtSymbolSizeOnValueChanged;
+            ptSymbolColor.Click -= PtSymbolColorOnClick;
+            ptSymbolColorSlider.ValueChanged -= PtSymbolColorSliderOnValueChanged;
+            txtAliEnterpolAVLPdChars.TextChanged -= CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLPdColor.Click -= CharGraphicColorPanelOnClick;
+            txtAliEnterpolAVLFdChars.TextChanged -= CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLFdColor.Click -= CharGraphicColorPanelOnClick;
+            txtAliEnterpolAVLEmsChars.TextChanged -= CharGraphicCharsOnTextChanged;
+            pnlAliEnterpolAVLEmsColor.Click -= CharGraphicColorPanelOnClick;
+            pnlAliEnterpolAVLMyVehicleColor.Click -= CharGraphicColorPanelOnClick;
             ptAliNetworkfleetColor.Click -= CharGraphicColorPanelOnClick;
             ptAliNetworkfleetChar.TextChanged -= CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLEmsColor.Click -= CharGraphicColorPanelOnClick;
-            txtAliEnterpolAVLEmsChars.TextChanged -= CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLFdColor.Click -= CharGraphicColorPanelOnClick;
-            txtAliEnterpolAVLFdChars.TextChanged -= CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLPdColor.Click -= CharGraphicColorPanelOnClick;
-            txtAliEnterpolAVLPdChars.TextChanged -= CharGraphicCharsOnTextChanged;
-            pnlAliEnterpolAVLMyVehicleColor.Click -= CharGraphicColorPanelOnClick;
+            pnlAliNetworkfleetAVLMyVehicleColor.Click -= CharGraphicColorPanelOnClick;
+            pnlAliAVLInactiveColor.Click -= CharGraphicColorPanelOnClick;
+            pnlAliNetworkfleetAVLInactiveColor.Click -= CharGraphicColorPanelOnClick;
         }
 
         private void LayersOnLayerAdded(object sender, LayerEventArgs layerEventArgs)
@@ -771,15 +775,23 @@ namespace Go2It
             ptAliNetworkfleetSize.Text = _networkFleetSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
             Color avlNfInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlInactiveColor;
             pnlAliNetworkfleetAVLInactiveColor.BackColor = avlNfInactive;
-            pnlAliNetworkfleetAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
+            pnlAliNetworkfleetAVLInactiveColor.Click += CharGraphicColorPanelOnClick;
             Color avlNfMyColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlMyColor;
             pnlAliNetworkfleetAVLMyVehicleColor.BackColor = avlNfMyColor;
             pnlAliNetworkfleetAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
+            _networkFleetLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont;
+            lblAliNetworkfleetLabelFont.Text = _networkFleetLabelFont.Name;
+            lblAliNetworkfleetLabelFont.Font = _networkFleetLabelFont;
+            lblAliNetworkfleetLabelFontSize.Text = _networkFleetLabelFont.Size.ToString(CultureInfo.InvariantCulture);
+            cmbAliNetworkfleetLabelAlignment.SelectedIndex = cmbAliNetworkfleetLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment);
+            // set after the alignment to replace any defaults set by the selection changed event on the combobox
+            numAliNetworkfleetLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset;
+            numAliNetworkfleetLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset;
 
             // enterpol avl char graphics
             Color avlInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInactiveColor;
             pnlAliAVLInactiveColor.BackColor = avlInactive;
-            pnlAliEnterpolAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
+            pnlAliAVLInactiveColor.Click += CharGraphicColorPanelOnClick;
             Color avlMyColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColor;
             pnlAliEnterpolAVLMyVehicleColor.BackColor = avlMyColor;
             pnlAliEnterpolAVLMyVehicleColor.Click += CharGraphicColorPanelOnClick;
@@ -802,7 +814,6 @@ namespace Go2It
             lblAliEnterpolAVLSymbolFontName.Text = _enterpolAvlSymbolFont.Name;
             lblAliEnterpolAVLSymbolFontName.Font = _enterpolAvlSymbolFont;
             lblAliEnterpolAVLSymbolFontSize.Text = _enterpolAvlSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
-            
             _enterpolAvlLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
             lblAliEnterpolAVLLabelFontName.Text = _enterpolAvlLabelFont.Name;
             lblAliEnterpolAVLLabelFontName.Font = _enterpolAvlLabelFont;
@@ -811,16 +822,6 @@ namespace Go2It
             // set after the alignment to replace any defaults set by the selection changed event on the combobox
             numAliEnterpolAVLLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
             numAliEnterpolAVLLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelYOffset;
-
-            _networkFleetLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont;
-            lblAliNetworkfleetLabelFont.Text = _networkFleetLabelFont.Name;
-            lblAliNetworkfleetLabelFont.Font = _networkFleetLabelFont;
-            lblAliNetworkfleetLabelFontSize.Text = _networkFleetLabelFont.Size.ToString(CultureInfo.InvariantCulture);
-            cmbAliNetworkfleetLabelAlignment.SelectedIndex = cmbAliNetworkfleetLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment);
-            // set after the alignment to replace any defaults set by the selection changed event on the combobox
-            numAliNetworkfleetLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset;
-            numAliNetworkfleetLabelYOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelYOffset;
-
             DrawAllCharGraphics(); // draw all char based graphics ie: networkfleet, fd_avl, ems_avl, and le_avl
 
             // point symbology for graphics rendering
