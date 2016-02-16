@@ -11,10 +11,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.ALI.Properties;
 using DotSpatial.Topology;
+using GeoTimeZone;
 using SDR.Common;
 using ILog = SDR.Common.logging.ILog;
 using SDR.Common.UserMessage;
@@ -63,6 +65,47 @@ namespace DotSpatial.SDR.Plugins.ALI
         #endregion
 
         #region Methods
+        // called on startup and everytime the alimode/aliavl changes
+        public void ConfigureAliClient(AliMode am, AliAvl avl)
+        {
+            if (_currentAliMode == am && _currentAliAvl == avl) return;  // no need to update anything no change was made
+
+            if (_currentAliMode != am)
+            {
+                DisableCurrentAliModeEventHandlers();
+                switch (am)
+                {
+                    case AliMode.Enterpol:
+                        HandleEnterpolIncidentsView();
+                        break;
+                    case AliMode.Globalcad:
+                        HandleGlobalCadFiles();
+                        break;
+                    case AliMode.Sdraliserver:
+                        HandleAliServerClient();
+                        break;
+                }
+            }
+            if (_currentAliAvl != avl)
+            {
+                DisableCurrentAliAvlEventHandlers();
+                switch (avl)
+                {
+                    case AliAvl.Enterpolavl:
+                        HandleEnterpolAvlView();
+                        break;
+                    case AliAvl.Networkfleet:
+                        HandleNetworkFleetClient();
+                        break;
+                }
+            }
+            // update the current avl and mode
+            _currentAliMode = am;
+            _currentAliAvl = avl;
+            // update interface display to alipanel
+            ConfigureAliPanelInterface();
+        }
+
 
         private void HandleAliPanelEvents()
         {
@@ -118,17 +161,11 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void DisableCurrentAliModeEventHandlers()
         {
-            if (_currentAliMode == AliMode.Sdraliserver)
+            if (_currentAliMode == AliMode.Enterpol)
             {
-                if (_aliServerClient != null)
-                {
-                    _aliServerClient.PacketReceieved -= AliServerClientOnPacketReceieved;
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPathChanged -= InstanceOnAliSdrServerDbPathChanged;
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged -= InstanceOnAliSdrServerUdpHostChanged;
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged -= InstanceOnAliSdrServerUdpPortChanged;
-                    _aliServerClient.Close();  // handle logout and close if needed
-                    _aliServerClient = null;
-                }
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
             }
             if (_currentAliMode == AliMode.Globalcad)
             {
@@ -146,46 +183,55 @@ namespace DotSpatial.SDR.Plugins.ALI
                 SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPathChanged -= InstanceOnAliGlobalCadLogPathChanged;
                 _aliPanel.ComLogsComboBox.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
             }
-            if (_currentAliMode == AliMode.Enterpol)
+            if (_currentAliMode == AliMode.Sdraliserver)
             {
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalogChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableNameChanged -= InstanceOnAliEnterpolIncidentsDbParamsChanged;
+                if (_aliServerClient != null)
+                {
+                    _aliServerClient.PacketReceieved -= AliServerClientOnPacketReceieved;
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerDbPathChanged -= InstanceOnAliSdrServerDbPathChanged;
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged -= InstanceOnAliSdrServerUdpHostChanged;
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged -= InstanceOnAliSdrServerUdpPortChanged;
+                    _aliServerClient.Close();  // handle logout and close if needed
+                    _aliServerClient = null;
+                }
             }
         }
 
         private void DisableCurrentAliAvlEventHandlers()
         {
-            //if (_currentAliAvl == AliAvl.Enterpolavl)
-            //{
-            //    // TODO: review to make sure we got them all
-            //    _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged -= InstanceOnAliEnterpolAvlReadFreqChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsCharChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColorChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeCharChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFontChanged -= InstanceOnAliEnterpolAvlFontChanged;
-            //    if (_avlReadIntervalTimer != null) _avlReadIntervalTimer.Enabled = false;
-            //    if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Responder) return;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged -= InstanceOnAliEnterpolAvlSetMyLocProcChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged -= InstanceOnAliEnterpolAvlWhoAmIProcChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreqChanged -= InstanceOnAliEnterpolAvlUpdateFreqChanged;
-            //    SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged -= InstanceOnAliEnterpolAvlMyColorChanged;
-            //    if (_avlUpdateIntervalTimer != null) _avlUpdateIntervalTimer.Enabled = false;
-            //}
-            //if (_currentAliAvl == AliAvl.Networkfleet)
-            //{
-            //    // TODO
-            //}
+            if (_currentAliAvl == AliAvl.Enterpolavl)
+            {
+                _aliPanel.VehicleFleetListBox.ItemCheck -= VehicleFleetListBoxOnItemCheck;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlReadFreqChanged -= InstanceOnAliEnterpolAvlReadFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolDataSourceChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableNameChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalogChanged -= InstanceOnAliEnterpolAvlDbParamsChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3FreqChanged -= InstanceOnAliEnterpolAvlAgeFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsCharChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlEmsColorChanged -= InstanceOnAliEnterpolAvlEmsSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeCharChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLeColorChanged -= InstanceOnAliEnterpolAvlLeSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdCharChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlFdColorChanged -= InstanceOnAliEnterpolAvlFdSymbolChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFontChanged -= InstanceOnAliEnterpolAvlSymbolFontChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFontChanged -= InstanceOnAliEnterpolAvlLabelFontChanged;
+                if (_avlReadIntervalTimer != null) _avlReadIntervalTimer.Enabled = false;
+                _avlReadIntervalTimer = null;
+                // handle all responder based events
+                if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Responder) return;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSetMyLocProcChanged -= InstanceOnAliEnterpolAvlSetMyLocProcChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlWhoAmIProcChanged -= InstanceOnAliEnterpolAvlWhoAmIProcChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlUpdateFreqChanged -= InstanceOnAliEnterpolAvlUpdateFreqChanged;
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlMyColorChanged -= InstanceOnAliEnterpolAvlMyColorChanged;
+                if (_avlUpdateIntervalTimer != null) _avlUpdateIntervalTimer.Enabled = false;
+                _avlUpdateIntervalTimer = null;
+            }
+            if (_currentAliAvl == AliAvl.Networkfleet)
+            {
+                // TODO:
+            }
         }
         private void GlobalCadComLogsOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
@@ -1231,6 +1277,47 @@ namespace DotSpatial.SDR.Plugins.ALI
             return gcr;
         }
 
+        private void SetVehicleVisibility(AvlVehicle avlVehicle)
+        {
+            // get the timezone of this system and store as iana string
+            TimeZone winTz = TimeZone.CurrentTimeZone;
+            var locTz = WindowsToIana(winTz.StandardName);
+            DateTime curTime = DateTime.Now;
+
+            if (locTz != avlVehicle.TimeZone)
+            {
+                // get the windows named timezone of the vehicletimezone
+                var avlTzStr = IanaToWindows(avlVehicle.TimeZone);
+                var avlTz = TimeZoneInfo.FindSystemTimeZoneById(avlTzStr);
+                // determine the offsets of both tz's from utc
+                var avlOffset = avlTz.GetUtcOffset(avlVehicle.UpdateTime);
+                var locOffset = winTz.GetUtcOffset(curTime);
+                var totOffset = avlOffset - locOffset;
+                curTime = curTime + totOffset;
+            }
+            var diff = curTime.Subtract(avlVehicle.UpdateTime);
+            if (diff.TotalMinutes <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge1Freq)
+            {
+                avlVehicle.CurrentInterval = 0;
+            }
+            else if (diff.TotalMinutes <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge2Freq)
+            {
+                avlVehicle.CurrentInterval = 1;
+            }
+            else if (diff.TotalMinutes <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge3Freq)
+            {
+                avlVehicle.CurrentInterval = 2;
+            }
+            else  // in this case we are setting the vehicle to "inactive" display state
+            {
+                avlVehicle.CurrentInterval = 3;  // set to inactive mode
+                if (CheckAutoHideStatus())
+                {
+                    avlVehicle.Visible = avlVehicle.IgnoreActiveHide;
+                }
+            }
+        }
+
         private void NetworkFleetClientOnPacketReceieved(object sender, AliServerDataPacket packet)
         {
             /* ------------------------------
@@ -1283,56 +1370,97 @@ namespace DotSpatial.SDR.Plugins.ALI
             _avlVehicles.TryGetValue(msgVid, out avlVehicle);
             if (avlVehicle == null)
             {
+                // temp assign vehicle id as id and label
                 avlVehicle = new AvlVehicle
                 {
                     UnitId = msgVid,
                     UnitLabel = msgVid,
                     Latitude = Convert.ToDouble(msgLat),
                     Longitude = Convert.ToDouble(msgLon),
-                    UpdateTime = DateTime.Parse(msgTime)
+                    UpdateTime = DateTime.Parse(msgTime),
+                    TimeZone = TimeZoneLookup.GetTimeZone(Convert.ToDouble(msgLat), Convert.ToDouble(msgLon)).Result
                 };
-                _avlVehicles.Add(avlVehicle.UnitId, avlVehicle);
-            }
-
-            var idx = _aliPanel.VehicleFleetListBox.Items.IndexOf(avlVehicle);
-            if (avlVehicle.Latitude.Equals(Convert.ToDouble(msgLat)) && avlVehicle.Longitude.Equals(Convert.ToDouble(msgLon)))
-            {
-                var diff = DateTime.Now.Subtract(avlVehicle.UpdateTime);
-                if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge1Freq)
+                // search through available lookups to find the label
+                if (SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Count > 0)
                 {
-                    avlVehicle.CurrentInterval = 0;
-                }
-                else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge2Freq)
-                {
-                    avlVehicle.CurrentInterval = 1;
-                }
-                else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge3Freq)
-                {
-                    avlVehicle.CurrentInterval = 2;
-                }
-                else  // in this case we are setting the vehicle to "inactive" display state
-                {
-                    avlVehicle.CurrentInterval = 3;  // set to inactive mode
-                    if (CheckAutoHideStatus())
+                    foreach (var nfLabel in SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels)
                     {
-                        avlVehicle.Visible = avlVehicle.IgnoreActiveHide;
+                        var arr = nfLabel.Split('=');
+                        // found the matched vehicle id for the label
+                        if (msgVid == arr[0].ToString(CultureInfo.InvariantCulture))
+                        {
+                            avlVehicle.UnitLabel = arr[1].ToString(CultureInfo.InvariantCulture);
+                        }
                     }
                 }
+                // determine the visibility of the vehicle
+                SetVehicleVisibility(avlVehicle);
+                _avlVehicles.Add(avlVehicle.UnitId, avlVehicle);
             }
-            else  // lat/long have changed, so update the time and position and reset display UpdateInterval to shortest color value
+            else
             {
-                avlVehicle.UpdateTime = DateTime.Parse(msgTime);
-                avlVehicle.Latitude = Convert.ToDouble(msgLat);
-                avlVehicle.Longitude = Convert.ToDouble(msgLon);
-                avlVehicle.CurrentInterval = 0;
-                avlVehicle.IgnoreActiveHide = false;
-                _aliPanel.SetAvlVehicleCheckState(idx, avlVehicle.Visible);
+                if (avlVehicle.Latitude.Equals(Convert.ToDouble(msgLat)) &&
+                    avlVehicle.Longitude.Equals(Convert.ToDouble(msgLon)))
+                {
+                    SetVehicleVisibility(avlVehicle);
+                }
+                else
+                    // lat/long have changed, so update the time and position and reset display UpdateInterval to shortest color value
+                {
+                    avlVehicle.UpdateTime = DateTime.Parse(msgTime);
+                    avlVehicle.Latitude = Convert.ToDouble(msgLat);
+                    avlVehicle.Longitude = Convert.ToDouble(msgLon);
+                    avlVehicle.CurrentInterval = 0;
+                    avlVehicle.IgnoreActiveHide = false;
+                }
             }
+            BindCheckedListBoxToAvlList();
+            var idx = _aliPanel.VehicleFleetListBox.Items.IndexOf(avlVehicle);
+            _aliPanel.SetAvlVehicleCheckState(idx, avlVehicle.Visible);
             _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
             if (Map != null)
             {
                 Map.Invalidate();  // paint the map with updated avl positions (calls MapOnPaint)
             }
+        }
+
+        public string WindowsToIana(string windowsZoneId)
+        {
+            if (windowsZoneId.Equals("UTC", StringComparison.Ordinal))
+                return "Etc/UTC";
+
+            var tzdbSource = NodaTime.TimeZones.TzdbDateTimeZoneSource.Default;
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById(windowsZoneId);
+            if (tzi == null) return null;
+            var tzid = tzdbSource.MapTimeZoneId(tzi);
+            if (tzid == null) return null;
+            return tzdbSource.CanonicalIdMap[tzid];
+        }
+
+        // This will return the Windows zone that matches the IANA zone, if one exists.
+        public string IanaToWindows(string ianaZoneId)
+        {
+            var utcZones = new[] { "Etc/UTC", "Etc/UCT", "Etc/GMT" };
+            if (utcZones.Contains(ianaZoneId, StringComparer.Ordinal))
+                return "UTC";
+
+            var tzdbSource = NodaTime.TimeZones.TzdbDateTimeZoneSource.Default;
+
+            // resolve any link, since the CLDR doesn't necessarily use canonical IDs
+            var links = tzdbSource.CanonicalIdMap
+                .Where(x => x.Value.Equals(ianaZoneId, StringComparison.Ordinal))
+                .Select(x => x.Key);
+
+            // resolve canonical zones, and include original zone as well
+            var possibleZones = tzdbSource.CanonicalIdMap.ContainsKey(ianaZoneId)
+                ? links.Concat(new[] { tzdbSource.CanonicalIdMap[ianaZoneId], ianaZoneId })
+                : links;
+
+            // map the windows zone
+            var mappings = tzdbSource.WindowsMapping.MapZones;
+            var item = mappings.FirstOrDefault(x => x.TzdbIds.Any(possibleZones.Contains));
+            if (item == null) return null;
+            return item.WindowsId;
         }
 
         private void UpdateItemStateAndListBox()
@@ -1401,6 +1529,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void HandleNetworkFleetClient()
         {
             var msg = AppContext.Instance.Get<IUserMessage>();
+            // TODO:
             // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
             // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
 
@@ -1415,23 +1544,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                 {
                     _avlVehicles = new Dictionary<string, AvlVehicle>();
                     _aliPanel.VehicleFleetListBox.ItemCheck += VehicleFleetListBoxOnItemCheck;
-                }
-                // fetch the vehicle id lookup labels and generate our avl vehicles list
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Count > 0)
-                {
-                    foreach (var nfLabel in SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels)
-                    {
-                        var arr = nfLabel.Split('=');
-                        var avlVehicle = new AvlVehicle
-                        {
-                            UnitId = arr[0].ToString(CultureInfo.InvariantCulture),
-                            UnitLabel = arr[1].ToString(CultureInfo.InvariantCulture),
-                            Latitude = 0,
-                            Longitude = 0
-                        };
-                        _avlVehicles.Add(avlVehicle.UnitId, avlVehicle);
-                    }
-                    BindCheckedListBoxToAvlList();
                 }
                 _networkFleetClient.PacketReceieved += NetworkFleetClientOnPacketReceieved;
                 _networkFleetClient.Login();  // on login we will receive a full vehicle list from the client
@@ -1664,47 +1776,6 @@ namespace DotSpatial.SDR.Plugins.ALI
                         break;
                 }
             }
-        }
-
-        // this is called on startup as well as everytime the ali mode changes
-        public void ConfigureAliClient(AliMode am, AliAvl avl)
-        {
-            if (_currentAliMode == am && _currentAliAvl == avl) return;  // no need to update anything no change was made
-
-            if (_currentAliMode != am)
-            {
-                DisableCurrentAliModeEventHandlers();
-                switch (am)
-                {
-                    case AliMode.Enterpol:
-                        HandleEnterpolIncidentsView();
-                        break;
-                    case AliMode.Globalcad:
-                        HandleGlobalCadFiles();
-                        break;
-                    case AliMode.Sdraliserver:
-                        HandleAliServerClient();
-                        break;
-                }
-            }
-            if (_currentAliAvl != avl)
-            {
-                DisableCurrentAliAvlEventHandlers();
-                switch (avl)
-                {
-                    case AliAvl.Enterpolavl:
-                        HandleEnterpolAvlView();
-                        break;
-                    case AliAvl.Networkfleet:
-                        HandleNetworkFleetClient();
-                        break;
-                }
-            }
-            // update the current avl and mode
-            _currentAliMode = am;
-            _currentAliAvl = avl;
-            // update interface display to alipanel
-            ConfigureAliPanelInterface();
         }
 
         private void InstanceOnAliGlobalCadLogPathChanged(object sender, EventArgs eventArgs)

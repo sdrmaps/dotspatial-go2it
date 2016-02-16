@@ -20,6 +20,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         public double Longitude { get; set; }
         public DateTime UpdateTime { get; set; }
         public bool IgnoreActiveHide { get; set; }
+        public string TimeZone { get; set; }
     }
 
     public enum AvlVehicleType
