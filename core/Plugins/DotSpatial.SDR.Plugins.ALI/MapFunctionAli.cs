@@ -11,7 +11,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.ALI.Properties;
@@ -332,11 +331,17 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private void VehicleFleetListBoxOnItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // TODO: update this to handle networkfleet
-            var item = _aliPanel.VehicleFleetListBox.Items[e.Index] as DataRowView;
-            if (item == null) return;
-            AvlVehicle avlVehicle;  // attempt to get the unit by the unit id
-            _avlVehicles.TryGetValue(item[1].ToString(), out avlVehicle);
+            AvlVehicle avlVehicle = null; // attempt to get the unit by the unit id
+            if (_currentAliAvl == AliAvl.Enterpolavl)
+            {
+                var item = _aliPanel.VehicleFleetListBox.Items[e.Index] as DataRowView;
+                if (item == null) return;
+                _avlVehicles.TryGetValue(item[1].ToString(), out avlVehicle);
+            }
+            if (_currentAliAvl == AliAvl.Networkfleet)
+            {
+                avlVehicle = _aliPanel.VehicleFleetListBox.Items[e.Index] as AvlVehicle;
+            }
             if (avlVehicle == null) return;
             avlVehicle.Visible = e.NewValue == CheckState.Checked;
             if (CheckAutoHideStatus())
@@ -346,7 +351,17 @@ namespace DotSpatial.SDR.Plugins.ALI
                     avlVehicle.IgnoreActiveHide = CheckState.Checked == e.NewValue;
                 }   
             }
-            UpdateAvlFleetPositions();
+            if (_currentAliAvl == AliAvl.Enterpolavl)
+            {
+                UpdateAvlFleetPositions();
+            }
+            if (_currentAliAvl == AliAvl.Networkfleet)
+            {
+                if (Map != null)
+                {
+                    Map.Invalidate();  // paint the map with updated avl positions (calls MapOnPaint)
+                }
+            }
         }
 
         private void BindCheckedListBoxToSqlServer(string connString, string sqlString)
@@ -1404,8 +1419,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 {
                     SetVehicleVisibility(avlVehicle);
                 }
-                else
-                    // lat/long have changed, so update the time and position and reset display UpdateInterval to shortest color value
+                else  // lat/long have changed, so update the time and position and reset display UpdateInterval to shortest color value
                 {
                     avlVehicle.UpdateTime = DateTime.Parse(msgTime);
                     avlVehicle.Latitude = Convert.ToDouble(msgLat);
@@ -1483,15 +1497,15 @@ namespace DotSpatial.SDR.Plugins.ALI
                 if (avlVehicle.Latitude.Equals(Convert.ToDouble(item[4].ToString())) && avlVehicle.Longitude.Equals(Convert.ToDouble(item[5].ToString())))
                 {
                     var diff = DateTime.Now.Subtract(avlVehicle.UpdateTime);
-                    if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq)
+                    if (diff.TotalMinutes <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge1Freq)
                     {
                         avlVehicle.CurrentInterval = 0;
                     }
-                    else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq)
+                    else if (diff.TotalMinutes <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge2Freq)
                     {
                         avlVehicle.CurrentInterval = 1;
                     }
-                    else if (diff.TotalSeconds <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq)
+                    else if (diff.TotalMinutes <= SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlAge3Freq)
                     {
                         avlVehicle.CurrentInterval = 2;
                     }
@@ -1558,9 +1572,20 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             try
             {
+                int avlRowSelected = 0;
+                if (_aliPanel.VehicleFleetListBox.Items.Count >= 0)
+                {
+                    avlRowSelected = _aliPanel.GetSelectedAvlVehicleRow();
+                }
+
                 var avlBindList = _avlVehicles.Values.ToList();
                 var bindingSource = new BindingSource { DataSource = avlBindList };
                 _aliPanel.SetCheckedListBoxBindingSource(bindingSource);
+
+                if (_aliPanel.VehicleFleetListBox.Items.Count >= avlRowSelected)
+                {
+                    _aliPanel.SelectAvlVehicleRow(avlRowSelected);
+                }
             }
             catch (Exception ex)
             {
