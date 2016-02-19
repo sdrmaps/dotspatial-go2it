@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Go2It", "src\Go2It.csproj", "{ABF4CE56-E282-42CD-B5AF-91487517944D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Plugins.ALI", "core\Plugins\DotSpatial.SDR.Plugins.ALI\DotSpatial.SDR.Plugins.ALI.csproj", "{93C9C779-903D-491F-AA1F-5BE25E4F5188}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDR.Configuration", "core\Components\SDR.Configuration\SDR.Configuration.csproj", "{A93178A1-BA71-450F-8EA9-F5844A64478C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,26 +23,6 @@ Global
 		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.ActiveCfg = Release|x86
 		{ABF4CE56-E282-42CD-B5AF-91487517944D}.Release|x86.Build.0 = Release|x86
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{93C9C779-903D-491F-AA1F-5BE25E4F5188}.Release|x86.ActiveCfg = Release|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A93178A1-BA71-450F-8EA9-F5844A64478C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
