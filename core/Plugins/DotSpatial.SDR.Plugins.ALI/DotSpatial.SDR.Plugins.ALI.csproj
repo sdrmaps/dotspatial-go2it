@@ -12,7 +12,8 @@
     <AssemblyName>DotSpatial.SDR.Plugins.ALI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
@@ -58,10 +59,6 @@
       <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Projections.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DotSpatial.SDR.Controls">
-      <HintPath>..\..\..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DotSpatial.Symbology">
       <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
       <Private>False</Private>
@@ -96,9 +93,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
