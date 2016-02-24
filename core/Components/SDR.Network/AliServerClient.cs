@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -91,7 +90,7 @@ namespace SDR.Network
             {
                 _udpClient.Connect(_udpHost, _udpPort);
             }
-            else // and in this case we have been given an ip address
+            else // in this case we have been given an ip address
             {
                 _udpClient.Connect(ip, _udpPort);
             }

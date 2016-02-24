@@ -166,7 +166,7 @@ IF /I "%1"=="--Help" (
         Tools\paraffin\Paraffin.exe -d %BUILDPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDR_DIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
     REM Check if an actual ProductBinariesFragment for WIX exists
     IF NOT EXIST "..\install\ProductBinariesFragment.wxs" ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
-    REM Check if the to fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
+    REM Check if the two fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
     Tools\xmldiff\xmldiff.exe "..\install\ProductBinariesFragment.wxs" "..\install\ProductBinariesFragment.PARAFFIN"
     IF NOT %ERRORLEVEL%==0  ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
     goto CREATEINSTALL

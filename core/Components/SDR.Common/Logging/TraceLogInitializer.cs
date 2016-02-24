@@ -3,7 +3,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using SdrConfig = SDR.Configuration;
 
 namespace SDR.Common.logging
@@ -25,14 +24,9 @@ namespace SDR.Common.logging
 
         private static string CreateTraceFile()
         {
-            // first try to create it in application startup path
-            // var programFilesPath = Application.StartupPath;
-
-            // first try to put the trace.log into the documents path
+            // try to put the trace.log into the documents path
             var documentsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SDR", SdrConfig.Settings.Instance.ApplicationName);
             var tempPath = Path.Combine(Path.GetTempPath(), SdrConfig.Settings.Instance.ApplicationName);
-
-            // var stream = (TryToCreateLogFile(programFilesPath) ?? TryToCreateLogFile(documentsPath)) ?? TryToCreateLogFile(tempPath);
 
             var stream = TryToCreateLogFile(documentsPath) ?? TryToCreateLogFile(tempPath);
 
