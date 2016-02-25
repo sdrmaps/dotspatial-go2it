@@ -3521,7 +3521,8 @@ namespace Go2It
                     chkEnterpolAvl.Checked = false;
                 }
             }
-            pnlAliNetworkfleet.Visible = chk.Checked;
+            // TODO: refix this after interface updates
+            //pnlAliNetworkfleet.Visible = chk.Checked;
         }
 
         private void chkAvl_CheckedChanged(object sender, EventArgs e)
