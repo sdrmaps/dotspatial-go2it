@@ -284,29 +284,15 @@ namespace Go2It
         private void HandleApplicationModeDiffs()
         {
             if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Dispatch) return;
-
-            // in dispatch mode these options have no use
+            // in dispatch mode these options have no function
             tblNetworkfleetAvlColors.ColumnStyles[2].Width = 0;
-
+            tblEnterpolAvlSymbology.ColumnStyles[4].Width = 0;
+            pnlAliEnterpolAvl.RowStyles[4].SizeType = SizeType.Absolute;
             pnlAliEnterpolAvl.RowStyles[4].Height = 0;
+            pnlAliEnterpolAvl.RowStyles[5].SizeType = SizeType.Absolute;
             pnlAliEnterpolAvl.RowStyles[5].Height = 0;
+            pnlAliEnterpolAvl.RowStyles[6].SizeType = SizeType.Absolute;
             pnlAliEnterpolAvl.RowStyles[6].Height = 0;
-
-
-            // TODO: validate which ones we need to modify
-
-            // tblNetworkfleetAvlColors.ColumnStyles[0].Width = 50;
-            // tblNetworkfleetAvlColors.ColumnStyles[1].Width = 50;
-
-            // disable the responder aspects of the enterpol avl component
-            //lblAliEnterpolAVLSetLocProc.Visible = false;
-            //txtAliEnterpolAVLSetLocProc.Visible = false;
-            //lblAliEnterpolAVLUpdateFreq.Visible = false;
-            //numAliEnterpolAVLUpdateFreq.Visible = false;
-            //lblAliEnterpolAVLWhoAmIProc.Visible = false;
-            //txtAliEnterpolAVLWhoAmIProc.Visible = false;
-            //pnlAliEnterpolAVLMyVehicleColor.Visible = false;
-            //lblAliEnterpolAVLMyVehicleColor.Visible = false;
         }
 
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
@@ -3549,7 +3535,8 @@ namespace Go2It
                     chkNetworkfleet.Checked = false;
                 }
             }
-            pnlAliEnterpolAvlAll.Visible = chk.Checked;
+            // TODO:::
+            // pnlAliEnterpolAvlAll.Visible = chk.Checked;
         }
 
         private void btnAliEnterpolAVLFont_Click(object sender, EventArgs e)
