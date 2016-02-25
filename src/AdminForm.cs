@@ -284,15 +284,29 @@ namespace Go2It
         private void HandleApplicationModeDiffs()
         {
             if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Dispatch) return;
+
+            // in dispatch mode these options have no use
+            tblNetworkfleetAvlColors.ColumnStyles[2].Width = 0;
+
+            pnlAliEnterpolAvl.RowStyles[4].Height = 0;
+            pnlAliEnterpolAvl.RowStyles[5].Height = 0;
+            pnlAliEnterpolAvl.RowStyles[6].Height = 0;
+
+
+            // TODO: validate which ones we need to modify
+
+            // tblNetworkfleetAvlColors.ColumnStyles[0].Width = 50;
+            // tblNetworkfleetAvlColors.ColumnStyles[1].Width = 50;
+
             // disable the responder aspects of the enterpol avl component
-            lblAliEnterpolAVLSetLocProc.Visible = false;
-            txtAliEnterpolAVLSetLocProc.Visible = false;
-            lblAliEnterpolAVLUpdateFreq.Visible = false;
-            numAliEnterpolAVLUpdateFreq.Visible = false;
-            lblAliEnterpolAVLWhoAmIProc.Visible = false;
-            txtAliEnterpolAVLWhoAmIProc.Visible = false;
-            pnlAliEnterpolAVLMyVehicleColor.Visible = false;
-            lblAliEnterpolAVLMyVehicleColor.Visible = false;
+            //lblAliEnterpolAVLSetLocProc.Visible = false;
+            //txtAliEnterpolAVLSetLocProc.Visible = false;
+            //lblAliEnterpolAVLUpdateFreq.Visible = false;
+            //numAliEnterpolAVLUpdateFreq.Visible = false;
+            //lblAliEnterpolAVLWhoAmIProc.Visible = false;
+            //txtAliEnterpolAVLWhoAmIProc.Visible = false;
+            //pnlAliEnterpolAVLMyVehicleColor.Visible = false;
+            //lblAliEnterpolAVLMyVehicleColor.Visible = false;
         }
 
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
@@ -3535,7 +3549,7 @@ namespace Go2It
                     chkNetworkfleet.Checked = false;
                 }
             }
-            pnlAliEnterpolAvl.Visible = chk.Checked;
+            pnlAliEnterpolAvlAll.Visible = chk.Checked;
         }
 
         private void btnAliEnterpolAVLFont_Click(object sender, EventArgs e)
