@@ -3125,7 +3125,7 @@ namespace Go2It
         {
             pnlAliEnterpol.Visible = false;
             pnlAliGlobalCad.Visible = false;
-            pnlAliSdrAliServer.Visible = false;
+          // TODO::  pnlAliSdrAliServer.Visible = false;
 
             switch (cmbAliMode.Text)
             {
@@ -3133,7 +3133,7 @@ namespace Go2It
                     pnlAliGlobalCad.Visible = true;
                     return;
                 case "SDR AliServer":
-                    pnlAliSdrAliServer.Visible = true;
+                  //TODO:   pnlAliSdrAliServer.Visible = true;
                     return;
                 case "Enterpol Database":
                     pnlAliEnterpol.Visible = true;
