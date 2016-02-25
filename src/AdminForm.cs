@@ -200,7 +200,6 @@ namespace Go2It
             InitializeComponent();
             InitializeSaveSplitButton();
             InitializeAliModesDict();
-
             HandleApplicationModeDiffs();
 
             // assign all the admin form elements
@@ -1169,7 +1168,6 @@ namespace Go2It
             numAliNetworkfleetAVLAge3Freq.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAge3Freq;
             chkAutoHideInactiveUnitsNetworkfleet.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlAutoHideInactiveUnits;
             chkNetworkfleet.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseNetworkfleet;
-
             chkEnterpolAvl.Checked = SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl;
             txtAliEnterpolAVLTableName.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlTableName;
             txtAliEnterpolAVLInitialCatalog.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlInitialCatalog;
@@ -3125,7 +3123,7 @@ namespace Go2It
         {
             pnlAliEnterpol.Visible = false;
             pnlAliGlobalCad.Visible = false;
-          // TODO::  pnlAliSdrAliServer.Visible = false;
+            pnlAliSdrServer.Visible = false;
 
             switch (cmbAliMode.Text)
             {
@@ -3133,7 +3131,7 @@ namespace Go2It
                     pnlAliGlobalCad.Visible = true;
                     return;
                 case "SDR AliServer":
-                  //TODO:   pnlAliSdrAliServer.Visible = true;
+                    pnlAliSdrServer.Visible = true;
                     return;
                 case "Enterpol Database":
                     pnlAliEnterpol.Visible = true;
@@ -3521,8 +3519,8 @@ namespace Go2It
                     chkEnterpolAvl.Checked = false;
                 }
             }
-            // TODO: refix this after interface updates
-            //pnlAliNetworkfleet.Visible = chk.Checked;
+            // displays the verizon networkfleet options column
+            aliPanelTableLayout.ColumnStyles[0].Width = chk.Checked ? 40 : 0;
         }
 
         private void chkAvl_CheckedChanged(object sender, EventArgs e)
@@ -3535,8 +3533,7 @@ namespace Go2It
                     chkNetworkfleet.Checked = false;
                 }
             }
-            // TODO:::
-            // pnlAliEnterpolAvlAll.Visible = chk.Checked;
+            pnlAliEnterpolAvl.Visible = chk.Checked;
         }
 
         private void btnAliEnterpolAVLFont_Click(object sender, EventArgs e)
@@ -3588,7 +3585,6 @@ namespace Go2It
                     numAliEnterpolAVLLabelYOffset.Value = 0;
                     break;
             }
-            // TODO: really should come up with a way of validating isDirty before setting it
             _projectManager.IsDirty = true;
         }
 
@@ -3607,7 +3603,6 @@ namespace Go2It
                     numAliNetworkfleetLabelYOffset.Value = 0;
                     break;
             }
-            // TODO: really should come up with a way of validating isDirty before setting it
             _projectManager.IsDirty = true;
         }
 
@@ -3624,12 +3619,6 @@ namespace Go2It
                 _projectManager.IsDirty = true;
             }
             _networkFleetLabelFont = fd.Font;
-            // TODO: add the label rendering to the symbology display. this will require rework of the existing code.
-        }
-
-        private void pnlAliNetworkfleet_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }
