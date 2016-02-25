@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle103 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle104 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle105 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle106 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle107 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle108 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.adminTab_Control = new System.Windows.Forms.TabControl();
             this.adminTab_MapConfiguration = new System.Windows.Forms.TabPage();
@@ -119,22 +119,82 @@
             this.cmbLayerIndex = new System.Windows.Forms.ComboBox();
             this.chkLayerIndex = new System.Windows.Forms.CheckedListBox();
             this.adminTab_AliSettings = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.ptAliNetworkfleetFont = new System.Windows.Forms.Label();
-            this.ptAliNetworkfleetGraphic = new System.Windows.Forms.Panel();
-            this.tblNetworkfleetAvlColors = new System.Windows.Forms.TableLayoutPanel();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.ptAliNetworkfleetColor = new System.Windows.Forms.Panel();
-            this.pnlAliNetworkfleetAVLInactiveColor = new System.Windows.Forms.Panel();
-            this.pnlAliNetworkfleetAVLMyVehicleColor = new System.Windows.Forms.Panel();
-            this.label22 = new System.Windows.Forms.Label();
-            this.btnAliNetworkfleetFont = new System.Windows.Forms.Button();
-            this.ptAliNetworkfleetSize = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.ptAliNetworkfleetChar = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.cmbAliEnterpolAVLLabelAlignment = new System.Windows.Forms.ComboBox();
+            this.lblAliEnterpolAVLLabelFontName = new System.Windows.Forms.Label();
+            this.lblAliEnterpolAVLSymbolFontName = new System.Windows.Forms.Label();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.tblEnterpolAvlSymbology = new System.Windows.Forms.TableLayoutPanel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lblAliEnterpolAVLMyVehicleColor = new System.Windows.Forms.Label();
+            this.pnlAliEnterpolAVLEmsColor = new System.Windows.Forms.Panel();
+            this.pnlAliEnterpolAVLFdColor = new System.Windows.Forms.Panel();
+            this.pnlAliEnterpolAVLPdColor = new System.Windows.Forms.Panel();
+            this.pnlAliAVLInactiveColor = new System.Windows.Forms.Panel();
+            this.pnlAliEnterpolAVLMyVehicleColor = new System.Windows.Forms.Panel();
+            this.txtAliEnterpolAVLEmsChars = new System.Windows.Forms.TextBox();
+            this.txtAliEnterpolAVLFdChars = new System.Windows.Forms.TextBox();
+            this.txtAliEnterpolAVLPdChars = new System.Windows.Forms.TextBox();
+            this.pnlAliEnterpolAVLEmsGraphic = new System.Windows.Forms.Panel();
+            this.pnlAliEnterpolAVLFdGraphic = new System.Windows.Forms.Panel();
+            this.pnlAliEnterpolAVLPdGraphic = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numAliEnterpolAVLLabelXOffset = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.numAliEnterpolAVLLabelYOffset = new System.Windows.Forms.NumericUpDown();
+            this.btnAliEnterpolAVLSymbolFont = new System.Windows.Forms.Button();
+            this.txtAliEnterpolAVLSymbolFontSize = new System.Windows.Forms.TextBox();
+            this.lblAliEnterpolAVLSymbolFontSize = new System.Windows.Forms.Label();
+            this.txtAliEnterpolAVLLabelFontSize = new System.Windows.Forms.TextBox();
+            this.lblAliEnterpolAVLLabelAlignment = new System.Windows.Forms.Label();
+            this.btnAliEnterpolAVLLabelFont = new System.Windows.Forms.Button();
+            this.lblAliEnterpolAVLLabelFontSize = new System.Windows.Forms.Label();
+            this.pnlAliEnterpolAvl = new System.Windows.Forms.TableLayoutPanel();
+            this.txtAliEnterpolAVLTableName = new System.Windows.Forms.TextBox();
+            this.txtAliEnterpolAVLInitialCatalog = new System.Windows.Forms.TextBox();
+            this.txtAliEnterpolAVLSetLocProc = new System.Windows.Forms.TextBox();
+            this.lblAliEnterpolAVLInitialCatalog = new System.Windows.Forms.Label();
+            this.lblAliEnterpolAVLUpdateFreq = new System.Windows.Forms.Label();
+            this.txtAliEnterpolAVLWhoAmIProc = new System.Windows.Forms.TextBox();
+            this.lblAliEnterpolAVLSetLocProc = new System.Windows.Forms.Label();
+            this.lblAliEnterpolAVLWhoAmIProc = new System.Windows.Forms.Label();
+            this.lblAliEnterpolAVLReadFreq = new System.Windows.Forms.Label();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkAutoHideInactiveUnits = new System.Windows.Forms.CheckBox();
+            this.lblAliEnterpolAVLAgeFreq = new System.Windows.Forms.Label();
+            this.numAliEnterpolAVLAge1Freq = new System.Windows.Forms.NumericUpDown();
+            this.numAliEnterpolAVLAge2Freq = new System.Windows.Forms.NumericUpDown();
+            this.numAliEnterpolAVLAge3Freq = new System.Windows.Forms.NumericUpDown();
+            this.numAliEnterpolAVLReadFreq = new System.Windows.Forms.NumericUpDown();
+            this.numAliEnterpolAVLUpdateFreq = new System.Windows.Forms.NumericUpDown();
+            this.lblAliEnterpolAVLTableName = new System.Windows.Forms.Label();
+            this.pnlAliEnterpol = new System.Windows.Forms.TableLayoutPanel();
+            this.chkEnterpolAvl = new System.Windows.Forms.CheckBox();
+            this.lblAliEnterpolInitialCatalog = new System.Windows.Forms.Label();
+            this.txtAliEnterpolDataSource = new System.Windows.Forms.TextBox();
+            this.txtAliEnterpolTableName = new System.Windows.Forms.TextBox();
+            this.txtAliEnterpolInitialCatalog = new System.Windows.Forms.TextBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.lblAliEnterpolDataSource = new System.Windows.Forms.Label();
+            this.lblAliEnterpolTableName = new System.Windows.Forms.Label();
+            this.aliPanelTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlAliSdrServer = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnAliInterfaceDbPathBrowse = new System.Windows.Forms.Button();
+            this.lblAliInterfaceDbPath = new System.Windows.Forms.Label();
+            this.txtAliInterfaceDbPath = new System.Windows.Forms.TextBox();
+            this.lblAliInterfaceUdpHost = new System.Windows.Forms.Label();
+            this.numAliInterfaceUdpPort = new System.Windows.Forms.NumericUpDown();
+            this.lblAliInterfaceUdpPort = new System.Windows.Forms.Label();
+            this.txtAliInterfaceUdpHost = new System.Windows.Forms.TextBox();
+            this.pnlAliNetworkfleet = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.numAliNetworkfleetAVLAge1Freq = new System.Windows.Forms.NumericUpDown();
@@ -146,114 +206,54 @@
             this.numAliNetworkfleetUdpPort = new System.Windows.Forms.NumericUpDown();
             this.lblAliNetworkfleetUdpHost = new System.Windows.Forms.Label();
             this.txtAliNetworkfleetUdpHost = new System.Windows.Forms.TextBox();
-            this.btnAliNetworkfleetLabelFont = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.numAliNetworkfleetLabelXOffset = new System.Windows.Forms.NumericUpDown();
-            this.lblAliNetworkfleetLabelFontSize = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.numAliNetworkfleetLabelYOffset = new System.Windows.Forms.NumericUpDown();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.lblAliNetworkfleetLabelFont = new System.Windows.Forms.Label();
             this.cmbAliNetworkfleetLabelAlignment = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.dgvNetworkfleetLabelLookup = new System.Windows.Forms.DataGridView();
-            this.aliPanelTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.vehicle_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.vehicle_label = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numAliNetworkfleetLabelYOffset = new System.Windows.Forms.NumericUpDown();
+            this.numAliNetworkfleetLabelXOffset = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtAliNetworkfleetLabelFontSize = new System.Windows.Forms.TextBox();
+            this.btnAliNetworkfleetLabelFont = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lblAliNetworkfleetLabelFontSize = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tblNetworkfleetAvlColors = new System.Windows.Forms.TableLayoutPanel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.ptAliNetworkfleetColor = new System.Windows.Forms.Panel();
+            this.pnlAliNetworkfleetAVLInactiveColor = new System.Windows.Forms.Panel();
+            this.pnlAliNetworkfleetAVLMyVehicleColor = new System.Windows.Forms.Panel();
+            this.ptAliNetworkfleetGraphic = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.btnAliNetworkfleetFont = new System.Windows.Forms.Button();
+            this.ptAliNetworkfleetFont = new System.Windows.Forms.Label();
+            this.ptAliNetworkfleetSize = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.ptAliNetworkfleetChar = new System.Windows.Forms.TextBox();
             this.pnlAliValidate = new System.Windows.Forms.TableLayoutPanel();
             this.cmbAliMode = new System.Windows.Forms.ComboBox();
             this.btnAliValidate = new System.Windows.Forms.Button();
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.lblAliEnterpolAVLLabelAlignment = new System.Windows.Forms.Label();
-            this.numAliEnterpolAVLLabelYOffset = new System.Windows.Forms.NumericUpDown();
-            this.numAliEnterpolAVLLabelXOffset = new System.Windows.Forms.NumericUpDown();
-            this.cmbAliEnterpolAVLLabelAlignment = new System.Windows.Forms.ComboBox();
-            this.lblAliEnterpolAVLLabelFontSize = new System.Windows.Forms.Label();
-            this.lblAliEnterpolAVLLabelFontName = new System.Windows.Forms.Label();
-            this.btnAliEnterpolAVLLabelFont = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.pnlAliAVLInactiveColor = new System.Windows.Forms.Panel();
-            this.lblAliEnterpolAVLMyVehicleColor = new System.Windows.Forms.Label();
-            this.pnlAliEnterpolAVLMyVehicleColor = new System.Windows.Forms.Panel();
-            this.chkAutoHideInactiveUnits = new System.Windows.Forms.CheckBox();
-            this.pnlAliEnterpolAVLPdGraphic = new System.Windows.Forms.Panel();
-            this.lblAliEnterpolAVLTableName = new System.Windows.Forms.Label();
-            this.pnlAliEnterpolAVLFdGraphic = new System.Windows.Forms.Panel();
-            this.txtAliEnterpolAVLTableName = new System.Windows.Forms.TextBox();
-            this.pnlAliEnterpolAVLEmsGraphic = new System.Windows.Forms.Panel();
-            this.txtAliEnterpolAVLInitialCatalog = new System.Windows.Forms.TextBox();
-            this.lblAliEnterpolAVLSymbolFontSize = new System.Windows.Forms.Label();
-            this.txtAliEnterpolAVLSetLocProc = new System.Windows.Forms.TextBox();
-            this.lblAliEnterpolAVLSymbolFontName = new System.Windows.Forms.Label();
-            this.lblAliEnterpolAVLInitialCatalog = new System.Windows.Forms.Label();
-            this.lblAliEnterpolAVLUpdateFreq = new System.Windows.Forms.Label();
-            this.numAliEnterpolAVLUpdateFreq = new System.Windows.Forms.NumericUpDown();
-            this.txtAliEnterpolAVLFdChars = new System.Windows.Forms.TextBox();
-            this.txtAliEnterpolAVLWhoAmIProc = new System.Windows.Forms.TextBox();
-            this.txtAliEnterpolAVLPdChars = new System.Windows.Forms.TextBox();
-            this.lblAliEnterpolAVLSetLocProc = new System.Windows.Forms.Label();
-            this.txtAliEnterpolAVLEmsChars = new System.Windows.Forms.TextBox();
-            this.lblAliEnterpolAVLWhoAmIProc = new System.Windows.Forms.Label();
-            this.btnAliEnterpolAVLSymbolFont = new System.Windows.Forms.Button();
-            this.pnlAliEnterpolAVLFdColor = new System.Windows.Forms.Panel();
-            this.lblAliEnterpolAVLReadFreq = new System.Windows.Forms.Label();
-            this.numAliEnterpolAVLAge1Freq = new System.Windows.Forms.NumericUpDown();
-            this.pnlAliEnterpolAVLPdColor = new System.Windows.Forms.Panel();
-            this.numAliEnterpolAVLAge2Freq = new System.Windows.Forms.NumericUpDown();
-            this.numAliEnterpolAVLReadFreq = new System.Windows.Forms.NumericUpDown();
-            this.numAliEnterpolAVLAge3Freq = new System.Windows.Forms.NumericUpDown();
-            this.pnlAliEnterpolAVLEmsColor = new System.Windows.Forms.Panel();
-            this.lblAliEnterpolAVLAgeFreq = new System.Windows.Forms.Label();
-            this.chkEnterpolAvl = new System.Windows.Forms.CheckBox();
-            this.lblAliEnterpolInitialCatalog = new System.Windows.Forms.Label();
-            this.lblAliEnterpolTableName = new System.Windows.Forms.Label();
-            this.lblAliEnterpolDataSource = new System.Windows.Forms.Label();
-            this.txtAliEnterpolInitialCatalog = new System.Windows.Forms.TextBox();
-            this.txtAliEnterpolDataSource = new System.Windows.Forms.TextBox();
-            this.txtAliEnterpolTableName = new System.Windows.Forms.TextBox();
+            this.pnlAliGlobalCad = new System.Windows.Forms.TableLayoutPanel();
             this.btnAliGlobalCadConfigIniBrowse = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnAliGlobalCadArchivePathBrowse = new System.Windows.Forms.Button();
-            this.txtAliGlobalCadConfigIni = new System.Windows.Forms.TextBox();
-            this.lblAliGlobalCadConfigIni = new System.Windows.Forms.Label();
-            this.lblAliGlobalCadArchivePath = new System.Windows.Forms.Label();
-            this.txtAliGlobalCadArchivePath = new System.Windows.Forms.TextBox();
             this.lblAliGlobalCadLogPath = new System.Windows.Forms.Label();
             this.btnAliGlobalCadLogPathBrowse = new System.Windows.Forms.Button();
+            this.txtAliGlobalCadConfigIni = new System.Windows.Forms.TextBox();
+            this.lblAliGlobalCadArchivePath = new System.Windows.Forms.Label();
+            this.txtAliGlobalCadArchivePath = new System.Windows.Forms.TextBox();
+            this.lblAliGlobalCadConfigIni = new System.Windows.Forms.Label();
             this.txtAliGlobalCadLogPath = new System.Windows.Forms.TextBox();
-            this.lblAliInterfaceUdpPort = new System.Windows.Forms.Label();
-            this.lblAliInterfaceUdpHost = new System.Windows.Forms.Label();
-            this.lblAliInterfaceDbPath = new System.Windows.Forms.Label();
-            this.txtAliInterfaceUdpHost = new System.Windows.Forms.TextBox();
-            this.btnAliInterfaceDbPathBrowse = new System.Windows.Forms.Button();
-            this.txtAliInterfaceDbPath = new System.Windows.Forms.TextBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.vehicle_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.vehicle_label = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtAliNetworkfleetLabelFontSize = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlAliNetworkfleet = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlAliGlobalCad = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.pnlAliSdrServer = new System.Windows.Forms.TableLayoutPanel();
-            this.numAliInterfaceUdpPort = new System.Windows.Forms.NumericUpDown();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlAliEnterpol = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.txtAliEnterpolAVLSymbolFontSize = new System.Windows.Forms.TextBox();
-            this.tblEnterpolAvlSymbology = new System.Windows.Forms.TableLayoutPanel();
-            this.txtAliEnterpolAVLLabelFontSize = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlAliEnterpolAvl = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_MapConfiguration.SuspendLayout();
@@ -279,37 +279,37 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).BeginInit();
             this.adminTab_AliSettings.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.tblNetworkfleetAvlColors.SuspendLayout();
+            this.tableLayoutPanel7.SuspendLayout();
+            this.tblEnterpolAvlSymbology.SuspendLayout();
+            this.tableLayoutPanel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelXOffset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelYOffset)).BeginInit();
+            this.pnlAliEnterpolAvl.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge1Freq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge2Freq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLReadFreq)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLUpdateFreq)).BeginInit();
+            this.pnlAliEnterpol.SuspendLayout();
+            this.aliPanelTableLayout.SuspendLayout();
+            this.pnlAliSdrServer.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).BeginInit();
+            this.pnlAliNetworkfleet.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge1Freq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge2Freq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge3Freq)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvNetworkfleetLabelLookup)).BeginInit();
-            this.aliPanelTableLayout.SuspendLayout();
-            this.pnlAliValidate.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelYOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelXOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLUpdateFreq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge1Freq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge2Freq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLReadFreq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
-            this.pnlAliNetworkfleet.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNetworkfleetLabelLookup)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).BeginInit();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.tblNetworkfleetAvlColors.SuspendLayout();
+            this.pnlAliValidate.SuspendLayout();
             this.pnlAliGlobalCad.SuspendLayout();
-            this.pnlAliSdrServer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).BeginInit();
-            this.tableLayoutPanel6.SuspendLayout();
-            this.pnlAliEnterpol.SuspendLayout();
-            this.tblEnterpolAvlSymbology.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.pnlAliEnterpolAvl.SuspendLayout();
-            this.tableLayoutPanel7.SuspendLayout();
-            this.tableLayoutPanel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -353,7 +353,7 @@
             this.adminTab_MapConfiguration.Location = new System.Drawing.Point(4, 22);
             this.adminTab_MapConfiguration.Margin = new System.Windows.Forms.Padding(0);
             this.adminTab_MapConfiguration.Name = "adminTab_MapConfiguration";
-            this.adminTab_MapConfiguration.Size = new System.Drawing.Size(1400, 791);
+            this.adminTab_MapConfiguration.Size = new System.Drawing.Size(1487, 791);
             this.adminTab_MapConfiguration.TabIndex = 0;
             this.adminTab_MapConfiguration.Text = "Map Configuration";
             // 
@@ -402,8 +402,8 @@
             this.adminLayerSplitter.Panel2.Controls.Add(this.cmbNotesLayer);
             this.adminLayerSplitter.Panel2.Margin = new System.Windows.Forms.Padding(3);
             this.adminLayerSplitter.Panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.adminLayerSplitter.Size = new System.Drawing.Size(1400, 791);
-            this.adminLayerSplitter.SplitterDistance = 270;
+            this.adminLayerSplitter.Size = new System.Drawing.Size(1487, 791);
+            this.adminLayerSplitter.SplitterDistance = 286;
             this.adminLayerSplitter.SplitterWidth = 10;
             this.adminLayerSplitter.TabIndex = 8;
             this.adminLayerSplitter.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.adminLayerSplitter_SplitterMoved);
@@ -428,7 +428,7 @@
             this.legendSplitter.Panel2.BackColor = System.Drawing.Color.Transparent;
             this.legendSplitter.Panel2.Controls.Add(this.legendButtonTable);
             this.legendSplitter.Panel2MinSize = 33;
-            this.legendSplitter.Size = new System.Drawing.Size(268, 789);
+            this.legendSplitter.Size = new System.Drawing.Size(284, 789);
             this.legendSplitter.SplitterDistance = 755;
             this.legendSplitter.SplitterWidth = 1;
             this.legendSplitter.TabIndex = 0;
@@ -447,17 +447,17 @@
             this.legendButtonTable.RowCount = 1;
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.legendButtonTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.legendButtonTable.Size = new System.Drawing.Size(268, 33);
+            this.legendButtonTable.Size = new System.Drawing.Size(284, 33);
             this.legendButtonTable.TabIndex = 0;
             // 
             // btnRemoveLayer
             // 
             this.btnRemoveLayer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRemoveLayer.Location = new System.Drawing.Point(137, 3);
+            this.btnRemoveLayer.Location = new System.Drawing.Point(145, 3);
             this.btnRemoveLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnRemoveLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnRemoveLayer.Name = "btnRemoveLayer";
-            this.btnRemoveLayer.Size = new System.Drawing.Size(128, 27);
+            this.btnRemoveLayer.Size = new System.Drawing.Size(136, 27);
             this.btnRemoveLayer.TabIndex = 1;
             this.btnRemoveLayer.Text = "Remove";
             this.btnRemoveLayer.UseVisualStyleBackColor = true;
@@ -470,7 +470,7 @@
             this.btnAddLayer.MaximumSize = new System.Drawing.Size(0, 27);
             this.btnAddLayer.MinimumSize = new System.Drawing.Size(55, 23);
             this.btnAddLayer.Name = "btnAddLayer";
-            this.btnAddLayer.Size = new System.Drawing.Size(128, 27);
+            this.btnAddLayer.Size = new System.Drawing.Size(136, 27);
             this.btnAddLayer.TabIndex = 2;
             this.btnAddLayer.Text = "Add";
             this.btnAddLayer.UseVisualStyleBackColor = true;
@@ -783,7 +783,7 @@
             this.adminTab_ProjectSettings.Location = new System.Drawing.Point(4, 22);
             this.adminTab_ProjectSettings.Name = "adminTab_ProjectSettings";
             this.adminTab_ProjectSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_ProjectSettings.Size = new System.Drawing.Size(1400, 791);
+            this.adminTab_ProjectSettings.Size = new System.Drawing.Size(1487, 791);
             this.adminTab_ProjectSettings.TabIndex = 5;
             this.adminTab_ProjectSettings.Text = "Project Settings";
             this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
@@ -960,7 +960,7 @@
             this.adminTab_ProgramManagement.Location = new System.Drawing.Point(4, 22);
             this.adminTab_ProgramManagement.Name = "adminTab_ProgramManagement";
             this.adminTab_ProgramManagement.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(1400, 791);
+            this.adminTab_ProgramManagement.Size = new System.Drawing.Size(1487, 791);
             this.adminTab_ProgramManagement.TabIndex = 3;
             this.adminTab_ProgramManagement.Text = "Program Management";
             this.adminTab_ProgramManagement.UseVisualStyleBackColor = true;
@@ -980,35 +980,35 @@
             this.dgvHotKeys.AllowUserToAddRows = false;
             this.dgvHotKeys.AllowUserToDeleteRows = false;
             this.dgvHotKeys.AllowUserToResizeRows = false;
-            dataGridViewCellStyle103.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle103.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle103.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle103.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle103.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle103.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle103.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle103;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dgvHotKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle104.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle104.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle104.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle104.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle104.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle104.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle104.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle104;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvHotKeys.DefaultCellStyle = dataGridViewCellStyle8;
             this.dgvHotKeys.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvHotKeys.Location = new System.Drawing.Point(24, 218);
             this.dgvHotKeys.MultiSelect = false;
             this.dgvHotKeys.Name = "dgvHotKeys";
-            dataGridViewCellStyle105.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle105.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle105.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle105.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle105.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle105.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle105.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle105;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvHotKeys.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dgvHotKeys.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvHotKeys.Size = new System.Drawing.Size(483, 213);
             this.dgvHotKeys.TabIndex = 9;
@@ -1116,7 +1116,7 @@
             this.adminTab_SearchSettings.Location = new System.Drawing.Point(4, 22);
             this.adminTab_SearchSettings.Name = "adminTab_SearchSettings";
             this.adminTab_SearchSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.adminTab_SearchSettings.Size = new System.Drawing.Size(1400, 791);
+            this.adminTab_SearchSettings.Size = new System.Drawing.Size(1487, 791);
             this.adminTab_SearchSettings.TabIndex = 4;
             this.adminTab_SearchSettings.Text = "Search Settings";
             this.adminTab_SearchSettings.UseVisualStyleBackColor = true;
@@ -1262,35 +1262,35 @@
             this.dgvLayerIndex.AllowUserToAddRows = false;
             this.dgvLayerIndex.AllowUserToDeleteRows = false;
             this.dgvLayerIndex.AllowUserToResizeRows = false;
-            dataGridViewCellStyle106.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle106.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle106.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle106.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle106.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle106.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle106.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle106;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.dgvLayerIndex.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle107.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle107.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle107.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle107.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle107.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle107.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle107.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle107;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLayerIndex.DefaultCellStyle = dataGridViewCellStyle11;
             this.dgvLayerIndex.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvLayerIndex.Location = new System.Drawing.Point(202, 39);
             this.dgvLayerIndex.MultiSelect = false;
             this.dgvLayerIndex.Name = "dgvLayerIndex";
-            dataGridViewCellStyle108.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle108.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle108.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle108.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle108.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle108.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle108.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle108;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLayerIndex.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.dgvLayerIndex.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvLayerIndex.Size = new System.Drawing.Size(311, 415);
             this.dgvLayerIndex.TabIndex = 4;
@@ -1336,7 +1336,6 @@
             // 
             // adminTab_AliSettings
             // 
-            this.adminTab_AliSettings.Controls.Add(this.tableLayoutPanel7);
             this.adminTab_AliSettings.Controls.Add(this.pnlAliEnterpolAvl);
             this.adminTab_AliSettings.Controls.Add(this.pnlAliEnterpol);
             this.adminTab_AliSettings.Controls.Add(this.aliPanelTableLayout);
@@ -1348,192 +1347,982 @@
             this.adminTab_AliSettings.Text = "ALI Settings";
             this.adminTab_AliSettings.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel5
+            // tableLayoutPanel7
             // 
-            this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 87F));
-            this.tableLayoutPanel5.Controls.Add(this.groupBox2, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.tblNetworkfleetAvlColors, 0, 4);
-            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetGraphic, 0, 2);
-            this.tableLayoutPanel5.Controls.Add(this.label22, 1, 2);
-            this.tableLayoutPanel5.Controls.Add(this.btnAliNetworkfleetFont, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetFont, 1, 1);
-            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetSize, 2, 2);
-            this.tableLayoutPanel5.Controls.Add(this.label20, 1, 3);
-            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetChar, 2, 3);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 144);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 5;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(238, 154);
-            this.tableLayoutPanel5.TabIndex = 103;
+            this.tableLayoutPanel7.ColumnCount = 5;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.tableLayoutPanel7, 4);
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel8, 0, 6);
+            this.tableLayoutPanel7.Controls.Add(this.btnAliEnterpolAVLSymbolFont, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.txtAliEnterpolAVLSymbolFontSize, 4, 1);
+            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLSymbolFontSize, 3, 1);
+            this.tableLayoutPanel7.Controls.Add(this.txtAliEnterpolAVLLabelFontSize, 4, 4);
+            this.tableLayoutPanel7.Controls.Add(this.tblEnterpolAvlSymbology, 0, 2);
+            this.tableLayoutPanel7.Controls.Add(this.cmbAliEnterpolAVLLabelAlignment, 1, 5);
+            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLLabelAlignment, 0, 5);
+            this.tableLayoutPanel7.Controls.Add(this.groupBox9, 0, 3);
+            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLSymbolFontName, 1, 1);
+            this.tableLayoutPanel7.Controls.Add(this.groupBox8, 0, 0);
+            this.tableLayoutPanel7.Controls.Add(this.btnAliEnterpolAVLLabelFont, 0, 4);
+            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLLabelFontSize, 3, 4);
+            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLLabelFontName, 1, 4);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 248);
+            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel7.MinimumSize = new System.Drawing.Size(0, 272);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 8;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(335, 280);
+            this.tableLayoutPanel7.TabIndex = 111;
             // 
-            // groupBox2
+            // cmbAliEnterpolAVLLabelAlignment
             // 
-            this.tableLayoutPanel5.SetColumnSpan(this.groupBox2, 3);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 3);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox2.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox2.Size = new System.Drawing.Size(238, 15);
-            this.groupBox2.TabIndex = 99;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Networkfleet Symbology";
+            this.tableLayoutPanel7.SetColumnSpan(this.cmbAliEnterpolAVLLabelAlignment, 4);
+            this.cmbAliEnterpolAVLLabelAlignment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmbAliEnterpolAVLLabelAlignment.FormattingEnabled = true;
+            this.cmbAliEnterpolAVLLabelAlignment.Items.AddRange(new object[] {
+            "Above",
+            "Below",
+            "Right",
+            "Left"});
+            this.cmbAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(79, 221);
+            this.cmbAliEnterpolAVLLabelAlignment.Name = "cmbAliEnterpolAVLLabelAlignment";
+            this.cmbAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(253, 21);
+            this.cmbAliEnterpolAVLLabelAlignment.TabIndex = 92;
+            this.cmbAliEnterpolAVLLabelAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAliEnterpolAVLLabelAlignment_SelectedIndexChanged);
             // 
-            // ptAliNetworkfleetFont
+            // lblAliEnterpolAVLLabelFontName
             // 
-            this.tableLayoutPanel5.SetColumnSpan(this.ptAliNetworkfleetFont, 2);
-            this.ptAliNetworkfleetFont.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ptAliNetworkfleetFont.Location = new System.Drawing.Point(79, 21);
-            this.ptAliNetworkfleetFont.Name = "ptAliNetworkfleetFont";
-            this.ptAliNetworkfleetFont.Size = new System.Drawing.Size(144, 29);
-            this.ptAliNetworkfleetFont.TabIndex = 69;
-            this.ptAliNetworkfleetFont.Text = "This is the font name";
+            this.lblAliEnterpolAVLLabelFontName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAliEnterpolAVLLabelFontName.AutoSize = true;
+            this.tableLayoutPanel7.SetColumnSpan(this.lblAliEnterpolAVLLabelFontName, 2);
+            this.lblAliEnterpolAVLLabelFontName.Location = new System.Drawing.Point(79, 197);
+            this.lblAliEnterpolAVLLabelFontName.Name = "lblAliEnterpolAVLLabelFontName";
+            this.lblAliEnterpolAVLLabelFontName.Size = new System.Drawing.Size(134, 13);
+            this.lblAliEnterpolAVLLabelFontName.TabIndex = 90;
+            this.lblAliEnterpolAVLLabelFontName.Text = "Font Name";
             // 
-            // ptAliNetworkfleetGraphic
+            // lblAliEnterpolAVLSymbolFontName
             // 
-            this.ptAliNetworkfleetGraphic.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.ptAliNetworkfleetGraphic.Location = new System.Drawing.Point(13, 53);
-            this.ptAliNetworkfleetGraphic.Name = "ptAliNetworkfleetGraphic";
-            this.tableLayoutPanel5.SetRowSpan(this.ptAliNetworkfleetGraphic, 2);
-            this.ptAliNetworkfleetGraphic.Size = new System.Drawing.Size(50, 50);
-            this.ptAliNetworkfleetGraphic.TabIndex = 4;
+            this.lblAliEnterpolAVLSymbolFontName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel7.SetColumnSpan(this.lblAliEnterpolAVLSymbolFontName, 2);
+            this.lblAliEnterpolAVLSymbolFontName.Location = new System.Drawing.Point(79, 28);
+            this.lblAliEnterpolAVLSymbolFontName.Name = "lblAliEnterpolAVLSymbolFontName";
+            this.lblAliEnterpolAVLSymbolFontName.Size = new System.Drawing.Size(134, 15);
+            this.lblAliEnterpolAVLSymbolFontName.TabIndex = 79;
+            this.lblAliEnterpolAVLSymbolFontName.Text = "Font Name";
             // 
-            // tblNetworkfleetAvlColors
+            // groupBox8
             // 
-            this.tblNetworkfleetAvlColors.ColumnCount = 3;
-            this.tableLayoutPanel5.SetColumnSpan(this.tblNetworkfleetAvlColors, 3);
-            this.tblNetworkfleetAvlColors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tblNetworkfleetAvlColors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tblNetworkfleetAvlColors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tblNetworkfleetAvlColors.Controls.Add(this.label21, 0, 0);
-            this.tblNetworkfleetAvlColors.Controls.Add(this.label18, 1, 0);
-            this.tblNetworkfleetAvlColors.Controls.Add(this.label19, 2, 0);
-            this.tblNetworkfleetAvlColors.Controls.Add(this.ptAliNetworkfleetColor, 0, 1);
-            this.tblNetworkfleetAvlColors.Controls.Add(this.pnlAliNetworkfleetAVLInactiveColor, 1, 1);
-            this.tblNetworkfleetAvlColors.Controls.Add(this.pnlAliNetworkfleetAVLMyVehicleColor, 2, 1);
-            this.tblNetworkfleetAvlColors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblNetworkfleetAvlColors.Location = new System.Drawing.Point(0, 106);
-            this.tblNetworkfleetAvlColors.Margin = new System.Windows.Forms.Padding(0);
-            this.tblNetworkfleetAvlColors.Name = "tblNetworkfleetAvlColors";
-            this.tblNetworkfleetAvlColors.RowCount = 2;
-            this.tblNetworkfleetAvlColors.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblNetworkfleetAvlColors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblNetworkfleetAvlColors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tblNetworkfleetAvlColors.Size = new System.Drawing.Size(238, 48);
-            this.tblNetworkfleetAvlColors.TabIndex = 100;
+            this.tableLayoutPanel7.SetColumnSpan(this.groupBox8, 5);
+            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox8.Location = new System.Drawing.Point(0, 3);
+            this.groupBox8.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox8.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox8.Size = new System.Drawing.Size(335, 15);
+            this.groupBox8.TabIndex = 104;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Enterpol AVL Symbology";
             // 
-            // label21
+            // groupBox9
             // 
-            this.label21.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(21, 0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(37, 13);
-            this.label21.TabIndex = 95;
-            this.label21.Text = "Active";
+            this.tableLayoutPanel7.SetColumnSpan(this.groupBox9, 5);
+            this.groupBox9.Location = new System.Drawing.Point(0, 169);
+            this.groupBox9.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox9.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox9.Size = new System.Drawing.Size(335, 17);
+            this.groupBox9.TabIndex = 105;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Enterpol AVL Labeling";
             // 
-            // label18
+            // tblEnterpolAvlSymbology
             // 
-            this.label18.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(96, 0);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(45, 13);
-            this.label18.TabIndex = 91;
-            this.label18.Text = "Inactive";
+            this.tblEnterpolAvlSymbology.ColumnCount = 5;
+            this.tableLayoutPanel7.SetColumnSpan(this.tblEnterpolAvlSymbology, 5);
+            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tblEnterpolAvlSymbology.Controls.Add(this.label7, 0, 0);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.label9, 1, 0);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.label8, 2, 0);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.label5, 3, 0);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.lblAliEnterpolAVLMyVehicleColor, 4, 0);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLEmsColor, 0, 1);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLFdColor, 1, 1);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLPdColor, 2, 1);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliAVLInactiveColor, 3, 1);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLMyVehicleColor, 4, 1);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.txtAliEnterpolAVLEmsChars, 0, 2);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.txtAliEnterpolAVLFdChars, 1, 2);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.txtAliEnterpolAVLPdChars, 2, 2);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLEmsGraphic, 0, 3);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLFdGraphic, 1, 3);
+            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLPdGraphic, 2, 3);
+            this.tblEnterpolAvlSymbology.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblEnterpolAvlSymbology.Location = new System.Drawing.Point(0, 50);
+            this.tblEnterpolAvlSymbology.Margin = new System.Windows.Forms.Padding(0);
+            this.tblEnterpolAvlSymbology.MinimumSize = new System.Drawing.Size(0, 116);
+            this.tblEnterpolAvlSymbology.Name = "tblEnterpolAvlSymbology";
+            this.tblEnterpolAvlSymbology.RowCount = 5;
+            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tblEnterpolAvlSymbology.Size = new System.Drawing.Size(335, 116);
+            this.tblEnterpolAvlSymbology.TabIndex = 107;
             // 
-            // label19
+            // label7
             // 
-            this.label19.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(176, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(43, 13);
-            this.label19.TabIndex = 92;
-            this.label19.Text = "My Unit";
+            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(18, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(30, 13);
+            this.label7.TabIndex = 98;
+            this.label7.Text = "EMS";
             // 
-            // ptAliNetworkfleetColor
+            // label9
             // 
-            this.ptAliNetworkfleetColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ptAliNetworkfleetColor.Location = new System.Drawing.Point(3, 16);
-            this.ptAliNetworkfleetColor.Name = "ptAliNetworkfleetColor";
-            this.ptAliNetworkfleetColor.Size = new System.Drawing.Size(73, 29);
-            this.ptAliNetworkfleetColor.TabIndex = 70;
+            this.label9.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(90, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(21, 13);
+            this.label9.TabIndex = 100;
+            this.label9.Text = "FD";
             // 
-            // pnlAliNetworkfleetAVLInactiveColor
+            // label8
             // 
-            this.pnlAliNetworkfleetAVLInactiveColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliNetworkfleetAVLInactiveColor.Location = new System.Drawing.Point(82, 16);
-            this.pnlAliNetworkfleetAVLInactiveColor.Name = "pnlAliNetworkfleetAVLInactiveColor";
-            this.pnlAliNetworkfleetAVLInactiveColor.Size = new System.Drawing.Size(73, 29);
-            this.pnlAliNetworkfleetAVLInactiveColor.TabIndex = 88;
+            this.label8.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(157, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(20, 13);
+            this.label8.TabIndex = 99;
+            this.label8.Text = "LE";
             // 
-            // pnlAliNetworkfleetAVLMyVehicleColor
+            // label5
             // 
-            this.pnlAliNetworkfleetAVLMyVehicleColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliNetworkfleetAVLMyVehicleColor.Location = new System.Drawing.Point(161, 16);
-            this.pnlAliNetworkfleetAVLMyVehicleColor.Name = "pnlAliNetworkfleetAVLMyVehicleColor";
-            this.pnlAliNetworkfleetAVLMyVehicleColor.Size = new System.Drawing.Size(74, 29);
-            this.pnlAliNetworkfleetAVLMyVehicleColor.TabIndex = 89;
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(212, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(45, 13);
+            this.label5.TabIndex = 88;
+            this.label5.Text = "Inactive";
             // 
-            // label22
+            // lblAliEnterpolAVLMyVehicleColor
             // 
-            this.label22.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(94, 56);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(54, 13);
-            this.label22.TabIndex = 102;
-            this.label22.Text = "Font Size:";
+            this.lblAliEnterpolAVLMyVehicleColor.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblAliEnterpolAVLMyVehicleColor.AutoSize = true;
+            this.lblAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(280, 0);
+            this.lblAliEnterpolAVLMyVehicleColor.Name = "lblAliEnterpolAVLMyVehicleColor";
+            this.lblAliEnterpolAVLMyVehicleColor.Size = new System.Drawing.Size(43, 13);
+            this.lblAliEnterpolAVLMyVehicleColor.TabIndex = 86;
+            this.lblAliEnterpolAVLMyVehicleColor.Text = "My Unit";
             // 
-            // btnAliNetworkfleetFont
+            // pnlAliEnterpolAVLEmsColor
             // 
-            this.btnAliNetworkfleetFont.Location = new System.Drawing.Point(3, 24);
-            this.btnAliNetworkfleetFont.Name = "btnAliNetworkfleetFont";
-            this.btnAliNetworkfleetFont.Size = new System.Drawing.Size(70, 23);
-            this.btnAliNetworkfleetFont.TabIndex = 68;
-            this.btnAliNetworkfleetFont.Text = "Select Font";
-            this.btnAliNetworkfleetFont.UseVisualStyleBackColor = true;
-            this.btnAliNetworkfleetFont.Click += new System.EventHandler(this.btnAliNetworkfleetFont_Click);
+            this.pnlAliEnterpolAVLEmsColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLEmsColor.Location = new System.Drawing.Point(3, 16);
+            this.pnlAliEnterpolAVLEmsColor.MinimumSize = new System.Drawing.Size(0, 24);
+            this.pnlAliEnterpolAVLEmsColor.Name = "pnlAliEnterpolAVLEmsColor";
+            this.pnlAliEnterpolAVLEmsColor.Size = new System.Drawing.Size(61, 24);
+            this.pnlAliEnterpolAVLEmsColor.TabIndex = 72;
             // 
-            // ptAliNetworkfleetSize
+            // pnlAliEnterpolAVLFdColor
             // 
-            this.ptAliNetworkfleetSize.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.ptAliNetworkfleetSize.Location = new System.Drawing.Point(154, 53);
-            this.ptAliNetworkfleetSize.Name = "ptAliNetworkfleetSize";
-            this.ptAliNetworkfleetSize.ReadOnly = true;
-            this.ptAliNetworkfleetSize.Size = new System.Drawing.Size(34, 20);
-            this.ptAliNetworkfleetSize.TabIndex = 101;
+            this.pnlAliEnterpolAVLFdColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLFdColor.Location = new System.Drawing.Point(70, 16);
+            this.pnlAliEnterpolAVLFdColor.MinimumSize = new System.Drawing.Size(0, 24);
+            this.pnlAliEnterpolAVLFdColor.Name = "pnlAliEnterpolAVLFdColor";
+            this.pnlAliEnterpolAVLFdColor.Size = new System.Drawing.Size(61, 24);
+            this.pnlAliEnterpolAVLFdColor.TabIndex = 74;
             // 
-            // label20
+            // pnlAliEnterpolAVLPdColor
             // 
-            this.label20.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(92, 84);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(56, 13);
-            this.label20.TabIndex = 94;
-            this.label20.Text = "Character:";
+            this.pnlAliEnterpolAVLPdColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLPdColor.Location = new System.Drawing.Point(137, 16);
+            this.pnlAliEnterpolAVLPdColor.MinimumSize = new System.Drawing.Size(0, 24);
+            this.pnlAliEnterpolAVLPdColor.Name = "pnlAliEnterpolAVLPdColor";
+            this.pnlAliEnterpolAVLPdColor.Size = new System.Drawing.Size(61, 24);
+            this.pnlAliEnterpolAVLPdColor.TabIndex = 73;
             // 
-            // ptAliNetworkfleetChar
+            // pnlAliAVLInactiveColor
             // 
-            this.ptAliNetworkfleetChar.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.ptAliNetworkfleetChar.Location = new System.Drawing.Point(154, 81);
-            this.ptAliNetworkfleetChar.MaxLength = 1;
-            this.ptAliNetworkfleetChar.Name = "ptAliNetworkfleetChar";
-            this.ptAliNetworkfleetChar.Size = new System.Drawing.Size(34, 20);
-            this.ptAliNetworkfleetChar.TabIndex = 67;
+            this.pnlAliAVLInactiveColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliAVLInactiveColor.Location = new System.Drawing.Point(204, 16);
+            this.pnlAliAVLInactiveColor.MinimumSize = new System.Drawing.Size(0, 24);
+            this.pnlAliAVLInactiveColor.Name = "pnlAliAVLInactiveColor";
+            this.pnlAliAVLInactiveColor.Size = new System.Drawing.Size(61, 24);
+            this.pnlAliAVLInactiveColor.TabIndex = 87;
+            // 
+            // pnlAliEnterpolAVLMyVehicleColor
+            // 
+            this.pnlAliEnterpolAVLMyVehicleColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(271, 16);
+            this.pnlAliEnterpolAVLMyVehicleColor.MinimumSize = new System.Drawing.Size(0, 24);
+            this.pnlAliEnterpolAVLMyVehicleColor.Name = "pnlAliEnterpolAVLMyVehicleColor";
+            this.pnlAliEnterpolAVLMyVehicleColor.Size = new System.Drawing.Size(61, 24);
+            this.pnlAliEnterpolAVLMyVehicleColor.TabIndex = 85;
+            // 
+            // txtAliEnterpolAVLEmsChars
+            // 
+            this.txtAliEnterpolAVLEmsChars.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLEmsChars.Location = new System.Drawing.Point(3, 46);
+            this.txtAliEnterpolAVLEmsChars.Name = "txtAliEnterpolAVLEmsChars";
+            this.txtAliEnterpolAVLEmsChars.Size = new System.Drawing.Size(61, 20);
+            this.txtAliEnterpolAVLEmsChars.TabIndex = 76;
+            // 
+            // txtAliEnterpolAVLFdChars
+            // 
+            this.txtAliEnterpolAVLFdChars.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLFdChars.Location = new System.Drawing.Point(70, 46);
+            this.txtAliEnterpolAVLFdChars.Name = "txtAliEnterpolAVLFdChars";
+            this.txtAliEnterpolAVLFdChars.Size = new System.Drawing.Size(61, 20);
+            this.txtAliEnterpolAVLFdChars.TabIndex = 78;
+            // 
+            // txtAliEnterpolAVLPdChars
+            // 
+            this.txtAliEnterpolAVLPdChars.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLPdChars.Location = new System.Drawing.Point(137, 46);
+            this.txtAliEnterpolAVLPdChars.Name = "txtAliEnterpolAVLPdChars";
+            this.txtAliEnterpolAVLPdChars.Size = new System.Drawing.Size(61, 20);
+            this.txtAliEnterpolAVLPdChars.TabIndex = 77;
+            // 
+            // pnlAliEnterpolAVLEmsGraphic
+            // 
+            this.pnlAliEnterpolAVLEmsGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLEmsGraphic.Location = new System.Drawing.Point(3, 72);
+            this.pnlAliEnterpolAVLEmsGraphic.MinimumSize = new System.Drawing.Size(0, 40);
+            this.pnlAliEnterpolAVLEmsGraphic.Name = "pnlAliEnterpolAVLEmsGraphic";
+            this.pnlAliEnterpolAVLEmsGraphic.Size = new System.Drawing.Size(61, 40);
+            this.pnlAliEnterpolAVLEmsGraphic.TabIndex = 81;
+            // 
+            // pnlAliEnterpolAVLFdGraphic
+            // 
+            this.pnlAliEnterpolAVLFdGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLFdGraphic.Location = new System.Drawing.Point(70, 72);
+            this.pnlAliEnterpolAVLFdGraphic.MinimumSize = new System.Drawing.Size(0, 40);
+            this.pnlAliEnterpolAVLFdGraphic.Name = "pnlAliEnterpolAVLFdGraphic";
+            this.pnlAliEnterpolAVLFdGraphic.Size = new System.Drawing.Size(61, 40);
+            this.pnlAliEnterpolAVLFdGraphic.TabIndex = 82;
+            // 
+            // pnlAliEnterpolAVLPdGraphic
+            // 
+            this.pnlAliEnterpolAVLPdGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliEnterpolAVLPdGraphic.Location = new System.Drawing.Point(137, 72);
+            this.pnlAliEnterpolAVLPdGraphic.MinimumSize = new System.Drawing.Size(0, 40);
+            this.pnlAliEnterpolAVLPdGraphic.Name = "pnlAliEnterpolAVLPdGraphic";
+            this.pnlAliEnterpolAVLPdGraphic.Size = new System.Drawing.Size(61, 40);
+            this.pnlAliEnterpolAVLPdGraphic.TabIndex = 83;
+            // 
+            // tableLayoutPanel8
+            // 
+            this.tableLayoutPanel8.ColumnCount = 4;
+            this.tableLayoutPanel7.SetColumnSpan(this.tableLayoutPanel8, 5);
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.Controls.Add(this.label10, 0, 0);
+            this.tableLayoutPanel8.Controls.Add(this.numAliEnterpolAVLLabelXOffset, 1, 0);
+            this.tableLayoutPanel8.Controls.Add(this.label11, 2, 0);
+            this.tableLayoutPanel8.Controls.Add(this.numAliEnterpolAVLLabelYOffset, 3, 0);
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(0, 245);
+            this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel8.MinimumSize = new System.Drawing.Size(0, 27);
+            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+            this.tableLayoutPanel8.RowCount = 2;
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(335, 27);
+            this.tableLayoutPanel8.TabIndex = 112;
+            // 
+            // label10
+            // 
+            this.label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 6);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(45, 13);
+            this.label10.TabIndex = 96;
+            this.label10.Text = "X Offset";
+            // 
+            // numAliEnterpolAVLLabelXOffset
+            // 
+            this.numAliEnterpolAVLLabelXOffset.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLLabelXOffset.Location = new System.Drawing.Point(54, 3);
+            this.numAliEnterpolAVLLabelXOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numAliEnterpolAVLLabelXOffset.Name = "numAliEnterpolAVLLabelXOffset";
+            this.numAliEnterpolAVLLabelXOffset.Size = new System.Drawing.Size(110, 20);
+            this.numAliEnterpolAVLLabelXOffset.TabIndex = 93;
+            // 
+            // label11
+            // 
+            this.label11.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(170, 6);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(45, 13);
+            this.label11.TabIndex = 97;
+            this.label11.Text = "Y Offset";
+            // 
+            // numAliEnterpolAVLLabelYOffset
+            // 
+            this.numAliEnterpolAVLLabelYOffset.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLLabelYOffset.Location = new System.Drawing.Point(221, 3);
+            this.numAliEnterpolAVLLabelYOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numAliEnterpolAVLLabelYOffset.Name = "numAliEnterpolAVLLabelYOffset";
+            this.numAliEnterpolAVLLabelYOffset.Size = new System.Drawing.Size(111, 20);
+            this.numAliEnterpolAVLLabelYOffset.TabIndex = 94;
+            // 
+            // btnAliEnterpolAVLSymbolFont
+            // 
+            this.btnAliEnterpolAVLSymbolFont.Location = new System.Drawing.Point(3, 24);
+            this.btnAliEnterpolAVLSymbolFont.Name = "btnAliEnterpolAVLSymbolFont";
+            this.btnAliEnterpolAVLSymbolFont.Size = new System.Drawing.Size(70, 23);
+            this.btnAliEnterpolAVLSymbolFont.TabIndex = 75;
+            this.btnAliEnterpolAVLSymbolFont.Text = "Select Font";
+            this.btnAliEnterpolAVLSymbolFont.UseVisualStyleBackColor = true;
+            this.btnAliEnterpolAVLSymbolFont.Click += new System.EventHandler(this.btnAliEnterpolAVLFont_Click);
+            // 
+            // txtAliEnterpolAVLSymbolFontSize
+            // 
+            this.txtAliEnterpolAVLSymbolFontSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLSymbolFontSize.Location = new System.Drawing.Point(279, 24);
+            this.txtAliEnterpolAVLSymbolFontSize.Name = "txtAliEnterpolAVLSymbolFontSize";
+            this.txtAliEnterpolAVLSymbolFontSize.ReadOnly = true;
+            this.txtAliEnterpolAVLSymbolFontSize.Size = new System.Drawing.Size(53, 20);
+            this.txtAliEnterpolAVLSymbolFontSize.TabIndex = 106;
+            // 
+            // lblAliEnterpolAVLSymbolFontSize
+            // 
+            this.lblAliEnterpolAVLSymbolFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAliEnterpolAVLSymbolFontSize.AutoSize = true;
+            this.lblAliEnterpolAVLSymbolFontSize.Location = new System.Drawing.Point(219, 29);
+            this.lblAliEnterpolAVLSymbolFontSize.Name = "lblAliEnterpolAVLSymbolFontSize";
+            this.lblAliEnterpolAVLSymbolFontSize.Size = new System.Drawing.Size(54, 13);
+            this.lblAliEnterpolAVLSymbolFontSize.TabIndex = 80;
+            this.lblAliEnterpolAVLSymbolFontSize.Text = "Font Size:";
+            // 
+            // txtAliEnterpolAVLLabelFontSize
+            // 
+            this.txtAliEnterpolAVLLabelFontSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLLabelFontSize.Location = new System.Drawing.Point(279, 192);
+            this.txtAliEnterpolAVLLabelFontSize.Name = "txtAliEnterpolAVLLabelFontSize";
+            this.txtAliEnterpolAVLLabelFontSize.ReadOnly = true;
+            this.txtAliEnterpolAVLLabelFontSize.Size = new System.Drawing.Size(53, 20);
+            this.txtAliEnterpolAVLLabelFontSize.TabIndex = 108;
+            // 
+            // lblAliEnterpolAVLLabelAlignment
+            // 
+            this.lblAliEnterpolAVLLabelAlignment.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLLabelAlignment.AutoSize = true;
+            this.lblAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(17, 225);
+            this.lblAliEnterpolAVLLabelAlignment.Name = "lblAliEnterpolAVLLabelAlignment";
+            this.lblAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(56, 13);
+            this.lblAliEnterpolAVLLabelAlignment.TabIndex = 95;
+            this.lblAliEnterpolAVLLabelAlignment.Text = "Alignment:";
+            // 
+            // btnAliEnterpolAVLLabelFont
+            // 
+            this.btnAliEnterpolAVLLabelFont.Location = new System.Drawing.Point(3, 192);
+            this.btnAliEnterpolAVLLabelFont.Name = "btnAliEnterpolAVLLabelFont";
+            this.btnAliEnterpolAVLLabelFont.Size = new System.Drawing.Size(70, 23);
+            this.btnAliEnterpolAVLLabelFont.TabIndex = 89;
+            this.btnAliEnterpolAVLLabelFont.Text = "Select Font";
+            this.btnAliEnterpolAVLLabelFont.UseVisualStyleBackColor = true;
+            this.btnAliEnterpolAVLLabelFont.Click += new System.EventHandler(this.btnAliEnterpolAVLLabelFont_Click);
+            // 
+            // lblAliEnterpolAVLLabelFontSize
+            // 
+            this.lblAliEnterpolAVLLabelFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblAliEnterpolAVLLabelFontSize.AutoSize = true;
+            this.lblAliEnterpolAVLLabelFontSize.Location = new System.Drawing.Point(219, 197);
+            this.lblAliEnterpolAVLLabelFontSize.Name = "lblAliEnterpolAVLLabelFontSize";
+            this.lblAliEnterpolAVLLabelFontSize.Size = new System.Drawing.Size(54, 13);
+            this.lblAliEnterpolAVLLabelFontSize.TabIndex = 91;
+            this.lblAliEnterpolAVLLabelFontSize.Text = "Font Size:";
+            // 
+            // pnlAliEnterpolAvl
+            // 
+            this.pnlAliEnterpolAvl.ColumnCount = 4;
+            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 115F));
+            this.pnlAliEnterpolAvl.Controls.Add(this.tableLayoutPanel7, 0, 8);
+            this.pnlAliEnterpolAvl.Controls.Add(this.groupBox7, 0, 0);
+            this.pnlAliEnterpolAvl.Controls.Add(this.tableLayoutPanel4, 0, 7);
+            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLInitialCatalog, 0, 2);
+            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLWhoAmIProc, 0, 6);
+            this.pnlAliEnterpolAvl.Controls.Add(this.numAliEnterpolAVLReadFreq, 2, 3);
+            this.pnlAliEnterpolAvl.Controls.Add(this.numAliEnterpolAVLUpdateFreq, 2, 5);
+            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLTableName, 0, 1);
+            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLTableName, 1, 1);
+            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLUpdateFreq, 0, 5);
+            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLInitialCatalog, 2, 2);
+            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLReadFreq, 0, 3);
+            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLWhoAmIProc, 2, 6);
+            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLSetLocProc, 0, 4);
+            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLSetLocProc, 2, 4);
+            this.pnlAliEnterpolAvl.Location = new System.Drawing.Point(1004, 38);
+            this.pnlAliEnterpolAvl.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlAliEnterpolAvl.MinimumSize = new System.Drawing.Size(0, 520);
+            this.pnlAliEnterpolAvl.Name = "pnlAliEnterpolAvl";
+            this.pnlAliEnterpolAvl.RowCount = 10;
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.pnlAliEnterpolAvl.Size = new System.Drawing.Size(335, 536);
+            this.pnlAliEnterpolAvl.TabIndex = 110;
+            // 
+            // txtAliEnterpolAVLTableName
+            // 
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLTableName, 3);
+            this.txtAliEnterpolAVLTableName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLTableName.Location = new System.Drawing.Point(96, 26);
+            this.txtAliEnterpolAVLTableName.Name = "txtAliEnterpolAVLTableName";
+            this.txtAliEnterpolAVLTableName.Size = new System.Drawing.Size(236, 20);
+            this.txtAliEnterpolAVLTableName.TabIndex = 9;
+            // 
+            // txtAliEnterpolAVLInitialCatalog
+            // 
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLInitialCatalog, 2);
+            this.txtAliEnterpolAVLInitialCatalog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(143, 52);
+            this.txtAliEnterpolAVLInitialCatalog.Name = "txtAliEnterpolAVLInitialCatalog";
+            this.txtAliEnterpolAVLInitialCatalog.Size = new System.Drawing.Size(189, 20);
+            this.txtAliEnterpolAVLInitialCatalog.TabIndex = 10;
+            // 
+            // txtAliEnterpolAVLSetLocProc
+            // 
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLSetLocProc, 2);
+            this.txtAliEnterpolAVLSetLocProc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(143, 104);
+            this.txtAliEnterpolAVLSetLocProc.Name = "txtAliEnterpolAVLSetLocProc";
+            this.txtAliEnterpolAVLSetLocProc.Size = new System.Drawing.Size(189, 20);
+            this.txtAliEnterpolAVLSetLocProc.TabIndex = 11;
+            // 
+            // lblAliEnterpolAVLInitialCatalog
+            // 
+            this.lblAliEnterpolAVLInitialCatalog.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLInitialCatalog.AutoSize = true;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLInitialCatalog, 2);
+            this.lblAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(14, 55);
+            this.lblAliEnterpolAVLInitialCatalog.Name = "lblAliEnterpolAVLInitialCatalog";
+            this.lblAliEnterpolAVLInitialCatalog.Size = new System.Drawing.Size(123, 13);
+            this.lblAliEnterpolAVLInitialCatalog.TabIndex = 12;
+            this.lblAliEnterpolAVLInitialCatalog.Text = "Units Table/View Name:";
+            // 
+            // lblAliEnterpolAVLUpdateFreq
+            // 
+            this.lblAliEnterpolAVLUpdateFreq.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLUpdateFreq.AutoSize = true;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLUpdateFreq, 2);
+            this.lblAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(17, 133);
+            this.lblAliEnterpolAVLUpdateFreq.Name = "lblAliEnterpolAVLUpdateFreq";
+            this.lblAliEnterpolAVLUpdateFreq.Size = new System.Drawing.Size(120, 13);
+            this.lblAliEnterpolAVLUpdateFreq.TabIndex = 19;
+            this.lblAliEnterpolAVLUpdateFreq.Text = "Update Frequency (ms):";
+            // 
+            // txtAliEnterpolAVLWhoAmIProc
+            // 
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLWhoAmIProc, 2);
+            this.txtAliEnterpolAVLWhoAmIProc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(143, 156);
+            this.txtAliEnterpolAVLWhoAmIProc.Name = "txtAliEnterpolAVLWhoAmIProc";
+            this.txtAliEnterpolAVLWhoAmIProc.Size = new System.Drawing.Size(189, 20);
+            this.txtAliEnterpolAVLWhoAmIProc.TabIndex = 14;
+            // 
+            // lblAliEnterpolAVLSetLocProc
+            // 
+            this.lblAliEnterpolAVLSetLocProc.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLSetLocProc.AutoSize = true;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLSetLocProc, 2);
+            this.lblAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(4, 107);
+            this.lblAliEnterpolAVLSetLocProc.Name = "lblAliEnterpolAVLSetLocProc";
+            this.lblAliEnterpolAVLSetLocProc.Size = new System.Drawing.Size(133, 13);
+            this.lblAliEnterpolAVLSetLocProc.TabIndex = 17;
+            this.lblAliEnterpolAVLSetLocProc.Text = "SetMyLocation Procedure:";
+            // 
+            // lblAliEnterpolAVLWhoAmIProc
+            // 
+            this.lblAliEnterpolAVLWhoAmIProc.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLWhoAmIProc.AutoSize = true;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLWhoAmIProc, 2);
+            this.lblAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(34, 159);
+            this.lblAliEnterpolAVLWhoAmIProc.Name = "lblAliEnterpolAVLWhoAmIProc";
+            this.lblAliEnterpolAVLWhoAmIProc.Size = new System.Drawing.Size(103, 13);
+            this.lblAliEnterpolAVLWhoAmIProc.TabIndex = 16;
+            this.lblAliEnterpolAVLWhoAmIProc.Text = "WhoAmI Procedure:";
+            // 
+            // lblAliEnterpolAVLReadFreq
+            // 
+            this.lblAliEnterpolAVLReadFreq.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLReadFreq.AutoSize = true;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLReadFreq, 2);
+            this.lblAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(26, 81);
+            this.lblAliEnterpolAVLReadFreq.Name = "lblAliEnterpolAVLReadFreq";
+            this.lblAliEnterpolAVLReadFreq.Size = new System.Drawing.Size(111, 13);
+            this.lblAliEnterpolAVLReadFreq.TabIndex = 25;
+            this.lblAliEnterpolAVLReadFreq.Text = "Read Frequency (ms):";
+            // 
+            // groupBox7
+            // 
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.groupBox7, 4);
+            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox7.Location = new System.Drawing.Point(0, 3);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox7.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox7.Size = new System.Drawing.Size(335, 17);
+            this.groupBox7.TabIndex = 102;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Enterpol AVL Settings";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.pnlAliEnterpolAvl.SetColumnSpan(this.tableLayoutPanel4, 4);
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tableLayoutPanel4.Controls.Add(this.lblAliEnterpolAVLAgeFreq, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.numAliEnterpolAVLAge1Freq, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.numAliEnterpolAVLAge2Freq, 1, 1);
+            this.tableLayoutPanel4.Controls.Add(this.numAliEnterpolAVLAge3Freq, 2, 1);
+            this.tableLayoutPanel4.Controls.Add(this.chkAutoHideInactiveUnits, 0, 2);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 179);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel4.MinimumSize = new System.Drawing.Size(0, 69);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 4;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(335, 69);
+            this.tableLayoutPanel4.TabIndex = 109;
+            // 
+            // chkAutoHideInactiveUnits
+            // 
+            this.chkAutoHideInactiveUnits.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.chkAutoHideInactiveUnits.AutoSize = true;
+            this.tableLayoutPanel4.SetColumnSpan(this.chkAutoHideInactiveUnits, 3);
+            this.chkAutoHideInactiveUnits.Location = new System.Drawing.Point(99, 50);
+            this.chkAutoHideInactiveUnits.Name = "chkAutoHideInactiveUnits";
+            this.chkAutoHideInactiveUnits.Size = new System.Drawing.Size(136, 17);
+            this.chkAutoHideInactiveUnits.TabIndex = 84;
+            this.chkAutoHideInactiveUnits.Text = "Autohide Inactive Units";
+            this.chkAutoHideInactiveUnits.UseVisualStyleBackColor = true;
+            // 
+            // lblAliEnterpolAVLAgeFreq
+            // 
+            this.lblAliEnterpolAVLAgeFreq.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblAliEnterpolAVLAgeFreq.AutoSize = true;
+            this.tableLayoutPanel4.SetColumnSpan(this.lblAliEnterpolAVLAgeFreq, 3);
+            this.lblAliEnterpolAVLAgeFreq.Location = new System.Drawing.Point(109, 0);
+            this.lblAliEnterpolAVLAgeFreq.Name = "lblAliEnterpolAVLAgeFreq";
+            this.lblAliEnterpolAVLAgeFreq.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
+            this.lblAliEnterpolAVLAgeFreq.Size = new System.Drawing.Size(116, 21);
+            this.lblAliEnterpolAVLAgeFreq.TabIndex = 23;
+            this.lblAliEnterpolAVLAgeFreq.Text = "AVL Age Frequency (s)";
+            // 
+            // numAliEnterpolAVLAge1Freq
+            // 
+            this.numAliEnterpolAVLAge1Freq.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLAge1Freq.Location = new System.Drawing.Point(3, 24);
+            this.numAliEnterpolAVLAge1Freq.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numAliEnterpolAVLAge1Freq.Name = "numAliEnterpolAVLAge1Freq";
+            this.numAliEnterpolAVLAge1Freq.Size = new System.Drawing.Size(105, 20);
+            this.numAliEnterpolAVLAge1Freq.TabIndex = 20;
+            // 
+            // numAliEnterpolAVLAge2Freq
+            // 
+            this.numAliEnterpolAVLAge2Freq.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLAge2Freq.Location = new System.Drawing.Point(114, 24);
+            this.numAliEnterpolAVLAge2Freq.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numAliEnterpolAVLAge2Freq.Name = "numAliEnterpolAVLAge2Freq";
+            this.numAliEnterpolAVLAge2Freq.Size = new System.Drawing.Size(105, 20);
+            this.numAliEnterpolAVLAge2Freq.TabIndex = 21;
+            // 
+            // numAliEnterpolAVLAge3Freq
+            // 
+            this.numAliEnterpolAVLAge3Freq.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLAge3Freq.Location = new System.Drawing.Point(225, 24);
+            this.numAliEnterpolAVLAge3Freq.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numAliEnterpolAVLAge3Freq.Name = "numAliEnterpolAVLAge3Freq";
+            this.numAliEnterpolAVLAge3Freq.Size = new System.Drawing.Size(107, 20);
+            this.numAliEnterpolAVLAge3Freq.TabIndex = 22;
+            // 
+            // numAliEnterpolAVLReadFreq
+            // 
+            this.numAliEnterpolAVLReadFreq.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(143, 78);
+            this.numAliEnterpolAVLReadFreq.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numAliEnterpolAVLReadFreq.Name = "numAliEnterpolAVLReadFreq";
+            this.numAliEnterpolAVLReadFreq.Size = new System.Drawing.Size(74, 20);
+            this.numAliEnterpolAVLReadFreq.TabIndex = 24;
+            // 
+            // numAliEnterpolAVLUpdateFreq
+            // 
+            this.numAliEnterpolAVLUpdateFreq.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(143, 130);
+            this.numAliEnterpolAVLUpdateFreq.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.numAliEnterpolAVLUpdateFreq.Name = "numAliEnterpolAVLUpdateFreq";
+            this.numAliEnterpolAVLUpdateFreq.Size = new System.Drawing.Size(74, 20);
+            this.numAliEnterpolAVLUpdateFreq.TabIndex = 18;
+            // 
+            // lblAliEnterpolAVLTableName
+            // 
+            this.lblAliEnterpolAVLTableName.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolAVLTableName.AutoSize = true;
+            this.lblAliEnterpolAVLTableName.Location = new System.Drawing.Point(3, 29);
+            this.lblAliEnterpolAVLTableName.Name = "lblAliEnterpolAVLTableName";
+            this.lblAliEnterpolAVLTableName.Size = new System.Drawing.Size(87, 13);
+            this.lblAliEnterpolAVLTableName.TabIndex = 13;
+            this.lblAliEnterpolAVLTableName.Text = "Database Name:";
+            // 
+            // pnlAliEnterpol
+            // 
+            this.pnlAliEnterpol.ColumnCount = 3;
+            this.pnlAliEnterpol.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.pnlAliEnterpol.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.pnlAliEnterpol.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.pnlAliEnterpol.Controls.Add(this.chkEnterpolAvl, 0, 4);
+            this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolInitialCatalog, 2, 3);
+            this.pnlAliEnterpol.Controls.Add(this.groupBox6, 0, 0);
+            this.pnlAliEnterpol.Controls.Add(this.lblAliEnterpolDataSource, 0, 1);
+            this.pnlAliEnterpol.Controls.Add(this.lblAliEnterpolTableName, 0, 2);
+            this.pnlAliEnterpol.Controls.Add(this.lblAliEnterpolInitialCatalog, 0, 3);
+            this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolDataSource, 1, 1);
+            this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolTableName, 1, 2);
+            this.pnlAliEnterpol.Location = new System.Drawing.Point(649, 12);
+            this.pnlAliEnterpol.Margin = new System.Windows.Forms.Padding(8, 0, 0, 3);
+            this.pnlAliEnterpol.MinimumSize = new System.Drawing.Size(0, 124);
+            this.pnlAliEnterpol.Name = "pnlAliEnterpol";
+            this.pnlAliEnterpol.RowCount = 6;
+            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.pnlAliEnterpol.Size = new System.Drawing.Size(335, 171);
+            this.pnlAliEnterpol.TabIndex = 74;
+            // 
+            // chkEnterpolAvl
+            // 
+            this.chkEnterpolAvl.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.chkEnterpolAvl.AutoSize = true;
+            this.pnlAliEnterpol.SetColumnSpan(this.chkEnterpolAvl, 3);
+            this.chkEnterpolAvl.Location = new System.Drawing.Point(58, 104);
+            this.chkEnterpolAvl.Name = "chkEnterpolAvl";
+            this.chkEnterpolAvl.Size = new System.Drawing.Size(219, 17);
+            this.chkEnterpolAvl.TabIndex = 8;
+            this.chkEnterpolAvl.Text = "Use Enterpol Automatic Vehicle Location";
+            this.chkEnterpolAvl.UseVisualStyleBackColor = true;
+            this.chkEnterpolAvl.CheckedChanged += new System.EventHandler(this.chkAvl_CheckedChanged);
+            // 
+            // lblAliEnterpolInitialCatalog
+            // 
+            this.lblAliEnterpolInitialCatalog.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolInitialCatalog.AutoSize = true;
+            this.pnlAliEnterpol.SetColumnSpan(this.lblAliEnterpolInitialCatalog, 2);
+            this.lblAliEnterpolInitialCatalog.Location = new System.Drawing.Point(3, 81);
+            this.lblAliEnterpolInitialCatalog.Name = "lblAliEnterpolInitialCatalog";
+            this.lblAliEnterpolInitialCatalog.Size = new System.Drawing.Size(142, 13);
+            this.lblAliEnterpolInitialCatalog.TabIndex = 7;
+            this.lblAliEnterpolInitialCatalog.Text = "Incidents Table/View Name:";
+            // 
+            // txtAliEnterpolDataSource
+            // 
+            this.pnlAliEnterpol.SetColumnSpan(this.txtAliEnterpolDataSource, 2);
+            this.txtAliEnterpolDataSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolDataSource.Location = new System.Drawing.Point(109, 26);
+            this.txtAliEnterpolDataSource.Name = "txtAliEnterpolDataSource";
+            this.txtAliEnterpolDataSource.Size = new System.Drawing.Size(223, 20);
+            this.txtAliEnterpolDataSource.TabIndex = 2;
+            // 
+            // txtAliEnterpolTableName
+            // 
+            this.pnlAliEnterpol.SetColumnSpan(this.txtAliEnterpolTableName, 2);
+            this.txtAliEnterpolTableName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolTableName.Location = new System.Drawing.Point(109, 52);
+            this.txtAliEnterpolTableName.Name = "txtAliEnterpolTableName";
+            this.txtAliEnterpolTableName.Size = new System.Drawing.Size(223, 20);
+            this.txtAliEnterpolTableName.TabIndex = 1;
+            // 
+            // txtAliEnterpolInitialCatalog
+            // 
+            this.txtAliEnterpolInitialCatalog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliEnterpolInitialCatalog.Location = new System.Drawing.Point(151, 78);
+            this.txtAliEnterpolInitialCatalog.Name = "txtAliEnterpolInitialCatalog";
+            this.txtAliEnterpolInitialCatalog.Size = new System.Drawing.Size(181, 20);
+            this.txtAliEnterpolInitialCatalog.TabIndex = 3;
+            // 
+            // groupBox6
+            // 
+            this.pnlAliEnterpol.SetColumnSpan(this.groupBox6, 3);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox6.Location = new System.Drawing.Point(0, 3);
+            this.groupBox6.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox6.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox6.Size = new System.Drawing.Size(335, 17);
+            this.groupBox6.TabIndex = 101;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Enterpol Database Settings";
+            // 
+            // lblAliEnterpolDataSource
+            // 
+            this.lblAliEnterpolDataSource.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolDataSource.AutoSize = true;
+            this.lblAliEnterpolDataSource.Location = new System.Drawing.Point(3, 29);
+            this.lblAliEnterpolDataSource.Name = "lblAliEnterpolDataSource";
+            this.lblAliEnterpolDataSource.Size = new System.Drawing.Size(100, 13);
+            this.lblAliEnterpolDataSource.TabIndex = 5;
+            this.lblAliEnterpolDataSource.Text = "Database Location:";
+            // 
+            // lblAliEnterpolTableName
+            // 
+            this.lblAliEnterpolTableName.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliEnterpolTableName.AutoSize = true;
+            this.lblAliEnterpolTableName.Location = new System.Drawing.Point(16, 55);
+            this.lblAliEnterpolTableName.Name = "lblAliEnterpolTableName";
+            this.lblAliEnterpolTableName.Size = new System.Drawing.Size(87, 13);
+            this.lblAliEnterpolTableName.TabIndex = 6;
+            this.lblAliEnterpolTableName.Text = "Database Name:";
+            // 
+            // aliPanelTableLayout
+            // 
+            this.aliPanelTableLayout.ColumnCount = 2;
+            this.aliPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.aliPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.aliPanelTableLayout.Controls.Add(this.pnlAliSdrServer, 1, 1);
+            this.aliPanelTableLayout.Controls.Add(this.pnlAliNetworkfleet, 0, 1);
+            this.aliPanelTableLayout.Controls.Add(this.pnlAliValidate, 0, 0);
+            this.aliPanelTableLayout.Controls.Add(this.pnlAliGlobalCad, 1, 2);
+            this.aliPanelTableLayout.Location = new System.Drawing.Point(3, 3);
+            this.aliPanelTableLayout.Name = "aliPanelTableLayout";
+            this.aliPanelTableLayout.RowCount = 4;
+            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.2F));
+            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 56.8F));
+            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 500F));
+            this.aliPanelTableLayout.Size = new System.Drawing.Size(596, 782);
+            this.aliPanelTableLayout.TabIndex = 73;
+            // 
+            // pnlAliSdrServer
+            // 
+            this.pnlAliSdrServer.ColumnCount = 4;
+            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.42857F));
+            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.57143F));
+            this.pnlAliSdrServer.Controls.Add(this.tableLayoutPanel6, 0, 1);
+            this.pnlAliSdrServer.Controls.Add(this.groupBox5, 0, 0);
+            this.pnlAliSdrServer.Controls.Add(this.lblAliInterfaceUdpHost, 0, 2);
+            this.pnlAliSdrServer.Controls.Add(this.numAliInterfaceUdpPort, 3, 2);
+            this.pnlAliSdrServer.Controls.Add(this.lblAliInterfaceUdpPort, 2, 2);
+            this.pnlAliSdrServer.Controls.Add(this.txtAliInterfaceUdpHost, 1, 2);
+            this.pnlAliSdrServer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlAliSdrServer.Location = new System.Drawing.Point(246, 61);
+            this.pnlAliSdrServer.Margin = new System.Windows.Forms.Padding(8, 0, 0, 3);
+            this.pnlAliSdrServer.MinimumSize = new System.Drawing.Size(0, 79);
+            this.pnlAliSdrServer.Name = "pnlAliSdrServer";
+            this.pnlAliSdrServer.RowCount = 4;
+            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.pnlAliSdrServer.Size = new System.Drawing.Size(350, 90);
+            this.pnlAliSdrServer.TabIndex = 102;
+            // 
+            // groupBox5
+            // 
+            this.pnlAliSdrServer.SetColumnSpan(this.groupBox5, 4);
+            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox5.Location = new System.Drawing.Point(0, 3);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox5.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox5.Size = new System.Drawing.Size(350, 17);
+            this.groupBox5.TabIndex = 101;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "SDR AliServer Settings";
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 3;
+            this.pnlAliSdrServer.SetColumnSpan(this.tableLayoutPanel6, 4);
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel6.Controls.Add(this.btnAliInterfaceDbPathBrowse, 2, 0);
+            this.tableLayoutPanel6.Controls.Add(this.lblAliInterfaceDbPath, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.txtAliInterfaceDbPath, 1, 0);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 23);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel6.MinimumSize = new System.Drawing.Size(0, 30);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 1;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(350, 30);
+            this.tableLayoutPanel6.TabIndex = 103;
+            // 
+            // btnAliInterfaceDbPathBrowse
+            // 
+            this.btnAliInterfaceDbPathBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAliInterfaceDbPathBrowse.Location = new System.Drawing.Point(283, 3);
+            this.btnAliInterfaceDbPathBrowse.Name = "btnAliInterfaceDbPathBrowse";
+            this.btnAliInterfaceDbPathBrowse.Size = new System.Drawing.Size(64, 24);
+            this.btnAliInterfaceDbPathBrowse.TabIndex = 1;
+            this.btnAliInterfaceDbPathBrowse.Text = "Browse";
+            this.btnAliInterfaceDbPathBrowse.UseVisualStyleBackColor = true;
+            this.btnAliInterfaceDbPathBrowse.Click += new System.EventHandler(this.btnAliInterfaceDbPathBrowse_Click);
+            // 
+            // lblAliInterfaceDbPath
+            // 
+            this.lblAliInterfaceDbPath.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliInterfaceDbPath.AutoSize = true;
+            this.lblAliInterfaceDbPath.Location = new System.Drawing.Point(3, 8);
+            this.lblAliInterfaceDbPath.Name = "lblAliInterfaceDbPath";
+            this.lblAliInterfaceDbPath.Size = new System.Drawing.Size(100, 13);
+            this.lblAliInterfaceDbPath.TabIndex = 4;
+            this.lblAliInterfaceDbPath.Text = "Database Location:";
+            // 
+            // txtAliInterfaceDbPath
+            // 
+            this.txtAliInterfaceDbPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliInterfaceDbPath.Location = new System.Drawing.Point(109, 3);
+            this.txtAliInterfaceDbPath.Name = "txtAliInterfaceDbPath";
+            this.txtAliInterfaceDbPath.Size = new System.Drawing.Size(168, 20);
+            this.txtAliInterfaceDbPath.TabIndex = 0;
+            // 
+            // lblAliInterfaceUdpHost
+            // 
+            this.lblAliInterfaceUdpHost.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblAliInterfaceUdpHost.AutoSize = true;
+            this.lblAliInterfaceUdpHost.Location = new System.Drawing.Point(3, 59);
+            this.lblAliInterfaceUdpHost.Name = "lblAliInterfaceUdpHost";
+            this.lblAliInterfaceUdpHost.Size = new System.Drawing.Size(58, 13);
+            this.lblAliInterfaceUdpHost.TabIndex = 5;
+            this.lblAliInterfaceUdpHost.Text = "UDP Host:";
+            // 
+            // numAliInterfaceUdpPort
+            // 
+            this.numAliInterfaceUdpPort.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliInterfaceUdpPort.Location = new System.Drawing.Point(281, 56);
+            this.numAliInterfaceUdpPort.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numAliInterfaceUdpPort.Name = "numAliInterfaceUdpPort";
+            this.numAliInterfaceUdpPort.Size = new System.Drawing.Size(66, 20);
+            this.numAliInterfaceUdpPort.TabIndex = 7;
+            // 
+            // lblAliInterfaceUdpPort
+            // 
+            this.lblAliInterfaceUdpPort.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliInterfaceUdpPort.AutoSize = true;
+            this.lblAliInterfaceUdpPort.Location = new System.Drawing.Point(246, 59);
+            this.lblAliInterfaceUdpPort.Name = "lblAliInterfaceUdpPort";
+            this.lblAliInterfaceUdpPort.Size = new System.Drawing.Size(29, 13);
+            this.lblAliInterfaceUdpPort.TabIndex = 6;
+            this.lblAliInterfaceUdpPort.Text = "Port:";
+            // 
+            // txtAliInterfaceUdpHost
+            // 
+            this.txtAliInterfaceUdpHost.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliInterfaceUdpHost.Location = new System.Drawing.Point(67, 56);
+            this.txtAliInterfaceUdpHost.Name = "txtAliInterfaceUdpHost";
+            this.txtAliInterfaceUdpHost.Size = new System.Drawing.Size(173, 20);
+            this.txtAliInterfaceUdpHost.TabIndex = 2;
+            // 
+            // pnlAliNetworkfleet
+            // 
+            this.pnlAliNetworkfleet.ColumnCount = 1;
+            this.pnlAliNetworkfleet.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.pnlAliNetworkfleet.Controls.Add(this.tableLayoutPanel2, 0, 0);
+            this.pnlAliNetworkfleet.Controls.Add(this.tableLayoutPanel3, 0, 2);
+            this.pnlAliNetworkfleet.Controls.Add(this.tableLayoutPanel5, 0, 1);
+            this.pnlAliNetworkfleet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(0, 61);
+            this.pnlAliNetworkfleet.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
+            this.pnlAliNetworkfleet.RowCount = 3;
+            this.aliPanelTableLayout.SetRowSpan(this.pnlAliNetworkfleet, 3);
+            this.pnlAliNetworkfleet.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliNetworkfleet.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.pnlAliNetworkfleet.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(238, 721);
+            this.pnlAliNetworkfleet.TabIndex = 107;
             // 
             // tableLayoutPanel2
             // 
@@ -1676,73 +2465,39 @@
             this.txtAliNetworkfleetUdpHost.Size = new System.Drawing.Size(153, 20);
             this.txtAliNetworkfleetUdpHost.TabIndex = 0;
             // 
-            // btnAliNetworkfleetLabelFont
+            // tableLayoutPanel3
             // 
-            this.btnAliNetworkfleetLabelFont.Location = new System.Drawing.Point(3, 26);
-            this.btnAliNetworkfleetLabelFont.Name = "btnAliNetworkfleetLabelFont";
-            this.btnAliNetworkfleetLabelFont.Size = new System.Drawing.Size(70, 23);
-            this.btnAliNetworkfleetLabelFont.TabIndex = 77;
-            this.btnAliNetworkfleetLabelFont.Text = "Select Font";
-            this.btnAliNetworkfleetLabelFont.UseVisualStyleBackColor = true;
-            this.btnAliNetworkfleetLabelFont.Click += new System.EventHandler(this.btnAliNetworkfleetLabelFont_Click);
-            // 
-            // label14
-            // 
-            this.label14.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(25, 114);
-            this.label14.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(48, 13);
-            this.label14.TabIndex = 75;
-            this.label14.Text = "X Offset:";
-            // 
-            // numAliNetworkfleetLabelXOffset
-            // 
-            this.numAliNetworkfleetLabelXOffset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliNetworkfleetLabelXOffset.Location = new System.Drawing.Point(79, 108);
-            this.numAliNetworkfleetLabelXOffset.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numAliNetworkfleetLabelXOffset.Name = "numAliNetworkfleetLabelXOffset";
-            this.numAliNetworkfleetLabelXOffset.Size = new System.Drawing.Size(113, 20);
-            this.numAliNetworkfleetLabelXOffset.TabIndex = 73;
-            // 
-            // lblAliNetworkfleetLabelFontSize
-            // 
-            this.lblAliNetworkfleetLabelFontSize.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliNetworkfleetLabelFontSize.AutoSize = true;
-            this.lblAliNetworkfleetLabelFontSize.Location = new System.Drawing.Point(19, 58);
-            this.lblAliNetworkfleetLabelFontSize.Name = "lblAliNetworkfleetLabelFontSize";
-            this.lblAliNetworkfleetLabelFontSize.Size = new System.Drawing.Size(54, 13);
-            this.lblAliNetworkfleetLabelFontSize.TabIndex = 79;
-            this.lblAliNetworkfleetLabelFontSize.Text = "Font Size:";
-            // 
-            // label15
-            // 
-            this.label15.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(25, 140);
-            this.label15.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(48, 13);
-            this.label15.TabIndex = 76;
-            this.label15.Text = "Y Offset:";
-            // 
-            // numAliNetworkfleetLabelYOffset
-            // 
-            this.numAliNetworkfleetLabelYOffset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliNetworkfleetLabelYOffset.Location = new System.Drawing.Point(79, 134);
-            this.numAliNetworkfleetLabelYOffset.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numAliNetworkfleetLabelYOffset.Name = "numAliNetworkfleetLabelYOffset";
-            this.numAliNetworkfleetLabelYOffset.Size = new System.Drawing.Size(113, 20);
-            this.numAliNetworkfleetLabelYOffset.TabIndex = 74;
+            this.tableLayoutPanel3.ColumnCount = 3;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.07407F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.92593F));
+            this.tableLayoutPanel3.Controls.Add(this.groupBox1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.numAliNetworkfleetLabelYOffset, 1, 6);
+            this.tableLayoutPanel3.Controls.Add(this.numAliNetworkfleetLabelXOffset, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.label15, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.txtAliNetworkfleetLabelFontSize, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.btnAliNetworkfleetLabelFont, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lblAliNetworkfleetLabelFont, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.label13, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.dgvNetworkfleetLabelLookup, 0, 7);
+            this.tableLayoutPanel3.Controls.Add(this.lblAliNetworkfleetLabelFontSize, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.cmbAliNetworkfleetLabelAlignment, 1, 4);
+            this.tableLayoutPanel3.Controls.Add(this.label14, 0, 5);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 298);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 8;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(238, 423);
+            this.tableLayoutPanel3.TabIndex = 106;
             // 
             // lblAliNetworkfleetLabelFont
             // 
@@ -1772,16 +2527,6 @@
             this.cmbAliNetworkfleetLabelAlignment.TabIndex = 72;
             this.cmbAliNetworkfleetLabelAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAliNetworkfleetLabelAlignment_SelectedIndexChanged);
             // 
-            // label13
-            // 
-            this.label13.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(17, 85);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(56, 13);
-            this.label13.TabIndex = 71;
-            this.label13.Text = "Alignment:";
-            // 
             // dgvNetworkfleetLabelLookup
             // 
             this.dgvNetworkfleetLabelLookup.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -1797,24 +2542,306 @@
             this.dgvNetworkfleetLabelLookup.Size = new System.Drawing.Size(238, 261);
             this.dgvNetworkfleetLabelLookup.TabIndex = 80;
             // 
-            // aliPanelTableLayout
+            // vehicle_id
             // 
-            this.aliPanelTableLayout.ColumnCount = 2;
-            this.aliPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.aliPanelTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.aliPanelTableLayout.Controls.Add(this.pnlAliSdrServer, 1, 1);
-            this.aliPanelTableLayout.Controls.Add(this.pnlAliNetworkfleet, 0, 1);
-            this.aliPanelTableLayout.Controls.Add(this.pnlAliValidate, 0, 0);
-            this.aliPanelTableLayout.Controls.Add(this.pnlAliGlobalCad, 1, 2);
-            this.aliPanelTableLayout.Location = new System.Drawing.Point(3, 3);
-            this.aliPanelTableLayout.Name = "aliPanelTableLayout";
-            this.aliPanelTableLayout.RowCount = 4;
-            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.2F));
-            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 56.8F));
-            this.aliPanelTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 500F));
-            this.aliPanelTableLayout.Size = new System.Drawing.Size(596, 782);
-            this.aliPanelTableLayout.TabIndex = 73;
+            this.vehicle_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.vehicle_id.HeaderText = "Vehicle ID";
+            this.vehicle_id.Name = "vehicle_id";
+            this.vehicle_id.Width = 81;
+            // 
+            // vehicle_label
+            // 
+            this.vehicle_label.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.vehicle_label.HeaderText = "Label";
+            this.vehicle_label.Name = "vehicle_label";
+            // 
+            // groupBox1
+            // 
+            this.tableLayoutPanel3.SetColumnSpan(this.groupBox1, 3);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 3);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox1.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox1.Size = new System.Drawing.Size(238, 17);
+            this.groupBox1.TabIndex = 104;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Networkfleet Labeling";
+            // 
+            // numAliNetworkfleetLabelYOffset
+            // 
+            this.numAliNetworkfleetLabelYOffset.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliNetworkfleetLabelYOffset.Location = new System.Drawing.Point(79, 134);
+            this.numAliNetworkfleetLabelYOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numAliNetworkfleetLabelYOffset.Name = "numAliNetworkfleetLabelYOffset";
+            this.numAliNetworkfleetLabelYOffset.Size = new System.Drawing.Size(113, 20);
+            this.numAliNetworkfleetLabelYOffset.TabIndex = 74;
+            // 
+            // numAliNetworkfleetLabelXOffset
+            // 
+            this.numAliNetworkfleetLabelXOffset.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numAliNetworkfleetLabelXOffset.Location = new System.Drawing.Point(79, 108);
+            this.numAliNetworkfleetLabelXOffset.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numAliNetworkfleetLabelXOffset.Name = "numAliNetworkfleetLabelXOffset";
+            this.numAliNetworkfleetLabelXOffset.Size = new System.Drawing.Size(113, 20);
+            this.numAliNetworkfleetLabelXOffset.TabIndex = 73;
+            // 
+            // label15
+            // 
+            this.label15.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(25, 140);
+            this.label15.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(48, 13);
+            this.label15.TabIndex = 76;
+            this.label15.Text = "Y Offset:";
+            // 
+            // txtAliNetworkfleetLabelFontSize
+            // 
+            this.txtAliNetworkfleetLabelFontSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliNetworkfleetLabelFontSize.Location = new System.Drawing.Point(79, 55);
+            this.txtAliNetworkfleetLabelFontSize.Name = "txtAliNetworkfleetLabelFontSize";
+            this.txtAliNetworkfleetLabelFontSize.ReadOnly = true;
+            this.txtAliNetworkfleetLabelFontSize.Size = new System.Drawing.Size(113, 20);
+            this.txtAliNetworkfleetLabelFontSize.TabIndex = 105;
+            // 
+            // btnAliNetworkfleetLabelFont
+            // 
+            this.btnAliNetworkfleetLabelFont.Location = new System.Drawing.Point(3, 26);
+            this.btnAliNetworkfleetLabelFont.Name = "btnAliNetworkfleetLabelFont";
+            this.btnAliNetworkfleetLabelFont.Size = new System.Drawing.Size(70, 23);
+            this.btnAliNetworkfleetLabelFont.TabIndex = 77;
+            this.btnAliNetworkfleetLabelFont.Text = "Select Font";
+            this.btnAliNetworkfleetLabelFont.UseVisualStyleBackColor = true;
+            this.btnAliNetworkfleetLabelFont.Click += new System.EventHandler(this.btnAliNetworkfleetLabelFont_Click);
+            // 
+            // label13
+            // 
+            this.label13.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(17, 85);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(56, 13);
+            this.label13.TabIndex = 71;
+            this.label13.Text = "Alignment:";
+            // 
+            // lblAliNetworkfleetLabelFontSize
+            // 
+            this.lblAliNetworkfleetLabelFontSize.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliNetworkfleetLabelFontSize.AutoSize = true;
+            this.lblAliNetworkfleetLabelFontSize.Location = new System.Drawing.Point(19, 58);
+            this.lblAliNetworkfleetLabelFontSize.Name = "lblAliNetworkfleetLabelFontSize";
+            this.lblAliNetworkfleetLabelFontSize.Size = new System.Drawing.Size(54, 13);
+            this.lblAliNetworkfleetLabelFontSize.TabIndex = 79;
+            this.lblAliNetworkfleetLabelFontSize.Text = "Font Size:";
+            // 
+            // label14
+            // 
+            this.label14.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(25, 114);
+            this.label14.Margin = new System.Windows.Forms.Padding(3, 6, 3, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(48, 13);
+            this.label14.TabIndex = 75;
+            this.label14.Text = "X Offset:";
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 3;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 87F));
+            this.tableLayoutPanel5.Controls.Add(this.groupBox2, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.tblNetworkfleetAvlColors, 0, 4);
+            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetGraphic, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label22, 1, 2);
+            this.tableLayoutPanel5.Controls.Add(this.btnAliNetworkfleetFont, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetFont, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetSize, 2, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label20, 1, 3);
+            this.tableLayoutPanel5.Controls.Add(this.ptAliNetworkfleetChar, 2, 3);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 144);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 5;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(238, 154);
+            this.tableLayoutPanel5.TabIndex = 103;
+            // 
+            // groupBox2
+            // 
+            this.tableLayoutPanel5.SetColumnSpan(this.groupBox2, 3);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(0, 3);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox2.MinimumSize = new System.Drawing.Size(0, 15);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.groupBox2.Size = new System.Drawing.Size(238, 15);
+            this.groupBox2.TabIndex = 99;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Networkfleet Symbology";
+            // 
+            // tblNetworkfleetAvlColors
+            // 
+            this.tblNetworkfleetAvlColors.ColumnCount = 3;
+            this.tableLayoutPanel5.SetColumnSpan(this.tblNetworkfleetAvlColors, 3);
+            this.tblNetworkfleetAvlColors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tblNetworkfleetAvlColors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tblNetworkfleetAvlColors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
+            this.tblNetworkfleetAvlColors.Controls.Add(this.label21, 0, 0);
+            this.tblNetworkfleetAvlColors.Controls.Add(this.label18, 1, 0);
+            this.tblNetworkfleetAvlColors.Controls.Add(this.label19, 2, 0);
+            this.tblNetworkfleetAvlColors.Controls.Add(this.ptAliNetworkfleetColor, 0, 1);
+            this.tblNetworkfleetAvlColors.Controls.Add(this.pnlAliNetworkfleetAVLInactiveColor, 1, 1);
+            this.tblNetworkfleetAvlColors.Controls.Add(this.pnlAliNetworkfleetAVLMyVehicleColor, 2, 1);
+            this.tblNetworkfleetAvlColors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblNetworkfleetAvlColors.Location = new System.Drawing.Point(0, 106);
+            this.tblNetworkfleetAvlColors.Margin = new System.Windows.Forms.Padding(0);
+            this.tblNetworkfleetAvlColors.Name = "tblNetworkfleetAvlColors";
+            this.tblNetworkfleetAvlColors.RowCount = 2;
+            this.tblNetworkfleetAvlColors.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tblNetworkfleetAvlColors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblNetworkfleetAvlColors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tblNetworkfleetAvlColors.Size = new System.Drawing.Size(238, 48);
+            this.tblNetworkfleetAvlColors.TabIndex = 100;
+            // 
+            // label21
+            // 
+            this.label21.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(21, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(37, 13);
+            this.label21.TabIndex = 95;
+            this.label21.Text = "Active";
+            // 
+            // label18
+            // 
+            this.label18.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(96, 0);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(45, 13);
+            this.label18.TabIndex = 91;
+            this.label18.Text = "Inactive";
+            // 
+            // label19
+            // 
+            this.label19.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(176, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(43, 13);
+            this.label19.TabIndex = 92;
+            this.label19.Text = "My Unit";
+            // 
+            // ptAliNetworkfleetColor
+            // 
+            this.ptAliNetworkfleetColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ptAliNetworkfleetColor.Location = new System.Drawing.Point(3, 16);
+            this.ptAliNetworkfleetColor.Name = "ptAliNetworkfleetColor";
+            this.ptAliNetworkfleetColor.Size = new System.Drawing.Size(73, 29);
+            this.ptAliNetworkfleetColor.TabIndex = 70;
+            // 
+            // pnlAliNetworkfleetAVLInactiveColor
+            // 
+            this.pnlAliNetworkfleetAVLInactiveColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliNetworkfleetAVLInactiveColor.Location = new System.Drawing.Point(82, 16);
+            this.pnlAliNetworkfleetAVLInactiveColor.Name = "pnlAliNetworkfleetAVLInactiveColor";
+            this.pnlAliNetworkfleetAVLInactiveColor.Size = new System.Drawing.Size(73, 29);
+            this.pnlAliNetworkfleetAVLInactiveColor.TabIndex = 88;
+            // 
+            // pnlAliNetworkfleetAVLMyVehicleColor
+            // 
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Location = new System.Drawing.Point(161, 16);
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Name = "pnlAliNetworkfleetAVLMyVehicleColor";
+            this.pnlAliNetworkfleetAVLMyVehicleColor.Size = new System.Drawing.Size(74, 29);
+            this.pnlAliNetworkfleetAVLMyVehicleColor.TabIndex = 89;
+            // 
+            // ptAliNetworkfleetGraphic
+            // 
+            this.ptAliNetworkfleetGraphic.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.ptAliNetworkfleetGraphic.Location = new System.Drawing.Point(13, 53);
+            this.ptAliNetworkfleetGraphic.Name = "ptAliNetworkfleetGraphic";
+            this.tableLayoutPanel5.SetRowSpan(this.ptAliNetworkfleetGraphic, 2);
+            this.ptAliNetworkfleetGraphic.Size = new System.Drawing.Size(50, 50);
+            this.ptAliNetworkfleetGraphic.TabIndex = 4;
+            // 
+            // label22
+            // 
+            this.label22.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(94, 56);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(54, 13);
+            this.label22.TabIndex = 102;
+            this.label22.Text = "Font Size:";
+            // 
+            // btnAliNetworkfleetFont
+            // 
+            this.btnAliNetworkfleetFont.Location = new System.Drawing.Point(3, 24);
+            this.btnAliNetworkfleetFont.Name = "btnAliNetworkfleetFont";
+            this.btnAliNetworkfleetFont.Size = new System.Drawing.Size(70, 23);
+            this.btnAliNetworkfleetFont.TabIndex = 68;
+            this.btnAliNetworkfleetFont.Text = "Select Font";
+            this.btnAliNetworkfleetFont.UseVisualStyleBackColor = true;
+            this.btnAliNetworkfleetFont.Click += new System.EventHandler(this.btnAliNetworkfleetFont_Click);
+            // 
+            // ptAliNetworkfleetFont
+            // 
+            this.tableLayoutPanel5.SetColumnSpan(this.ptAliNetworkfleetFont, 2);
+            this.ptAliNetworkfleetFont.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ptAliNetworkfleetFont.Location = new System.Drawing.Point(79, 21);
+            this.ptAliNetworkfleetFont.Name = "ptAliNetworkfleetFont";
+            this.ptAliNetworkfleetFont.Size = new System.Drawing.Size(144, 29);
+            this.ptAliNetworkfleetFont.TabIndex = 69;
+            this.ptAliNetworkfleetFont.Text = "This is the font name";
+            // 
+            // ptAliNetworkfleetSize
+            // 
+            this.ptAliNetworkfleetSize.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.ptAliNetworkfleetSize.Location = new System.Drawing.Point(154, 53);
+            this.ptAliNetworkfleetSize.Name = "ptAliNetworkfleetSize";
+            this.ptAliNetworkfleetSize.ReadOnly = true;
+            this.ptAliNetworkfleetSize.Size = new System.Drawing.Size(34, 20);
+            this.ptAliNetworkfleetSize.TabIndex = 101;
+            // 
+            // label20
+            // 
+            this.label20.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(92, 84);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(56, 13);
+            this.label20.TabIndex = 94;
+            this.label20.Text = "Character:";
+            // 
+            // ptAliNetworkfleetChar
+            // 
+            this.ptAliNetworkfleetChar.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.ptAliNetworkfleetChar.Location = new System.Drawing.Point(154, 81);
+            this.ptAliNetworkfleetChar.MaxLength = 1;
+            this.ptAliNetworkfleetChar.Name = "ptAliNetworkfleetChar";
+            this.ptAliNetworkfleetChar.Size = new System.Drawing.Size(34, 20);
+            this.ptAliNetworkfleetChar.TabIndex = 67;
             // 
             // pnlAliValidate
             // 
@@ -1868,805 +2895,6 @@
             this.chkNetworkfleet.UseVisualStyleBackColor = true;
             this.chkNetworkfleet.CheckedChanged += new System.EventHandler(this.chkNetworkfleet_CheckedChanged);
             // 
-            // label9
-            // 
-            this.label9.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(91, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(21, 13);
-            this.label9.TabIndex = 100;
-            this.label9.Text = "FD";
-            // 
-            // label8
-            // 
-            this.label8.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(160, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(20, 13);
-            this.label8.TabIndex = 99;
-            this.label8.Text = "LE";
-            // 
-            // label7
-            // 
-            this.label7.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(19, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(30, 13);
-            this.label7.TabIndex = 98;
-            this.label7.Text = "EMS";
-            // 
-            // label11
-            // 
-            this.label11.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(174, 6);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(45, 13);
-            this.label11.TabIndex = 97;
-            this.label11.Text = "Y Offset";
-            // 
-            // label10
-            // 
-            this.label10.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(3, 6);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(45, 13);
-            this.label10.TabIndex = 96;
-            this.label10.Text = "X Offset";
-            // 
-            // lblAliEnterpolAVLLabelAlignment
-            // 
-            this.lblAliEnterpolAVLLabelAlignment.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLLabelAlignment.AutoSize = true;
-            this.lblAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(17, 225);
-            this.lblAliEnterpolAVLLabelAlignment.Name = "lblAliEnterpolAVLLabelAlignment";
-            this.lblAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(56, 13);
-            this.lblAliEnterpolAVLLabelAlignment.TabIndex = 95;
-            this.lblAliEnterpolAVLLabelAlignment.Text = "Alignment:";
-            // 
-            // numAliEnterpolAVLLabelYOffset
-            // 
-            this.numAliEnterpolAVLLabelYOffset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLLabelYOffset.Location = new System.Drawing.Point(225, 3);
-            this.numAliEnterpolAVLLabelYOffset.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numAliEnterpolAVLLabelYOffset.Name = "numAliEnterpolAVLLabelYOffset";
-            this.numAliEnterpolAVLLabelYOffset.Size = new System.Drawing.Size(114, 20);
-            this.numAliEnterpolAVLLabelYOffset.TabIndex = 94;
-            // 
-            // numAliEnterpolAVLLabelXOffset
-            // 
-            this.numAliEnterpolAVLLabelXOffset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLLabelXOffset.Location = new System.Drawing.Point(54, 3);
-            this.numAliEnterpolAVLLabelXOffset.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            -2147483648});
-            this.numAliEnterpolAVLLabelXOffset.Name = "numAliEnterpolAVLLabelXOffset";
-            this.numAliEnterpolAVLLabelXOffset.Size = new System.Drawing.Size(114, 20);
-            this.numAliEnterpolAVLLabelXOffset.TabIndex = 93;
-            // 
-            // cmbAliEnterpolAVLLabelAlignment
-            // 
-            this.tableLayoutPanel7.SetColumnSpan(this.cmbAliEnterpolAVLLabelAlignment, 4);
-            this.cmbAliEnterpolAVLLabelAlignment.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmbAliEnterpolAVLLabelAlignment.FormattingEnabled = true;
-            this.cmbAliEnterpolAVLLabelAlignment.Items.AddRange(new object[] {
-            "Above",
-            "Below",
-            "Right",
-            "Left"});
-            this.cmbAliEnterpolAVLLabelAlignment.Location = new System.Drawing.Point(79, 221);
-            this.cmbAliEnterpolAVLLabelAlignment.Name = "cmbAliEnterpolAVLLabelAlignment";
-            this.cmbAliEnterpolAVLLabelAlignment.Size = new System.Drawing.Size(260, 21);
-            this.cmbAliEnterpolAVLLabelAlignment.TabIndex = 92;
-            this.cmbAliEnterpolAVLLabelAlignment.SelectedIndexChanged += new System.EventHandler(this.cmbAliEnterpolAVLLabelAlignment_SelectedIndexChanged);
-            // 
-            // lblAliEnterpolAVLLabelFontSize
-            // 
-            this.lblAliEnterpolAVLLabelFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblAliEnterpolAVLLabelFontSize.AutoSize = true;
-            this.lblAliEnterpolAVLLabelFontSize.Location = new System.Drawing.Point(226, 197);
-            this.lblAliEnterpolAVLLabelFontSize.Name = "lblAliEnterpolAVLLabelFontSize";
-            this.lblAliEnterpolAVLLabelFontSize.Size = new System.Drawing.Size(54, 13);
-            this.lblAliEnterpolAVLLabelFontSize.TabIndex = 91;
-            this.lblAliEnterpolAVLLabelFontSize.Text = "Font Size:";
-            // 
-            // lblAliEnterpolAVLLabelFontName
-            // 
-            this.lblAliEnterpolAVLLabelFontName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblAliEnterpolAVLLabelFontName.AutoSize = true;
-            this.tableLayoutPanel7.SetColumnSpan(this.lblAliEnterpolAVLLabelFontName, 2);
-            this.lblAliEnterpolAVLLabelFontName.Location = new System.Drawing.Point(79, 197);
-            this.lblAliEnterpolAVLLabelFontName.Name = "lblAliEnterpolAVLLabelFontName";
-            this.lblAliEnterpolAVLLabelFontName.Size = new System.Drawing.Size(141, 13);
-            this.lblAliEnterpolAVLLabelFontName.TabIndex = 90;
-            this.lblAliEnterpolAVLLabelFontName.Text = "Font Name";
-            // 
-            // btnAliEnterpolAVLLabelFont
-            // 
-            this.btnAliEnterpolAVLLabelFont.Location = new System.Drawing.Point(3, 192);
-            this.btnAliEnterpolAVLLabelFont.Name = "btnAliEnterpolAVLLabelFont";
-            this.btnAliEnterpolAVLLabelFont.Size = new System.Drawing.Size(70, 23);
-            this.btnAliEnterpolAVLLabelFont.TabIndex = 89;
-            this.btnAliEnterpolAVLLabelFont.Text = "Select Font";
-            this.btnAliEnterpolAVLLabelFont.UseVisualStyleBackColor = true;
-            this.btnAliEnterpolAVLLabelFont.Click += new System.EventHandler(this.btnAliEnterpolAVLLabelFont_Click);
-            // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(215, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(45, 13);
-            this.label5.TabIndex = 88;
-            this.label5.Text = "Inactive";
-            // 
-            // pnlAliAVLInactiveColor
-            // 
-            this.pnlAliAVLInactiveColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliAVLInactiveColor.Location = new System.Drawing.Point(207, 16);
-            this.pnlAliAVLInactiveColor.MinimumSize = new System.Drawing.Size(0, 24);
-            this.pnlAliAVLInactiveColor.Name = "pnlAliAVLInactiveColor";
-            this.pnlAliAVLInactiveColor.Size = new System.Drawing.Size(62, 24);
-            this.pnlAliAVLInactiveColor.TabIndex = 87;
-            // 
-            // lblAliEnterpolAVLMyVehicleColor
-            // 
-            this.lblAliEnterpolAVLMyVehicleColor.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblAliEnterpolAVLMyVehicleColor.AutoSize = true;
-            this.lblAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(285, 0);
-            this.lblAliEnterpolAVLMyVehicleColor.Name = "lblAliEnterpolAVLMyVehicleColor";
-            this.lblAliEnterpolAVLMyVehicleColor.Size = new System.Drawing.Size(43, 13);
-            this.lblAliEnterpolAVLMyVehicleColor.TabIndex = 86;
-            this.lblAliEnterpolAVLMyVehicleColor.Text = "My Unit";
-            // 
-            // pnlAliEnterpolAVLMyVehicleColor
-            // 
-            this.pnlAliEnterpolAVLMyVehicleColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLMyVehicleColor.Location = new System.Drawing.Point(275, 16);
-            this.pnlAliEnterpolAVLMyVehicleColor.MinimumSize = new System.Drawing.Size(0, 24);
-            this.pnlAliEnterpolAVLMyVehicleColor.Name = "pnlAliEnterpolAVLMyVehicleColor";
-            this.pnlAliEnterpolAVLMyVehicleColor.Size = new System.Drawing.Size(64, 24);
-            this.pnlAliEnterpolAVLMyVehicleColor.TabIndex = 85;
-            // 
-            // chkAutoHideInactiveUnits
-            // 
-            this.chkAutoHideInactiveUnits.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.chkAutoHideInactiveUnits.AutoSize = true;
-            this.tableLayoutPanel4.SetColumnSpan(this.chkAutoHideInactiveUnits, 3);
-            this.chkAutoHideInactiveUnits.Location = new System.Drawing.Point(99, 50);
-            this.chkAutoHideInactiveUnits.Name = "chkAutoHideInactiveUnits";
-            this.chkAutoHideInactiveUnits.Size = new System.Drawing.Size(136, 17);
-            this.chkAutoHideInactiveUnits.TabIndex = 84;
-            this.chkAutoHideInactiveUnits.Text = "Autohide Inactive Units";
-            this.chkAutoHideInactiveUnits.UseVisualStyleBackColor = true;
-            // 
-            // pnlAliEnterpolAVLPdGraphic
-            // 
-            this.pnlAliEnterpolAVLPdGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLPdGraphic.Location = new System.Drawing.Point(139, 72);
-            this.pnlAliEnterpolAVLPdGraphic.MinimumSize = new System.Drawing.Size(0, 40);
-            this.pnlAliEnterpolAVLPdGraphic.Name = "pnlAliEnterpolAVLPdGraphic";
-            this.pnlAliEnterpolAVLPdGraphic.Size = new System.Drawing.Size(62, 40);
-            this.pnlAliEnterpolAVLPdGraphic.TabIndex = 83;
-            // 
-            // lblAliEnterpolAVLTableName
-            // 
-            this.lblAliEnterpolAVLTableName.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLTableName.AutoSize = true;
-            this.lblAliEnterpolAVLTableName.Location = new System.Drawing.Point(11, 29);
-            this.lblAliEnterpolAVLTableName.Name = "lblAliEnterpolAVLTableName";
-            this.lblAliEnterpolAVLTableName.Size = new System.Drawing.Size(87, 13);
-            this.lblAliEnterpolAVLTableName.TabIndex = 13;
-            this.lblAliEnterpolAVLTableName.Text = "Database Name:";
-            // 
-            // pnlAliEnterpolAVLFdGraphic
-            // 
-            this.pnlAliEnterpolAVLFdGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLFdGraphic.Location = new System.Drawing.Point(71, 72);
-            this.pnlAliEnterpolAVLFdGraphic.MinimumSize = new System.Drawing.Size(0, 40);
-            this.pnlAliEnterpolAVLFdGraphic.Name = "pnlAliEnterpolAVLFdGraphic";
-            this.pnlAliEnterpolAVLFdGraphic.Size = new System.Drawing.Size(62, 40);
-            this.pnlAliEnterpolAVLFdGraphic.TabIndex = 82;
-            // 
-            // txtAliEnterpolAVLTableName
-            // 
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLTableName, 3);
-            this.txtAliEnterpolAVLTableName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLTableName.Location = new System.Drawing.Point(104, 26);
-            this.txtAliEnterpolAVLTableName.Name = "txtAliEnterpolAVLTableName";
-            this.txtAliEnterpolAVLTableName.Size = new System.Drawing.Size(228, 20);
-            this.txtAliEnterpolAVLTableName.TabIndex = 9;
-            // 
-            // pnlAliEnterpolAVLEmsGraphic
-            // 
-            this.pnlAliEnterpolAVLEmsGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLEmsGraphic.Location = new System.Drawing.Point(3, 72);
-            this.pnlAliEnterpolAVLEmsGraphic.MinimumSize = new System.Drawing.Size(0, 40);
-            this.pnlAliEnterpolAVLEmsGraphic.Name = "pnlAliEnterpolAVLEmsGraphic";
-            this.pnlAliEnterpolAVLEmsGraphic.Size = new System.Drawing.Size(62, 40);
-            this.pnlAliEnterpolAVLEmsGraphic.TabIndex = 81;
-            // 
-            // txtAliEnterpolAVLInitialCatalog
-            // 
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLInitialCatalog, 2);
-            this.txtAliEnterpolAVLInitialCatalog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(144, 52);
-            this.txtAliEnterpolAVLInitialCatalog.Name = "txtAliEnterpolAVLInitialCatalog";
-            this.txtAliEnterpolAVLInitialCatalog.Size = new System.Drawing.Size(188, 20);
-            this.txtAliEnterpolAVLInitialCatalog.TabIndex = 10;
-            // 
-            // lblAliEnterpolAVLSymbolFontSize
-            // 
-            this.lblAliEnterpolAVLSymbolFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblAliEnterpolAVLSymbolFontSize.AutoSize = true;
-            this.lblAliEnterpolAVLSymbolFontSize.Location = new System.Drawing.Point(226, 29);
-            this.lblAliEnterpolAVLSymbolFontSize.Name = "lblAliEnterpolAVLSymbolFontSize";
-            this.lblAliEnterpolAVLSymbolFontSize.Size = new System.Drawing.Size(54, 13);
-            this.lblAliEnterpolAVLSymbolFontSize.TabIndex = 80;
-            this.lblAliEnterpolAVLSymbolFontSize.Text = "Font Size:";
-            // 
-            // txtAliEnterpolAVLSetLocProc
-            // 
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLSetLocProc, 2);
-            this.txtAliEnterpolAVLSetLocProc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(144, 104);
-            this.txtAliEnterpolAVLSetLocProc.Name = "txtAliEnterpolAVLSetLocProc";
-            this.txtAliEnterpolAVLSetLocProc.Size = new System.Drawing.Size(188, 20);
-            this.txtAliEnterpolAVLSetLocProc.TabIndex = 11;
-            // 
-            // lblAliEnterpolAVLSymbolFontName
-            // 
-            this.lblAliEnterpolAVLSymbolFontName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel7.SetColumnSpan(this.lblAliEnterpolAVLSymbolFontName, 2);
-            this.lblAliEnterpolAVLSymbolFontName.Location = new System.Drawing.Point(79, 28);
-            this.lblAliEnterpolAVLSymbolFontName.Name = "lblAliEnterpolAVLSymbolFontName";
-            this.lblAliEnterpolAVLSymbolFontName.Size = new System.Drawing.Size(141, 15);
-            this.lblAliEnterpolAVLSymbolFontName.TabIndex = 79;
-            this.lblAliEnterpolAVLSymbolFontName.Text = "Font Name";
-            // 
-            // lblAliEnterpolAVLInitialCatalog
-            // 
-            this.lblAliEnterpolAVLInitialCatalog.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLInitialCatalog.AutoSize = true;
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLInitialCatalog, 2);
-            this.lblAliEnterpolAVLInitialCatalog.Location = new System.Drawing.Point(15, 55);
-            this.lblAliEnterpolAVLInitialCatalog.Name = "lblAliEnterpolAVLInitialCatalog";
-            this.lblAliEnterpolAVLInitialCatalog.Size = new System.Drawing.Size(123, 13);
-            this.lblAliEnterpolAVLInitialCatalog.TabIndex = 12;
-            this.lblAliEnterpolAVLInitialCatalog.Text = "Units Table/View Name:";
-            // 
-            // lblAliEnterpolAVLUpdateFreq
-            // 
-            this.lblAliEnterpolAVLUpdateFreq.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLUpdateFreq.AutoSize = true;
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLUpdateFreq, 2);
-            this.lblAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(18, 133);
-            this.lblAliEnterpolAVLUpdateFreq.Name = "lblAliEnterpolAVLUpdateFreq";
-            this.lblAliEnterpolAVLUpdateFreq.Size = new System.Drawing.Size(120, 13);
-            this.lblAliEnterpolAVLUpdateFreq.TabIndex = 19;
-            this.lblAliEnterpolAVLUpdateFreq.Text = "Update Frequency (ms):";
-            // 
-            // numAliEnterpolAVLUpdateFreq
-            // 
-            this.numAliEnterpolAVLUpdateFreq.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLUpdateFreq.Location = new System.Drawing.Point(144, 130);
-            this.numAliEnterpolAVLUpdateFreq.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numAliEnterpolAVLUpdateFreq.Name = "numAliEnterpolAVLUpdateFreq";
-            this.numAliEnterpolAVLUpdateFreq.Size = new System.Drawing.Size(74, 20);
-            this.numAliEnterpolAVLUpdateFreq.TabIndex = 18;
-            // 
-            // txtAliEnterpolAVLFdChars
-            // 
-            this.txtAliEnterpolAVLFdChars.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLFdChars.Location = new System.Drawing.Point(71, 46);
-            this.txtAliEnterpolAVLFdChars.Name = "txtAliEnterpolAVLFdChars";
-            this.txtAliEnterpolAVLFdChars.Size = new System.Drawing.Size(62, 20);
-            this.txtAliEnterpolAVLFdChars.TabIndex = 78;
-            // 
-            // txtAliEnterpolAVLWhoAmIProc
-            // 
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.txtAliEnterpolAVLWhoAmIProc, 2);
-            this.txtAliEnterpolAVLWhoAmIProc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(144, 156);
-            this.txtAliEnterpolAVLWhoAmIProc.Name = "txtAliEnterpolAVLWhoAmIProc";
-            this.txtAliEnterpolAVLWhoAmIProc.Size = new System.Drawing.Size(188, 20);
-            this.txtAliEnterpolAVLWhoAmIProc.TabIndex = 14;
-            // 
-            // txtAliEnterpolAVLPdChars
-            // 
-            this.txtAliEnterpolAVLPdChars.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLPdChars.Location = new System.Drawing.Point(139, 46);
-            this.txtAliEnterpolAVLPdChars.Name = "txtAliEnterpolAVLPdChars";
-            this.txtAliEnterpolAVLPdChars.Size = new System.Drawing.Size(62, 20);
-            this.txtAliEnterpolAVLPdChars.TabIndex = 77;
-            // 
-            // lblAliEnterpolAVLSetLocProc
-            // 
-            this.lblAliEnterpolAVLSetLocProc.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLSetLocProc.AutoSize = true;
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLSetLocProc, 2);
-            this.lblAliEnterpolAVLSetLocProc.Location = new System.Drawing.Point(5, 107);
-            this.lblAliEnterpolAVLSetLocProc.Name = "lblAliEnterpolAVLSetLocProc";
-            this.lblAliEnterpolAVLSetLocProc.Size = new System.Drawing.Size(133, 13);
-            this.lblAliEnterpolAVLSetLocProc.TabIndex = 17;
-            this.lblAliEnterpolAVLSetLocProc.Text = "SetMyLocation Procedure:";
-            // 
-            // txtAliEnterpolAVLEmsChars
-            // 
-            this.txtAliEnterpolAVLEmsChars.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLEmsChars.Location = new System.Drawing.Point(3, 46);
-            this.txtAliEnterpolAVLEmsChars.Name = "txtAliEnterpolAVLEmsChars";
-            this.txtAliEnterpolAVLEmsChars.Size = new System.Drawing.Size(62, 20);
-            this.txtAliEnterpolAVLEmsChars.TabIndex = 76;
-            // 
-            // lblAliEnterpolAVLWhoAmIProc
-            // 
-            this.lblAliEnterpolAVLWhoAmIProc.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLWhoAmIProc.AutoSize = true;
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLWhoAmIProc, 2);
-            this.lblAliEnterpolAVLWhoAmIProc.Location = new System.Drawing.Point(35, 159);
-            this.lblAliEnterpolAVLWhoAmIProc.Name = "lblAliEnterpolAVLWhoAmIProc";
-            this.lblAliEnterpolAVLWhoAmIProc.Size = new System.Drawing.Size(103, 13);
-            this.lblAliEnterpolAVLWhoAmIProc.TabIndex = 16;
-            this.lblAliEnterpolAVLWhoAmIProc.Text = "WhoAmI Procedure:";
-            // 
-            // btnAliEnterpolAVLSymbolFont
-            // 
-            this.btnAliEnterpolAVLSymbolFont.Location = new System.Drawing.Point(3, 24);
-            this.btnAliEnterpolAVLSymbolFont.Name = "btnAliEnterpolAVLSymbolFont";
-            this.btnAliEnterpolAVLSymbolFont.Size = new System.Drawing.Size(70, 23);
-            this.btnAliEnterpolAVLSymbolFont.TabIndex = 75;
-            this.btnAliEnterpolAVLSymbolFont.Text = "Select Font";
-            this.btnAliEnterpolAVLSymbolFont.UseVisualStyleBackColor = true;
-            this.btnAliEnterpolAVLSymbolFont.Click += new System.EventHandler(this.btnAliEnterpolAVLFont_Click);
-            // 
-            // pnlAliEnterpolAVLFdColor
-            // 
-            this.pnlAliEnterpolAVLFdColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLFdColor.Location = new System.Drawing.Point(71, 16);
-            this.pnlAliEnterpolAVLFdColor.MinimumSize = new System.Drawing.Size(0, 24);
-            this.pnlAliEnterpolAVLFdColor.Name = "pnlAliEnterpolAVLFdColor";
-            this.pnlAliEnterpolAVLFdColor.Size = new System.Drawing.Size(62, 24);
-            this.pnlAliEnterpolAVLFdColor.TabIndex = 74;
-            // 
-            // lblAliEnterpolAVLReadFreq
-            // 
-            this.lblAliEnterpolAVLReadFreq.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolAVLReadFreq.AutoSize = true;
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.lblAliEnterpolAVLReadFreq, 2);
-            this.lblAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(27, 81);
-            this.lblAliEnterpolAVLReadFreq.Name = "lblAliEnterpolAVLReadFreq";
-            this.lblAliEnterpolAVLReadFreq.Size = new System.Drawing.Size(111, 13);
-            this.lblAliEnterpolAVLReadFreq.TabIndex = 25;
-            this.lblAliEnterpolAVLReadFreq.Text = "Read Frequency (ms):";
-            // 
-            // numAliEnterpolAVLAge1Freq
-            // 
-            this.numAliEnterpolAVLAge1Freq.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLAge1Freq.Location = new System.Drawing.Point(3, 24);
-            this.numAliEnterpolAVLAge1Freq.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numAliEnterpolAVLAge1Freq.Name = "numAliEnterpolAVLAge1Freq";
-            this.numAliEnterpolAVLAge1Freq.Size = new System.Drawing.Size(105, 20);
-            this.numAliEnterpolAVLAge1Freq.TabIndex = 20;
-            // 
-            // pnlAliEnterpolAVLPdColor
-            // 
-            this.pnlAliEnterpolAVLPdColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLPdColor.Location = new System.Drawing.Point(139, 16);
-            this.pnlAliEnterpolAVLPdColor.MinimumSize = new System.Drawing.Size(0, 24);
-            this.pnlAliEnterpolAVLPdColor.Name = "pnlAliEnterpolAVLPdColor";
-            this.pnlAliEnterpolAVLPdColor.Size = new System.Drawing.Size(62, 24);
-            this.pnlAliEnterpolAVLPdColor.TabIndex = 73;
-            // 
-            // numAliEnterpolAVLAge2Freq
-            // 
-            this.numAliEnterpolAVLAge2Freq.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLAge2Freq.Location = new System.Drawing.Point(114, 24);
-            this.numAliEnterpolAVLAge2Freq.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numAliEnterpolAVLAge2Freq.Name = "numAliEnterpolAVLAge2Freq";
-            this.numAliEnterpolAVLAge2Freq.Size = new System.Drawing.Size(105, 20);
-            this.numAliEnterpolAVLAge2Freq.TabIndex = 21;
-            // 
-            // numAliEnterpolAVLReadFreq
-            // 
-            this.numAliEnterpolAVLReadFreq.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLReadFreq.Location = new System.Drawing.Point(144, 78);
-            this.numAliEnterpolAVLReadFreq.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numAliEnterpolAVLReadFreq.Name = "numAliEnterpolAVLReadFreq";
-            this.numAliEnterpolAVLReadFreq.Size = new System.Drawing.Size(74, 20);
-            this.numAliEnterpolAVLReadFreq.TabIndex = 24;
-            // 
-            // numAliEnterpolAVLAge3Freq
-            // 
-            this.numAliEnterpolAVLAge3Freq.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliEnterpolAVLAge3Freq.Location = new System.Drawing.Point(225, 24);
-            this.numAliEnterpolAVLAge3Freq.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numAliEnterpolAVLAge3Freq.Name = "numAliEnterpolAVLAge3Freq";
-            this.numAliEnterpolAVLAge3Freq.Size = new System.Drawing.Size(107, 20);
-            this.numAliEnterpolAVLAge3Freq.TabIndex = 22;
-            // 
-            // pnlAliEnterpolAVLEmsColor
-            // 
-            this.pnlAliEnterpolAVLEmsColor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliEnterpolAVLEmsColor.Location = new System.Drawing.Point(3, 16);
-            this.pnlAliEnterpolAVLEmsColor.MinimumSize = new System.Drawing.Size(0, 24);
-            this.pnlAliEnterpolAVLEmsColor.Name = "pnlAliEnterpolAVLEmsColor";
-            this.pnlAliEnterpolAVLEmsColor.Size = new System.Drawing.Size(62, 24);
-            this.pnlAliEnterpolAVLEmsColor.TabIndex = 72;
-            // 
-            // lblAliEnterpolAVLAgeFreq
-            // 
-            this.lblAliEnterpolAVLAgeFreq.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblAliEnterpolAVLAgeFreq.AutoSize = true;
-            this.tableLayoutPanel4.SetColumnSpan(this.lblAliEnterpolAVLAgeFreq, 3);
-            this.lblAliEnterpolAVLAgeFreq.Location = new System.Drawing.Point(109, 0);
-            this.lblAliEnterpolAVLAgeFreq.Name = "lblAliEnterpolAVLAgeFreq";
-            this.lblAliEnterpolAVLAgeFreq.Padding = new System.Windows.Forms.Padding(0, 5, 0, 3);
-            this.lblAliEnterpolAVLAgeFreq.Size = new System.Drawing.Size(116, 21);
-            this.lblAliEnterpolAVLAgeFreq.TabIndex = 23;
-            this.lblAliEnterpolAVLAgeFreq.Text = "AVL Age Frequency (s)";
-            // 
-            // chkEnterpolAvl
-            // 
-            this.chkEnterpolAvl.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.chkEnterpolAvl.AutoSize = true;
-            this.pnlAliEnterpol.SetColumnSpan(this.chkEnterpolAvl, 3);
-            this.chkEnterpolAvl.Location = new System.Drawing.Point(58, 104);
-            this.chkEnterpolAvl.Name = "chkEnterpolAvl";
-            this.chkEnterpolAvl.Size = new System.Drawing.Size(219, 17);
-            this.chkEnterpolAvl.TabIndex = 8;
-            this.chkEnterpolAvl.Text = "Use Enterpol Automatic Vehicle Location";
-            this.chkEnterpolAvl.UseVisualStyleBackColor = true;
-            this.chkEnterpolAvl.CheckedChanged += new System.EventHandler(this.chkAvl_CheckedChanged);
-            // 
-            // lblAliEnterpolInitialCatalog
-            // 
-            this.lblAliEnterpolInitialCatalog.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolInitialCatalog.AutoSize = true;
-            this.pnlAliEnterpol.SetColumnSpan(this.lblAliEnterpolInitialCatalog, 2);
-            this.lblAliEnterpolInitialCatalog.Location = new System.Drawing.Point(10, 81);
-            this.lblAliEnterpolInitialCatalog.Name = "lblAliEnterpolInitialCatalog";
-            this.lblAliEnterpolInitialCatalog.Size = new System.Drawing.Size(142, 13);
-            this.lblAliEnterpolInitialCatalog.TabIndex = 7;
-            this.lblAliEnterpolInitialCatalog.Text = "Incidents Table/View Name:";
-            // 
-            // lblAliEnterpolTableName
-            // 
-            this.lblAliEnterpolTableName.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolTableName.AutoSize = true;
-            this.lblAliEnterpolTableName.Location = new System.Drawing.Point(16, 55);
-            this.lblAliEnterpolTableName.Name = "lblAliEnterpolTableName";
-            this.lblAliEnterpolTableName.Size = new System.Drawing.Size(87, 13);
-            this.lblAliEnterpolTableName.TabIndex = 6;
-            this.lblAliEnterpolTableName.Text = "Database Name:";
-            // 
-            // lblAliEnterpolDataSource
-            // 
-            this.lblAliEnterpolDataSource.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliEnterpolDataSource.AutoSize = true;
-            this.lblAliEnterpolDataSource.Location = new System.Drawing.Point(3, 29);
-            this.lblAliEnterpolDataSource.Name = "lblAliEnterpolDataSource";
-            this.lblAliEnterpolDataSource.Size = new System.Drawing.Size(100, 13);
-            this.lblAliEnterpolDataSource.TabIndex = 5;
-            this.lblAliEnterpolDataSource.Text = "Database Location:";
-            // 
-            // txtAliEnterpolInitialCatalog
-            // 
-            this.txtAliEnterpolInitialCatalog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolInitialCatalog.Location = new System.Drawing.Point(158, 78);
-            this.txtAliEnterpolInitialCatalog.Name = "txtAliEnterpolInitialCatalog";
-            this.txtAliEnterpolInitialCatalog.Size = new System.Drawing.Size(174, 20);
-            this.txtAliEnterpolInitialCatalog.TabIndex = 3;
-            // 
-            // txtAliEnterpolDataSource
-            // 
-            this.pnlAliEnterpol.SetColumnSpan(this.txtAliEnterpolDataSource, 2);
-            this.txtAliEnterpolDataSource.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolDataSource.Location = new System.Drawing.Point(109, 26);
-            this.txtAliEnterpolDataSource.Name = "txtAliEnterpolDataSource";
-            this.txtAliEnterpolDataSource.Size = new System.Drawing.Size(223, 20);
-            this.txtAliEnterpolDataSource.TabIndex = 2;
-            // 
-            // txtAliEnterpolTableName
-            // 
-            this.pnlAliEnterpol.SetColumnSpan(this.txtAliEnterpolTableName, 2);
-            this.txtAliEnterpolTableName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolTableName.Location = new System.Drawing.Point(109, 52);
-            this.txtAliEnterpolTableName.Name = "txtAliEnterpolTableName";
-            this.txtAliEnterpolTableName.Size = new System.Drawing.Size(223, 20);
-            this.txtAliEnterpolTableName.TabIndex = 1;
-            // 
-            // btnAliGlobalCadConfigIniBrowse
-            // 
-            this.btnAliGlobalCadConfigIniBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAliGlobalCadConfigIniBrowse.Location = new System.Drawing.Point(283, 84);
-            this.btnAliGlobalCadConfigIniBrowse.Name = "btnAliGlobalCadConfigIniBrowse";
-            this.btnAliGlobalCadConfigIniBrowse.Size = new System.Drawing.Size(64, 23);
-            this.btnAliGlobalCadConfigIniBrowse.TabIndex = 8;
-            this.btnAliGlobalCadConfigIniBrowse.Text = "Browse";
-            this.btnAliGlobalCadConfigIniBrowse.UseVisualStyleBackColor = true;
-            this.btnAliGlobalCadConfigIniBrowse.Click += new System.EventHandler(this.btnAliGlobalCadConfigIniBrowse_Click);
-            // 
-            // btnAliGlobalCadArchivePathBrowse
-            // 
-            this.btnAliGlobalCadArchivePathBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAliGlobalCadArchivePathBrowse.Location = new System.Drawing.Point(283, 55);
-            this.btnAliGlobalCadArchivePathBrowse.Name = "btnAliGlobalCadArchivePathBrowse";
-            this.btnAliGlobalCadArchivePathBrowse.Size = new System.Drawing.Size(64, 23);
-            this.btnAliGlobalCadArchivePathBrowse.TabIndex = 7;
-            this.btnAliGlobalCadArchivePathBrowse.Text = "Browse";
-            this.btnAliGlobalCadArchivePathBrowse.UseVisualStyleBackColor = true;
-            this.btnAliGlobalCadArchivePathBrowse.Click += new System.EventHandler(this.btnAliGlobalCadArchivePathBrowse_Click);
-            // 
-            // txtAliGlobalCadConfigIni
-            // 
-            this.txtAliGlobalCadConfigIni.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliGlobalCadConfigIni.Location = new System.Drawing.Point(108, 84);
-            this.txtAliGlobalCadConfigIni.Name = "txtAliGlobalCadConfigIni";
-            this.txtAliGlobalCadConfigIni.Size = new System.Drawing.Size(169, 20);
-            this.txtAliGlobalCadConfigIni.TabIndex = 6;
-            // 
-            // lblAliGlobalCadConfigIni
-            // 
-            this.lblAliGlobalCadConfigIni.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliGlobalCadConfigIni.AutoSize = true;
-            this.lblAliGlobalCadConfigIni.Location = new System.Drawing.Point(11, 89);
-            this.lblAliGlobalCadConfigIni.Name = "lblAliGlobalCadConfigIni";
-            this.lblAliGlobalCadConfigIni.Size = new System.Drawing.Size(91, 13);
-            this.lblAliGlobalCadConfigIni.TabIndex = 5;
-            this.lblAliGlobalCadConfigIni.Text = "Configuration File:";
-            // 
-            // lblAliGlobalCadArchivePath
-            // 
-            this.lblAliGlobalCadArchivePath.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliGlobalCadArchivePath.AutoSize = true;
-            this.lblAliGlobalCadArchivePath.Location = new System.Drawing.Point(12, 60);
-            this.lblAliGlobalCadArchivePath.Name = "lblAliGlobalCadArchivePath";
-            this.lblAliGlobalCadArchivePath.Size = new System.Drawing.Size(90, 13);
-            this.lblAliGlobalCadArchivePath.TabIndex = 4;
-            this.lblAliGlobalCadArchivePath.Text = "Archive Location:";
-            // 
-            // txtAliGlobalCadArchivePath
-            // 
-            this.txtAliGlobalCadArchivePath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliGlobalCadArchivePath.Location = new System.Drawing.Point(108, 55);
-            this.txtAliGlobalCadArchivePath.Name = "txtAliGlobalCadArchivePath";
-            this.txtAliGlobalCadArchivePath.Size = new System.Drawing.Size(169, 20);
-            this.txtAliGlobalCadArchivePath.TabIndex = 3;
-            // 
-            // lblAliGlobalCadLogPath
-            // 
-            this.lblAliGlobalCadLogPath.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliGlobalCadLogPath.AutoSize = true;
-            this.lblAliGlobalCadLogPath.Location = new System.Drawing.Point(30, 31);
-            this.lblAliGlobalCadLogPath.Name = "lblAliGlobalCadLogPath";
-            this.lblAliGlobalCadLogPath.Size = new System.Drawing.Size(72, 13);
-            this.lblAliGlobalCadLogPath.TabIndex = 2;
-            this.lblAliGlobalCadLogPath.Text = "Log Location:";
-            // 
-            // btnAliGlobalCadLogPathBrowse
-            // 
-            this.btnAliGlobalCadLogPathBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAliGlobalCadLogPathBrowse.Location = new System.Drawing.Point(283, 26);
-            this.btnAliGlobalCadLogPathBrowse.Name = "btnAliGlobalCadLogPathBrowse";
-            this.btnAliGlobalCadLogPathBrowse.Size = new System.Drawing.Size(64, 23);
-            this.btnAliGlobalCadLogPathBrowse.TabIndex = 1;
-            this.btnAliGlobalCadLogPathBrowse.Text = "Browse";
-            this.btnAliGlobalCadLogPathBrowse.UseVisualStyleBackColor = true;
-            this.btnAliGlobalCadLogPathBrowse.Click += new System.EventHandler(this.btnAliGlobalCadLogPathBrowse_Click);
-            // 
-            // txtAliGlobalCadLogPath
-            // 
-            this.txtAliGlobalCadLogPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliGlobalCadLogPath.Location = new System.Drawing.Point(108, 26);
-            this.txtAliGlobalCadLogPath.Name = "txtAliGlobalCadLogPath";
-            this.txtAliGlobalCadLogPath.Size = new System.Drawing.Size(169, 20);
-            this.txtAliGlobalCadLogPath.TabIndex = 0;
-            // 
-            // lblAliInterfaceUdpPort
-            // 
-            this.lblAliInterfaceUdpPort.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliInterfaceUdpPort.AutoSize = true;
-            this.lblAliInterfaceUdpPort.Location = new System.Drawing.Point(246, 59);
-            this.lblAliInterfaceUdpPort.Name = "lblAliInterfaceUdpPort";
-            this.lblAliInterfaceUdpPort.Size = new System.Drawing.Size(29, 13);
-            this.lblAliInterfaceUdpPort.TabIndex = 6;
-            this.lblAliInterfaceUdpPort.Text = "Port:";
-            // 
-            // lblAliInterfaceUdpHost
-            // 
-            this.lblAliInterfaceUdpHost.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblAliInterfaceUdpHost.AutoSize = true;
-            this.lblAliInterfaceUdpHost.Location = new System.Drawing.Point(3, 59);
-            this.lblAliInterfaceUdpHost.Name = "lblAliInterfaceUdpHost";
-            this.lblAliInterfaceUdpHost.Size = new System.Drawing.Size(58, 13);
-            this.lblAliInterfaceUdpHost.TabIndex = 5;
-            this.lblAliInterfaceUdpHost.Text = "UDP Host:";
-            // 
-            // lblAliInterfaceDbPath
-            // 
-            this.lblAliInterfaceDbPath.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblAliInterfaceDbPath.AutoSize = true;
-            this.lblAliInterfaceDbPath.Location = new System.Drawing.Point(3, 8);
-            this.lblAliInterfaceDbPath.Name = "lblAliInterfaceDbPath";
-            this.lblAliInterfaceDbPath.Size = new System.Drawing.Size(100, 13);
-            this.lblAliInterfaceDbPath.TabIndex = 4;
-            this.lblAliInterfaceDbPath.Text = "Database Location:";
-            // 
-            // txtAliInterfaceUdpHost
-            // 
-            this.txtAliInterfaceUdpHost.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliInterfaceUdpHost.Location = new System.Drawing.Point(67, 56);
-            this.txtAliInterfaceUdpHost.Name = "txtAliInterfaceUdpHost";
-            this.txtAliInterfaceUdpHost.Size = new System.Drawing.Size(173, 20);
-            this.txtAliInterfaceUdpHost.TabIndex = 2;
-            // 
-            // btnAliInterfaceDbPathBrowse
-            // 
-            this.btnAliInterfaceDbPathBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAliInterfaceDbPathBrowse.Location = new System.Drawing.Point(283, 3);
-            this.btnAliInterfaceDbPathBrowse.Name = "btnAliInterfaceDbPathBrowse";
-            this.btnAliInterfaceDbPathBrowse.Size = new System.Drawing.Size(64, 24);
-            this.btnAliInterfaceDbPathBrowse.TabIndex = 1;
-            this.btnAliInterfaceDbPathBrowse.Text = "Browse";
-            this.btnAliInterfaceDbPathBrowse.UseVisualStyleBackColor = true;
-            this.btnAliInterfaceDbPathBrowse.Click += new System.EventHandler(this.btnAliInterfaceDbPathBrowse_Click);
-            // 
-            // txtAliInterfaceDbPath
-            // 
-            this.txtAliInterfaceDbPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliInterfaceDbPath.Location = new System.Drawing.Point(109, 3);
-            this.txtAliInterfaceDbPath.Name = "txtAliInterfaceDbPath";
-            this.txtAliInterfaceDbPath.Size = new System.Drawing.Size(168, 20);
-            this.txtAliInterfaceDbPath.TabIndex = 0;
-            // 
-            // btnSplitSave
-            // 
-            this.btnSplitSave.AutoSize = true;
-            this.btnSplitSave.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnSplitSave.Location = new System.Drawing.Point(1406, 820);
-            this.btnSplitSave.MaximumSize = new System.Drawing.Size(85, 28);
-            this.btnSplitSave.MinimumSize = new System.Drawing.Size(85, 23);
-            this.btnSplitSave.Name = "btnSplitSave";
-            this.btnSplitSave.Size = new System.Drawing.Size(85, 28);
-            this.btnSplitSave.TabIndex = 7;
-            this.btnSplitSave.Text = "Save";
-            this.btnSplitSave.UseVisualStyleBackColor = true;
-            this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCancel.Location = new System.Drawing.Point(1325, 820);
-            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
-            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // vehicle_id
-            // 
-            this.vehicle_id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.vehicle_id.HeaderText = "Vehicle ID";
-            this.vehicle_id.Name = "vehicle_id";
-            this.vehicle_id.Width = 81;
-            // 
-            // vehicle_label
-            // 
-            this.vehicle_label.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.vehicle_label.HeaderText = "Label";
-            this.vehicle_label.Name = "vehicle_label";
-            // 
-            // groupBox1
-            // 
-            this.tableLayoutPanel3.SetColumnSpan(this.groupBox1, 3);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 3);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox1.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox1.Size = new System.Drawing.Size(238, 17);
-            this.groupBox1.TabIndex = 104;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Networkfleet Labeling";
-            // 
-            // txtAliNetworkfleetLabelFontSize
-            // 
-            this.txtAliNetworkfleetLabelFontSize.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliNetworkfleetLabelFontSize.Location = new System.Drawing.Point(79, 55);
-            this.txtAliNetworkfleetLabelFontSize.Name = "txtAliNetworkfleetLabelFontSize";
-            this.txtAliNetworkfleetLabelFontSize.ReadOnly = true;
-            this.txtAliNetworkfleetLabelFontSize.Size = new System.Drawing.Size(113, 20);
-            this.txtAliNetworkfleetLabelFontSize.TabIndex = 105;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 3;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.07407F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.92593F));
-            this.tableLayoutPanel3.Controls.Add(this.groupBox1, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.numAliNetworkfleetLabelYOffset, 1, 6);
-            this.tableLayoutPanel3.Controls.Add(this.numAliNetworkfleetLabelXOffset, 1, 5);
-            this.tableLayoutPanel3.Controls.Add(this.label15, 0, 6);
-            this.tableLayoutPanel3.Controls.Add(this.txtAliNetworkfleetLabelFontSize, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.btnAliNetworkfleetLabelFont, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.lblAliNetworkfleetLabelFont, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label13, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.dgvNetworkfleetLabelLookup, 0, 7);
-            this.tableLayoutPanel3.Controls.Add(this.lblAliNetworkfleetLabelFontSize, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.cmbAliNetworkfleetLabelAlignment, 1, 4);
-            this.tableLayoutPanel3.Controls.Add(this.label14, 0, 5);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 298);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 8;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(238, 423);
-            this.tableLayoutPanel3.TabIndex = 106;
-            // 
-            // pnlAliNetworkfleet
-            // 
-            this.pnlAliNetworkfleet.ColumnCount = 1;
-            this.pnlAliNetworkfleet.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.pnlAliNetworkfleet.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.pnlAliNetworkfleet.Controls.Add(this.tableLayoutPanel3, 0, 2);
-            this.pnlAliNetworkfleet.Controls.Add(this.tableLayoutPanel5, 0, 1);
-            this.pnlAliNetworkfleet.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlAliNetworkfleet.Location = new System.Drawing.Point(0, 61);
-            this.pnlAliNetworkfleet.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlAliNetworkfleet.Name = "pnlAliNetworkfleet";
-            this.pnlAliNetworkfleet.RowCount = 3;
-            this.aliPanelTableLayout.SetRowSpan(this.pnlAliNetworkfleet, 3);
-            this.pnlAliNetworkfleet.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliNetworkfleet.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliNetworkfleet.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.pnlAliNetworkfleet.Size = new System.Drawing.Size(238, 721);
-            this.pnlAliNetworkfleet.TabIndex = 107;
-            // 
             // pnlAliGlobalCad
             // 
             this.pnlAliGlobalCad.ColumnCount = 3;
@@ -2697,6 +2925,17 @@
             this.pnlAliGlobalCad.Size = new System.Drawing.Size(350, 120);
             this.pnlAliGlobalCad.TabIndex = 74;
             // 
+            // btnAliGlobalCadConfigIniBrowse
+            // 
+            this.btnAliGlobalCadConfigIniBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAliGlobalCadConfigIniBrowse.Location = new System.Drawing.Point(283, 84);
+            this.btnAliGlobalCadConfigIniBrowse.Name = "btnAliGlobalCadConfigIniBrowse";
+            this.btnAliGlobalCadConfigIniBrowse.Size = new System.Drawing.Size(64, 23);
+            this.btnAliGlobalCadConfigIniBrowse.TabIndex = 8;
+            this.btnAliGlobalCadConfigIniBrowse.Text = "Browse";
+            this.btnAliGlobalCadConfigIniBrowse.UseVisualStyleBackColor = true;
+            this.btnAliGlobalCadConfigIniBrowse.Click += new System.EventHandler(this.btnAliGlobalCadConfigIniBrowse_Click);
+            // 
             // groupBox4
             // 
             this.pnlAliGlobalCad.SetColumnSpan(this.groupBox4, 3);
@@ -2711,344 +2950,108 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "GlobalCAD Log Settings";
             // 
-            // groupBox5
+            // btnAliGlobalCadArchivePathBrowse
             // 
-            this.pnlAliSdrServer.SetColumnSpan(this.groupBox5, 4);
-            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox5.Location = new System.Drawing.Point(0, 3);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox5.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox5.Size = new System.Drawing.Size(350, 17);
-            this.groupBox5.TabIndex = 101;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "SDR AliServer Settings";
+            this.btnAliGlobalCadArchivePathBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAliGlobalCadArchivePathBrowse.Location = new System.Drawing.Point(283, 55);
+            this.btnAliGlobalCadArchivePathBrowse.Name = "btnAliGlobalCadArchivePathBrowse";
+            this.btnAliGlobalCadArchivePathBrowse.Size = new System.Drawing.Size(64, 23);
+            this.btnAliGlobalCadArchivePathBrowse.TabIndex = 7;
+            this.btnAliGlobalCadArchivePathBrowse.Text = "Browse";
+            this.btnAliGlobalCadArchivePathBrowse.UseVisualStyleBackColor = true;
+            this.btnAliGlobalCadArchivePathBrowse.Click += new System.EventHandler(this.btnAliGlobalCadArchivePathBrowse_Click);
             // 
-            // pnlAliSdrServer
+            // lblAliGlobalCadLogPath
             // 
-            this.pnlAliSdrServer.ColumnCount = 4;
-            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.42857F));
-            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.pnlAliSdrServer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.57143F));
-            this.pnlAliSdrServer.Controls.Add(this.tableLayoutPanel6, 0, 1);
-            this.pnlAliSdrServer.Controls.Add(this.groupBox5, 0, 0);
-            this.pnlAliSdrServer.Controls.Add(this.lblAliInterfaceUdpHost, 0, 2);
-            this.pnlAliSdrServer.Controls.Add(this.numAliInterfaceUdpPort, 3, 2);
-            this.pnlAliSdrServer.Controls.Add(this.lblAliInterfaceUdpPort, 2, 2);
-            this.pnlAliSdrServer.Controls.Add(this.txtAliInterfaceUdpHost, 1, 2);
-            this.pnlAliSdrServer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlAliSdrServer.Location = new System.Drawing.Point(246, 61);
-            this.pnlAliSdrServer.Margin = new System.Windows.Forms.Padding(8, 0, 0, 3);
-            this.pnlAliSdrServer.MinimumSize = new System.Drawing.Size(0, 79);
-            this.pnlAliSdrServer.Name = "pnlAliSdrServer";
-            this.pnlAliSdrServer.RowCount = 4;
-            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliSdrServer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.pnlAliSdrServer.Size = new System.Drawing.Size(350, 90);
-            this.pnlAliSdrServer.TabIndex = 102;
+            this.lblAliGlobalCadLogPath.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliGlobalCadLogPath.AutoSize = true;
+            this.lblAliGlobalCadLogPath.Location = new System.Drawing.Point(30, 31);
+            this.lblAliGlobalCadLogPath.Name = "lblAliGlobalCadLogPath";
+            this.lblAliGlobalCadLogPath.Size = new System.Drawing.Size(72, 13);
+            this.lblAliGlobalCadLogPath.TabIndex = 2;
+            this.lblAliGlobalCadLogPath.Text = "Log Location:";
             // 
-            // numAliInterfaceUdpPort
+            // btnAliGlobalCadLogPathBrowse
             // 
-            this.numAliInterfaceUdpPort.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numAliInterfaceUdpPort.Location = new System.Drawing.Point(281, 56);
-            this.numAliInterfaceUdpPort.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.numAliInterfaceUdpPort.Name = "numAliInterfaceUdpPort";
-            this.numAliInterfaceUdpPort.Size = new System.Drawing.Size(66, 20);
-            this.numAliInterfaceUdpPort.TabIndex = 7;
+            this.btnAliGlobalCadLogPathBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAliGlobalCadLogPathBrowse.Location = new System.Drawing.Point(283, 26);
+            this.btnAliGlobalCadLogPathBrowse.Name = "btnAliGlobalCadLogPathBrowse";
+            this.btnAliGlobalCadLogPathBrowse.Size = new System.Drawing.Size(64, 23);
+            this.btnAliGlobalCadLogPathBrowse.TabIndex = 1;
+            this.btnAliGlobalCadLogPathBrowse.Text = "Browse";
+            this.btnAliGlobalCadLogPathBrowse.UseVisualStyleBackColor = true;
+            this.btnAliGlobalCadLogPathBrowse.Click += new System.EventHandler(this.btnAliGlobalCadLogPathBrowse_Click);
             // 
-            // tableLayoutPanel6
+            // txtAliGlobalCadConfigIni
             // 
-            this.tableLayoutPanel6.ColumnCount = 3;
-            this.pnlAliSdrServer.SetColumnSpan(this.tableLayoutPanel6, 4);
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel6.Controls.Add(this.btnAliInterfaceDbPathBrowse, 2, 0);
-            this.tableLayoutPanel6.Controls.Add(this.lblAliInterfaceDbPath, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.txtAliInterfaceDbPath, 1, 0);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 23);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel6.MinimumSize = new System.Drawing.Size(0, 30);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 1;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(350, 30);
-            this.tableLayoutPanel6.TabIndex = 103;
+            this.txtAliGlobalCadConfigIni.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliGlobalCadConfigIni.Location = new System.Drawing.Point(108, 84);
+            this.txtAliGlobalCadConfigIni.Name = "txtAliGlobalCadConfigIni";
+            this.txtAliGlobalCadConfigIni.Size = new System.Drawing.Size(169, 20);
+            this.txtAliGlobalCadConfigIni.TabIndex = 6;
             // 
-            // pnlAliEnterpol
+            // lblAliGlobalCadArchivePath
             // 
-            this.pnlAliEnterpol.ColumnCount = 3;
-            this.pnlAliEnterpol.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.pnlAliEnterpol.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.pnlAliEnterpol.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.pnlAliEnterpol.Controls.Add(this.chkEnterpolAvl, 0, 4);
-            this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolInitialCatalog, 2, 3);
-            this.pnlAliEnterpol.Controls.Add(this.groupBox6, 0, 0);
-            this.pnlAliEnterpol.Controls.Add(this.lblAliEnterpolDataSource, 0, 1);
-            this.pnlAliEnterpol.Controls.Add(this.lblAliEnterpolTableName, 0, 2);
-            this.pnlAliEnterpol.Controls.Add(this.lblAliEnterpolInitialCatalog, 0, 3);
-            this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolDataSource, 1, 1);
-            this.pnlAliEnterpol.Controls.Add(this.txtAliEnterpolTableName, 1, 2);
-            this.pnlAliEnterpol.Location = new System.Drawing.Point(649, 12);
-            this.pnlAliEnterpol.Margin = new System.Windows.Forms.Padding(8, 0, 0, 3);
-            this.pnlAliEnterpol.MinimumSize = new System.Drawing.Size(0, 124);
-            this.pnlAliEnterpol.Name = "pnlAliEnterpol";
-            this.pnlAliEnterpol.RowCount = 6;
-            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpol.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.pnlAliEnterpol.Size = new System.Drawing.Size(335, 171);
-            this.pnlAliEnterpol.TabIndex = 74;
+            this.lblAliGlobalCadArchivePath.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliGlobalCadArchivePath.AutoSize = true;
+            this.lblAliGlobalCadArchivePath.Location = new System.Drawing.Point(12, 60);
+            this.lblAliGlobalCadArchivePath.Name = "lblAliGlobalCadArchivePath";
+            this.lblAliGlobalCadArchivePath.Size = new System.Drawing.Size(90, 13);
+            this.lblAliGlobalCadArchivePath.TabIndex = 4;
+            this.lblAliGlobalCadArchivePath.Text = "Archive Location:";
             // 
-            // groupBox6
+            // txtAliGlobalCadArchivePath
             // 
-            this.pnlAliEnterpol.SetColumnSpan(this.groupBox6, 3);
-            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox6.Location = new System.Drawing.Point(0, 3);
-            this.groupBox6.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox6.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox6.Size = new System.Drawing.Size(335, 17);
-            this.groupBox6.TabIndex = 101;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Enterpol Database Settings";
+            this.txtAliGlobalCadArchivePath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliGlobalCadArchivePath.Location = new System.Drawing.Point(108, 55);
+            this.txtAliGlobalCadArchivePath.Name = "txtAliGlobalCadArchivePath";
+            this.txtAliGlobalCadArchivePath.Size = new System.Drawing.Size(169, 20);
+            this.txtAliGlobalCadArchivePath.TabIndex = 3;
             // 
-            // groupBox7
+            // lblAliGlobalCadConfigIni
             // 
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.groupBox7, 4);
-            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox7.Location = new System.Drawing.Point(0, 3);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox7.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox7.Size = new System.Drawing.Size(335, 17);
-            this.groupBox7.TabIndex = 102;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Enterpol AVL Settings";
+            this.lblAliGlobalCadConfigIni.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblAliGlobalCadConfigIni.AutoSize = true;
+            this.lblAliGlobalCadConfigIni.Location = new System.Drawing.Point(11, 89);
+            this.lblAliGlobalCadConfigIni.Name = "lblAliGlobalCadConfigIni";
+            this.lblAliGlobalCadConfigIni.Size = new System.Drawing.Size(91, 13);
+            this.lblAliGlobalCadConfigIni.TabIndex = 5;
+            this.lblAliGlobalCadConfigIni.Text = "Configuration File:";
             // 
-            // groupBox8
+            // txtAliGlobalCadLogPath
             // 
-            this.tableLayoutPanel7.SetColumnSpan(this.groupBox8, 5);
-            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox8.Location = new System.Drawing.Point(0, 3);
-            this.groupBox8.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox8.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox8.Size = new System.Drawing.Size(342, 15);
-            this.groupBox8.TabIndex = 104;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Enterpol AVL Symbology";
+            this.txtAliGlobalCadLogPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAliGlobalCadLogPath.Location = new System.Drawing.Point(108, 26);
+            this.txtAliGlobalCadLogPath.Name = "txtAliGlobalCadLogPath";
+            this.txtAliGlobalCadLogPath.Size = new System.Drawing.Size(169, 20);
+            this.txtAliGlobalCadLogPath.TabIndex = 0;
             // 
-            // groupBox9
+            // btnSplitSave
             // 
-            this.tableLayoutPanel7.SetColumnSpan(this.groupBox9, 5);
-            this.groupBox9.Location = new System.Drawing.Point(0, 169);
-            this.groupBox9.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox9.MinimumSize = new System.Drawing.Size(0, 15);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.groupBox9.Size = new System.Drawing.Size(335, 17);
-            this.groupBox9.TabIndex = 105;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Enterpol AVL Labeling";
+            this.btnSplitSave.AutoSize = true;
+            this.btnSplitSave.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnSplitSave.Location = new System.Drawing.Point(1406, 820);
+            this.btnSplitSave.MaximumSize = new System.Drawing.Size(85, 28);
+            this.btnSplitSave.MinimumSize = new System.Drawing.Size(85, 23);
+            this.btnSplitSave.Name = "btnSplitSave";
+            this.btnSplitSave.Size = new System.Drawing.Size(85, 28);
+            this.btnSplitSave.TabIndex = 7;
+            this.btnSplitSave.Text = "Save";
+            this.btnSplitSave.UseVisualStyleBackColor = true;
+            this.btnSplitSave.Click += new System.EventHandler(this.btnSplitSave_Click);
             // 
-            // txtAliEnterpolAVLSymbolFontSize
+            // btnCancel
             // 
-            this.txtAliEnterpolAVLSymbolFontSize.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLSymbolFontSize.Location = new System.Drawing.Point(286, 24);
-            this.txtAliEnterpolAVLSymbolFontSize.Name = "txtAliEnterpolAVLSymbolFontSize";
-            this.txtAliEnterpolAVLSymbolFontSize.ReadOnly = true;
-            this.txtAliEnterpolAVLSymbolFontSize.Size = new System.Drawing.Size(53, 20);
-            this.txtAliEnterpolAVLSymbolFontSize.TabIndex = 106;
-            // 
-            // tblEnterpolAvlSymbology
-            // 
-            this.tblEnterpolAvlSymbology.ColumnCount = 5;
-            this.tableLayoutPanel7.SetColumnSpan(this.tblEnterpolAvlSymbology, 5);
-            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tblEnterpolAvlSymbology.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tblEnterpolAvlSymbology.Controls.Add(this.label7, 0, 0);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.label9, 1, 0);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.label8, 2, 0);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.label5, 3, 0);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.lblAliEnterpolAVLMyVehicleColor, 4, 0);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLEmsColor, 0, 1);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLFdColor, 1, 1);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLPdColor, 2, 1);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliAVLInactiveColor, 3, 1);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLMyVehicleColor, 4, 1);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.txtAliEnterpolAVLEmsChars, 0, 2);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.txtAliEnterpolAVLFdChars, 1, 2);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.txtAliEnterpolAVLPdChars, 2, 2);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLEmsGraphic, 0, 3);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLFdGraphic, 1, 3);
-            this.tblEnterpolAvlSymbology.Controls.Add(this.pnlAliEnterpolAVLPdGraphic, 2, 3);
-            this.tblEnterpolAvlSymbology.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblEnterpolAvlSymbology.Location = new System.Drawing.Point(0, 50);
-            this.tblEnterpolAvlSymbology.Margin = new System.Windows.Forms.Padding(0);
-            this.tblEnterpolAvlSymbology.MinimumSize = new System.Drawing.Size(0, 116);
-            this.tblEnterpolAvlSymbology.Name = "tblEnterpolAvlSymbology";
-            this.tblEnterpolAvlSymbology.RowCount = 5;
-            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblEnterpolAvlSymbology.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tblEnterpolAvlSymbology.Size = new System.Drawing.Size(342, 116);
-            this.tblEnterpolAvlSymbology.TabIndex = 107;
-            // 
-            // txtAliEnterpolAVLLabelFontSize
-            // 
-            this.txtAliEnterpolAVLLabelFontSize.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAliEnterpolAVLLabelFontSize.Location = new System.Drawing.Point(286, 192);
-            this.txtAliEnterpolAVLLabelFontSize.Name = "txtAliEnterpolAVLLabelFontSize";
-            this.txtAliEnterpolAVLLabelFontSize.ReadOnly = true;
-            this.txtAliEnterpolAVLLabelFontSize.Size = new System.Drawing.Size(53, 20);
-            this.txtAliEnterpolAVLLabelFontSize.TabIndex = 108;
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 3;
-            this.pnlAliEnterpolAvl.SetColumnSpan(this.tableLayoutPanel4, 4);
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
-            this.tableLayoutPanel4.Controls.Add(this.lblAliEnterpolAVLAgeFreq, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.numAliEnterpolAVLAge1Freq, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.numAliEnterpolAVLAge2Freq, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.numAliEnterpolAVLAge3Freq, 2, 1);
-            this.tableLayoutPanel4.Controls.Add(this.chkAutoHideInactiveUnits, 0, 2);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 179);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel4.MinimumSize = new System.Drawing.Size(0, 69);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 4;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(335, 69);
-            this.tableLayoutPanel4.TabIndex = 109;
-            // 
-            // pnlAliEnterpolAvl
-            // 
-            this.pnlAliEnterpolAvl.ColumnCount = 4;
-            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.22302F));
-            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.77698F));
-            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.pnlAliEnterpolAvl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 113F));
-            this.pnlAliEnterpolAvl.Controls.Add(this.groupBox7, 0, 0);
-            this.pnlAliEnterpolAvl.Controls.Add(this.tableLayoutPanel4, 0, 7);
-            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLInitialCatalog, 0, 2);
-            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLWhoAmIProc, 0, 6);
-            this.pnlAliEnterpolAvl.Controls.Add(this.numAliEnterpolAVLReadFreq, 2, 3);
-            this.pnlAliEnterpolAvl.Controls.Add(this.numAliEnterpolAVLUpdateFreq, 2, 5);
-            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLTableName, 0, 1);
-            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLTableName, 1, 1);
-            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLUpdateFreq, 0, 5);
-            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLInitialCatalog, 2, 2);
-            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLReadFreq, 0, 3);
-            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLWhoAmIProc, 2, 6);
-            this.pnlAliEnterpolAvl.Controls.Add(this.lblAliEnterpolAVLSetLocProc, 0, 4);
-            this.pnlAliEnterpolAvl.Controls.Add(this.txtAliEnterpolAVLSetLocProc, 2, 4);
-            this.pnlAliEnterpolAvl.Location = new System.Drawing.Point(649, 196);
-            this.pnlAliEnterpolAvl.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlAliEnterpolAvl.Name = "pnlAliEnterpolAvl";
-            this.pnlAliEnterpolAvl.RowCount = 10;
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.pnlAliEnterpolAvl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.pnlAliEnterpolAvl.Size = new System.Drawing.Size(335, 561);
-            this.pnlAliEnterpolAvl.TabIndex = 110;
-            // 
-            // tableLayoutPanel7
-            // 
-            this.tableLayoutPanel7.ColumnCount = 5;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel8, 0, 6);
-            this.tableLayoutPanel7.Controls.Add(this.btnAliEnterpolAVLSymbolFont, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.txtAliEnterpolAVLSymbolFontSize, 4, 1);
-            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLSymbolFontSize, 3, 1);
-            this.tableLayoutPanel7.Controls.Add(this.txtAliEnterpolAVLLabelFontSize, 4, 4);
-            this.tableLayoutPanel7.Controls.Add(this.tblEnterpolAvlSymbology, 0, 2);
-            this.tableLayoutPanel7.Controls.Add(this.cmbAliEnterpolAVLLabelAlignment, 1, 5);
-            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLLabelAlignment, 0, 5);
-            this.tableLayoutPanel7.Controls.Add(this.groupBox9, 0, 3);
-            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLSymbolFontName, 1, 1);
-            this.tableLayoutPanel7.Controls.Add(this.groupBox8, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.btnAliEnterpolAVLLabelFont, 0, 4);
-            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLLabelFontSize, 3, 4);
-            this.tableLayoutPanel7.Controls.Add(this.lblAliEnterpolAVLLabelFontName, 1, 4);
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(1016, 470);
-            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel7.MinimumSize = new System.Drawing.Size(0, 272);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 8;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(342, 272);
-            this.tableLayoutPanel7.TabIndex = 111;
-            // 
-            // tableLayoutPanel8
-            // 
-            this.tableLayoutPanel8.ColumnCount = 4;
-            this.tableLayoutPanel7.SetColumnSpan(this.tableLayoutPanel8, 5);
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Controls.Add(this.label10, 0, 0);
-            this.tableLayoutPanel8.Controls.Add(this.numAliEnterpolAVLLabelXOffset, 1, 0);
-            this.tableLayoutPanel8.Controls.Add(this.label11, 2, 0);
-            this.tableLayoutPanel8.Controls.Add(this.numAliEnterpolAVLLabelYOffset, 3, 0);
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(0, 245);
-            this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel8.MinimumSize = new System.Drawing.Size(0, 27);
-            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 2;
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(342, 27);
-            this.tableLayoutPanel8.TabIndex = 112;
+            this.btnCancel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCancel.Location = new System.Drawing.Point(1325, 820);
+            this.btnCancel.MaximumSize = new System.Drawing.Size(75, 28);
+            this.btnCancel.MinimumSize = new System.Drawing.Size(75, 23);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AdminForm
             // 
@@ -3090,51 +3093,51 @@
             ((System.ComponentModel.ISupportInitialize)(this.searchHydrantCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLayerIndex)).EndInit();
             this.adminTab_AliSettings.ResumeLayout(false);
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this.tblNetworkfleetAvlColors.ResumeLayout(false);
-            this.tblNetworkfleetAvlColors.PerformLayout();
+            this.tableLayoutPanel7.ResumeLayout(false);
+            this.tableLayoutPanel7.PerformLayout();
+            this.tblEnterpolAvlSymbology.ResumeLayout(false);
+            this.tblEnterpolAvlSymbology.PerformLayout();
+            this.tableLayoutPanel8.ResumeLayout(false);
+            this.tableLayoutPanel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelXOffset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelYOffset)).EndInit();
+            this.pnlAliEnterpolAvl.ResumeLayout(false);
+            this.pnlAliEnterpolAvl.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge1Freq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge2Freq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLReadFreq)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLUpdateFreq)).EndInit();
+            this.pnlAliEnterpol.ResumeLayout(false);
+            this.pnlAliEnterpol.PerformLayout();
+            this.aliPanelTableLayout.ResumeLayout(false);
+            this.pnlAliSdrServer.ResumeLayout(false);
+            this.pnlAliSdrServer.PerformLayout();
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).EndInit();
+            this.pnlAliNetworkfleet.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge1Freq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge2Freq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetAVLAge3Freq)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetUdpPort)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvNetworkfleetLabelLookup)).EndInit();
-            this.aliPanelTableLayout.ResumeLayout(false);
-            this.pnlAliValidate.ResumeLayout(false);
-            this.pnlAliValidate.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelYOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLLabelXOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLUpdateFreq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge1Freq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge2Freq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLReadFreq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliEnterpolAVLAge3Freq)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.pnlAliNetworkfleet.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNetworkfleetLabelLookup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelYOffset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAliNetworkfleetLabelXOffset)).EndInit();
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.tblNetworkfleetAvlColors.ResumeLayout(false);
+            this.tblNetworkfleetAvlColors.PerformLayout();
+            this.pnlAliValidate.ResumeLayout(false);
+            this.pnlAliValidate.PerformLayout();
             this.pnlAliGlobalCad.ResumeLayout(false);
             this.pnlAliGlobalCad.PerformLayout();
-            this.pnlAliSdrServer.ResumeLayout(false);
-            this.pnlAliSdrServer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numAliInterfaceUdpPort)).EndInit();
-            this.tableLayoutPanel6.ResumeLayout(false);
-            this.tableLayoutPanel6.PerformLayout();
-            this.pnlAliEnterpol.ResumeLayout(false);
-            this.pnlAliEnterpol.PerformLayout();
-            this.tblEnterpolAvlSymbology.ResumeLayout(false);
-            this.tblEnterpolAvlSymbology.PerformLayout();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            this.pnlAliEnterpolAvl.ResumeLayout(false);
-            this.pnlAliEnterpolAvl.PerformLayout();
-            this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel7.PerformLayout();
-            this.tableLayoutPanel8.ResumeLayout(false);
-            this.tableLayoutPanel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
