@@ -198,6 +198,7 @@ namespace Go2It
         public AdminForm(AppManager app)
         {
             InitializeComponent();
+            Height = 815;
             InitializeSaveSplitButton();
             InitializeAliModesDict();
             HandleApplicationModeDiffs();
@@ -487,7 +488,7 @@ namespace Go2It
             pnlAliEnterpolAVLEmsColor.Click -= CharGraphicColorPanelOnClick;
             pnlAliEnterpolAVLMyVehicleColor.Click -= CharGraphicColorPanelOnClick;
             ptAliNetworkfleetColor.Click -= CharGraphicColorPanelOnClick;
-            ptAliNetworkfleetChar.TextChanged -= CharGraphicCharsOnTextChanged;
+            txtAliNetworkfleetChar.TextChanged -= CharGraphicCharsOnTextChanged;
             pnlAliNetworkfleetAVLMyVehicleColor.Click -= CharGraphicColorPanelOnClick;
             pnlAliAVLInactiveColor.Click -= CharGraphicColorPanelOnClick;
             pnlAliNetworkfleetAVLInactiveColor.Click -= CharGraphicColorPanelOnClick;
@@ -766,12 +767,12 @@ namespace Go2It
             Color nfColor = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetColor;
             ptAliNetworkfleetColor.BackColor = nfColor;
             ptAliNetworkfleetColor.Click += CharGraphicColorPanelOnClick;
-            ptAliNetworkfleetChar.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString(CultureInfo.InvariantCulture);
-            ptAliNetworkfleetChar.TextChanged += CharGraphicCharsOnTextChanged;
+            txtAliNetworkfleetChar.Text = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString(CultureInfo.InvariantCulture);
+            txtAliNetworkfleetChar.TextChanged += CharGraphicCharsOnTextChanged;
             _networkFleetSymbolFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont;
-            ptAliNetworkfleetFont.Text = _networkFleetSymbolFont.Name;
-            ptAliNetworkfleetFont.Font = _networkFleetSymbolFont;
-            ptAliNetworkfleetSize.Text = _networkFleetSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
+            lblAliNetworkfleetFont.Text = _networkFleetSymbolFont.Name;
+            lblAliNetworkfleetFont.Font = _networkFleetSymbolFont;
+            txtAliNetworkfleetSize.Text = _networkFleetSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
             Color avlNfInactive = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlInactiveColor;
             pnlAliNetworkfleetAVLInactiveColor.BackColor = avlNfInactive;
             pnlAliNetworkfleetAVLInactiveColor.Click += CharGraphicColorPanelOnClick;
@@ -781,7 +782,7 @@ namespace Go2It
             _networkFleetLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont;
             lblAliNetworkfleetLabelFont.Text = _networkFleetLabelFont.Name;
             lblAliNetworkfleetLabelFont.Font = _networkFleetLabelFont;
-            lblAliNetworkfleetLabelFontSize.Text = _networkFleetLabelFont.Size.ToString(CultureInfo.InvariantCulture);
+            txtAliNetworkfleetLabelFontSize.Text = _networkFleetLabelFont.Size.ToString(CultureInfo.InvariantCulture);
             cmbAliNetworkfleetLabelAlignment.SelectedIndex = cmbAliNetworkfleetLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment);
             // set after the alignment to replace any defaults set by the selection changed event on the combobox
             numAliNetworkfleetLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelXOffset;
@@ -812,11 +813,11 @@ namespace Go2It
             _enterpolAvlSymbolFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlSymbolFont;
             lblAliEnterpolAVLSymbolFontName.Text = _enterpolAvlSymbolFont.Name;
             lblAliEnterpolAVLSymbolFontName.Font = _enterpolAvlSymbolFont;
-            lblAliEnterpolAVLSymbolFontSize.Text = _enterpolAvlSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
+            txtAliEnterpolAVLSymbolFontSize.Text = _enterpolAvlSymbolFont.Size.ToString(CultureInfo.InvariantCulture);
             _enterpolAvlLabelFont = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelFont;
             lblAliEnterpolAVLLabelFontName.Text = _enterpolAvlLabelFont.Name;
             lblAliEnterpolAVLLabelFontName.Font = _enterpolAvlLabelFont;
-            lblAliEnterpolAVLLabelFontSize.Text = _enterpolAvlLabelFont.Size.ToString(CultureInfo.InvariantCulture);
+            txtAliEnterpolAVLLabelFontSize.Text = _enterpolAvlLabelFont.Size.ToString(CultureInfo.InvariantCulture);
             cmbAliEnterpolAVLLabelAlignment.SelectedIndex = cmbAliEnterpolAVLLabelAlignment.Items.IndexOf(SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelAlignment);
             // set after the alignment to replace any defaults set by the selection changed event on the combobox
             numAliEnterpolAVLLabelXOffset.Value = SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolAvlLabelXOffset;
@@ -880,7 +881,7 @@ namespace Go2It
 
         private void DrawAllCharGraphics()
         {
-            DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, ptAliNetworkfleetChar.Text);
+            DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, txtAliNetworkfleetChar.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLEmsGraphic, pnlAliEnterpolAVLEmsColor.BackColor, txtAliEnterpolAVLEmsChars.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLPdGraphic, pnlAliEnterpolAVLPdColor.BackColor, txtAliEnterpolAVLPdChars.Text);
             DrawCharacterGraphic(pnlAliEnterpolAVLFdGraphic, pnlAliEnterpolAVLFdColor.BackColor, txtAliEnterpolAVLFdChars.Text);
@@ -978,7 +979,7 @@ namespace Go2It
             else  // networkfleet panel backcolor
             {
                 ptAliNetworkfleetColor.BackColor = nColor;
-                DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, ptAliNetworkfleetChar.Text);
+                DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, txtAliNetworkfleetChar.Text);
             }
         }
 
@@ -1004,7 +1005,7 @@ namespace Go2It
             else  // networkfleet textbox char
             {
                 oText = SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar.ToString(CultureInfo.InvariantCulture);
-                DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, ptAliNetworkfleetChar.Text);
+                DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, txtAliNetworkfleetChar.Text);
             }
             if (oText != txt.Text)
             {
@@ -1666,7 +1667,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpHost = txtAliNetworkfleetUdpHost.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetUdpPort = (int)numAliNetworkfleetUdpPort.Value;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetFont = _networkFleetSymbolFont;
-            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar = char.Parse(ptAliNetworkfleetChar.Text.ToString(CultureInfo.InvariantCulture));
+            SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetChar = char.Parse(txtAliNetworkfleetChar.Text.ToString(CultureInfo.InvariantCulture));
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetColor = ptAliNetworkfleetColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelFont = _networkFleetLabelFont;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetLabelAlignment = cmbAliNetworkfleetLabelAlignment.SelectedItem.ToString();
@@ -1682,7 +1683,7 @@ namespace Go2It
             foreach (DataGridViewRow row in dgvNetworkfleetLabelLookup.Rows)
             {
                 if (row.Cells[0].Value == null || row.Cells[1].Value == null) continue;
-                var record = row.Cells[0].Value.ToString() + "=" + row.Cells[1].Value.ToString();
+                var record = row.Cells[0].Value + "=" + row.Cells[1].Value;
                 if (record.Length > 1)
                 {
                     SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Add(record);
@@ -3127,14 +3128,22 @@ namespace Go2It
 
             switch (cmbAliMode.Text)
             {
-                case "GlobalCAD Log":
-                    pnlAliGlobalCad.Visible = true;
-                    return;
                 case "SDR AliServer":
                     pnlAliSdrServer.Visible = true;
+                    aliPanelTableLayout.RowStyles[1].SizeType = SizeType.AutoSize;
+                    return;
+                case "GlobalCAD Log":
+                    pnlAliGlobalCad.Visible = true;
+                    aliPanelTableLayout.RowStyles[2].SizeType = SizeType.AutoSize;
+                    aliPanelTableLayout.RowStyles[1].SizeType = SizeType.Absolute;
+                    aliPanelTableLayout.RowStyles[1].Height = 0;
                     return;
                 case "Enterpol Database":
                     pnlAliEnterpol.Visible = true;
+                    aliPanelTableLayout.RowStyles[2].SizeType = SizeType.Absolute;
+                    aliPanelTableLayout.RowStyles[2].Height = 0;
+                    aliPanelTableLayout.RowStyles[1].SizeType = SizeType.Absolute;
+                    aliPanelTableLayout.RowStyles[1].Height = 0;
                     return;
                 default: // disabled
                     return;
@@ -3498,15 +3507,15 @@ namespace Go2It
             var fd = new FontDialog { Font = _networkFleetSymbolFont };
             if (fd.ShowDialog() != DialogResult.OK) return;
 
-            ptAliNetworkfleetFont.Text = fd.Font.Name;
-            ptAliNetworkfleetFont.Font = fd.Font;
-            ptAliNetworkfleetSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            lblAliNetworkfleetFont.Text = fd.Font.Name;
+            lblAliNetworkfleetFont.Font = fd.Font;
+            txtAliNetworkfleetSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
             if (!Equals(fd.Font, _networkFleetSymbolFont))
             {
                 _projectManager.IsDirty = true;
             }
             _networkFleetSymbolFont = fd.Font;
-            DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, ptAliNetworkfleetChar.Text);
+            DrawCharacterGraphic(ptAliNetworkfleetGraphic, ptAliNetworkfleetColor.BackColor, txtAliNetworkfleetChar.Text);
         }
 
         private void chkNetworkfleet_CheckedChanged(object sender, EventArgs e)
@@ -3519,8 +3528,21 @@ namespace Go2It
                     chkEnterpolAvl.Checked = false;
                 }
             }
-            // displays the verizon networkfleet options column
-            aliPanelTableLayout.ColumnStyles[0].Width = chk.Checked ? 40 : 0;
+            // display/hide the column and set the networkfleet panels visibility
+            if (chk.Checked)
+            {
+                aliPanelTableLayout.ColumnStyles[0].Width = 40;
+                tblAliNetworkfleetSettings.Visible = true;
+                tblAliNetworkfleetSymbology.Visible = true;
+                tblAliNetworkfleetLabeling.Visible = true;
+            }
+            else
+            {
+                aliPanelTableLayout.ColumnStyles[0].Width = 0;
+                tblAliNetworkfleetSettings.Visible = false;
+                tblAliNetworkfleetSymbology.Visible = false;
+                tblAliNetworkfleetLabeling.Visible = false;
+            }
         }
 
         private void chkAvl_CheckedChanged(object sender, EventArgs e)
@@ -3543,7 +3565,7 @@ namespace Go2It
 
             lblAliEnterpolAVLSymbolFontName.Text = fd.Font.Name;
             lblAliEnterpolAVLSymbolFontName.Font = fd.Font;
-            lblAliEnterpolAVLSymbolFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            txtAliEnterpolAVLSymbolFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
             if (!Equals(fd.Font, _enterpolAvlSymbolFont))
             {
                 _projectManager.IsDirty = true;
@@ -3561,13 +3583,12 @@ namespace Go2It
 
             lblAliEnterpolAVLLabelFontName.Text = fd.Font.Name;
             lblAliEnterpolAVLLabelFontName.Font = fd.Font;
-            lblAliEnterpolAVLLabelFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            txtAliEnterpolAVLLabelFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
             if (!Equals(fd.Font, _enterpolAvlLabelFont))
             {
                 _projectManager.IsDirty = true;
             }
             _enterpolAvlLabelFont = fd.Font;
-            // TODO: add the label rendering to the symbology display. this will require rework of the existing code.
         }
 
         private void cmbAliEnterpolAVLLabelAlignment_SelectedIndexChanged(object sender, EventArgs e)
@@ -3613,7 +3634,8 @@ namespace Go2It
 
             lblAliNetworkfleetLabelFont.Text = fd.Font.Name;
             lblAliNetworkfleetLabelFont.Font = fd.Font;
-            lblAliNetworkfleetLabelFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+            txtAliNetworkfleetLabelFontSize.Text = fd.Font.Size.ToString(CultureInfo.InvariantCulture);
+
             if (!Equals(fd.Font, _networkFleetLabelFont))
             {
                 _projectManager.IsDirty = true;
