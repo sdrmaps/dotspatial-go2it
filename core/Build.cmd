@@ -120,10 +120,13 @@ IF /I "%1"=="--Help" (
 		)
 		msbuild.exe /p:BuildInfo=%BUILD_INFO%;Version=!SUB_VERSION:~1! AssemblyInfo\Versioning.proj
 		IF NOT %ERRORLEVEL%==0 ( goto HALT )
+		REM Check if we are compiling a component or a plugin if it does not exist
 		IF EXIST Components\%%a\%%a.csproj (
+			start /w Tools\nuget\nuget.exe restore Components\%%a\%%a.csproj
 		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\ Components\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		) ELSE (
+			start /w Tools\nuget\nuget.exe restore Plugins\%%a\%%a.sln
 		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\Plugins Plugins\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		)
@@ -132,9 +135,11 @@ IF /I "%1"=="--Help" (
 	IF NOT "%TYPE%"=="Release" (
 	    FOR /f "eol=; tokens=* delims= " %%a in (..\config\_components.txt) do (
 		IF EXIST Components\%%a\%%a.csproj (
+			start /w Tools\nuget\nuget.exe restore Components\%%a\%%a.csproj
 		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\ Components\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		) ELSE (
+			start /w Tools\nuget\nuget.exe restore Plugins\%%a\%%a.sln
 		    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\..\%BUILDPATH%\Plugins Plugins\%%a\%%a.sln
 		    IF NOT %ERRORLEVEL%==0 ( goto HALT )
 		)
