@@ -167,7 +167,9 @@
     <None Include="AliPlugin-ConfigExamples\GlobalCAD-LogParser.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\AvlConfig.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AvlConfig.Designer.cs</LastGenOutput>
