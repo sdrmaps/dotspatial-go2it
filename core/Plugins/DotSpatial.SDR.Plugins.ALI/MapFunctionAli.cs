@@ -1769,12 +1769,27 @@ namespace DotSpatial.SDR.Plugins.ALI
                 {
                     case AliMode.Enterpol:
                     case AliMode.Sdraliserver:
+                        if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
+                        {
+                            _aliPanel.DisplayAvlListInterfaceWithMyUnit("Networkfleet Vehicles", "My Unit", true);
+                            break;
+                        }
                         _aliPanel.DisplayAvlListInterface("Networkfleet Vehicles", true);
                         break;
                     case AliMode.Globalcad:
+                        if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
+                        {
+                            _aliPanel.DisplayAvlListWithMyUnitAndCommLogInterface("Networkfleet Vehicles", "My Unit", "Active Comm Log");
+                            break;
+                        }
                         _aliPanel.DisplayAvlListAndCommLogInterface("Networkfleet Vehicles", "Active Comm Log");
                         break;
-                    default:
+                    default: // No active ALI mode
+                        if (SdrConfig.Settings.Instance.ApplicationMode == SdrConfig.AppMode.Responder)
+                        {
+                            _aliPanel.DisplayAvlListInterfaceWithMyUnit("Networkfleet Vehicles", "My Unit", false);
+                            break;
+                        }
                         _aliPanel.DisplayAvlListInterface("Networkfleet Vehicles", false);
                         break;
                 }
@@ -1796,7 +1811,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                     case AliMode.Globalcad:
                         _aliPanel.DisplayCommLogInterface("Active Comm Log");
                         break;
-                    default:
+                    default:  // No active AVL interface
                         _aliPanel.DisplayStandardInterface();
                         break;
                 }

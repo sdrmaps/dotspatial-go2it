@@ -175,6 +175,44 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[2].Width = 0;
         }
 
+        public void DisplayAvlListInterfaceWithMyUnit(string listTitle, string unitTitle, bool enableFunctions)
+        {
+            tsbAliLocate.Enabled = enableFunctions;
+            tsbAliUpdate.Enabled = enableFunctions;
+            lblFleetList.Text = listTitle;
+            lblCommLog.Text = unitTitle;  // because collapsing the top row would complicate things
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 60;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 20;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 20;
+
+            aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[1].Height = 0;
+            aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[2].Height = 0;
+        }
+
+        public void DisplayAvlListWithMyUnitAndCommLogInterface(string listTitle, string unitTitle, string logTitle)
+        {
+            tsbAliLocate.Enabled = true;
+            tsbAliUpdate.Enabled = true;
+            lblFleetList.Text = listTitle;
+            lblCommLog.Text = logTitle;
+            lblMyUnit.Text = unitTitle;
+            aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[0].Width = 60;
+            aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[1].Width = 20;
+            aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Percent;
+            aliTableLayoutPanel.ColumnStyles[2].Width = 20;
+
+            aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[2].Height = 20;
+        }
+
         public void DisplayAvlListAndCommLogInterface(string listTitle, string logTitle)
         {
             tsbAliLocate.Enabled = true;
@@ -187,6 +225,12 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[1].Width = 20;
             aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[2].Width = 20;
+
+            aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[2].Height = 0;
+            aliTableLayoutPanel.RowStyles[3].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[3].Height = 0;
         }
 
         public void DisplayCommLogInterface(string logTitle)
@@ -200,6 +244,12 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.ColumnStyles[1].Width = 0;
             aliTableLayoutPanel.ColumnStyles[2].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[2].Width = 25;
+
+            aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.AutoSize;
+            aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[2].Height = 0;
+            aliTableLayoutPanel.RowStyles[3].SizeType = SizeType.Absolute;
+            aliTableLayoutPanel.RowStyles[3].Height = 0;
         }
 
         public void PopulateComboBox()
