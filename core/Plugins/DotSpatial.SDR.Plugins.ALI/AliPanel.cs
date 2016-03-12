@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -33,6 +34,10 @@ namespace DotSpatial.SDR.Plugins.ALI
         public CheckedListBox VehicleFleetListBox
         {
             get { return chkFleetList;  }
+        }
+        public ComboBox MyUnitComboBox
+        {
+            get { return cmbAliMyUnit; }
         }
         #endregion
 
@@ -122,12 +127,12 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        delegate void FillComboBoxCallback(string[] array);
-        private void FillComboBox(string[] array)
+        delegate void FillLogComboBoxCallback(string[] array);
+        private void FillLogComboBox(string[] array)
         {
             if (cmbAliCommLog.InvokeRequired)
             {
-                var cb = new FillComboBoxCallback(FillComboBox);
+                var cb = new FillLogComboBoxCallback(FillLogComboBox);
                 Invoke(cb, new object[] { array });
             }
             else
@@ -136,12 +141,40 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        delegate void ClearComboBoxCallback();
-        private void ClearComboBox()
+        delegate void ClearMyUnitComboBoxCallback();
+        private void ClearMyUnitComboBox()
+        {
+            if (cmbAliMyUnit.InvokeRequired)
+            {
+                var cb = new ClearMyUnitComboBoxCallback(ClearMyUnitComboBox);
+                Invoke(cb, new object[] { });
+            }
+            else
+            {
+                cmbAliMyUnit.Items.Clear();
+            }
+        }
+
+        delegate void FillMyUnitComboBoxCallback(string[] array);
+        private void FillMyUnitComboBox(string[] array)
+        {
+            if (cmbAliMyUnit.InvokeRequired)
+            {
+                var cb = new FillMyUnitComboBoxCallback(FillMyUnitComboBox);
+                Invoke(cb, new object[] { array });
+            }
+            else
+            {
+                cmbAliMyUnit.Items.AddRange(array);
+            }
+        }
+
+        delegate void ClearLogComboBoxCallback();
+        private void ClearLogComboBox()
         {
             if (cmbAliCommLog.InvokeRequired)
             {
-                var cb = new ClearComboBoxCallback(ClearComboBox);
+                var cb = new ClearLogComboBoxCallback(ClearLogComboBox);
                 Invoke(cb, new object[] { });
             }
             else
@@ -252,9 +285,23 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.RowStyles[3].Height = 0;
         }
 
-        public void PopulateComboBox()
+        public void PopulateMyUnitComboBox(string[] array)
         {
-            ClearComboBox();
+            try
+            {
+                ClearMyUnitComboBox();
+                FillMyUnitComboBox(array);
+            }
+            catch (Exception ex)
+            {
+                var msg = AppContext.Instance.Get<IUserMessage>();
+                msg.Warn("Failed to populate ComboBox with Unit Labels", ex);
+            }
+        }
+
+        public void PopulateLogComboBox()
+        {
+            ClearLogComboBox();
             var files = new List<string>();
             var dir = new DirectoryInfo(SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadArchivePath);
             try
@@ -267,7 +314,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 files.Add(curLog);
                 files.Sort();
                 files.Reverse();
-                FillComboBox(files.ToArray());
+                FillLogComboBox(files.ToArray());
             }
             catch (Exception ex)
             {
@@ -285,6 +332,11 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void tsbAliLocate_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void chkFleetList_ControlAdded(object sender, ControlEventArgs e)
+        {
+            Debug.WriteLine("added item");
         }
     }
 }

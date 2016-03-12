@@ -1121,7 +1121,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                     DateTime.Now.ToShortDateString().Replace("/", "");
             }
             // populate the combobox with files now
-            _aliPanel.PopulateComboBox();
+            _aliPanel.PopulateLogComboBox();
             // set up the event handler for the combobox index change
             _aliPanel.ComLogsComboBox.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
             // set the selection initiating the datagridview columns
@@ -1131,7 +1131,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void OnGlobalCadArchiveChanged(object source, FileSystemEventArgs e)
         {
             _aliPanel.ComLogsComboBox.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
-            _aliPanel.PopulateComboBox();
+            _aliPanel.PopulateLogComboBox();
             _aliPanel.ComLogsComboBox.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
         }
 
@@ -1543,6 +1543,14 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void HandleNetworkFleetClient()
         {
             var msg = AppContext.Instance.Get<IUserMessage>();
+
+
+            //_aliPanel.MyUnitComboBox.SelectedIndexChanged += delegate(object sender, EventArgs args)
+            //{
+            // TODO: handle my unit changed
+            //    Debug.WriteLine("changed");
+            //};
+
             // TODO:
             // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpHostChanged += InstanceOnAliSdrServerUdpHostChanged;
             // SdrConfig.Project.Go2ItProjectSettings.Instance.AliSdrServerUdpPortChanged += InstanceOnAliSdrServerUdpPortChanged;
@@ -1577,11 +1585,17 @@ namespace DotSpatial.SDR.Plugins.ALI
                 {
                     avlRowSelected = _aliPanel.GetSelectedAvlVehicleRow();
                 }
-
                 var avlBindList = _avlVehicles.Values.ToList();
                 var bindingSource = new BindingSource { DataSource = avlBindList };
                 _aliPanel.SetCheckedListBoxBindingSource(bindingSource);
-
+                // now populate the my_unit combobox and set selection if available
+                var myUnitsList = new List<string>();
+                foreach (AvlVehicle v in _aliPanel.VehicleFleetListBox.Items)
+                {
+                    myUnitsList.Add(v.UnitLabel);
+                }
+                _aliPanel.PopulateMyUnitComboBox(myUnitsList.ToArray());
+                // make to set the selected avl vehicle if present
                 if (_aliPanel.VehicleFleetListBox.Items.Count >= avlRowSelected)
                 {
                     _aliPanel.SelectAvlVehicleRow(avlRowSelected);

@@ -154,6 +154,7 @@
             this.aliTableLayoutPanel.SetRowSpan(this.chkFleetList, 3);
             this.chkFleetList.Size = new System.Drawing.Size(191, 108);
             this.chkFleetList.TabIndex = 4;
+            this.chkFleetList.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.chkFleetList_ControlAdded);
             // 
             // lblFleetList
             // 
