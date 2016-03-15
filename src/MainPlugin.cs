@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -223,6 +224,10 @@ namespace Go2It
                 }
                 // assign the functionmode changed event binding
                 map.FunctionModeChanged += MapOnFunctionModeChanged;
+                /* map.MouseHover += delegate(object o, EventArgs args)
+                {
+                    Debug.WriteLine("on hover");
+                };*/
 
                 // update the view changes/events of the mapframe
                 var mapFrame = map.MapFrame as EventMapFrame;

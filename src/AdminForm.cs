@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -30,6 +31,7 @@ using SDR.Common;
 using SDR.Common.UserMessage;
 using SDR.Network;
 using Spatial4n.Core.Context.Nts;
+using Wintellect.PowerCollections;
 using Version = Lucene.Net.Util.Version;
 using LDirectory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -83,6 +85,10 @@ namespace Go2It
         private readonly SelectionsHandler _pointLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
+
+        // switch handler and dictionary lookup for dealing with maptip settings
+        private readonly  SelectionsHandler _mapTipsSwitcher = new SelectionsHandler();
+        private readonly Dictionary<string, Set<string>> _mapTipsLookup = new Dictionary<string, Set<string>>(); 
 
         // lookup of all layers available to this project
         private readonly Dictionary<string, IMapLayer> _layerLookup = new Dictionary<string, IMapLayer>();
@@ -195,6 +201,69 @@ namespace Go2It
             }
         }
 
+        private void PopulateMapTipsToForm()
+        {
+            // organize them all into a dict for proper population
+            foreach (var maptip in SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips)
+            {
+                var arr = maptip.Split(',');
+                var x = new Set<string>();
+                if (_mapTipsLookup.ContainsKey(arr[0]))
+                {
+                    _mapTipsLookup.TryGetValue(arr[0], out x);
+                    x.Add(arr[1]);
+                }
+                else
+                {
+                    x.Add(arr[1]);
+                    _mapTipsLookup.Add(arr[0], x);
+                }
+            }
+
+            if (_mapTipsLookup.Count > 0)
+            {
+
+
+            }
+            else  // no current map tips set, populate a single row with all avail layers for selection
+            {
+                tblMapTips.RowCount = 1;
+                tblMapTips.RowStyles.Add(new RowStyle(SizeType.Absolute, 31));
+
+                Label lblLabel = new Label();
+                lblLabel.Text = "Layer:";
+                lblLabel.AutoSize = true;
+                lblLabel.Anchor = AnchorStyles.Right;
+
+                ComboBox cmBox = new ComboBox();
+
+                foreach (KeyValuePair<string, IMapLayer> keyValuePair in _layerLookup)
+                {
+                    var c = keyValuePair.Value;
+                    cmBox.Items.Add(c.DataSet.Name);
+                }
+                cmBox.Anchor = AnchorStyles.Right | AnchorStyles.Left;
+                _mapTipsSwitcher.Add(cmBox);
+
+                Button btnAdd = new Button();
+                btnAdd.Width = 29;
+                btnAdd.Height = 25;
+                btnAdd.Text = "+";
+                btnAdd.Anchor = AnchorStyles.Left;
+
+                Button btnRemove = new Button();
+                btnRemove.Width = 29;
+                btnRemove.Height = 25;
+                btnRemove.Text = "-";
+                btnRemove.Anchor = AnchorStyles.Left;
+
+                tblMapTips.Controls.Add(lblLabel, 0, 0);
+                tblMapTips.Controls.Add(cmBox, 1, 0);
+                tblMapTips.Controls.Add(btnAdd, 2, 0);
+                tblMapTips.Controls.Add(btnRemove, 3, 0);
+            }
+        }
+
         public AdminForm(AppManager app)
         {
             InitializeComponent();
@@ -262,6 +331,7 @@ namespace Go2It
             PopulateHotKeysToForm();
             PopulateGraphicsToForm();
             PopulateNetworkFleetLabels();
+            PopulateMapTipsToForm();
 
             // watch for changes of index on the pull down map tab change
             cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
@@ -1306,6 +1376,7 @@ namespace Go2It
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
             var f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
             if (f == null) return;
+
             if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Add(mapLayer); // add to line layer list
@@ -3641,6 +3712,32 @@ namespace Go2It
                 _projectManager.IsDirty = true;
             }
             _networkFleetLabelFont = fd.Font;
+        }
+
+        private void btnMapTipsAddLayer_Click(object sender, EventArgs e)
+        {
+            //tblData.Controls.Clear();
+            ////Set the new count
+            //tblData.RowCount = tblData.RowCount += 1;
+            //for (int i = 0; i < tblData.RowCount; i++)
+            //{
+            //    tblData.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            //    Label lblLabel = new Label();
+            //    //This is just to have text that is smaller then the rest.
+            //    //Just to see how the table reacts.
+            //    if ((i > 3) & (i < 6))
+            //        lblLabel.Text = "Label: " + i.ToString();
+            //    else
+            //        lblLabel.Text = "Label control: " + i.ToString();
+            //    lblLabel.Font = new Font("Verdana", 8, FontStyle.Bold | FontStyle.Regular);
+            //    lblLabel.AutoSize = true;
+            //    Label lblData = new Label();
+            //    lblData.Text = "Data for entity (" + i.ToString() + ")";
+            //    lblData.Font = new Font("Verdana", 8, FontStyle.Regular);
+            //    lblData.AutoSize = true;
+            //    tblData.Controls.Add(lblLabel, 0, i);
+            //    tblData.Controls.Add(lblData, 1, i);
+            //}
         }
     }
 }

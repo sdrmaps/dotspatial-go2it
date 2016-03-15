@@ -452,7 +452,7 @@ namespace Go2It
             {
                 DataTable lblTable = SQLiteHelper.GetDataTable(conn, lblQuery);
                 LoadNetworkfleetLabels(lblTable);
-            }   
+            }
 
             const string psQuery = "SELECT * FROM ProjectSettings";
             DataTable p = SQLiteHelper.GetDataTable(conn, psQuery);

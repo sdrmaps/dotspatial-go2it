@@ -73,6 +73,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProjectSettings = new System.Windows.Forms.TabPage();
+            this.tblMapTips = new System.Windows.Forms.TableLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
             this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
@@ -767,6 +768,7 @@
             // 
             // adminTab_ProjectSettings
             // 
+            this.adminTab_ProjectSettings.Controls.Add(this.tblMapTips);
             this.adminTab_ProjectSettings.Controls.Add(this.label4);
             this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolColorSlider);
             this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolColorSlider);
@@ -788,10 +790,24 @@
             this.adminTab_ProjectSettings.Text = "Project Settings";
             this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
             // 
+            // tblMapTips
+            // 
+            this.tblMapTips.ColumnCount = 4;
+            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tblMapTips.Location = new System.Drawing.Point(22, 257);
+            this.tblMapTips.Name = "tblMapTips";
+            this.tblMapTips.RowCount = 1;
+            this.tblMapTips.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblMapTips.Size = new System.Drawing.Size(541, 134);
+            this.tblMapTips.TabIndex = 49;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(55, 219);
+            this.label4.Location = new System.Drawing.Point(45, 204);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(268, 13);
             this.label4.TabIndex = 48;
@@ -883,7 +899,7 @@
             // 
             // lineSymbolSize
             // 
-            this.lineSymbolSize.Location = new System.Drawing.Point(547, 110);
+            this.lineSymbolSize.Location = new System.Drawing.Point(505, 110);
             this.lineSymbolSize.Name = "lineSymbolSize";
             this.lineSymbolSize.Size = new System.Drawing.Size(46, 20);
             this.lineSymbolSize.TabIndex = 34;
@@ -894,7 +910,7 @@
             this.lineSymbolStyle.FormattingEnabled = true;
             this.lineSymbolStyle.Location = new System.Drawing.Point(297, 109);
             this.lineSymbolStyle.Name = "lineSymbolStyle";
-            this.lineSymbolStyle.Size = new System.Drawing.Size(244, 21);
+            this.lineSymbolStyle.Size = new System.Drawing.Size(202, 21);
             this.lineSymbolStyle.TabIndex = 33;
             // 
             // lineSymbolColor
@@ -3384,6 +3400,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+        private System.Windows.Forms.TableLayoutPanel tblMapTips;
 
     }
 }

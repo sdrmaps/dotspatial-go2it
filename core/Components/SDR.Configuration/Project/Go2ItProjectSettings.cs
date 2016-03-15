@@ -29,10 +29,12 @@ namespace SDR.Configuration.Project
 
         public void ResetProjectSettingsToDefaults()
         {
+            Properties.ProjectSettings.Default.MapTipsLookup.Clear();
             Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Clear();
             Properties.ProjectSettings.Default.AddressesLayers.Clear();
             Properties.ProjectSettings.Default.RoadsLayers.Clear();
             Properties.ProjectSettings.Default.KeyLocationsLayers.Clear();
+           
             Properties.ProjectSettings.Default.NotesLayer = string.Empty;
             Properties.ProjectSettings.Default.CityLimitsLayer = string.Empty;
             Properties.ProjectSettings.Default.CellSectorsLayer = string.Empty;
@@ -112,6 +114,36 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelYOffset = -5;
             Properties.ProjectSettings.Default.AliEnterpolAVLLabelAlignment = "Above";
             Properties.ProjectSettings.Default.AliEnterpolAvlAutoHideInactiveUnits = true;
+        }
+
+
+        /// <summary>
+        /// Gets/sets the list of maptip settings lookups
+        /// </summary>
+        public System.Collections.Specialized.StringCollection MapTips
+        {
+            get { return Properties.ProjectSettings.Default.MapTipsLookup; }
+            set { Properties.ProjectSettings.Default.MapTipsLookup = value; }
+        }
+
+        /// <summary>
+        /// Add a maptip setting lookup to the current list of maptips
+        /// </summary>
+        public void AddMapTip(string layerName, string fieldName)
+        {
+            string record = layerName + "," + fieldName;
+            if (!Properties.ProjectSettings.Default.MapTipsLookup.Contains(record))
+            {
+                Properties.ProjectSettings.Default.MapTipsLookup.Add(record);
+            }
+        }
+
+        /// <summary>
+        /// clears the list maptip settings
+        /// </summary>
+        public void ClearMapTips()
+        {
+            Properties.ProjectSettings.Default.MapTipsLookup.Clear();
         }
 
         /// <summary>
