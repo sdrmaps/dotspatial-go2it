@@ -139,54 +139,53 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void PlotGpsPointToMap(PositionEventArgs args)
         {
-            if (Map != null)
+            if (Map == null) return;
+
+            if (double.IsNaN(args.Position.Latitude.DecimalDegrees) ||
+                double.IsNaN(args.Position.Longitude.DecimalDegrees)) return;
+
+            if (_displayQueue == null)
             {
-                if (!double.IsNaN(args.Position.Latitude.DecimalDegrees) && !double.IsNaN(args.Position.Longitude.DecimalDegrees))
-                {
-                    if (_displayQueue == null)
+                PointShape pointShape;
+                Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out pointShape);
+                _displayQueue = new GpsDisplayQueue(
+                    pointShape,
+                    PluginSettings.Instance.GpsPointSize,
+                    PluginSettings.Instance.GpsPointColor,
+                    PluginSettings.Instance.GpsDisplayCount);
+
+                // refresh the map to display our updated gps trail
+                _displayQueue.ListUpdated += (o, eventArgs) => Map.Refresh();
+
+                PluginSettings.Instance.GpsDisplayCountChanged +=
+                    delegate
                     {
-                        PointShape pointShape;
-                        Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out pointShape);
-                        _displayQueue = new GpsDisplayQueue(
-                            pointShape,
-                            PluginSettings.Instance.GpsPointSize,
-                            PluginSettings.Instance.GpsPointColor,
-                            PluginSettings.Instance.GpsDisplayCount);
-
-                        // refresh the map to display our updated gps trail
-                        _displayQueue.ListUpdated += (o, eventArgs) => Map.Refresh();
-
-                        PluginSettings.Instance.GpsDisplayCountChanged +=
-                            delegate
-                            {
-                                _displayQueue.GpsPointDisplayCount = PluginSettings.Instance.GpsDisplayCount;
-                            };
-                        PluginSettings.Instance.GpsPointColorChanged +=
-                            delegate
-                            {
-                                _displayQueue.GpsNewPointColor = PluginSettings.Instance.GpsPointColor;
-                            };
-                        PluginSettings.Instance.GpsPointStyleChanged +=
-                            delegate
-                            {
-                                PointShape ps;
-                                Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out ps);
-                                _displayQueue.GpsPointShape = ps;
-                            };
-                        PluginSettings.Instance.GpsPointSizeChanged +=
-                            delegate
-                            {
-                                _displayQueue.GpsPointSize = PluginSettings.Instance.GpsPointSize;
-                            };
-                    }
-                    AddGpsTrail();
-
-                    Coordinate c = ConvertLatLonToMap(args.Position.Longitude.DecimalDegrees, args.Position.Latitude.DecimalDegrees);
-                    _latestGpsPoint = new Point(c);
-
-                    HandleGpsInterval();
-                }
+                        _displayQueue.GpsPointDisplayCount = PluginSettings.Instance.GpsDisplayCount;
+                    };
+                PluginSettings.Instance.GpsPointColorChanged +=
+                    delegate
+                    {
+                        _displayQueue.GpsNewPointColor = PluginSettings.Instance.GpsPointColor;
+                    };
+                PluginSettings.Instance.GpsPointStyleChanged +=
+                    delegate
+                    {
+                        PointShape ps;
+                        Enum.TryParse(PluginSettings.Instance.GpsPointStyle, true, out ps);
+                        _displayQueue.GpsPointShape = ps;
+                    };
+                PluginSettings.Instance.GpsPointSizeChanged +=
+                    delegate
+                    {
+                        _displayQueue.GpsPointSize = PluginSettings.Instance.GpsPointSize;
+                    };
             }
+            AddGpsTrail();
+
+            Coordinate c = ConvertLatLonToMap(args.Position.Longitude.DecimalDegrees, args.Position.Latitude.DecimalDegrees);
+            _latestGpsPoint = new Point(c);
+
+            HandleGpsInterval();
         }
 
         private void HandleGpsInterval()

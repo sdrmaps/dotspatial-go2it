@@ -24,6 +24,7 @@ namespace Go2It
 
         private StartUpForm _startUpForm;
         private CoordinateDisplay _latLongDisplay;
+        private MapTipsPopup _mapTipsPopup;
         // TODO: add the selections display message back to application
         // private SelectionsDisplay _selectionsDisplay;
 
@@ -45,6 +46,7 @@ namespace Go2It
             
             // create a new lat/long display panel
             _latLongDisplay = new CoordinateDisplay(App);
+            _mapTipsPopup = new MapTipsPopup(App);
             // make sure the admin mode is set to false on startup
             SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive = false;
             base.Activate();
@@ -159,6 +161,7 @@ namespace Go2It
         {
             // display the lat/long status panel
             _latLongDisplay.ShowCoordinates = true;
+            _mapTipsPopup.ShowMapTips = true;
             // TODO: display the selection status panel
             // _selectionsDisplay.ShowSelectionStatus = false;
             Shell.Focus();  // set focus to the main application window

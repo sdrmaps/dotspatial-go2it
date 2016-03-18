@@ -73,7 +73,11 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProjectSettings = new System.Windows.Forms.TabPage();
-            this.tblMapTips = new System.Windows.Forms.TableLayoutPanel();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.layerName = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.fieldName = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.add = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.remove = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label4 = new System.Windows.Forms.Label();
             this.ptSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
             this.lineSymbolColorSlider = new DotSpatial.Symbology.Forms.RampSlider();
@@ -269,6 +273,7 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProjectSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
             this.adminTab_ProgramManagement.SuspendLayout();
@@ -768,7 +773,7 @@
             // 
             // adminTab_ProjectSettings
             // 
-            this.adminTab_ProjectSettings.Controls.Add(this.tblMapTips);
+            this.adminTab_ProjectSettings.Controls.Add(this.dataGridView1);
             this.adminTab_ProjectSettings.Controls.Add(this.label4);
             this.adminTab_ProjectSettings.Controls.Add(this.ptSymbolColorSlider);
             this.adminTab_ProjectSettings.Controls.Add(this.lineSymbolColorSlider);
@@ -790,19 +795,42 @@
             this.adminTab_ProjectSettings.Text = "Project Settings";
             this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
             // 
-            // tblMapTips
+            // dataGridView1
             // 
-            this.tblMapTips.ColumnCount = 4;
-            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tblMapTips.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tblMapTips.Location = new System.Drawing.Point(22, 257);
-            this.tblMapTips.Name = "tblMapTips";
-            this.tblMapTips.RowCount = 1;
-            this.tblMapTips.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblMapTips.Size = new System.Drawing.Size(541, 134);
-            this.tblMapTips.TabIndex = 49;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.layerName,
+            this.fieldName,
+            this.add,
+            this.remove});
+            this.dataGridView1.Location = new System.Drawing.Point(26, 249);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(537, 324);
+            this.dataGridView1.TabIndex = 50;
+            // 
+            // layerName
+            // 
+            this.layerName.HeaderText = "Layer Name";
+            this.layerName.Name = "layerName";
+            this.layerName.ReadOnly = true;
+            // 
+            // fieldName
+            // 
+            this.fieldName.HeaderText = "Field Name";
+            this.fieldName.Name = "fieldName";
+            this.fieldName.ReadOnly = true;
+            // 
+            // add
+            // 
+            this.add.HeaderText = "Add";
+            this.add.Name = "add";
+            this.add.ReadOnly = true;
+            // 
+            // remove
+            // 
+            this.remove.HeaderText = "Remove";
+            this.remove.Name = "remove";
+            this.remove.ReadOnly = true;
             // 
             // label4
             // 
@@ -3116,6 +3144,7 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProjectSettings.ResumeLayout(false);
             this.adminTab_ProjectSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
             this.adminTab_ProgramManagement.ResumeLayout(false);
@@ -3400,7 +3429,11 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
-        private System.Windows.Forms.TableLayoutPanel tblMapTips;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewComboBoxColumn layerName;
+        private System.Windows.Forms.DataGridViewComboBoxColumn fieldName;
+        private System.Windows.Forms.DataGridViewButtonColumn add;
+        private System.Windows.Forms.DataGridViewButtonColumn remove;
 
     }
 }

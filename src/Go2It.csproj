@@ -192,6 +192,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainPlugin.cs" />
+    <Compile Include="MapTipsPopup.cs" />
     <Compile Include="MenuBarControl.cs" />
     <Compile Include="OverviewMap.cs" />
     <Compile Include="OverviewMapForm.cs">

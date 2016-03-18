@@ -22,18 +22,17 @@ namespace DotSpatial.SDR.Plugins.GPS
 
         private void InitializeEventHandlers()
         {
-            numGpsDisplayCount.ValueChanged += delegate(object sender, EventArgs args)
-            {
+            numGpsDisplayCount.ValueChanged += delegate {
                 PluginSettings.Instance.GpsDisplayCount = Convert.ToInt32(numGpsDisplayCount.Text);
             };
-            gpsIntervalModeCount.CheckedChanged += delegate(object sender, EventArgs args)
+            gpsIntervalModeCount.CheckedChanged += delegate
             {
                 if (gpsIntervalModeCount.Checked)
                 {
                     PluginSettings.Instance.GpsIntervalType = "Count";
                 }
             };
-            gpsIntervalModeTime.CheckedChanged += delegate(object sender, EventArgs args)
+            gpsIntervalModeTime.CheckedChanged += delegate
             {
                 if (gpsIntervalModeTime.Checked)
                 {
@@ -45,7 +44,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 var n = (NumericUpDown) sender;
                 PluginSettings.Instance.GpsIntervalValue = Convert.ToInt32(n.Value);
             };
-            gpsSymbolColor.Click += delegate(object sender, EventArgs args)
+            gpsSymbolColor.Click += delegate
             {
                 var dlg = new ColorDialog();
                 if (dlg.ShowDialog() != DialogResult.OK) return;
@@ -58,19 +57,19 @@ namespace DotSpatial.SDR.Plugins.GPS
                 PluginSettings.Instance.GpsPointColor = gpsSymbolColor.BackColor;
                 DrawGpsPointGraphics();
             };
-            gpsSymbolColorSlider.ValueChanged += delegate(object sender, EventArgs args)
+            gpsSymbolColorSlider.ValueChanged += delegate
             {
                 int alpha = Convert.ToInt32(gpsSymbolColorSlider.Value * 255);
                 gpsSymbolColor.BackColor = Color.FromArgb(alpha, gpsSymbolColor.BackColor.R, gpsSymbolColor.BackColor.G, gpsSymbolColor.BackColor.B);
                 PluginSettings.Instance.GpsPointColor = gpsSymbolColor.BackColor;
                 DrawGpsPointGraphics();
             };
-            gpsSymbolStyle.SelectedIndexChanged += delegate(object sender, EventArgs args)
+            gpsSymbolStyle.SelectedIndexChanged += delegate
             {
                 PluginSettings.Instance.GpsPointStyle = ApplyComboBoxSetting(gpsSymbolStyle);
                 DrawGpsPointGraphics();
             };
-            gpsSymbolSize.ValueChanged += delegate(object sender, EventArgs args)
+            gpsSymbolSize.ValueChanged += delegate
             {
                 PluginSettings.Instance.GpsPointSize = Convert.ToInt32(gpsSymbolSize.Text);
                 DrawGpsPointGraphics();

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -31,7 +30,6 @@ using SDR.Common;
 using SDR.Common.UserMessage;
 using SDR.Network;
 using Spatial4n.Core.Context.Nts;
-using Wintellect.PowerCollections;
 using Version = Lucene.Net.Util.Version;
 using LDirectory = Lucene.Net.Store.Directory;
 using Field = Lucene.Net.Documents.Field;
@@ -86,9 +84,10 @@ namespace Go2It
         private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
 
+        // TODO: lets get this going
         // switch handler and dictionary lookup for dealing with maptip settings
-        private readonly  SelectionsHandler _mapTipsSwitcher = new SelectionsHandler();
-        private readonly Dictionary<string, Set<string>> _mapTipsLookup = new Dictionary<string, Set<string>>(); 
+        // private readonly  SelectionsHandler _mapTipsSwitcher = new SelectionsHandler();
+        private readonly Dictionary<string, string> _mapTipsLookup = new Dictionary<string, string>(); 
 
         // lookup of all layers available to this project
         private readonly Dictionary<string, IMapLayer> _layerLookup = new Dictionary<string, IMapLayer>();
@@ -203,65 +202,63 @@ namespace Go2It
 
         private void PopulateMapTipsToForm()
         {
-            // organize them all into a dict for proper population
-            foreach (var maptip in SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips)
-            {
-                var arr = maptip.Split(',');
-                var x = new Set<string>();
-                if (_mapTipsLookup.ContainsKey(arr[0]))
-                {
-                    _mapTipsLookup.TryGetValue(arr[0], out x);
-                    x.Add(arr[1]);
-                }
-                else
-                {
-                    x.Add(arr[1]);
-                    _mapTipsLookup.Add(arr[0], x);
-                }
-            }
+            //// organize them all into a dict for proper population
+            //foreach (var maptip in SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips)
+            //{
+            //    var arr = maptip.Split(',');
+            //    var x = new Set<string>();
+            //    if (_mapTipsLookup.ContainsKey(arr[0]))
+            //    {
+            //        _mapTipsLookup.TryGetValue(arr[0], out x);
+            //        x.Add(arr[1]);
+            //    }
+            //    else
+            //    {
+            //        x.Add(arr[1]);
+            //        _mapTipsLookup.Add(arr[0], x);
+            //    }
+            //}
 
-            if (_mapTipsLookup.Count > 0)
-            {
+            //if (_mapTipsLookup.Count > 0)
+            //{
 
 
-            }
-            else  // no current map tips set, populate a single row with all avail layers for selection
-            {
-                tblMapTips.RowCount = 1;
-                tblMapTips.RowStyles.Add(new RowStyle(SizeType.Absolute, 31));
+            //}
+            //else  // no current map tips set, populate a single row with all avail layers for selection
+            //{
 
-                Label lblLabel = new Label();
-                lblLabel.Text = "Layer:";
-                lblLabel.AutoSize = true;
-                lblLabel.Anchor = AnchorStyles.Right;
+                //Label lblLabel = new Label();
+                //lblLabel.Text = "Layer:";
+                //lblLabel.AutoSize = true;
+                //lblLabel.Anchor = AnchorStyles.Right;
 
-                ComboBox cmBox = new ComboBox();
+                //ComboBox cmBox = new ComboBox();
 
-                foreach (KeyValuePair<string, IMapLayer> keyValuePair in _layerLookup)
-                {
-                    var c = keyValuePair.Value;
-                    cmBox.Items.Add(c.DataSet.Name);
-                }
-                cmBox.Anchor = AnchorStyles.Right | AnchorStyles.Left;
-                _mapTipsSwitcher.Add(cmBox);
+                //foreach (KeyValuePair<string, IMapLayer> keyValuePair in _layerLookup)
+                //{
+                //    var c = keyValuePair.Value;
+                //    cmBox.Items.Add(c.DataSet.Name);
+                //}
+                //cmBox.Anchor = AnchorStyles.Right | AnchorStyles.Left;
+                //cmBox.SelectedIndexChanged += delegate(object sender, EventArgs args)
+                //{
+                //    var cmb = (ComboBox) sender;
+                //    var p = cmb.Parent;
 
-                Button btnAdd = new Button();
-                btnAdd.Width = 29;
-                btnAdd.Height = 25;
-                btnAdd.Text = "+";
-                btnAdd.Anchor = AnchorStyles.Left;
+                //};
 
-                Button btnRemove = new Button();
-                btnRemove.Width = 29;
-                btnRemove.Height = 25;
-                btnRemove.Text = "-";
-                btnRemove.Anchor = AnchorStyles.Left;
+                //Button btnAdd = new Button();
+                //btnAdd.Width = 29;
+                //btnAdd.Height = 25;
+                //btnAdd.Text = "+";
+                //btnAdd.Anchor = AnchorStyles.Left;
 
-                tblMapTips.Controls.Add(lblLabel, 0, 0);
-                tblMapTips.Controls.Add(cmBox, 1, 0);
-                tblMapTips.Controls.Add(btnAdd, 2, 0);
-                tblMapTips.Controls.Add(btnRemove, 3, 0);
-            }
+                //Button btnRemove = new Button();
+                //btnRemove.Width = 29;
+                //btnRemove.Height = 25;
+                //btnRemove.Text = "-";
+                //btnRemove.Anchor = AnchorStyles.Left;
+            //}
         }
 
         public AdminForm(AppManager app)

@@ -76,7 +76,7 @@ namespace Go2It
         }
 
         /// <summary>
-        /// Load Application Configuration, setting the:
+        /// Load Application Configuration, sets:
         ///     ApplicationName: Go2It
         ///     ApplicationDataDirectory: Install Directory
         ///     ApplicationRepoConnectionString: SQL connection string to ApplicationDatabase
