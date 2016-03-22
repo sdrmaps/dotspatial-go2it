@@ -463,7 +463,7 @@ namespace DotSpatial.SDR.Plugins.Search
             PopulateValuesToCombo();
         }
 
-        private void searchRoad_Click(object sender, EventArgs e)
+        public void SearchRoad_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
             if (PluginSettings.Instance.SearchMode != SearchMode.Road)

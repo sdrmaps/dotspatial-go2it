@@ -85,8 +85,8 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             // hotkeys for this plugin
             HotKeyManager.AddHotKey(new HotKey(Keys.F1, "Zoom to Max Extent"), "Navigate_Zoom_Max_Extent");
-            HotKeyManager.AddHotKey(new HotKey(Keys.F11, "Zoom Out"), "Navigate_Set_Zoom_Out");
-            HotKeyManager.AddHotKey(new HotKey(Keys.F12, "Zoom In"), "Navigate_Set_Zoom_In");
+            HotKeyManager.AddHotKey(new HotKey(Keys.F10, "Zoom Out"), "Navigate_Set_Zoom_Out");
+            HotKeyManager.AddHotKey(new HotKey(Keys.F11, "Zoom In"), "Navigate_Set_Zoom_In");
 
             // dockmanager events for display of various maps on tab panels
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;

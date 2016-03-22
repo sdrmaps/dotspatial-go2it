@@ -56,12 +56,12 @@ namespace SDR.Common.logging
                 return null;
             }
 
-            //at this point the directory exists
+            // at this point the directory exists
             var logFileName = string.Format(LogFileName, string.Empty);
             var fullPath = Path.Combine(logFileDirectory, logFileName);
             try
             {
-                // Rename previous file to LOG_FILE_NAME_yyyyMMdd.log
+                // rename previous file to LOG_FILE_NAME_yyyyMMdd.log
                 if (File.Exists(fullPath))
                 {
                     var lastTime = File.GetLastWriteTime(fullPath);
@@ -71,7 +71,7 @@ namespace SDR.Common.logging
                     }
                 }
 
-                // Add to existing log file or create new
+                // add to existing log file or create new
                 return new FileStream(fullPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
             }
             catch (Exception ex)

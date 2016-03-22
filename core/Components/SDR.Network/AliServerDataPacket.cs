@@ -9,9 +9,9 @@ namespace SDR.Network
     /// </summary>
     public enum Command
     {
-        Login,      // Log into the server
+        Login,      // Login to the server
         Logout,     // Logout of the server
-        Message,    // Send a text message to all the clients
+        Message,    // Send a message to all logged in clients
         List,       // Get a list of clients logged in from the server
         Ping,       // Check if the server is up and listening
         Null        // No command

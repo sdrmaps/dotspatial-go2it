@@ -39,10 +39,33 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel = new SearchPanel();
             _dockPanel = new DockablePanel(PluginKey, PluginCaption, _searchPanel, DockStyle.Fill);
             App.DockManager.Add(_dockPanel);
+
+            // hotkeys for this plugin
+            HotKeyManager.AddHotKey(new HotKey(Keys.F4, "Road Search"), "Activate_Road_Search");
+
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
+            // watch for hotkeys activated via the mainform plugin
+            HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
+        }
+
+        private void HotKeyManagerOnHotKeyEvent(string action)
+        {
+            switch (action)
+            {
+                case "Activate_Road_Search":
+                    if (_isFunctionActive)
+                    {
+                        _searchPanel.SearchRoad_Click(null, null);
+                    }
+                    else
+                    {
+                        SearchTool_Click(null, null);
+                    }
+                    break;
+            }
         }
 
         public override void Deactivate()

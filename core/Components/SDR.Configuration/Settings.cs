@@ -128,17 +128,17 @@ namespace SDR.Configuration
 
         #region Events
 
-        /// <summary>
-        /// This event occurs when the main database connection string has changed
-        /// </summary>
-        public event EventHandler DatabaseChanged;
+        ///// <summary>
+        ///// This event occurs when the main database connection string has changed
+        ///// </summary>
+        //public event EventHandler DatabaseChanged;
 
-        private void OnDatabaseChanged()
-        {
-            var handler = DatabaseChanged;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
+        //private void OnDatabaseChanged()
+        //{
+        //    var handler = DatabaseChanged;
+        //    if (handler != null)
+        //        handler(this, EventArgs.Empty);
+        //}
 
         #endregion Events
     }

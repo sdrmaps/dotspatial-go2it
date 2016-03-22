@@ -158,7 +158,7 @@
             this.searchRoad.Text = "Road";
             this.searchRoad.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchRoad.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchRoad.Click += new System.EventHandler(this.searchRoad_Click);
+            this.searchRoad.Click += new System.EventHandler(this.SearchRoad_Click);
             // 
             // searchIntersection
             // 

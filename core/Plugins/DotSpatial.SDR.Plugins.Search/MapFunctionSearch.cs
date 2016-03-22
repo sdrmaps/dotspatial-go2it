@@ -48,8 +48,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private SearchPanel _searchPanel;
         private readonly DataGridView _dataGridView; // dgv to populate our results of query to
-        private static IndexSearcher _indexSearcher = null;
-        private static IndexReader _indexReader = null;
+        private static IndexSearcher _indexSearcher;
+        private static IndexReader _indexReader;
 
         // drawing layers used by this tool
         private FeatureSet _pointGraphics;
@@ -190,14 +190,6 @@ namespace DotSpatial.SDR.Plugins.Search
             EnableSearchModes();
             _searchPanel.Show();
             base.OnActivate();
-        }
-
-        /// <summary>
-        /// Allows for new behavior during deactivation.
-        /// </summary>
-        protected override void OnDeactivate()
-        {
-            base.OnDeactivate();
         }
 
         #endregion
@@ -377,7 +369,7 @@ namespace DotSpatial.SDR.Plugins.Search
             double x, y;
             double.TryParse(coord[0], out x);
             double.TryParse(coord[1], out y);
-            double[] xy = new double[2];
+            var xy = new double[2];
             xy[0] = x;
             xy[1] = y;
             // reproject the point if need be
@@ -387,9 +379,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     xy, new double[1], KnownCoordinateSystems.Geographic.World.WGS1984, Map.Projection, 0, 1);
             }
             CreatePointHighlightGraphic(new Coordinate(xy[0], xy[1]));
-            var envelope = CreateBufferGraphic(new DotSpatial.Topology.Point(new Coordinate(xy[0], xy[1])));
+            var envelope = CreateBufferGraphic(new Point(new Coordinate(xy[0], xy[1])));
 
-            double zoomInFactor = (double) SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor; // fixed zoom-in by 10% - 5% on each side
+            var zoomInFactor = (double) SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor; // fixed zoom-in by 10% - 5% on each side
             var newExtentWidth = envelope.Width * zoomInFactor;
             var newExtentHeight = envelope.Height * zoomInFactor;
             envelope.ExpandBy(newExtentWidth, newExtentHeight);
@@ -479,10 +471,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 _polylineGraphics = new FeatureSet(FeatureType.Line);
                 _polylineGraphicsLayer = new MapLineLayer(_polylineGraphics);
 
-                LineCap lineCap = new LineCap();
-                LineCap.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out lineCap);
-                DashStyle lineStyle = new DashStyle();
-                DashStyle.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap, true, out lineStyle);
+                LineCap lineCap;
+                Enum.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineStyle, true, out lineCap);
+                DashStyle lineStyle;
+                Enum.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineCap, true, out lineStyle);
                 _polylineGraphicsLayer.Symbolizer = new LineSymbolizer(
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineColor,
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicLineBorderColor,
@@ -502,21 +494,18 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 _pointGraphics = new FeatureSet(FeatureType.Point);
                 _pointGraphicsLayer = new MapPointLayer(_pointGraphics);
-                PointShape pointShape = new PointShape();
-                PointShape.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle, true, out pointShape);
+                PointShape pointShape;
+                Enum.TryParse(SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointStyle, true, out pointShape);
 
                 _pointGraphicsLayer.Symbolizer = new PointSymbolizer(
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointColor,
                     pointShape,
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
 
+                // TODO: I do not recall what I was planning to do here
                 //  Symbol = new CharacterSymbol()
                 // _pointGraphicsLayer.Symbolizer.Symbols.Add();
 
-                // TODO: what in the hell was i doing in here??
-                var ccc = Map.MapFrame.DrawingLayers.Count;
-                var zzz = Map.MapFrame.Layers.Count;
-                var zxz = Map.MapFrame.LayerCount;
                 Map.MapFrame.DrawingLayers.Add(_pointGraphicsLayer);
             }
             var point = new Point(c);
@@ -549,7 +538,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 }
                 IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
 
-                double zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
+                var zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
                 var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
                 var newExtentHeight = Map.ViewExtents.Height * zoomInFactor;
                 buffEnv.ExpandBy(newExtentWidth, newExtentHeight);
@@ -601,9 +590,8 @@ namespace DotSpatial.SDR.Plugins.Search
             IFeatureSet hydrantfs = null;
             foreach (IMapPointLayer ptLayer in layers)
             {
-                IFeatureSet fs = null;
                 if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
-                fs = FeatureSet.Open(ptLayer.DataSet.Filename);
+                var fs = FeatureSet.Open(ptLayer.DataSet.Filename);
                 if (fs != null && fs.Name == SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
                 {
                     hydrantfs = fs;
@@ -618,7 +606,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (hits.Length == 0)
             {
                 SetupIndexReaderWriter(idxType);  // set the index searcher back
-                MessageBox.Show("No hydrants within the search area");
+                MessageBox.Show(@"No hydrants within the search area");
             }
             // create a graphic for each hydrant to be displayed
             for (int i = 0; i <= SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantSearchCount -1; i++)
@@ -636,7 +624,7 @@ namespace DotSpatial.SDR.Plugins.Search
             }
 
             SetupIndexReaderWriter(idxType);  // set the index searcher back
-            double zoomFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
+            var zoomFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
 
             var newExtentWidth = _pointGraphics.Extent.Width * zoomFactor;
             var newExtentHeight = _pointGraphics.Extent.Height * zoomFactor;
@@ -653,7 +641,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteScoredHydrantQuery(FeatureLookup activeLookup)
         {
             var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
-            Spatial4n.Core.Shapes.Shape shp = ctx.ReadShape(activeLookup.Shape);
+            Shape shp = ctx.ReadShape(activeLookup.Shape);
             Spatial4n.Core.Shapes.Point centerPt = shp.GetCenter();
 
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);

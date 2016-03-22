@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -30,57 +30,56 @@ namespace Go2It
                 LargeImage = Resources.legend_32
             });
 
-            // hotkeys for toggling various layers
-            // HotKeyManager.AddHotKey(new HotKey(Keys.F3, "Toggle Address Layers"), "Legend_Toggle_Address_Layers");
+            // hotkeys for this extension
+            HotKeyManager.AddHotKey(new HotKey(Keys.F3, "Toggle Address Layers"), "Legend_Toggle_Address_Layers");
 
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
-            // watch for hotkeys activated via the mainform plugin
-            // HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
 
+            // watch for hotkeys activated via the mainform plugin
+            HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
             base.Activate();
         }
 
-        //private void HotKeyManagerOnHotKeyEvent(string action)
-        //{
-        //    switch (action)
-        //    {
-        //        case "Legend_Toggle_Address_Layers":
-        //            ToggleAddressLayers();
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
+        private void HotKeyManagerOnHotKeyEvent(string action)
+        {
+            switch (action)
+            {
+                case "Legend_Toggle_Address_Layers":
+                    ToggleAddressLayers();
+                    break;
+            }
+        }
 
-        //private void ToggleAddressLayers()
-        //{
-        //    if (_map == null) return;
-        //    // get all layer names set as address layers
-        //    var layers = SDR.Configuration.Project.Go2ItProjectSettings.Instance.AddressLayers;
-        //    // locate and toggle required layers visibility
-        //    foreach (IMapLayer ml in App.Map.Layers)
-        //    {
-        //        if (ml.GetType().Name != "MapImageLayer")
-        //        {
-        //            var mFeatureLyr = ml as IMapFeatureLayer;
-        //            // make sure this is a valid map feature layer
-        //            if (mFeatureLyr != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename)))) return;
-        //            // get the name of this layer for comparison
-        //            var lyrName = Path.GetFileNameWithoutExtension(mFeatureLyr.DataSet.Filename);
-        //            // find the required layers and toggle that shit
-        //            foreach (string layer in layers)
-        //            {
-        //                if (lyrName == layer)
-        //                {
-        //                    if (mFeatureLyr.IsVisible)
-        //                    {
-        //                        mFeatureLyr.
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+        private void ToggleAddressLayers()
+        {
+            if (App.Map == null) return;
+            // get all layer names set as address layers
+            var layers = SDR.Configuration.Project.Go2ItProjectSettings.Instance.AddressLayers;
+            // locate and toggle required layers visibility
+            foreach (IMapLayer ml in App.Map.Layers)
+            {
+                if (ml.GetType().Name != "MapImageLayer")
+                {
+                    var mFeatureLyr = ml as IMapFeatureLayer;
+                    // make sure this is a valid map feature layer
+                    if (mFeatureLyr != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename)))) return;
+                    // get the name of this layer for comparison
+                    var lyrName = Path.GetFileNameWithoutExtension(mFeatureLyr.DataSet.Filename);
+                    // find the required layers and toggle that shit
+                    foreach (string layer in layers)
+                    {
+                        if (lyrName == layer)
+                        {
+                            if (mFeatureLyr.IsVisible)
+                            {
+                                // mFeatureLyr.SetVisible();
+                                // mFeatureLyr.
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
         {
@@ -134,7 +133,7 @@ namespace Go2It
 
         private void AttachLegend()
         {
-            _userLegend = new RestrictedLegend()
+            _userLegend = new RestrictedLegend
             {
                 BackColor = System.Drawing.Color.White,
                 ControlRectangle = new System.Drawing.Rectangle(0, 0, 176, 128),

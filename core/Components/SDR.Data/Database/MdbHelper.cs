@@ -67,7 +67,7 @@ namespace SDR.Data.Database
             using (var cnn = new OleDbConnection(conn))
             {
                 cnn.Open();
-                var exists = cnn.GetSchema("Tables", new string[4] { null, null, table, "TABLE" }).Rows.Count > 0;
+                var exists = cnn.GetSchema("Tables", new[] { null, null, table, "TABLE" }).Rows.Count > 0;
                 return exists;
             }
         }
