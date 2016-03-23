@@ -40,7 +40,7 @@ namespace Go2It
             // add the file menu
             header.Add(new RootItem(FileMenuKey, "File") { SortOrder = -20 });
             header.Add(new SimpleActionItem(FileMenuKey, "Open Project", OpenProject_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 10, SmallImage = Resources.open_file_16, LargeImage = Resources.open_file_32 });
-            // header.Add(new SimpleActionItem(FileMenuKey, Msg.File_Print, PrintLayout_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 40, SmallImage = Resources.printer_16, LargeImage = Resources.printer_32 });
+            header.Add(new SimpleActionItem(FileMenuKey, "Print Map", PrintLayout_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 40, SmallImage = Resources.printer_16, LargeImage = Resources.printer_32 });
             header.Add(new SimpleActionItem(FileMenuKey, "Exit", Exit_Click) { GroupCaption = DotSpatial.Controls.Header.HeaderControl.ApplicationMenuKey, SortOrder = 5000, });
             // add the admin menu
             header.Add(new RootItem(AdminMenuKey, "Administration") {SortOrder = -10});

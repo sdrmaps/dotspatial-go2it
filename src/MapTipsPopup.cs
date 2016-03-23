@@ -69,7 +69,7 @@ namespace Go2It
 
         private void MapOnMouseHover(object sender, EventArgs eventArgs)
         {
-            Debug.WriteLine("map tip show");
+            // Debug.WriteLine("map tip show");
             //_mapTip.Show("test", _map);
 
             //var x = sender;
