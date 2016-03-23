@@ -171,10 +171,16 @@ namespace Go2It
                 else // reactivate all the layers stored in our dict that were previously visible
                 {
                     ActivateImageryLayersVisibility(kvPair.Key, map);
-                    _imageryLayersVisible.Clear();
                 }
             }
-            _userLegend.Invalidate();
+            if (!_isImageryToggleActive)
+            {
+                _imageryLayersVisible.Clear();
+            }
+            if (_userLegend.Visible)
+            {
+                _userLegend.Invalidate();
+            }
         }
 
         private void ToggleAddressLayers()
@@ -194,10 +200,16 @@ namespace Go2It
                 else // reactivate all the layers stored in our dict that were previously visible
                 {
                     ActivateAddressLayersVisibility(kvPair.Key, map);
-                    _addressLayersVisible.Clear();
                 }
             }
-            _userLegend.Invalidate();
+            if (!_isAddressToggleActive)
+            {
+                _addressLayersVisible.Clear();
+            }
+            if (_userLegend.Visible)
+            {
+                _userLegend.Invalidate();
+            }
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
