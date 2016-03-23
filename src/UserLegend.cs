@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows.Forms;
@@ -20,6 +21,12 @@ namespace Go2It
 
         private const string HomeMenuKey = DotSpatial.Controls.Header.HeaderControl.HomeRootItemKey;
 
+        private readonly Dictionary<string, List<string>> _addressLayersVisible = new Dictionary<string, List<string>>();
+        private bool _isAddressToggleActive;
+
+        private readonly Dictionary<string, List<string>> _imageryLayersVisible = new Dictionary<string, List<string>>();
+        private bool _isImageryToggleActive;
+
         public override void Activate()
         {
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Legend", ToggleLegendTool_Click)
@@ -32,6 +39,7 @@ namespace Go2It
 
             // hotkeys for this extension
             HotKeyManager.AddHotKey(new HotKey(Keys.F3, "Toggle Address Layers"), "Legend_Toggle_Address_Layers");
+            HotKeyManager.AddHotKey(new HotKey(Keys.F2, "Toggle Imagery Layers"), "Legend_Toggle_Imagery_Layers");
 
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
 
@@ -45,40 +53,151 @@ namespace Go2It
             switch (action)
             {
                 case "Legend_Toggle_Address_Layers":
+                    _isAddressToggleActive = !_isAddressToggleActive;
                     ToggleAddressLayers();
                     break;
+                case "Legend_Toggle_Imagery_Layers":
+                    _isImageryToggleActive = !_isImageryToggleActive;
+                    ToggleImageryLayers();
+                    break;
             }
+        }
+
+        private void ActivateAddressLayersVisibility(string key, Map map)
+        {
+            List<string> visibleList;
+            _addressLayersVisible.TryGetValue(key, out visibleList);
+            // get all layer address layers by name
+            var layers = SDR.Configuration.Project.Go2ItProjectSettings.Instance.AddressLayers;
+            foreach (IMapLayer ml in map.Layers)
+            {
+                if (ml.GetType().Name == "MapImageLayer") continue;
+                var mFeatureLyr = ml as IMapFeatureLayer;
+                // make sure this is a valid map feature layer
+                if (mFeatureLyr == null || 
+                    String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename))))
+                    continue;
+                var lyrName = Path.GetFileNameWithoutExtension(mFeatureLyr.DataSet.Filename);
+                // find the required layers and toggle that shit
+                foreach (string layer in layers)
+                {
+                    if (lyrName != layer) continue;
+                    if (visibleList != null && visibleList.Contains(lyrName))
+                    {
+                        ml.IsVisible = true;
+                    }
+                }
+            }
+        }
+
+        private void ActivateImageryLayersVisibility(string key, Map map)
+        {
+            List<string> visibleList;
+            _imageryLayersVisible.TryGetValue(key, out visibleList);
+            foreach (IMapLayer ml in map.Layers)
+            {
+                if (ml.GetType().Name != "MapImageLayer") continue;
+                var mImageLyr = ml as IMapImageLayer;
+                if (mImageLyr == null ||
+                    String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mImageLyr.DataSet.Filename))))
+                    continue;
+                var lyrName = Path.GetFileNameWithoutExtension(mImageLyr.DataSet.Filename);
+                if (visibleList != null && visibleList.Contains(lyrName))
+                {
+                    ml.IsVisible = true;
+                }
+            }
+        }
+
+        private static List<string> PopulateAddressVisibilityList(Map map)
+        {
+            // get all layer address layers by name
+            var layers = SDR.Configuration.Project.Go2ItProjectSettings.Instance.AddressLayers;
+            var visibleList = new List<string>();
+            foreach (IMapLayer ml in map.Layers)
+            {
+                if (ml.GetType().Name == "MapImageLayer") continue;
+                var mFeatureLyr = ml as IMapFeatureLayer;
+                // make sure this is a valid map feature layer
+                if (mFeatureLyr == null ||
+                    String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename))))
+                    continue;
+                // get the name of this layer for comparison
+                var lyrName = Path.GetFileNameWithoutExtension(mFeatureLyr.DataSet.Filename);
+                // find the required layers and toggle that shit
+                foreach (string layer in layers)
+                {
+                    if (lyrName != layer) continue;
+                    if (!mFeatureLyr.IsVisible) continue;
+                    visibleList.Add(lyrName);
+                    ml.IsVisible = false;
+                }
+            }
+            return visibleList;
+        }
+
+        private static List<string> PopulateImageryVisibilityList(Map map)
+        {
+            var visibleList = new List<string>();
+            foreach (IMapLayer ml in map.Layers)
+            {
+                if (ml.GetType().Name != "MapImageLayer") continue;
+                var mImageLyr = ml as IMapImageLayer;
+                if (mImageLyr == null ||
+                    String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mImageLyr.DataSet.Filename))))
+                    continue;
+                var lyrName = Path.GetFileNameWithoutExtension(mImageLyr.DataSet.Filename);
+                if (!mImageLyr.IsVisible) continue;
+                visibleList.Add(lyrName);
+                ml.IsVisible = false;
+            }
+            return visibleList;
+        }
+
+        private void ToggleImageryLayers()
+        {
+            if (App.Map == null) return;
+
+            var dockControl = (DockingControl)App.DockManager;
+            foreach (KeyValuePair<string, DockPanelInfo> kvPair in dockControl.DockPanelLookup)
+            {
+                if (!kvPair.Key.StartsWith("kMap_")) continue;
+                var map = (Map)kvPair.Value.DotSpatialDockPanel.InnerControl;
+                if (_isImageryToggleActive)
+                {
+                    var vList = PopulateImageryVisibilityList(map);
+                    _imageryLayersVisible.Add(kvPair.Key, vList);
+                }
+                else // reactivate all the layers stored in our dict that were previously visible
+                {
+                    ActivateImageryLayersVisibility(kvPair.Key, map);
+                    _imageryLayersVisible.Clear();
+                }
+            }
+            _userLegend.Invalidate();
         }
 
         private void ToggleAddressLayers()
         {
             if (App.Map == null) return;
-            // get all layer names set as address layers
-            var layers = SDR.Configuration.Project.Go2ItProjectSettings.Instance.AddressLayers;
-            // locate and toggle required layers visibility
-            foreach (IMapLayer ml in App.Map.Layers)
+
+            var dockControl = (DockingControl) App.DockManager;
+            foreach (KeyValuePair<string, DockPanelInfo> kvPair in dockControl.DockPanelLookup)
             {
-                if (ml.GetType().Name != "MapImageLayer")
+                if (!kvPair.Key.StartsWith("kMap_")) continue;
+                var map = (Map)kvPair.Value.DotSpatialDockPanel.InnerControl;
+                if (_isAddressToggleActive)
                 {
-                    var mFeatureLyr = ml as IMapFeatureLayer;
-                    // make sure this is a valid map feature layer
-                    if (mFeatureLyr != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mFeatureLyr.DataSet.Filename)))) return;
-                    // get the name of this layer for comparison
-                    var lyrName = Path.GetFileNameWithoutExtension(mFeatureLyr.DataSet.Filename);
-                    // find the required layers and toggle that shit
-                    foreach (string layer in layers)
-                    {
-                        if (lyrName == layer)
-                        {
-                            if (mFeatureLyr.IsVisible)
-                            {
-                                // mFeatureLyr.SetVisible();
-                                // mFeatureLyr.
-                            }
-                        }
-                    }
+                    var vList = PopulateAddressVisibilityList(map);
+                    _addressLayersVisible.Add(kvPair.Key, vList);
+                }
+                else // reactivate all the layers stored in our dict that were previously visible
+                {
+                    ActivateAddressLayersVisibility(kvPair.Key, map);
+                    _addressLayersVisible.Clear();
                 }
             }
+            _userLegend.Invalidate();
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs e)
