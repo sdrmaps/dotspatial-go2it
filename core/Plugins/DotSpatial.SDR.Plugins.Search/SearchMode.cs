@@ -50,5 +50,9 @@
         /// Locate Hydrants near by active Selections
         /// </summary>
         Hydrant,
+        /// <summary>
+        /// Zoom to a Coordinate
+        /// </summary>
+        Coordinate,
     }
 }

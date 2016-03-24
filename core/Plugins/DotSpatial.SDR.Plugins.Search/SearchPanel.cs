@@ -18,6 +18,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private TableLayoutPanel _addressPanel;
         private TableLayoutPanel _roadPanel;
         private TableLayoutPanel _intersectionPanel;
+        private TableLayoutPanel _coordinatePanel;
         private readonly EventedArrayList _intersectedFeatures;
 
         #endregion
@@ -110,6 +111,9 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Parcel:
                     ActivateParcelSearch();
                     break;
+                case SearchMode.Coordinate:
+                    ActivateCoordinateSearch();
+                    break;
             }
         }
 
@@ -126,6 +130,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchCellSector.Checked = false;
             searchParcels.Checked = false;
+            searchCoordinate.Checked = false;
         }
 
         /// <summary>
@@ -163,6 +168,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     break;
                 case SearchMode.Hydrant:
                     searchHydrant.Enabled = enabled;
+                    break;
+                case SearchMode.Coordinate:
+                    searchCoordinate.Enabled = enabled;
                     break;
             }
         }
@@ -236,6 +244,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Parcel:
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                     break;
+                case SearchMode.Coordinate:
+                    // TODO:
+                    break;
+
             }
             OnPerformSearch();
         }
@@ -254,6 +266,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = true;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -287,6 +300,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = true;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -320,6 +334,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup search panel for this tool
             RemoveCurrentSearchPanel();
@@ -354,6 +369,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = true;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup search panel for this tool
             RemoveCurrentSearchPanel();
@@ -388,6 +404,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -421,6 +438,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -454,6 +472,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup search panel for this tool
             RemoveCurrentSearchPanel();
@@ -488,6 +507,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -521,6 +541,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -554,6 +575,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -587,6 +609,7 @@ namespace DotSpatial.SDR.Plugins.Search
             searchEsn.Checked = false;
             searchParcels.Checked = false;
             searchCellSector.Checked = false;
+            searchCoordinate.Checked = false;
 
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
@@ -618,10 +641,54 @@ namespace DotSpatial.SDR.Plugins.Search
             ClearSearches();
         }
 
+        private void searchCoordinate_Click(object sender, EventArgs e)
+        {
+            if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
+            if (PluginSettings.Instance.SearchMode != SearchMode.Coordinate)
+            {
+                PluginSettings.Instance.SearchMode = SearchMode.Coordinate;
+                OnSearchModeChanged();
+                ActivateCoordinateSearch();
+            }
+        }
+
+        private void ActivateCoordinateSearch()
+        {
+            // toggle the button for this tool
+            searchAdds.Checked = false;
+            searchPhone.Checked = false;
+            searchName.Checked = false;
+            searchIntersection.Checked = false;
+            searchRoad.Checked = false;
+            searchKeyLocations.Checked = false;
+            searchAll.Checked = false;
+            searchCity.Checked = false;
+            searchEsn.Checked = false;
+            searchParcels.Checked = false;
+            searchCellSector.Checked = false;
+            searchCoordinate.Checked = true;
+
+            // setup the search panel for this tool
+            RemoveCurrentSearchPanel();
+            searchLayoutPanel.Controls.Add(_coordinatePanel, 0, 0);
+            // TODO: be sure to clear all text boxes
+            // _intersectionPanel.Controls["cmbIntSearch1"].Text = string.Empty;
+            // _intersectionPanel.Controls["cmbIntSearch2"].Text = string.Empty;
+            ClearSearches();
+        }
+
         private void OnSearchModeChanged()
         {
             // set the buttton label with proper text value
-            btnSearch.Text = PluginSettings.Instance.SearchMode == SearchMode.Intersection ? @"Locate" : @"Search";
+            if (PluginSettings.Instance.SearchMode == SearchMode.Intersection ||
+                PluginSettings.Instance.SearchMode == SearchMode.Coordinate)
+            {
+                btnSearch.Text = @"Locate";
+            }
+            else
+            {
+                btnSearch.Text = @"Search";
+            }
             if (SearchModeChanged != null) SearchModeChanged(this, new EventArgs());
         }
 
@@ -644,6 +711,50 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         private void CreateQueryPanels()
         {
+            /*--------------------------------------------------------*/
+            // coordinate search panel
+            _coordinatePanel = new TableLayoutPanel
+            {
+                Name = "coordinatePanel",
+                Dock = DockStyle.Fill,
+                ColumnCount = 9,
+                RowCount = 1
+            };
+
+            _coordinatePanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+
+            var lblLatitude = new Label { Name = "lblLatitude", Text = @"Latitude", Dock = DockStyle.Fill };
+            var lblLongitude = new Label { Name = "lblLongitude", Text = @"Longitude", Dock = DockStyle.Fill };
+
+            var txtLatDegree = new TextBox { Name = "txtLatDegree", Text = @"Degrees", Dock = DockStyle.Fill };
+            var txtLatMinute = new TextBox { Name = "txtLatMinute", Text = @"Minutes", Dock = DockStyle.Fill };
+            var txtLatSecond = new TextBox { Name = "txtLatSecond", Text = @"Seconds", Dock = DockStyle.Fill };
+
+            var txtLonDegree = new TextBox { Name = "txtLonDegree", Text = @"Degrees", Dock = DockStyle.Fill };
+            var txtLonMinute = new TextBox { Name = "txtLonMinute", Text = @"Minutes", Dock = DockStyle.Fill };
+            var txtLonSecond = new TextBox { Name = "txtLonSecond", Text = @"Seconds", Dock = DockStyle.Fill };
+
+            var lblError = new Label { Name = "lblError", Text = @"Coord Error", Dock = DockStyle.Fill };
+
+            _coordinatePanel.Controls.Add(lblLatitude, 0, 0);
+            _coordinatePanel.Controls.Add(txtLatDegree, 0, 1);
+            _coordinatePanel.Controls.Add(txtLatMinute, 0, 2);
+            _coordinatePanel.Controls.Add(txtLatSecond, 0, 3);
+            _coordinatePanel.Controls.Add(lblLongitude, 0, 4);
+            _coordinatePanel.Controls.Add(txtLonDegree, 0, 5);
+            _coordinatePanel.Controls.Add(txtLonMinute, 0, 6);
+            _coordinatePanel.Controls.Add(txtLonSecond, 0, 7);
+            _coordinatePanel.Controls.Add(lblError, 0, 8);
+
             /*--------------------------------------------------------*/
             // address search panel
             _addressPanel = new TableLayoutPanel
@@ -877,5 +988,7 @@ namespace DotSpatial.SDR.Plugins.Search
         }
 
         #endregion
+
+
     }
 }

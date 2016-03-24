@@ -171,6 +171,8 @@
     <None Include="Resources\cities_16.png" />
     <None Include="Resources\clear_16.png" />
     <None Include="Resources\esn_16.png" />
+    <None Include="Resources\coordinate_16.png" />
+    <None Include="Resources\coordinate_32.png" />
     <Content Include="Resources\info_16.png" />
     <Content Include="Resources\info_32.png" />
   </ItemGroup>
