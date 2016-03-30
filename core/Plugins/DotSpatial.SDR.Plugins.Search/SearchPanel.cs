@@ -74,6 +74,22 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
+        public string CoordinateError
+        {
+            set
+            {
+                _coordinatePanel.Controls["lblCoordError"].Text = value;
+                if (value.Length > 0)
+                {
+                    _coordinatePanel.ColumnStyles[4].SizeType = SizeType.AutoSize;
+                }
+                else
+                {
+                    _coordinatePanel.ColumnStyles[4].SizeType = SizeType.Absolute;
+                    _coordinatePanel.ColumnStyles[4].Width = 0;
+                }
+            }
+        }
         public void ActivateSearchModeButton()
         {
             switch (PluginSettings.Instance.SearchMode)
@@ -172,6 +188,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Coordinate:
                     searchCoordinate.Enabled = enabled;
                     break;
+                // TODO: need to handle all search
             }
         }
         #endregion
@@ -217,7 +234,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
                     break;
                 case SearchMode.Intersection:
-                    SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                    SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" + 
                         _intersectionPanel.Controls["cmbIntSearch2"].Text;
                     break;
                 case SearchMode.Name:
@@ -245,9 +262,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                     break;
                 case SearchMode.Coordinate:
-                    // TODO:
+                    SearchQuery = _coordinatePanel.Controls["txtLatitude"].Text + "|" + 
+                        _coordinatePanel.Controls["txtLongitude"].Text;
                     break;
-
             }
             OnPerformSearch();
         }
@@ -671,9 +688,12 @@ namespace DotSpatial.SDR.Plugins.Search
             // setup the search panel for this tool
             RemoveCurrentSearchPanel();
             searchLayoutPanel.Controls.Add(_coordinatePanel, 0, 0);
-            // TODO: be sure to clear all text boxes
-            // _intersectionPanel.Controls["cmbIntSearch1"].Text = string.Empty;
-            // _intersectionPanel.Controls["cmbIntSearch2"].Text = string.Empty;
+            // clear any currently set coordinates or errors displayed
+            _coordinatePanel.Controls["txtLatitude"].Text = string.Empty;
+            _coordinatePanel.Controls["txtLongitude"].Text = string.Empty;
+            _coordinatePanel.Controls["lblCoordError"].Text = string.Empty;
+            _coordinatePanel.ColumnStyles[4].SizeType = SizeType.Absolute;
+            _coordinatePanel.ColumnStyles[4].Width = 0;
             ClearSearches();
         }
 
@@ -717,43 +737,27 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 Name = "coordinatePanel",
                 Dock = DockStyle.Fill,
-                ColumnCount = 9,
+                ColumnCount = 5,
                 RowCount = 1
             };
-
             _coordinatePanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
-            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 56));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 64));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
 
-            var lblLatitude = new Label { Name = "lblLatitude", Text = @"Latitude", Dock = DockStyle.Fill };
-            var lblLongitude = new Label { Name = "lblLongitude", Text = @"Longitude", Dock = DockStyle.Fill };
-
-            var txtLatDegree = new TextBox { Name = "txtLatDegree", Text = @"Degrees", Dock = DockStyle.Fill };
-            var txtLatMinute = new TextBox { Name = "txtLatMinute", Text = @"Minutes", Dock = DockStyle.Fill };
-            var txtLatSecond = new TextBox { Name = "txtLatSecond", Text = @"Seconds", Dock = DockStyle.Fill };
-
-            var txtLonDegree = new TextBox { Name = "txtLonDegree", Text = @"Degrees", Dock = DockStyle.Fill };
-            var txtLonMinute = new TextBox { Name = "txtLonMinute", Text = @"Minutes", Dock = DockStyle.Fill };
-            var txtLonSecond = new TextBox { Name = "txtLonSecond", Text = @"Seconds", Dock = DockStyle.Fill };
-
-            var lblError = new Label { Name = "lblError", Text = @"Coord Error", Dock = DockStyle.Fill };
-
+            var lblLatitude = new Label { Name = "lblLatitude", Text = @"Latitude:", Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
+            var lblLongitude = new Label { Name = "lblLongitude", Text = @"Longitude:", Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
+            var txtLatitude = new TextBox { Name = "txtLatitude", Dock = DockStyle.Fill };
+            var txtLongitude = new TextBox { Name = "txtLongitude", Dock = DockStyle.Fill };
+            var lblCoordError = new Label { Name = "lblCoordError", Text = @"Coordinate Error", Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
+            
             _coordinatePanel.Controls.Add(lblLatitude, 0, 0);
-            _coordinatePanel.Controls.Add(txtLatDegree, 0, 1);
-            _coordinatePanel.Controls.Add(txtLatMinute, 0, 2);
-            _coordinatePanel.Controls.Add(txtLatSecond, 0, 3);
-            _coordinatePanel.Controls.Add(lblLongitude, 0, 4);
-            _coordinatePanel.Controls.Add(txtLonDegree, 0, 5);
-            _coordinatePanel.Controls.Add(txtLonMinute, 0, 6);
-            _coordinatePanel.Controls.Add(txtLonSecond, 0, 7);
-            _coordinatePanel.Controls.Add(lblError, 0, 8);
+            _coordinatePanel.Controls.Add(txtLatitude, 1, 0);
+            _coordinatePanel.Controls.Add(lblLongitude, 2, 0);
+            _coordinatePanel.Controls.Add(txtLongitude, 3, 0);
+            _coordinatePanel.Controls.Add(lblCoordError, 4, 0);
 
             /*--------------------------------------------------------*/
             // address search panel
@@ -988,7 +992,5 @@ namespace DotSpatial.SDR.Plugins.Search
         }
 
         #endregion
-
-
     }
 }

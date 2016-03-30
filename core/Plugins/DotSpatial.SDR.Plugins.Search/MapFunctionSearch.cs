@@ -66,7 +66,7 @@ namespace DotSpatial.SDR.Plugins.Search
         internal const string GEOSHAPE = "GEOSHAPE";
 
         private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
-
+        private static readonly Regex ParseCoordinates = new Regex("(-?\\d{1,3})[\\.\\,°]{0,1}\\s*(\\d{0,2})[\\.\\,\']{0,1}\\s*(\\d*)[\\.\\,°]{0,1}\\s*([NSnsEeWw]?)");
         #region Constructors
 
         /// <summary>
@@ -85,6 +85,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
             HandleSearchPanelEvents();
             SetSearchVariables();
+            if (_indexType == string.Empty) return;  // not an index based search (ie. coordinate)
             SetupIndexReaderWriter(_indexType);
         }
 
@@ -108,6 +109,7 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.EnableSearchButton(SearchMode.Parcel, GetLuceneIndexDirectory("ParcelIndex") != null);
             _searchPanel.EnableSearchButton(SearchMode.Esn, GetLuceneIndexDirectory("EsnIndex") != null);
             _searchPanel.EnableSearchButton(SearchMode.Hydrant, GetLuceneIndexDirectory("HydrantIndex") != null);
+            _searchPanel.EnableSearchButton(SearchMode.Coordinate, Map != null);
         }
 
         private void SetSearchVariables()
@@ -154,7 +156,12 @@ namespace DotSpatial.SDR.Plugins.Search
                     _indexType = "ParcelIndex";
                     _columnNames = GetColumnNames();
                     break;
+                case SearchMode.Coordinate:
+                    _indexType = string.Empty;
+                    _columnNames = new string[0];
+                    break;
                 case SearchMode.All:
+                    MessageBox.Show("TODO");
                     // TODO: Further thought is needed on this one
                     break;
             }
@@ -241,6 +248,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private void SearchPanelOnSearchModeChanged(object sender, EventArgs eventArgs)
         {
             SetSearchVariables();
+            if (_indexType == string.Empty) return;  // not an index based search (coordinates)
             SetupIndexReaderWriter(_indexType);
         }
 
@@ -286,7 +294,6 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             else if (PluginSettings.Instance.SearchMode == SearchMode.City || PluginSettings.Instance.SearchMode == SearchMode.Esn)
             {
-                // all other queries require a lucene query and populate combos and datagridview
                 _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
                 var hitz = ExecuteLuceneQuery(q);
                 if (hitz.Count() != 0)
@@ -303,13 +310,141 @@ namespace DotSpatial.SDR.Plugins.Search
                     return;
                 }
             }
-            // all other queries require a lucene query and populate combos and datagridview
+            else if (PluginSettings.Instance.SearchMode == SearchMode.Coordinate)
+            {
+                if (_searchPanel.SearchQuery.Length <= 1) return;  // only the | (internal separator) is present (empty search)
+                var arr = q.Split('|');
+                if (arr.Length != 2) return; // lat and long have not been passed in
+                if (arr[0].Length > 0 && arr[1].Length > 0)
+                {
+                    _searchPanel.ClearSearches();  // clear any existing searches
+                    ZoomToCoordinates(arr[0], arr[1]);
+                    return;
+                }
+            }
+            // all other queries require a lucene query and then populate combos and datagridview
             _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
             // setup columns, ordering, etc for results datagridview
             PrepareDataGridView();
             // execute our lucene query
             var hits = ExecuteLuceneQuery(q);
             FormatQueryResults(hits);
+        }
+
+        private void ZoomToCoordinates(string strLat, string strLng)
+        {
+            var lat = new double[3];
+            var lng = new double[3];
+
+            var latCheck = ValidateCoordinates(lat, strLat);
+            var lonCheck = ValidateCoordinates(lng, strLng);
+
+            if (!latCheck)
+            {
+                _searchPanel.CoordinateError = "Invalid Latitude (Valid example: \"41.1939 N\")";
+                return;
+            }
+            if (!lonCheck)
+            {
+                _searchPanel.CoordinateError = "Invalid Longitude (Valid example: \"19.4908 E\")";
+                return;
+            }
+
+            var latCoor = LoadCoordinates(lat);
+            var lonCoor = LoadCoordinates(lng);
+
+            var xy = new double[2];
+
+            //Now convert from Lat-Long to x,y coordinates that App.Map.ViewExtents can use to pan to the correct location.
+            xy = LatLonReproject(lonCoor, latCoor);
+
+            //Get extent where center is desired X,Y coordinate.
+            
+            var width = Map.ViewExtents.Width;
+            var height = Map.ViewExtents.Height;
+            Map.ViewExtents.X = (xy[0] - (width / 2));
+            Map.ViewExtents.Y = (xy[1] + (height / 2));
+            var ex = Map.ViewExtents;
+
+            //Set App.Map.ViewExtents to new extent that centers on desired LatLong.
+            Map.ViewExtents = ex;
+
+        }
+
+        private double[] LatLonReproject(double x, double y)
+        {
+            var xy = new[] { x, y };
+
+            //Change y coordinate to be less than 90 degrees to prevent a bug.
+            if (xy[1] >= 90) xy[1] = 89.9;
+            if (xy[1] <= -90) xy[1] = -89.9;
+
+            //Need to convert points to proper projection. Currently describe WGS84 points which may or may not be accurate.
+
+            var wgs84String = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223562997]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.0174532925199433]]";
+            var mapProjEsriString = Map.Projection.ToEsriString();
+            var isWgs84 = (mapProjEsriString.Equals(wgs84String));
+
+            //If the projection is not WGS84, then convert points to properly describe desired location.
+            if (!isWgs84)
+            {
+                var z = new double[1];
+                var wgs84Projection = ProjectionInfo.FromEsriString(wgs84String);
+                var currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
+                Reproject.ReprojectPoints(xy, z, wgs84Projection, currentMapProjection, 0, 1);
+            }
+
+            //Return array with 1 x and 1 y value.
+            return xy;
+        }
+
+        // Take Degrees-Minutes-Seconds from ParseCoordinates and turn them into doubles.
+        private static double LoadCoordinates(IList<double> values)
+        {
+            //Convert Degrees, Minutes, Seconds to x, y coordinates for both lat and long.
+            var coor = values[2] / 100;
+            coor += values[1];
+            coor = coor / 100;
+            coor += Math.Abs(values[0]);
+
+            //Change signs to get to the right quadrant.
+            if (values[0] < 0) { coor *= -1; }
+
+            return coor;
+        }
+
+        // ConvertCoordinates will understand lat-lon coordinates in a variety of
+        // formats and separate them into Degrees, Minutes, and Seconds.
+        private bool ValidateCoordinates(IList<double> values, String text)
+        {
+            var match = ParseCoordinates.Match(text);
+            var groups = match.Groups;
+            try
+            {
+                values[0] = Double.Parse(groups[1].ToString());
+                if (groups[2].Length > 0)
+                {
+                    values[1] = Double.Parse(groups[2].ToString());
+                    if (groups[2].Length == 1) values[1] *= 10;
+                }
+                if (groups[3].Length > 0)
+                {
+                    values[2] = Double.Parse(groups[3].ToString());
+                    if (groups[3].Length == 1) values[2] *= 10;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            if ((groups[4].ToString().Equals("S", StringComparison.OrdinalIgnoreCase)
+                || groups[4].ToString().Equals("W", StringComparison.OrdinalIgnoreCase))
+                && values[0] > 0)
+            {
+                values[0] *= -1;
+            }
+            return true;
         }
 
         private void ActivateMapPanelWithLayer(string layer)
