@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
@@ -66,7 +67,9 @@ namespace DotSpatial.SDR.Plugins.Search
         internal const string GEOSHAPE = "GEOSHAPE";
 
         private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
-        private static readonly Regex ParseCoordinates = new Regex("(-?\\d{1,3})[\\.\\,°]{0,1}\\s*(\\d{0,2})[\\.\\,\']{0,1}\\s*(\\d*)[\\.\\,°]{0,1}\\s*([NSnsEeWw]?)");
+        // private static readonly Regex ParseCoordinates = new Regex("(-?\\d{1,3})[\\.\\,°]{0,1}\\s*(\\d{0,2})[\\.\\,\']{0,1}\\s*(\\d*)[\\.\\,°]{0,1}\\s*([NSnsEeWw]?)");
+        private static readonly Regex ParseCoordinates = new Regex("(-?\\d{1,3})[\\.\\,\\°]{0,1}\\s*(\\d{0,2})[\\.\\,\']{0,1}\\s*(\\d*)[\\.\\,\"]*\\d*[\\s\\.\"]*([NSnsEeWw]?)");
+
         #region Constructors
 
         /// <summary>
@@ -322,7 +325,10 @@ namespace DotSpatial.SDR.Plugins.Search
                     return;
                 }
             }
-            // all other queries require a lucene query and then populate combos and datagridview
+            /*         
+             * all other query types are processed and proceed from this point ....
+             * each requires a lucene query and populates combos and datagridview    
+             */
             _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
             // setup columns, ordering, etc for results datagridview
             PrepareDataGridView();
@@ -351,7 +357,9 @@ namespace DotSpatial.SDR.Plugins.Search
             }
 
             var latCoor = LoadCoordinates(lat);
+            Debug.WriteLine(latCoor);
             var lonCoor = LoadCoordinates(lng);
+            Debug.WriteLine(lonCoor);
 
             var xy = new double[2];
 
@@ -417,20 +425,28 @@ namespace DotSpatial.SDR.Plugins.Search
         // formats and separate them into Degrees, Minutes, and Seconds.
         private bool ValidateCoordinates(IList<double> values, String text)
         {
+            // TODO: work on decimal minutes as input, it tends to fail their
             var match = ParseCoordinates.Match(text);
             var groups = match.Groups;
+
             try
             {
                 values[0] = Double.Parse(groups[1].ToString());
                 if (groups[2].Length > 0)
                 {
                     values[1] = Double.Parse(groups[2].ToString());
-                    if (groups[2].Length == 1) values[1] *= 10;
+                    if (groups[2].Length == 1)
+                    {
+                        values[1] *= 10;
+                    }
                 }
                 if (groups[3].Length > 0)
                 {
                     values[2] = Double.Parse(groups[3].ToString());
-                    if (groups[3].Length == 1) values[2] *= 10;
+                    if (groups[3].Length == 1)
+                    {
+                        values[2] *= 10;
+                    }
                 }
             }
             catch
