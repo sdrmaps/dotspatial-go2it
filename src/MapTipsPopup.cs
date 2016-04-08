@@ -15,7 +15,9 @@ namespace Go2It
         private readonly AppManager _appManager;
         private string _toolTipStr;
         private ToolTip _mapTip { get; set; }
+        private Timer _timer { get; set; }
         private Point _currentPosition { get; set; }
+        private bool _isMapActive;
 
         public bool ShowMapTips { get; set; }
 
@@ -25,7 +27,17 @@ namespace Go2It
             _appManager.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             _appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
-            _mapTip = new ToolTip();
+            _mapTip = new ToolTip {IsBalloon = true};
+            _timer = new Timer {Interval = 1000};  // delay on tooltip display in ms
+            _timer.Tick += TimerOnTick;
+            _timer.Enabled = false;
+        }
+
+        // this is our simulated hover event
+        private void TimerOnTick(object sender, EventArgs eventArgs)
+        {
+            _timer.Stop();
+            _mapTip.Show("maptip", _map, _currentPosition);
         }
 
         private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
@@ -38,9 +50,9 @@ namespace Go2It
             if (!key.StartsWith("kMap_")) return;
             if (_map == null) return;
 
-            _map.MouseHover -= MapOnMouseHover;
-            _map.MouseMove -= MapOnMouseMove;
+            _map.MouseEnter -= MapOnMouseEnter;
             _map.MouseLeave -= MapOnMouseLeave;
+            _map.MouseMove -= MapOnMouseMove;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
@@ -55,53 +67,34 @@ namespace Go2It
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             if (_map == null) return;
 
-            _map.MouseHover += MapOnMouseHover;
-            _map.MouseMove += MapOnMouseMove;
+            _map.MouseEnter += MapOnMouseEnter;
             _map.MouseLeave += MapOnMouseLeave;
+            _map.MouseMove += MapOnMouseMove;
         }
 
+        private void MapOnMouseEnter(object sender, EventArgs e)
+        {
+            _isMapActive = true;
+        }
         private void MapOnMouseLeave(object sender, EventArgs e)
         {
-            // _mapTip.Hide(_map);
-            // _currentPosition = new Point { X = e.X, Y = e.Y };
-            // Debug.WriteLine("OnMouseMove");
+            _isMapActive = false;
+            _timer.Enabled = false;
+            if (_map == null) return;
+            _mapTip.Hide(_map);
         }
 
         private void MapOnMouseMove(object sender, MouseEventArgs e)
         {
+            if (!_isMapActive) return;
+
             _currentPosition = new Point { X = e.X, Y = e.Y };
-            // Debug.WriteLine("OnMouseMove");
-        }
-
-        private void MapOnMouseHover(object sender, EventArgs e)
-        {
-            // _mapTip.Show("maptip", _map, _currentPosition);
-            Debug.WriteLine("OnMouseHover");
-            // var mapTip = new ToolTip();
-            /* mapTip.Active = true;
-            Debug.WriteLine(mapTip.AutoPopDelay);
-            Debug.WriteLine(mapTip.ReshowDelay);
-            Debug.WriteLine(mapTip.InitialDelay);
-            Debug.WriteLine(mapTip.AutomaticDelay);
-            Debug.WriteLine(mapTip.ReshowDelay);
-            Debug.WriteLine(mapTip.ShowAlways); */
-
-            // mapTip.Show("test", _map, _currentPosition);
-
-            //var x = sender;
-            // var z = eventArgs;
-
-            // tT.Show("Why So Many Times?", _map);
-
-            //ToolTip mapTip = new ToolTip();
-            //// mapTip.AutoPopDelay = 5000;
-            //mapTip.InitialDelay = 1000;
-            //mapTip.ReshowDelay = 500;
-            //mapTip.ShowAlways = true;
-
-            //mapTip.SetToolTip(_map, "test");
-
-            //mapTip.IsBalloon = true;
+            // reset the timer on a move event, we are watching for a hover
+            if (_timer.Enabled)
+            {
+                _timer.Enabled = false;
+            }
+            _timer.Enabled = true;
         }
     }
 }
