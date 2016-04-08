@@ -11,7 +11,6 @@ namespace DotSpatial.SDR.Plugins.Selection
         #region Constants and Fields
 
         private const string HomeMenuKey = HeaderControl.HomeRootItemKey;
-        private const string ClearPanel = "kPanel_Clear";
 
         #endregion
 
@@ -56,7 +55,6 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void IdentifierTool_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel(ClearPanel);
             App.Map.FunctionMode = FunctionMode.Info;
         }
 
@@ -65,7 +63,6 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void SelectionTool_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel(ClearPanel);
             App.Map.FunctionMode = FunctionMode.Select;
         }
 
@@ -74,7 +71,6 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void DeselectAllTool_Click(object sender, EventArgs e)
         {
-            App.DockManager.SelectPanel(ClearPanel);
             IEnvelope env;
             App.Map.MapFrame.ClearSelection(out env);
         }

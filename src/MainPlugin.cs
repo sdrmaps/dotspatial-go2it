@@ -267,11 +267,12 @@ namespace Go2It
             var map = sender as Map;
             if (map != null)
             {
-                if (map.FunctionMode != FunctionMode.None)
-                {
-                    var dockControl = (DockingControl) App.DockManager;
-                    dockControl.CollapseToolPanel();
-                }
+                // removed because of the jarring effect it results in.
+                // if (map.FunctionMode != FunctionMode.None)
+                // { 
+                    // var dockControl = (DockingControl) App.DockManager;
+                    // dockControl.CollapseToolPanel();
+                // }
                 SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode = map.FunctionMode.ToString();
             }
         }

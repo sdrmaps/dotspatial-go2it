@@ -665,7 +665,8 @@ namespace Go2It
             LoadMapTabs();
 
             Dock.SelectPanel(Go2ItProjectSettings.Instance.ActiveMapViewKey);
-            Dock.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
+            // Dock.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
+            Dock.SelectPanel("kPanel_Search");
 
             ResetMapProjection();
             App.Map.Invalidate();

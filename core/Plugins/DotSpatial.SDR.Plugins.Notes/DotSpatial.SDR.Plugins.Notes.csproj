@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8DD51F99-CD4A-4A18-BF0B-CCA20602C312}</ProjectGuid>
+    <ProjectGuid>{7487EA28-0BE6-4632-A150-6AA981F88F02}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DotSpatial.SDR.Plugins.Navigate</RootNamespace>
-    <AssemblyName>DotSpatial.SDR.Plugins.Navigate</AssemblyName>
+    <RootNamespace>DotSpatial.SDR.Plugins.Notes</RootNamespace>
+    <AssemblyName>DotSpatial.SDR.Plugins.Notes</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -105,7 +105,8 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
-    <Compile Include="NavigatePlugin.cs" />
+    <Compile Include="MapFunctionNotes.cs" />
+    <Compile Include="NotesPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -119,20 +120,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\pan_16.png" />
-    <Content Include="Resources\pan_32.png" />
-    <Content Include="Resources\zoom_extent_16.png" />
-    <Content Include="Resources\zoom_extent_32.png" />
-    <Content Include="Resources\zoom_in_16.png" />
-    <Content Include="Resources\zoom_in_32.png" />
-    <Content Include="Resources\zoom_next_16.png" />
-    <Content Include="Resources\zoom_next_32.png" />
-    <Content Include="Resources\zoom_out_16.png" />
-    <Content Include="Resources\zoom_out_32.png" />
-    <Content Include="Resources\zoom_prev_16.png" />
-    <Content Include="Resources\zoom_prev_32.png" />
-    <Content Include="Resources\zoom_to_layer_16.png" />
-    <Content Include="Resources\zoom_to_layer_32.png" />
+    <None Include="Resources\notes_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\notes_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

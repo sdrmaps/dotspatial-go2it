@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -16,8 +13,11 @@ namespace Go2It
     {
         private Map _map;
         private readonly AppManager _appManager;
-        private bool _showMapTips;
-        public ToolTip _mapTip { get; set; }
+        private string _toolTipStr;
+        private ToolTip _mapTip { get; set; }
+        private Point _currentPosition { get; set; }
+
+        public bool ShowMapTips { get; set; }
 
         public MapTipsPopup(AppManager app)
         {
@@ -26,7 +26,6 @@ namespace Go2It
             _appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             _mapTip = new ToolTip();
-            // todo: function to apply maptips dictionary/list for query against
         }
 
         private void DockManagerOnPanelHidden(object sender, DockablePanelEventArgs e)
@@ -41,6 +40,7 @@ namespace Go2It
 
             _map.MouseHover -= MapOnMouseHover;
             _map.MouseMove -= MapOnMouseMove;
+            _map.MouseLeave -= MapOnMouseLeave;
         }
 
         private void DockManagerOnActivePanelChanged(object sender, DockablePanelEventArgs dockablePanelEventArgs)
@@ -55,25 +55,41 @@ namespace Go2It
             _map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
             if (_map == null) return;
 
-            // todo: do i need to capture mouse move to get the coordinate?
             _map.MouseHover += MapOnMouseHover;
             _map.MouseMove += MapOnMouseMove;
-
+            _map.MouseLeave += MapOnMouseLeave;
         }
 
-        private void MapOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
+        private void MapOnMouseLeave(object sender, EventArgs e)
         {
-           //  Debug.WriteLine("map tip hide");
-           //  _mapTip.Hide(_map);
+            // _mapTip.Hide(_map);
+            // _currentPosition = new Point { X = e.X, Y = e.Y };
+            // Debug.WriteLine("OnMouseMove");
         }
 
-        private void MapOnMouseHover(object sender, EventArgs eventArgs)
+        private void MapOnMouseMove(object sender, MouseEventArgs e)
         {
-            // Debug.WriteLine("map tip show");
-            //_mapTip.Show("test", _map);
+            _currentPosition = new Point { X = e.X, Y = e.Y };
+            // Debug.WriteLine("OnMouseMove");
+        }
+
+        private void MapOnMouseHover(object sender, EventArgs e)
+        {
+            // _mapTip.Show("maptip", _map, _currentPosition);
+            Debug.WriteLine("OnMouseHover");
+            // var mapTip = new ToolTip();
+            /* mapTip.Active = true;
+            Debug.WriteLine(mapTip.AutoPopDelay);
+            Debug.WriteLine(mapTip.ReshowDelay);
+            Debug.WriteLine(mapTip.InitialDelay);
+            Debug.WriteLine(mapTip.AutomaticDelay);
+            Debug.WriteLine(mapTip.ReshowDelay);
+            Debug.WriteLine(mapTip.ShowAlways); */
+
+            // mapTip.Show("test", _map, _currentPosition);
 
             //var x = sender;
-           // var z = eventArgs;
+            // var z = eventArgs;
 
             // tT.Show("Why So Many Times?", _map);
 
@@ -86,27 +102,6 @@ namespace Go2It
             //mapTip.SetToolTip(_map, "test");
 
             //mapTip.IsBalloon = true;
-        }
-
-        public bool ShowMapTips
-        {
-            get
-            {
-                return _showMapTips;
-            }
-            set
-            {
-                _showMapTips = value;
-                //if (_showMapTips == false)
-                //{
-                //    _appManager.ProgressHandler.Remove(_latLonStatusPanel);
-                //}
-                //else
-                //{
-                //    _appManager.ProgressHandler.Add(_latLonStatusPanel);
-                //}
-                //_latLonStatusPanel.Caption = String.Empty;
-            }
         }
     }
 }
