@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -51,6 +52,7 @@ namespace Go2It
     {
         private const string AliPlugin = "DotSpatial.SDR.Plugins.ALI";
 
+        // ali interface options
         private Dictionary<string, string> _aliInterfaces;
         private Font _networkFleetSymbolFont;
         private Font _networkFleetLabelFont;
@@ -84,13 +86,11 @@ namespace Go2It
         private readonly SelectionsHandler _lineLayerSwitcher = new SelectionsHandler();
         private readonly SelectionsHandler _polygonLayerSwitcher = new SelectionsHandler();
 
-        // TODO: lets get this going
-        // switch handler and dictionary lookup for dealing with maptip settings
-        // private readonly  SelectionsHandler _mapTipsSwitcher = new SelectionsHandler();
-        private readonly Dictionary<string, string> _mapTipsLookup = new Dictionary<string, string>(); 
-
         // lookup of all layers available to this project
         private readonly Dictionary<string, IMapLayer> _layerLookup = new Dictionary<string, IMapLayer>();
+
+        // row template for handling maptips as they are added and removed
+        private DataGridViewRow _mapTipsDgvRowTemplate = new DataGridViewRow();
 
         // background worker handles the indexing process
         private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
@@ -117,6 +117,9 @@ namespace Go2It
             get { return _tempIdxPath; }
         }
         
+        /// <summary>
+        /// Assigns a temporary directory in the instance that the user is building a project but has not yet saved it
+        /// </summary>
         private static void AssignTempIndexDir()
         {
             string unqTmpId = string.Format("{0}_{1}{2}", DateTime.Now.Date.ToString("yyyy-MM-dd"), DateTime.Now.Hour,DateTime.Now.Minute);
@@ -200,65 +203,85 @@ namespace Go2It
             }
         }
 
+        /// <summary>
+        /// generate a DataGridViewRow that is a clone of the row passed in
+        /// </summary>
+        /// <param name="row">DataGridViewRow to clone</param>
+        /// <returns>A New DataGridViewRow cloned from the input row</returns>
+        public DataGridViewRow CloneDataGridViewRowTemplate(DataGridViewRow row)
+        {
+            var clonedRow = (DataGridViewRow)row.Clone();
+            for (var i = 0; i < row.Cells.Count; i++)
+            {
+                if (clonedRow != null) clonedRow.Cells[i].Value = row.Cells[i].Value;
+            }
+            return clonedRow;
+        }
+
+        /// <summary>
+        /// Create the basic maptips row template and populate basic information to the admin dgv for maptips
+        /// </summary>
+        private void InitializeMapTipsTemplate()
+        {
+            dgvMapTips.Rows.Clear();
+            dgvMapTips.Columns.Clear();
+
+            // generate the columns for the maptips datagridview
+            var lyrNameCol = new DataGridViewComboBoxColumn
+            {
+                HeaderText = @"Layer Name",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
+            dgvMapTips.Columns.Add(lyrNameCol);
+            var fldNameCol = new DataGridViewComboBoxColumn
+            {
+                HeaderText = @"Field Name",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
+            dgvMapTips.Columns.Add(fldNameCol);
+            var addTipCol = new DataGridViewButtonColumn
+            {
+                HeaderText = @"Add",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
+                Width = 50
+            };
+            dgvMapTips.Columns.Add(addTipCol);
+            var delTipCol = new DataGridViewButtonColumn
+            {
+                HeaderText = @"Delete",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
+                Width = 50,
+            };
+            dgvMapTips.Columns.Add(delTipCol);
+           
+            // generate the cells for the maptips datagridview row
+            dgvMapTips.Rows[0].Cells[0] = new DataGridViewComboBoxCell();
+            dgvMapTips.Rows[0].Cells[1] = new DataGridViewComboBoxCell();
+            dgvMapTips.Rows[0].Cells[2] = new DataGridViewButtonCell { Value = "+" };
+            dgvMapTips.Rows[0].Cells[3] = new DataGridViewButtonCell { Value = "-" };
+
+            // store the default row as our row template for additional changes and clones as needed
+            _mapTipsDgvRowTemplate = CloneDataGridViewRowTemplate(dgvMapTips.Rows[0]);
+
+            // event handler for the add/remove click event
+            dgvMapTips.CellContentClick += DgvMapTipsOnCellContentClick;
+            // event handler for layer/field selected changed event
+            dgvMapTips.SelectionChanged += DgvMapTipsOnSelectionChanged;
+        }
+
+        private void DgvMapTipsOnSelectionChanged(object sender, EventArgs eventArgs)
+        {
+            Debug.WriteLine("SelectionChanged");
+        }
+
+        private void DgvMapTipsOnCellContentClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
+        {
+            Debug.WriteLine("CellContentClick");
+        }
+
         private void PopulateMapTipsToForm()
         {
-            //// organize them all into a dict for proper population
-            //foreach (var maptip in SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips)
-            //{
-            //    var arr = maptip.Split(',');
-            //    var x = new Set<string>();
-            //    if (_mapTipsLookup.ContainsKey(arr[0]))
-            //    {
-            //        _mapTipsLookup.TryGetValue(arr[0], out x);
-            //        x.Add(arr[1]);
-            //    }
-            //    else
-            //    {
-            //        x.Add(arr[1]);
-            //        _mapTipsLookup.Add(arr[0], x);
-            //    }
-            //}
-
-            //if (_mapTipsLookup.Count > 0)
-            //{
-
-
-            //}
-            //else  // no current map tips set, populate a single row with all avail layers for selection
-            //{
-
-                //Label lblLabel = new Label();
-                //lblLabel.Text = "Layer:";
-                //lblLabel.AutoSize = true;
-                //lblLabel.Anchor = AnchorStyles.Right;
-
-                //ComboBox cmBox = new ComboBox();
-
-                //foreach (KeyValuePair<string, IMapLayer> keyValuePair in _layerLookup)
-                //{
-                //    var c = keyValuePair.Value;
-                //    cmBox.Items.Add(c.DataSet.Name);
-                //}
-                //cmBox.Anchor = AnchorStyles.Right | AnchorStyles.Left;
-                //cmBox.SelectedIndexChanged += delegate(object sender, EventArgs args)
-                //{
-                //    var cmb = (ComboBox) sender;
-                //    var p = cmb.Parent;
-
-                //};
-
-                //Button btnAdd = new Button();
-                //btnAdd.Width = 29;
-                //btnAdd.Height = 25;
-                //btnAdd.Text = "+";
-                //btnAdd.Anchor = AnchorStyles.Left;
-
-                //Button btnRemove = new Button();
-                //btnRemove.Width = 29;
-                //btnRemove.Height = 25;
-                //btnRemove.Text = "-";
-                //btnRemove.Anchor = AnchorStyles.Left;
-            //}
+            // TODO: set the saved/existing maptips to the form for user input and modification
         }
 
         public AdminForm(AppManager app)
@@ -268,6 +291,7 @@ namespace Go2It
             InitializeSaveSplitButton();
             InitializeAliModesDict();
             HandleApplicationModeDiffs();
+            InitializeMapTipsTemplate();
 
             // assign all the admin form elements
             _appManager = app;
@@ -348,6 +372,9 @@ namespace Go2It
             _appManager.DockManager.HidePanel(SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionPanel);
         }
 
+        /// <summary>
+        /// Modify the user interface at runtime depending on the current mode of the application
+        /// </summary>
         private void HandleApplicationModeDiffs()
         {
             if (SdrConfig.Settings.Instance.ApplicationMode != SdrConfig.AppMode.Dispatch) return;
@@ -503,6 +530,12 @@ namespace Go2It
             }
         }
 
+        /// <summary>
+        /// Process any hotkeys that have been setup
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             // update the hotkey datagridview as needed
@@ -591,7 +624,7 @@ namespace Go2It
             if (mMapLayer.DataSet.Filename == null) return;
 
             var fs = FeatureSet.Open(mMapLayer.DataSet.Filename);
-            AddLayer(fs); // perform all form specific add operations
+            AddLayer(fs); // perform all form specific operations based on the add event
         }
 
         private void LayersOnLayerRemoved(object sender, LayerEventArgs layerEventArgs)
@@ -632,7 +665,7 @@ namespace Go2It
                      mLayer.DataSet.FeatureType.ToString() != "Line" &&
                      mLayer.DataSet.FeatureType.ToString() != "Polygon")) return;
                 var fs = FeatureSet.Open(mLayer.DataSet.Filename);
-                RemoveLayer(fs); // perform all form specific remove operations
+                RemoveLayer(fs); // perform all form specific operations based on the layer removed event
             }
         }
 
@@ -684,6 +717,7 @@ namespace Go2It
             {
                 var map = (Map)dockInfo.DotSpatialDockPanel.InnerControl;
                 if (map == null) return;
+                // unbind any map specific events
                 map.Layers.LayerAdded -= LayersOnLayerAdded;
                 map.Layers.LayerRemoved -= LayersOnLayerRemoved;
             }
@@ -1364,6 +1398,21 @@ namespace Go2It
             }
         }
 
+        private void UpdateMapTipsLayers(string lyr)
+        {
+            // check if the layer combo box contains this layer
+            var cmb = (DataGridViewComboBoxCell)_mapTipsDgvRowTemplate.Cells[0];
+            if (!cmb.Items.Contains(lyr))
+            {
+                cmb.Items.Add(lyr);
+                foreach (DataGridViewRow row in dgvMapTips.Rows)
+                {
+                    cmb = (DataGridViewComboBoxCell)row.Cells[0];
+                    cmb.Items.Add(lyr);
+                }
+            }
+        }
+
         /// <summary>
         /// Handle all form elements when a new layer is added to the project
         /// </summary>
@@ -1378,6 +1427,7 @@ namespace Go2It
             {
                 _lineLayers.Add(mapLayer); // add to line layer list
                 chkRoadLayers.Items.Add(f);
+                UpdateMapTipsLayers(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
@@ -1400,6 +1450,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Add(f);
                 }
+                UpdateMapTipsLayers(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
@@ -1432,6 +1483,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Add(f);
                 }
+                UpdateMapTipsLayers(f);
             }
         }
 
@@ -1444,6 +1496,7 @@ namespace Go2It
             if (String.IsNullOrEmpty(mapLayer.Filename)) return;
             var f = Path.GetFileNameWithoutExtension(mapLayer.Filename);
             if (f == null) return;
+
             if (mapLayer.FeatureType.Equals(FeatureType.Line))
             {
                 _lineLayers.Remove(mapLayer); // remove from layer list

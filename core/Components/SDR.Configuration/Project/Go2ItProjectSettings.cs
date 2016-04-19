@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace SDR.Configuration.Project
@@ -144,6 +145,22 @@ namespace SDR.Configuration.Project
         public void ClearMapTips()
         {
             Properties.ProjectSettings.Default.MapTipsLookup.Clear();
+        }
+
+        /// <summary>
+        /// Remove an entire layer from all Maptips
+        /// </summary>
+        public void RemoveMapTipLayer()
+        {
+            Debug.WriteLine("TODO");
+        }
+
+        /// <summary>
+        /// Removes a specific MapTip
+        /// </summary>
+        public void RemoveMapTips()
+        {
+            Debug.WriteLine("TODO");
         }
 
         /// <summary>
