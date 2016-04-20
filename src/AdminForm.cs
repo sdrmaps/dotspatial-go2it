@@ -230,20 +230,23 @@ namespace Go2It
             var lyrNameCol = new DataGridViewComboBoxColumn
             {
                 HeaderText = @"Layer Name",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Tag = "LayerNameColumn"
             };
             dgvMapTips.Columns.Add(lyrNameCol);
             var fldNameCol = new DataGridViewComboBoxColumn
             {
                 HeaderText = @"Field Name",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Tag = "FieldNameColumn"
             };
             dgvMapTips.Columns.Add(fldNameCol);
             var addTipCol = new DataGridViewButtonColumn
             {
                 HeaderText = @"Add",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
-                Width = 50
+                Width = 50,
+                Tag = "AddButtonColumn"
             };
             dgvMapTips.Columns.Add(addTipCol);
             var delTipCol = new DataGridViewButtonColumn
@@ -251,32 +254,56 @@ namespace Go2It
                 HeaderText = @"Delete",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
                 Width = 50,
+                Tag = "RemoveButtonColumn"
             };
             dgvMapTips.Columns.Add(delTipCol);
-           
+
+            // add a cloned row of our template to the datagridview
+            dgvMapTips.Rows.Add(CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
             // generate the cells for the maptips datagridview row
             dgvMapTips.Rows[0].Cells[0] = new DataGridViewComboBoxCell();
             dgvMapTips.Rows[0].Cells[1] = new DataGridViewComboBoxCell();
             dgvMapTips.Rows[0].Cells[2] = new DataGridViewButtonCell { Value = "+" };
             dgvMapTips.Rows[0].Cells[3] = new DataGridViewButtonCell { Value = "-" };
-
-            // store the default row as our row template for additional changes and clones as needed
+            // clone the first row back to the template for later use
             _mapTipsDgvRowTemplate = CloneDataGridViewRowTemplate(dgvMapTips.Rows[0]);
 
-            // event handler for the add/remove click event
-            dgvMapTips.CellContentClick += DgvMapTipsOnCellContentClick;
-            // event handler for layer/field selected changed event
-            dgvMapTips.SelectionChanged += DgvMapTipsOnSelectionChanged;
+            // layer combobox selected index changed event (ridiculous roundabout approach ms forced us into)
+            dgvMapTips.EditingControlShowing += DgvMapTipsOnEditingControlShowing;
+
+            // add/remove maptip click event handler
+           dgvMapTips.CellContentClick += DgvMapTipsOnCellContentClick;
         }
 
-        private void DgvMapTipsOnSelectionChanged(object sender, EventArgs eventArgs)
+        private void DgvMapTipsOnEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            Debug.WriteLine("SelectionChanged");
+            if (e.Control is ComboBox)
+            {
+                ((ComboBox)e.Control).SelectedIndexChanged += delegate(object o, EventArgs args)
+                {
+                    // var dgv = (DataGridView)o;
+                    var x = o;
+                    var z = args;
+
+                    Debug.WriteLine("SelectedIndexChanged");
+                };
+            }
         }
 
-        private void DgvMapTipsOnCellContentClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
+        private void DgvMapTipsOnCellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            Debug.WriteLine("CellContentClick");
+            var dgv = (DataGridView) sender;
+            if (dgv.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            {
+                if (e.ColumnIndex == 2)  // add maptip row
+                {
+                    Debug.WriteLine("AddButtonClicked " + e.RowIndex);
+                }
+                if (e.ColumnIndex == 3)  // remove maptip row
+                {
+                    Debug.WriteLine("RemoveButtonClicked " + e.RowIndex);
+                }
+            }
         }
 
         private void PopulateMapTipsToForm()
@@ -1398,7 +1425,7 @@ namespace Go2It
             }
         }
 
-        private void UpdateMapTipsLayers(string lyr)
+        private void AddMapTipsLayer(string lyr)
         {
             // check if the layer combo box contains this layer
             var cmb = (DataGridViewComboBoxCell)_mapTipsDgvRowTemplate.Cells[0];
@@ -1427,7 +1454,7 @@ namespace Go2It
             {
                 _lineLayers.Add(mapLayer); // add to line layer list
                 chkRoadLayers.Items.Add(f);
-                UpdateMapTipsLayers(f);
+                AddMapTipsLayer(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
@@ -1450,7 +1477,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Add(f);
                 }
-                UpdateMapTipsLayers(f);
+                AddMapTipsLayer(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
@@ -1483,7 +1510,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Add(f);
                 }
-                UpdateMapTipsLayers(f);
+                AddMapTipsLayer(f);
             }
         }
 
