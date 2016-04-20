@@ -285,17 +285,31 @@ namespace Go2It
         private void OnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             var dgvec = (DataGridViewComboBoxEditingControl)sender;
-            var colIndex = dgvec.EditingControlDataGridView.CurrentCell.ColumnIndex;
+            var colIdx = dgvec.EditingControlDataGridView.CurrentCell.ColumnIndex;
 
-            if (colIndex == 0)
+            if (colIdx == 0) // a layer combobox selection has changed
             {
+                var lyr = dgvec.EditingControlFormattedValue;
+                if (lyr.ToString().Length == 0) return;
+
+                // open up the dataset and add all the data field columns the combobox for fields
+                IMapLayer mapLyr;
+                _layerLookup.TryGetValue(lyr.ToString(), out mapLyr);
+                var mfl = mapLyr as IMapFeatureLayer;
+
+                var fields = new List<string>();
+                if (mfl != null && mfl.DataSet != null)
+                {
+                    IFeatureSet fl = mfl.DataSet;
+                    fields = (from DataColumn dc in fl.DataTable.Columns select dc.ColumnName).ToList();
+                }
                 // populate the fields from the selected layer to the next column
+                var dgv = dgvec.EditingControlDataGridView;
+                var rowIdx = dgvec.EditingControlRowIndex;
+                var cmb = (DataGridViewComboBoxCell) dgv.Rows[rowIdx].Cells[1];
+                cmb.Items.Clear();
+                cmb.Items.AddRange(fields.ToArray());
             }
-
-
-            var rowIdx = dgvec.EditingControlRowIndex;
-
-            Debug.WriteLine("OnSelectedIndexChanged " + dgvec.EditingControlFormattedValue + " " + dgvec.EditingControlRowIndex + " " + " " + colIndex + " " + dgvec.EditingControlValueChanged);
         }
 
         /// <summary>
