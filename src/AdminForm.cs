@@ -241,7 +241,7 @@ namespace Go2It
                 Tag = "FieldNameColumn"
             };
             dgvMapTips.Columns.Add(fldNameCol);
-            var addTipCol = new DataGridViewButtonColumn
+            var addTipCol = new DataGridViewDisableButtonColumn
             {
                 HeaderText = @"Add",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
@@ -249,7 +249,7 @@ namespace Go2It
                 Tag = "AddButtonColumn"
             };
             dgvMapTips.Columns.Add(addTipCol);
-            var delTipCol = new DataGridViewButtonColumn
+            var delTipCol = new DataGridViewDisableButtonColumn
             {
                 HeaderText = @"Delete",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
@@ -263,45 +263,65 @@ namespace Go2It
             // generate the cells for the maptips datagridview row
             dgvMapTips.Rows[0].Cells[0] = new DataGridViewComboBoxCell();
             dgvMapTips.Rows[0].Cells[1] = new DataGridViewComboBoxCell();
-            dgvMapTips.Rows[0].Cells[2] = new DataGridViewButtonCell { Value = "+" };
-            dgvMapTips.Rows[0].Cells[3] = new DataGridViewButtonCell { Value = "-" };
+            dgvMapTips.Rows[0].Cells[2] = new DataGridViewDisableButtonCell { Value = "+", Enabled = true };
+            dgvMapTips.Rows[0].Cells[3] = new DataGridViewDisableButtonCell { Value = "-", Enabled = true };
             // clone the first row back to the template for later use
             _mapTipsDgvRowTemplate = CloneDataGridViewRowTemplate(dgvMapTips.Rows[0]);
 
             // layer combobox selected index changed event (ridiculous roundabout approach ms forced us into)
             dgvMapTips.EditingControlShowing += DgvMapTipsOnEditingControlShowing;
-
             // add/remove maptip click event handler
-           dgvMapTips.CellContentClick += DgvMapTipsOnCellContentClick;
+            dgvMapTips.CellContentClick += DgvMapTipsOnCellContentClick;
         }
 
         private void DgvMapTipsOnEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (e.Control is ComboBox)
-            {
-                ((ComboBox)e.Control).SelectedIndexChanged += delegate(object o, EventArgs args)
-                {
-                    // var dgv = (DataGridView)o;
-                    var x = o;
-                    var z = args;
+            if (!(e.Control is ComboBox)) return;
 
-                    Debug.WriteLine("SelectedIndexChanged");
-                };
-            }
+            ((ComboBox)e.Control).SelectedIndexChanged -= OnSelectedIndexChanged; 
+            ((ComboBox)e.Control).SelectedIndexChanged += OnSelectedIndexChanged;
         }
 
+        private void OnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            var dgvec = (DataGridViewComboBoxEditingControl)sender;
+            var colIndex = dgvec.EditingControlDataGridView.CurrentCell.ColumnIndex;
+
+            if (colIndex == 0)
+            {
+                // populate the fields from the selected layer to the next column
+            }
+
+
+            var rowIdx = dgvec.EditingControlRowIndex;
+
+            Debug.WriteLine("OnSelectedIndexChanged " + dgvec.EditingControlFormattedValue + " " + dgvec.EditingControlRowIndex + " " + " " + colIndex + " " + dgvec.EditingControlValueChanged);
+        }
+
+        /// <summary>
+        /// Handle the "add" and "remove" maptips buttons on click event
+        /// </summary>
+        /// <param name="sender">MapTips DataGridView</param>
+        /// <param name="e">ActiveCell DataGridViewCellEventArgs</param>
         private void DgvMapTipsOnCellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var dgv = (DataGridView) sender;
             if (dgv.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
-                if (e.ColumnIndex == 2)  // add maptip row
+                if (e.ColumnIndex == 2)  // add maptip button clicked (add a new maptip row below this row)
                 {
-                    Debug.WriteLine("AddButtonClicked " + e.RowIndex);
+                    dgv.Rows.Insert(e.RowIndex + 1, CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
                 }
-                if (e.ColumnIndex == 3)  // remove maptip row
+                if (e.ColumnIndex == 3)  // remove maptip button clicked (remove this maptip row)
                 {
-                    Debug.WriteLine("RemoveButtonClicked " + e.RowIndex);
+                    if (dgv.RowCount >= 1)
+                    {
+                        dgv.Rows.RemoveAt(e.RowIndex);
+                        if (dgv.RowCount == 0)  // the only row available was removed, need to insert a new blank one
+                        {
+                            dgv.Rows.Add(CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
+                        }
+                    }
                 }
             }
         }
@@ -1425,9 +1445,9 @@ namespace Go2It
             }
         }
 
-        private void AddMapTipsLayer(string lyr)
+        private void AddLayerToMapTipsComboBox(string lyr)
         {
-            // check if the layer combo box contains this layer
+            // check if the row template layer combo box contains this layer
             var cmb = (DataGridViewComboBoxCell)_mapTipsDgvRowTemplate.Cells[0];
             if (!cmb.Items.Contains(lyr))
             {
@@ -1436,6 +1456,41 @@ namespace Go2It
                 {
                     cmb = (DataGridViewComboBoxCell)row.Cells[0];
                     cmb.Items.Add(lyr);
+                }
+            }
+        }
+
+        private void RemoveLayerFromMapTipsComboBox(string lyr)
+        {
+            // make sure the row template layer combo box contains the layer
+            var cmb = (DataGridViewComboBoxCell)_mapTipsDgvRowTemplate.Cells[0];
+            if (cmb.Items.Contains(lyr))
+            {
+                cmb.Items.Remove(lyr);
+                var remove = new List<int>();
+                foreach (DataGridViewRow row in dgvMapTips.Rows)
+                {
+                    cmb = (DataGridViewComboBoxCell)row.Cells[0];
+                    if (cmb.Value.ToString() == lyr)
+                    {
+                        remove.Add(row.Index);  // store this index for complete removal after the loop completes
+                    }
+                    else
+                    {
+                        cmb.Items.Remove(lyr);
+                    }
+                }
+                // remove any rows that had the removed layer set as their active layer
+                if (remove.Count > 0)
+                {
+                    foreach (var i in remove)
+                    {
+                        dgvMapTips.Rows.RemoveAt(i);
+                    }
+                    if (dgvMapTips.RowCount == 0)  // the only row available was removed, need to insert a new blank one
+                    {
+                        dgvMapTips.Rows.Add(CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
+                    }
                 }
             }
         }
@@ -1454,7 +1509,7 @@ namespace Go2It
             {
                 _lineLayers.Add(mapLayer); // add to line layer list
                 chkRoadLayers.Items.Add(f);
-                AddMapTipsLayer(f);
+                AddLayerToMapTipsComboBox(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
@@ -1477,7 +1532,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Add(f);
                 }
-                AddMapTipsLayer(f);
+                AddLayerToMapTipsComboBox(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
@@ -1510,7 +1565,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Add(f);
                 }
-                AddMapTipsLayer(f);
+                AddLayerToMapTipsComboBox(f);
             }
         }
 
@@ -1528,6 +1583,7 @@ namespace Go2It
             {
                 _lineLayers.Remove(mapLayer); // remove from layer list
                 chkRoadLayers.Items.Remove(f);
+                RemoveLayerFromMapTipsComboBox(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Point))
             {
@@ -1550,6 +1606,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Remove(f);
                 }
+                RemoveLayerFromMapTipsComboBox(f);
             }
             if (mapLayer.FeatureType.Equals(FeatureType.Polygon))
             {
@@ -1582,6 +1639,7 @@ namespace Go2It
                 {
                     chkKeyLocationsLayers.Items.Remove(f);
                 }
+                RemoveLayerFromMapTipsComboBox(f);
             }
         }
 

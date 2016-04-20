@@ -76,6 +76,7 @@
     <Compile Include="..\..\AssemblyInfo\AssemblyInfoVersion.cs">
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
+    <Compile Include="DataGridViewDisableButtonCell.cs" />
     <Compile Include="EventedList.cs" />
     <Compile Include="EventMapFrame.cs" />
     <Compile Include="HotKeyManager.cs" />
