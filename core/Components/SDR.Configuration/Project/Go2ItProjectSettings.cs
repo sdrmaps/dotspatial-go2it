@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 
 namespace SDR.Configuration.Project
@@ -117,14 +116,24 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AliEnterpolAvlAutoHideInactiveUnits = true;
         }
 
-
+        public event EventHandler MapTipsChanged;
         /// <summary>
         /// Gets/sets the list of maptip settings lookups
         /// </summary>
         public System.Collections.Specialized.StringCollection MapTips
         {
             get { return Properties.ProjectSettings.Default.MapTipsLookup; }
-            set { Properties.ProjectSettings.Default.MapTipsLookup = value; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.MapTipsLookup == value) return;
+                Properties.ProjectSettings.Default.MapTipsLookup = value;
+                OnMapTipsChanged(EventArgs.Empty);
+            }
+        }
+        protected virtual void OnMapTipsChanged(EventArgs e)
+        {
+            if (MapTipsChanged != null)
+                MapTipsChanged(this, e);
         }
 
         /// <summary>
@@ -136,6 +145,7 @@ namespace SDR.Configuration.Project
             if (!Properties.ProjectSettings.Default.MapTipsLookup.Contains(record))
             {
                 Properties.ProjectSettings.Default.MapTipsLookup.Add(record);
+                OnMapTipsChanged(EventArgs.Empty);
             }
         }
 
@@ -145,22 +155,7 @@ namespace SDR.Configuration.Project
         public void ClearMapTips()
         {
             Properties.ProjectSettings.Default.MapTipsLookup.Clear();
-        }
-
-        /// <summary>
-        /// Remove an entire layer from all Maptips
-        /// </summary>
-        public void RemoveMapTipLayer()
-        {
-            Debug.WriteLine("TODO");
-        }
-
-        /// <summary>
-        /// Removes a specific MapTip
-        /// </summary>
-        public void RemoveMapTips()
-        {
-            Debug.WriteLine("TODO");
+            OnMapTipsChanged(EventArgs.Empty);
         }
 
         /// <summary>

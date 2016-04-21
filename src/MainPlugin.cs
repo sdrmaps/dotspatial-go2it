@@ -161,7 +161,8 @@ namespace Go2It
         {
             // display the lat/long status panel
             _latLongDisplay.ShowCoordinates = true;
-            _mapTipsPopup.ShowMapTips = true;
+            // TODO: activate this portion of code in the maptips popup
+            // _mapTipsPopup.ShowMapTips = true;
             // TODO: display the selection status panel
             // _selectionsDisplay.ShowSelectionStatus = false;
             Shell.Focus();  // set focus to the main application window
