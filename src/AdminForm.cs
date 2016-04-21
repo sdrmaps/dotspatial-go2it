@@ -267,7 +267,6 @@ namespace Go2It
             dgvMapTips.Rows[0].Cells[3] = new DataGridViewDisableButtonCell { Value = "-", Enabled = true };
             // clone the first row back to the template for later use
             _mapTipsDgvRowTemplate = CloneDataGridViewRowTemplate(dgvMapTips.Rows[0]);
-
             // layer combobox selected index changed event (ridiculous roundabout approach ms forced us into)
             dgvMapTips.EditingControlShowing += DgvMapTipsOnEditingControlShowing;
             // add/remove maptip click event handler
@@ -312,6 +311,44 @@ namespace Go2It
             }
         }
 
+        private void FillMapTipFieldsComboBox(string lyr, DataGridViewComboBoxCell cmb)
+        {
+            if (lyr.Length == 0) return;
+
+            // open up the dataset and add all the data field columns the combobox for fields
+            IMapLayer mapLyr;
+            _layerLookup.TryGetValue(lyr, out mapLyr);
+            var mfl = mapLyr as IMapFeatureLayer;
+
+            var fields = new List<string>();
+            if (mfl != null && mfl.DataSet != null)
+            {
+                IFeatureSet fl = mfl.DataSet;
+                fields = (from DataColumn dc in fl.DataTable.Columns select dc.ColumnName).ToList();
+            }
+            cmb.Items.Clear();
+            cmb.Items.AddRange(fields.ToArray());
+        }
+
+        private void PopulateMapTipsToForm()
+        {
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips.Count <= 0) return;
+            for (int i = 0; i <= SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips.Count - 1; i++)
+            {
+                var arr = SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips[i].Split(',');
+                dgvMapTips.Rows.Add(CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
+                // generate the cells for the maptips datagridview row
+                FillMapTipFieldsComboBox(arr[0], (DataGridViewComboBoxCell)dgvMapTips.Rows[i].Cells[1]);
+                dgvMapTips.Rows[i].Cells[0].Value = arr[0];
+                dgvMapTips.Rows[i].Cells[1].Value = arr[1];
+            }
+            // remove the last row if it's empty (result of the template load on start)
+            if (dgvMapTips.Rows[dgvMapTips.RowCount - 1].Cells[0].Value == null || dgvMapTips.Rows[dgvMapTips.RowCount - 1].Cells[1].Value == null)
+            {
+                dgvMapTips.Rows.RemoveAt(dgvMapTips.RowCount - 1);
+            }
+        }
+
         /// <summary>
         /// Handle the "add" and "remove" maptips buttons on click event
         /// </summary>
@@ -338,11 +375,6 @@ namespace Go2It
                     }
                 }
             }
-        }
-
-        private void PopulateMapTipsToForm()
-        {
-            // TODO: set the saved/existing maptips to the form for user input and modification
         }
 
         public AdminForm(AppManager app)
@@ -1907,6 +1939,16 @@ namespace Go2It
                 if (record.Length > 1)
                 {
                     SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Add(record);
+                }
+            }
+            // convert maptips lookup to list for storage to sqlite row
+            foreach (DataGridViewRow row in dgvMapTips.Rows)
+            {
+                if (row.Cells[0].Value == null || row.Cells[1].Value == null) continue;
+                var record = row.Cells[0].Value + "," + row.Cells[1].Value;
+                if (record.Length > 1)
+                {
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips.Add(record);
                 }
             }
             // setup ali interface configuration

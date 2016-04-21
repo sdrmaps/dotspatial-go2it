@@ -386,6 +386,34 @@ namespace Go2It
                     SQLiteHelper.Insert(conn, "NetworkfleetLabels", nfLabels);
                 }
             }
+            // handle the maptips lookup table as well
+            if (SQLiteHelper.TableExists(conn, "MapTips"))
+            {
+                SQLiteHelper.ClearTable(conn, "MapTips");
+            }
+            else
+            {
+                var mapTipsLookup = new Dictionary<string, string>
+                {
+                    {"key", "INTEGER PRIMARY KEY"},
+                    {"layer", "TEXT"},
+                    {"field", "TEXT"}
+                };
+                SQLiteHelper.CreateTable(conn, "MapTips", mapTipsLookup);
+            }
+            // populate any maptips to the table
+            foreach (var mapTip in Go2ItProjectSettings.Instance.MapTips)
+            {
+                var mapTips = new Dictionary<string, string>();
+                var arr = mapTip.Split(',');
+
+                mapTips.Add("layer", arr[0].ToString(CultureInfo.InvariantCulture));
+                mapTips.Add("field", arr[1].ToString(CultureInfo.InvariantCulture));
+                if (mapTips.Count > 0)
+                {
+                    SQLiteHelper.Insert(conn, "MapTips", mapTips);
+                }
+            }
         }
 
         private static string AttachSetting(string key, string setting, DataTable dt)
@@ -452,6 +480,14 @@ namespace Go2It
             {
                 DataTable lblTable = SQLiteHelper.GetDataTable(conn, lblQuery);
                 LoadNetworkfleetLabels(lblTable);
+            }
+
+            // handle maptip lookups
+            const string tipQuery = "SELECT * FROM MapTips";
+            if (SQLiteHelper.TableExists(conn, "MapTips"))
+            {
+                DataTable tipsTable = SQLiteHelper.GetDataTable(conn, tipQuery);
+                LoadMapTips(tipsTable);
             }
 
             const string psQuery = "SELECT * FROM ProjectSettings";
@@ -547,6 +583,16 @@ namespace Go2It
                 string id = row["vehicle_id"].ToString();
                 string label = row["vehicle_label"].ToString();
                 Go2ItProjectSettings.Instance.AddNetworkfleetLabel(int.Parse(id), label);
+            }
+        }
+
+        private static void LoadMapTips(DataTable tipTable)
+        {
+            foreach (DataRow row in tipTable.Rows)
+            {
+                string layer = row["layer"].ToString();
+                string field = row["field"].ToString();
+                Go2ItProjectSettings.Instance.AddMapTip(layer, field);
             }
         }
 
