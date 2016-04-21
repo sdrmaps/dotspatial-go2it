@@ -1,4 +1,5 @@
-﻿using SDR.Configuration.Properties;
+﻿using System;
+using SDR.Configuration.Properties;
 
 namespace SDR.Configuration.User
 {
@@ -41,10 +42,20 @@ namespace SDR.Configuration.User
             }
         }
 
+        public event EventHandler AdminModeChanged;
         public bool AdminModeActive
         {
             get { return UserSettings.Default.AdminModeActive; }
-            set { UserSettings.Default.AdminModeActive = value; }
+            set
+            {
+                UserSettings.Default.AdminModeActive = value;
+                OnAdminModeChanged(EventArgs.Empty);
+            }
+        }
+        protected virtual void OnAdminModeChanged(EventArgs e)
+        {
+            if (AdminModeChanged != null)
+                AdminModeChanged(this, e);
         }
 
         public string ActiveFunctionMode
