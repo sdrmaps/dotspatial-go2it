@@ -92,7 +92,7 @@ namespace Go2It
         {
             var pCoord = _map.PixelToProj(MousePosition); // turn pixels into coordinates
             IEnvelope env = new Envelope(pCoord);
-            env.ExpandBy(100);  // arbitrary unit size expansion (to generate an extent)
+            env.ExpandBy(5);  // arbitrary unit size expansion (to generate an extent)
             var msgList = new List<string>();
 
             foreach (KeyValuePair<string, HashSet<string>> kv in _mapTipsDict)

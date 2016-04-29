@@ -306,6 +306,12 @@ namespace Go2It
                 var dgv = dgvec.EditingControlDataGridView;
                 var rowIdx = dgvec.EditingControlRowIndex;
                 var cmb = (DataGridViewComboBoxCell) dgv.Rows[rowIdx].Cells[1];
+
+                if (!fields.Contains(cmb.Value))
+                {
+                    cmb.Items.Add(string.Empty);
+                    cmb.Value = string.Empty;
+                }
                 cmb.Items.Clear();
                 cmb.Items.AddRange(fields.ToArray());
             }
