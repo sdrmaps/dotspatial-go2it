@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -25,6 +24,7 @@ namespace Go2It
         private StartUpForm _startUpForm;
         private CoordinateDisplay _latLongDisplay;
         private MapTipsPopup _mapTipsPopup;
+
         // TODO: add the selections display message back to application
         // private SelectionsDisplay _selectionsDisplay;
 
@@ -61,6 +61,7 @@ namespace Go2It
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
+            _mapTipsPopup.LayerLookup = ProjectManager.GetLayerLookup;
         }
 
         private void ProjectManagerOnDeserializing(object sender, SerializingEventArgs serializingEventArgs)
@@ -72,6 +73,7 @@ namespace Go2It
             {
                 _latLongDisplay.MapProjectionString = App.Map.Projection.ToEsriString();
             }
+            _mapTipsPopup.LayerLookup = ProjectManager.GetLayerLookup;
         }
 
         void App_ExtensionsActivated(object sender, EventArgs e)

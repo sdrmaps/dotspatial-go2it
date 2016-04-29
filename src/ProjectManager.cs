@@ -712,7 +712,7 @@ namespace Go2It
 
             Dock.SelectPanel(Go2ItProjectSettings.Instance.ActiveMapViewKey);
             // Dock.SelectPanel(Go2ItUserSettings.Instance.ActiveFunctionPanel);
-            Dock.SelectPanel("kPanel_Search");
+            Dock.SelectPanel("kPanel_Search");  // by default activate the search plugin
 
             ResetMapProjection();
             App.Map.Invalidate();

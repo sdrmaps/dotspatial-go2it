@@ -357,9 +357,7 @@ namespace DotSpatial.SDR.Plugins.Search
             }
 
             var latCoor = LoadCoordinates(lat);
-            Debug.WriteLine(latCoor);
             var lonCoor = LoadCoordinates(lng);
-            Debug.WriteLine(lonCoor);
 
             var xy = new double[2];
 
