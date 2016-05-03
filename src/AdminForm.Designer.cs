@@ -73,7 +73,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProjectSettings = new System.Windows.Forms.TabPage();
-            this.chkDisplayMapTips = new System.Windows.Forms.CheckBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.dgvMapTips = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
@@ -771,7 +771,7 @@
             // 
             // adminTab_ProjectSettings
             // 
-            this.adminTab_ProjectSettings.Controls.Add(this.chkDisplayMapTips);
+            this.adminTab_ProjectSettings.Controls.Add(this.label17);
             this.adminTab_ProjectSettings.Controls.Add(this.label12);
             this.adminTab_ProjectSettings.Controls.Add(this.dgvMapTips);
             this.adminTab_ProjectSettings.Controls.Add(this.label4);
@@ -795,15 +795,14 @@
             this.adminTab_ProjectSettings.Text = "Project Settings";
             this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
             // 
-            // chkDisplayMapTips
+            // label17
             // 
-            this.chkDisplayMapTips.AutoSize = true;
-            this.chkDisplayMapTips.Location = new System.Drawing.Point(160, 226);
-            this.chkDisplayMapTips.Name = "chkDisplayMapTips";
-            this.chkDisplayMapTips.Size = new System.Drawing.Size(104, 17);
-            this.chkDisplayMapTips.TabIndex = 52;
-            this.chkDisplayMapTips.Text = "Display MapTips";
-            this.chkDisplayMapTips.UseVisualStyleBackColor = true;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(145, 224);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(286, 13);
+            this.label17.TabIndex = 52;
+            this.label17.Text = "TODO: should maptips have an option to turn it off and on?";
             // 
             // label12
             // 
@@ -825,7 +824,7 @@
             this.dgvMapTips.Location = new System.Drawing.Point(26, 249);
             this.dgvMapTips.MultiSelect = false;
             this.dgvMapTips.Name = "dgvMapTips";
-            this.dgvMapTips.Size = new System.Drawing.Size(537, 324);
+            this.dgvMapTips.Size = new System.Drawing.Size(537, 216);
             this.dgvMapTips.TabIndex = 50;
             // 
             // label4
@@ -3427,7 +3426,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.DataGridView dgvMapTips;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox chkDisplayMapTips;
+        private System.Windows.Forms.Label label17;
 
     }
 }
