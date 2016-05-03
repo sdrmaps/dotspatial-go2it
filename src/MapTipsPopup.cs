@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -14,23 +13,20 @@ namespace Go2It
 {
     public class MapTipsPopup
     {
+        public bool ShowMapTips { get; set; }  // turn the display of maptips off and on from main plugin
+
         private Map _map;  // currently active map
-        private readonly AppManager _appManager;
         private ToolTip MapTip { get; set; }  // maptip to display information for features hovered over
         private Timer HoverTimer { get; set; }  // timer tracks if user has hovered long enough to display a maptip
         private Point MousePosition { get; set; }  // current mouse position to display the maptip
-        private bool _isMapActive;  // make sure we are hovering over the actual map, and not anything else
-
+        private bool _isMapActive;  // make sure we are hovering over an actual map
+        // dict that holds all the maptip layers and features to display on
         private readonly Dictionary<string, HashSet<string>> _mapTipsDict = new Dictionary<string, HashSet<string>>();
-
+        // simple layer lookup to get a maplayer ussing the layer name from any existing maptab
         private Dictionary<string, IMapLayer> _layerLookup = new Dictionary<string, IMapLayer>();
 
-
-        // TODO: we need to finish integrating the option to activate and deactivate maptips (see main plugin)
-        // also should we disable maptips while in admin mode.. cause it could get to be confusing
-        // public bool ShowMapTips { get; set; }
-
-        // populated by the main plugin on project deserialization/serialization using ProjectManager.GetLayerLookup()
+        // populated by the main plugin on project deserialization/serialization
+        // using ProjectManager.GetLayerLookup() -> gives access to all availble layers
         public Dictionary<string, IMapLayer> LayerLookup
         {
             set { _layerLookup = value; }
@@ -38,9 +34,9 @@ namespace Go2It
 
         public MapTipsPopup(AppManager app)
         {
-            _appManager = app;
-            _appManager.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
-            _appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
+            AppManager appManager = app;
+            appManager.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
+            appManager.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             // convert the maptips lookup collection to 
             MapTip = new ToolTip {IsBalloon = false};  // setting balloon to true results in visible redraws on the hoverTimer tick show event
@@ -61,7 +57,8 @@ namespace Go2It
 
         private void InstanceOnAdminModeChanged(object sender, EventArgs eventArgs)
         {
-            // turn maptips off when admin mode is active
+            // turn maptips off when admin mode is active regardless of value of ShowMapTips
+            HoverTimer.Enabled = !SdrConfig.User.Go2ItUserSettings.Instance.AdminModeActive;
         }
 
         public void MapTipsLookup()
@@ -81,7 +78,7 @@ namespace Go2It
             }
         }
 
-        // simulated hover event
+        // simulation of an OnHoverEvent()
         private void TimerOnTick(object sender, EventArgs eventArgs)
         {
             HoverTimer.Stop();
@@ -93,7 +90,7 @@ namespace Go2It
             var pCoord = _map.PixelToProj(MousePosition); // turn pixels into coordinates
             IEnvelope env = new Envelope(pCoord);
             env.ExpandBy(5);  // arbitrary unit size expansion (to generate an extent)
-            var msgList = new List<string>();
+            var msgList = new List<string>();  // list of all maptips to display
 
             foreach (KeyValuePair<string, HashSet<string>> kv in _mapTipsDict)
             {
@@ -102,24 +99,23 @@ namespace Go2It
                 // check if this layer is present on the active map
                 if (!_map.Layers.Contains(mapLyr)) continue;
 
-                var mfl = mapLyr as IMapFeatureLayer;
                 // validate the dataset is available
+                var mfl = mapLyr as IMapFeatureLayer;
                 if (mfl == null || mfl.DataSet == null) continue;
 
+                // select all features within the extent of our mouse position
                 IFeatureSet fs = mfl.DataSet;
-                // select all features to list under the mouse
-                // TODO: doesnt seem to work with points?
                 var fl = fs.Select(env.ToExtent());
                 if (fl.Count <= 0) continue;
 
-                msgList.Add(kv.Key);
+                msgList.Add(kv.Key);  // add the name of the layer to maptip list
                 foreach (IFeature ft in fl)
                 {
-                    // cycle through all the maptips columns to display
-                    foreach (string s in kv.Value)
+                    // cycle through all the maptips columns for display
+                    foreach (var s in kv.Value)
                     {
                         var v = ft.DataRow[s];
-                        msgList.Add(s + ": " + v);
+                        msgList.Add(s + ": " + v);  // add the feature type and value to maptip list
                     }
                 }
             }
@@ -130,14 +126,16 @@ namespace Go2It
 
         private void MapOnMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isMapActive) return;
+            if (!ShowMapTips) return;  // check if maptips are displayed, no need to continue if not
+            if (!_isMapActive) return;  // check the mouse is hovering over an active map
 
-            MousePosition = new Point { X = e.X, Y = e.Y };
-            // reset the timer on a move event, we are simulating a hover event
+            MousePosition = new Point {X = e.X, Y = e.Y};
+            // if HoverTimer is active reset it now (do not display the maptip on timer.tick)
             if (HoverTimer.Enabled)
             {
                 HoverTimer.Enabled = false;
             }
+            // reactivate the HoverTimer and wait for either timer.tick or this event again
             HoverTimer.Enabled = true;
         }
 
@@ -181,7 +179,7 @@ namespace Go2It
         private void MapOnMouseLeave(object sender, EventArgs e)
         {
             _isMapActive = false;  // the mouse is no longer within the bounds of the map
-            HoverTimer.Enabled = false;  // no need to track hover time 
+            HoverTimer.Enabled = false;  // no need to track hover time anymore
 
             if (_map == null) return;
 

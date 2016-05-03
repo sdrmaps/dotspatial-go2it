@@ -73,6 +73,7 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProjectSettings = new System.Windows.Forms.TabPage();
+            this.chkDisplayMapTips = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
             this.dgvMapTips = new System.Windows.Forms.DataGridView();
             this.label4 = new System.Windows.Forms.Label();
@@ -256,7 +257,6 @@
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.chkDisplayMapTips = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_MapConfiguration.SuspendLayout();
@@ -794,6 +794,16 @@
             this.adminTab_ProjectSettings.TabIndex = 5;
             this.adminTab_ProjectSettings.Text = "Project Settings";
             this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
+            // 
+            // chkDisplayMapTips
+            // 
+            this.chkDisplayMapTips.AutoSize = true;
+            this.chkDisplayMapTips.Location = new System.Drawing.Point(160, 226);
+            this.chkDisplayMapTips.Name = "chkDisplayMapTips";
+            this.chkDisplayMapTips.Size = new System.Drawing.Size(104, 17);
+            this.chkDisplayMapTips.TabIndex = 52;
+            this.chkDisplayMapTips.Text = "Display MapTips";
+            this.chkDisplayMapTips.UseVisualStyleBackColor = true;
             // 
             // label12
             // 
@@ -3102,16 +3112,6 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // chkDisplayMapTips
-            // 
-            this.chkDisplayMapTips.AutoSize = true;
-            this.chkDisplayMapTips.Location = new System.Drawing.Point(160, 226);
-            this.chkDisplayMapTips.Name = "chkDisplayMapTips";
-            this.chkDisplayMapTips.Size = new System.Drawing.Size(104, 17);
-            this.chkDisplayMapTips.TabIndex = 52;
-            this.chkDisplayMapTips.Text = "Display MapTips";
-            this.chkDisplayMapTips.UseVisualStyleBackColor = true;
             // 
             // AdminForm
             // 

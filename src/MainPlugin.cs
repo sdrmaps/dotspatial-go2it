@@ -163,8 +163,8 @@ namespace Go2It
         {
             // display the lat/long status panel
             _latLongDisplay.ShowCoordinates = true;
-            // TODO: activate this portion of code in the maptips popup
-            // _mapTipsPopup.ShowMapTips = true;
+            // activate maptips popups
+            _mapTipsPopup.ShowMapTips = true;
             // TODO: display the selection status panel
             // _selectionsDisplay.ShowSelectionStatus = false;
             Shell.Focus();  // set focus to the main application window
@@ -270,12 +270,6 @@ namespace Go2It
             var map = sender as Map;
             if (map != null)
             {
-                // removed because of the jarring effect it results in.
-                // if (map.FunctionMode != FunctionMode.None)
-                // { 
-                    // var dockControl = (DockingControl) App.DockManager;
-                    // dockControl.CollapseToolPanel();
-                // }
                 SdrConfig.User.Go2ItUserSettings.Instance.ActiveFunctionMode = map.FunctionMode.ToString();
             }
         }
