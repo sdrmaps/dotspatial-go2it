@@ -19,6 +19,7 @@ using DotSpatial.Extensions;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Serialization;
 using DotSpatial.Symbology;
+using Lucene.Net.Index;
 using SDR.Common;
 using SDR.Common.UserMessage;
 using SDR.Configuration.Project;
@@ -358,61 +359,60 @@ namespace Go2It
             SaveLayerCollection(Go2ItProjectSettings.Instance.HydrantsLayer, LayerTypeHydrant, conn);
             SaveLayerCollection(Go2ItProjectSettings.Instance.KeyLocationLayers, LayerTypeKeyLocation, conn);
 
-            // handle the networkfleet label lookups
-            if (SQLiteHelper.TableExists(conn, "NetworkfleetLabels"))
-            {
-                SQLiteHelper.ClearTable(conn, "NetworkfleetLabels");
-            }
-            else
-            {
-                var labelLookup = new Dictionary<string, string>
-                {
-                    {"key", "INTEGER PRIMARY KEY"},
-                    {"vehicle_id", "NUMERIC"},
-                    {"vehicle_label", "TEXT"}
-                };
-                SQLiteHelper.CreateTable(conn, "NetworkfleetLabels", labelLookup);
-            }
             // now populate any networkfleet labels that may be set
+            var labelLookup = new Dictionary<string, string>{{"key", "INTEGER PRIMARY KEY"},{"vehicle_id", "NUMERIC"},{"vehicle_label", "TEXT"}};
+            ValidateTable(conn, "NetworkfleetLabels", labelLookup);
             foreach (var nfLabel in Go2ItProjectSettings.Instance.NetworkfleetLabels)
             {
-                var nfLabels = new Dictionary<string, string>();
                 var arr = nfLabel.Split('=');
-
-                nfLabels.Add("vehicle_id", arr[0].ToString(CultureInfo.InvariantCulture));
-                nfLabels.Add("vehicle_label", arr[1].ToString(CultureInfo.InvariantCulture));
+                var nfLabels = new Dictionary<string, string>
+                {
+                    {"vehicle_id", arr[0].ToString(CultureInfo.InvariantCulture)},
+                    {"vehicle_label", arr[1].ToString(CultureInfo.InvariantCulture)}
+                };
                 if (nfLabels.Count > 0)
                 {
                     SQLiteHelper.Insert(conn, "NetworkfleetLabels", nfLabels);
                 }
             }
-            // handle the maptips lookup table as well
-            if (SQLiteHelper.TableExists(conn, "MapTips"))
-            {
-                SQLiteHelper.ClearTable(conn, "MapTips");
-            }
-            else
-            {
-                var mapTipsLookup = new Dictionary<string, string>
-                {
-                    {"key", "INTEGER PRIMARY KEY"},
-                    {"layer", "TEXT"},
-                    {"field", "TEXT"}
-                };
-                SQLiteHelper.CreateTable(conn, "MapTips", mapTipsLookup);
-            }
-            // populate any maptips to the table
+            // populate maptips to the table
+            var mapTipsLookup = new Dictionary<string, string>{{"key", "INTEGER PRIMARY KEY"},{"layer", "TEXT"},{"field", "TEXT"}};
+            ValidateTable(conn, "MapTips", mapTipsLookup);
             foreach (var mapTip in Go2ItProjectSettings.Instance.MapTips)
             {
-                var mapTips = new Dictionary<string, string>();
                 var arr = mapTip.Split(',');
-
-                mapTips.Add("layer", arr[0].ToString(CultureInfo.InvariantCulture));
-                mapTips.Add("field", arr[1].ToString(CultureInfo.InvariantCulture));
+                var mapTips = new Dictionary<string, string>
+                {
+                    {"layer", arr[0].ToString(CultureInfo.InvariantCulture)},
+                    {"field", arr[1].ToString(CultureInfo.InvariantCulture)}
+                };
                 if (mapTips.Count > 0)
                 {
                     SQLiteHelper.Insert(conn, "MapTips", mapTips);
                 }
+            }
+            // populate any note fields to table
+            var notesFields = new Dictionary<string, string> {{ "key", "INTEGER PRIMARY KEY" }, { "field", "TEXT" }};
+            ValidateTable(conn, "NotesFields", notesFields);
+            foreach (var field in Go2ItProjectSettings.Instance.NoteFields)
+            {
+                var noteField = new Dictionary<string, string> {{"field", field}};
+                if (noteField.Count > 0)
+                {
+                    SQLiteHelper.Insert(conn, "NotesFields", noteField);
+                }
+            }
+        }
+
+        private void ValidateTable(string conn, string tableName, Dictionary<string, string> fieldDefs)
+        {
+            if (SQLiteHelper.TableExists(conn, tableName))
+            {
+                SQLiteHelper.ClearTable(conn, tableName);
+            }
+            else
+            {
+                SQLiteHelper.CreateTable(conn, tableName, fieldDefs);
             }
         }
 
@@ -488,6 +488,14 @@ namespace Go2It
             {
                 DataTable tipsTable = SQLiteHelper.GetDataTable(conn, tipQuery);
                 LoadMapTips(tipsTable);
+            }
+
+            // handle note field list
+            const string lblNotes = "SELECT * FROM NotesFields";
+            if (SQLiteHelper.TableExists(conn, "NotesFields"))
+            {
+                DataTable notesTable = SQLiteHelper.GetDataTable(conn, lblNotes);
+                LoadNotesFields(notesTable);
             }
 
             const string psQuery = "SELECT * FROM ProjectSettings";
@@ -583,6 +591,14 @@ namespace Go2It
                 string id = row["vehicle_id"].ToString();
                 string label = row["vehicle_label"].ToString();
                 Go2ItProjectSettings.Instance.AddNetworkfleetLabel(int.Parse(id), label);
+            }
+        }
+
+        private static void LoadNotesFields(DataTable notesTable)
+        {
+            foreach (var fld in from DataRow row in notesTable.Rows select row["field"].ToString())
+            {
+                Go2ItProjectSettings.Instance.NoteFields.Add(fld);
             }
         }
 

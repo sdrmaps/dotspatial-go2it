@@ -73,6 +73,8 @@
             this.chkAddressLayers = new System.Windows.Forms.CheckedListBox();
             this.cmbNotesLayer = new System.Windows.Forms.ComboBox();
             this.adminTab_ProjectSettings = new System.Windows.Forms.TabPage();
+            this.lblNotesFields = new System.Windows.Forms.Label();
+            this.dgvNotesFields = new System.Windows.Forms.DataGridView();
             this.label17 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.dgvMapTips = new System.Windows.Forms.DataGridView();
@@ -271,6 +273,7 @@
             this.panelRadKeyLocations.SuspendLayout();
             this.panelRadAddress.SuspendLayout();
             this.adminTab_ProjectSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNotesFields)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapTips)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).BeginInit();
@@ -771,6 +774,8 @@
             // 
             // adminTab_ProjectSettings
             // 
+            this.adminTab_ProjectSettings.Controls.Add(this.lblNotesFields);
+            this.adminTab_ProjectSettings.Controls.Add(this.dgvNotesFields);
             this.adminTab_ProjectSettings.Controls.Add(this.label17);
             this.adminTab_ProjectSettings.Controls.Add(this.label12);
             this.adminTab_ProjectSettings.Controls.Add(this.dgvMapTips);
@@ -795,6 +800,28 @@
             this.adminTab_ProjectSettings.Text = "Project Settings";
             this.adminTab_ProjectSettings.UseVisualStyleBackColor = true;
             // 
+            // lblNotesFields
+            // 
+            this.lblNotesFields.AutoSize = true;
+            this.lblNotesFields.Location = new System.Drawing.Point(48, 491);
+            this.lblNotesFields.Name = "lblNotesFields";
+            this.lblNotesFields.Size = new System.Drawing.Size(101, 13);
+            this.lblNotesFields.TabIndex = 54;
+            this.lblNotesFields.Text = "Editable Note Fields";
+            // 
+            // dgvNotesFields
+            // 
+            this.dgvNotesFields.AllowUserToAddRows = false;
+            this.dgvNotesFields.AllowUserToDeleteRows = false;
+            this.dgvNotesFields.AllowUserToResizeRows = false;
+            this.dgvNotesFields.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvNotesFields.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dgvNotesFields.Location = new System.Drawing.Point(26, 507);
+            this.dgvNotesFields.MultiSelect = false;
+            this.dgvNotesFields.Name = "dgvNotesFields";
+            this.dgvNotesFields.Size = new System.Drawing.Size(537, 150);
+            this.dgvNotesFields.TabIndex = 53;
+            // 
             // label17
             // 
             this.label17.AutoSize = true;
@@ -815,7 +842,6 @@
             // 
             // dgvMapTips
             // 
-            this.dgvMapTips.AllowDrop = true;
             this.dgvMapTips.AllowUserToAddRows = false;
             this.dgvMapTips.AllowUserToDeleteRows = false;
             this.dgvMapTips.AllowUserToResizeRows = false;
@@ -3139,6 +3165,7 @@
             this.panelRadAddress.PerformLayout();
             this.adminTab_ProjectSettings.ResumeLayout(false);
             this.adminTab_ProjectSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNotesFields)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMapTips)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lineSymbolSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptSymbolSize)).EndInit();
@@ -3427,6 +3454,8 @@
         private System.Windows.Forms.DataGridView dgvMapTips;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label lblNotesFields;
+        private System.Windows.Forms.DataGridView dgvNotesFields;
 
     }
 }

@@ -22,7 +22,7 @@ namespace Go2It
         private bool _isMapActive;  // make sure we are hovering over an actual map
         // dict that holds all the maptip layers and features to display on
         private readonly Dictionary<string, HashSet<string>> _mapTipsDict = new Dictionary<string, HashSet<string>>();
-        // simple layer lookup to get a maplayer ussing the layer name from any existing maptab
+        // simple layer lookup to get a maplayer using the layer name from any existing maptab
         private Dictionary<string, IMapLayer> _layerLookup = new Dictionary<string, IMapLayer>();
 
         // populated by the main plugin on project deserialization/serialization

@@ -34,6 +34,7 @@ namespace SDR.Configuration.Project
             Properties.ProjectSettings.Default.AddressesLayers.Clear();
             Properties.ProjectSettings.Default.RoadsLayers.Clear();
             Properties.ProjectSettings.Default.KeyLocationsLayers.Clear();
+            Properties.ProjectSettings.Default.NotesFields.Clear();
            
             Properties.ProjectSettings.Default.NotesLayer = string.Empty;
             Properties.ProjectSettings.Default.CityLimitsLayer = string.Empty;
@@ -269,6 +270,16 @@ namespace SDR.Configuration.Project
         public void ClearKeyLocationLayers()
         {
             Properties.ProjectSettings.Default.KeyLocationsLayers.Clear();
+        }
+
+        public System.Collections.Specialized.StringCollection NoteFields
+        {
+            get { return Properties.ProjectSettings.Default.NotesFields; }
+            set
+            {
+                if (value != null && Properties.ProjectSettings.Default.NotesFields == value) return;
+                Properties.ProjectSettings.Default.NotesFields = value;
+            }
         }
 
         /// <summary>

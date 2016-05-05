@@ -284,10 +284,6 @@
       <Link>Config\keyLocation_indexes.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\config\note_indexes.txt">
-      <Link>Config\note_indexes.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\config\parcel_indexes.txt">
       <Link>Config\parcel_indexes.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

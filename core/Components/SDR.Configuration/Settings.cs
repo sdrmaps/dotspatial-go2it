@@ -20,7 +20,7 @@ namespace SDR.Configuration
     public class Settings
     {
         // app mode lookup for int based value
-        private AppMode _appMode;
+        private AppMode _appMode; // (responder/dispatch)
         private static readonly List<AppMode> AppModes = new List<AppMode>(new[] { AppMode.Dispatch, AppMode.Responder});
 
         /// <summary>

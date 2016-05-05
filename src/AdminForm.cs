@@ -91,6 +91,9 @@ namespace Go2It
 
         // row template for handling maptips as they are added and removed
         private DataGridViewRow _mapTipsDgvRowTemplate = new DataGridViewRow();
+        // row template for handling the editable note fields as added and removed
+        private DataGridViewRow _noteFieldsDsgRowTemplate = new DataGridViewRow();
+        private string _selectedNotesLayer = string.Empty;
 
         // background worker handles the indexing process
         private readonly BackgroundWorker _idxWorker = new BackgroundWorker();
@@ -218,6 +221,74 @@ namespace Go2It
             return clonedRow;
         }
 
+        private void DgvNotesFieldsOnCellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var dgv = (DataGridView)sender;
+            if (dgv.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            {
+                if (e.ColumnIndex == 1)  // add note field button clicked (add a new note row below this row)
+                {
+                    dgv.Rows.Insert(e.RowIndex + 1, CloneDataGridViewRowTemplate(_noteFieldsDsgRowTemplate));
+                }
+                if (e.ColumnIndex == 2)  // remove note field button clicked (remove this note field row)
+                {
+                    if (dgv.RowCount >= 1)
+                    {
+                        dgv.Rows.RemoveAt(e.RowIndex);
+                        if (dgv.RowCount == 0)  // the only row available was removed, insert a new blank row
+                        {
+                            dgv.Rows.Add(CloneDataGridViewRowTemplate(_noteFieldsDsgRowTemplate));
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create the basic notes field row template and populate basic information to the admin dgv for maptips
+        /// </summary>
+        private void InitializeNotesFieldsTemplate()
+        {
+            dgvNotesFields.Rows.Clear();
+            dgvNotesFields.Columns.Clear();
+
+            // generate the columns for the editable notes fields datagridview
+            var fldNameCol = new DataGridViewComboBoxColumn
+            {
+                HeaderText = @"Field Name",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Tag = "FieldNameColumn"
+            };
+            dgvNotesFields.Columns.Add(fldNameCol);
+            var addFldCol = new DataGridViewDisableButtonColumn
+            {
+                HeaderText = @"Add",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
+                Width = 50,
+                Tag = "AddButtonColumn"
+            };
+            dgvNotesFields.Columns.Add(addFldCol);
+            var delFldCol = new DataGridViewDisableButtonColumn
+            {
+                HeaderText = @"Delete",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.NotSet,
+                Width = 50,
+                Tag = "RemoveButtonColumn"
+            };
+            dgvNotesFields.Columns.Add(delFldCol);
+            dgvNotesFields.Rows.Add(new DataGridViewRow());
+            // generate the required cells for the notefield datagridview row
+            dgvNotesFields.Rows[0].Cells[0] = new DataGridViewComboBoxCell();
+            dgvNotesFields.Rows[0].Cells[1] = new DataGridViewDisableButtonCell { Value = "+", Enabled = true };
+            dgvNotesFields.Rows[0].Cells[2] = new DataGridViewDisableButtonCell { Value = "-", Enabled = true };
+            // clone the first row to the template variable for later use
+            _noteFieldsDsgRowTemplate = CloneDataGridViewRowTemplate(dgvNotesFields.Rows[0]);
+            // handle the click of the add and remove buttons
+            dgvNotesFields.CellContentClick += DgvNotesFieldsOnCellContentClick;
+            // disable this datagridview until a notes layer is selected
+            dgvNotesFields.Enabled = false;
+        }
+
         /// <summary>
         /// Create the basic maptips row template and populate basic information to the admin dgv for maptips
         /// </summary>
@@ -257,19 +328,17 @@ namespace Go2It
                 Tag = "RemoveButtonColumn"
             };
             dgvMapTips.Columns.Add(delTipCol);
-
-            // add a cloned row of our template to the datagridview
-            dgvMapTips.Rows.Add(CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
+            dgvMapTips.Rows.Add(new DataGridViewRow());
             // generate the cells for the maptips datagridview row
             dgvMapTips.Rows[0].Cells[0] = new DataGridViewComboBoxCell();
             dgvMapTips.Rows[0].Cells[1] = new DataGridViewComboBoxCell();
             dgvMapTips.Rows[0].Cells[2] = new DataGridViewDisableButtonCell { Value = "+", Enabled = true };
             dgvMapTips.Rows[0].Cells[3] = new DataGridViewDisableButtonCell { Value = "-", Enabled = true };
-            // clone the first row back to the template for later use
+            // clone the first row to the template and store locally for internal use
             _mapTipsDgvRowTemplate = CloneDataGridViewRowTemplate(dgvMapTips.Rows[0]);
-            // layer combobox selected index changed event (ridiculous roundabout approach ms forced us into)
+            // layer combobox selected index changed event (done this way because it is within a datagridview)
             dgvMapTips.EditingControlShowing += DgvMapTipsOnEditingControlShowing;
-            // add/remove maptip click event handler
+            // add/remove buttons maptip click event handler
             dgvMapTips.CellContentClick += DgvMapTipsOnCellContentClick;
         }
 
@@ -277,11 +346,11 @@ namespace Go2It
         {
             if (!(e.Control is ComboBox)) return;
 
-            ((ComboBox)e.Control).SelectedIndexChanged -= OnSelectedIndexChanged; 
-            ((ComboBox)e.Control).SelectedIndexChanged += OnSelectedIndexChanged;
+            ((ComboBox)e.Control).SelectedIndexChanged -= OnDgvMapTipsSelectedIndexChanged;
+            ((ComboBox)e.Control).SelectedIndexChanged += OnDgvMapTipsSelectedIndexChanged;
         }
 
-        private void OnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        private void OnDgvMapTipsSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
             var dgvec = (DataGridViewComboBoxEditingControl)sender;
             var colIdx = dgvec.EditingControlDataGridView.CurrentCell.ColumnIndex;
@@ -317,25 +386,6 @@ namespace Go2It
             }
         }
 
-        private void FillMapTipFieldsComboBox(string lyr, DataGridViewComboBoxCell cmb)
-        {
-            if (lyr.Length == 0) return;
-
-            // open up the dataset and add all the data field columns the combobox for fields
-            IMapLayer mapLyr;
-            _layerLookup.TryGetValue(lyr, out mapLyr);
-            var mfl = mapLyr as IMapFeatureLayer;
-
-            var fields = new List<string>();
-            if (mfl != null && mfl.DataSet != null)
-            {
-                IFeatureSet fl = mfl.DataSet;
-                fields = (from DataColumn dc in fl.DataTable.Columns select dc.ColumnName).ToList();
-            }
-            cmb.Items.Clear();
-            cmb.Items.AddRange(fields.ToArray());
-        }
-
         private void PopulateMapTipsToForm()
         {
             if (SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips.Count <= 0) return;
@@ -344,7 +394,7 @@ namespace Go2It
                 var arr = SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips[i].Split(',');
                 dgvMapTips.Rows.Add(CloneDataGridViewRowTemplate(_mapTipsDgvRowTemplate));
                 // generate the cells for the maptips datagridview row
-                FillMapTipFieldsComboBox(arr[0], (DataGridViewComboBoxCell)dgvMapTips.Rows[i].Cells[1]);
+                FillDgvComboBoxWithFields(arr[0], (DataGridViewComboBoxCell)dgvMapTips.Rows[i].Cells[1]);
                 dgvMapTips.Rows[i].Cells[0].Value = arr[0];
                 dgvMapTips.Rows[i].Cells[1].Value = arr[1];
             }
@@ -352,6 +402,22 @@ namespace Go2It
             if (dgvMapTips.Rows[dgvMapTips.RowCount - 1].Cells[0].Value == null || dgvMapTips.Rows[dgvMapTips.RowCount - 1].Cells[1].Value == null)
             {
                 dgvMapTips.Rows.RemoveAt(dgvMapTips.RowCount - 1);
+            }
+        }
+
+        private void PopulateNotesFieldsToForm()
+        {
+            if (SdrConfig.Project.Go2ItProjectSettings.Instance.NoteFields.Count <= 0) return;
+            for (int i = 0; i <= SdrConfig.Project.Go2ItProjectSettings.Instance.NoteFields.Count - 1; i++)
+            {
+                var fldName = SdrConfig.Project.Go2ItProjectSettings.Instance.NoteFields[i];
+                dgvNotesFields.Rows.Add(CloneDataGridViewRowTemplate(_noteFieldsDsgRowTemplate));
+                dgvNotesFields.Rows[i].Cells[0].Value = fldName;
+            }
+            // remove the last row if it's empty (result of the empty template load on start)
+            if (dgvNotesFields.Rows[dgvNotesFields.RowCount - 1].Cells[0].Value == null)
+            {
+                dgvNotesFields.Rows.RemoveAt(dgvNotesFields.RowCount - 1);
             }
         }
 
@@ -391,6 +457,7 @@ namespace Go2It
             InitializeAliModesDict();
             HandleApplicationModeDiffs();
             InitializeMapTipsTemplate();
+            InitializeNotesFieldsTemplate();
 
             // assign all the admin form elements
             _appManager = app;
@@ -452,6 +519,7 @@ namespace Go2It
             PopulateGraphicsToForm();
             PopulateNetworkFleetLabels();
             PopulateMapTipsToForm();
+            PopulateNotesFieldsToForm();
 
             // watch for changes of index on the pull down map tab change
             cmbActiveMapTab.SelectedIndexChanged += CmbActiveMapTabOnSelectedIndexChanged;
@@ -1957,6 +2025,16 @@ namespace Go2It
                     SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips.Add(record);
                 }
             }
+            // save all the note fields to list
+            foreach (DataGridViewRow row in dgvNotesFields.Rows)
+            {
+                if (row.Cells[0].Value == null) continue;
+                var record = row.Cells[0].Value.ToString();
+                if (record.Length > 0)
+                {
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.NoteFields.Add(record);
+                }
+            }
             // setup ali interface configuration
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolInitialCatalog = txtAliEnterpolInitialCatalog.Text;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliEnterpolTableName = txtAliEnterpolTableName.Text;
@@ -2433,15 +2511,6 @@ namespace Go2It
                 }
                 return table;
             }
-            if (layName == ApplyComboBoxSetting(cmbNotesLayer))
-            {
-                var file = ReadIndexLines(SdrConfig.Settings.Instance.ApplicationDataDirectory + @"\Config\note_indexes.txt");
-                foreach (string key in file)
-                {
-                    table.Rows.Add(key, "");
-                }
-                return table;
-            }
             return null;
         }
 
@@ -2482,9 +2551,6 @@ namespace Go2It
                             break;
                         case "HydrantIndex":
                             lstExistingIndexes.Items.Add(tblName.Substring(13));
-                            break;
-                        case "NoteIndex":
-                            lstExistingIndexes.Items.Add(tblName.Substring(10));
                             break;
                     }
                 }
@@ -2527,10 +2593,6 @@ namespace Go2It
             if (layName == ApplyComboBoxSetting(cmbHydrantsLayer))
             {
                 return "HydrantIndex";
-            }
-            if (layName == ApplyComboBoxSetting(cmbNotesLayer))
-            {
-                return "NoteIndex";
             }
             return null;
         }
@@ -3167,10 +3229,10 @@ namespace Go2It
             return l;
         }
 
-        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl, List<string> hy, List<string> nl)
+        private void UpdateLayerIndexCombo(List<string> ad, List<string> rd, List<string> kl, List<string> cs, List<string> cl, List<string> es, List<string> pl, List<string> hy)
         {
             cmbLayerIndex.Items.Clear();
-            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count + hy.Count + nl.Count);
+            var sels = new List<object>(ad.Count + rd.Count + kl.Count + cs.Count + cl.Count + es.Count + pl.Count + hy.Count);
             sels.AddRange(ad);
             sels.AddRange(rd);
             sels.AddRange(kl);
@@ -3179,7 +3241,6 @@ namespace Go2It
             sels.AddRange(es);
             sels.AddRange(pl);
             sels.AddRange(hy);
-            sels.AddRange(nl);
             cmbLayerIndex.Items.AddRange(sels.ToArray());
         }
 
@@ -3198,8 +3259,7 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3218,8 +3278,7 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3238,8 +3297,7 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3258,29 +3316,61 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
         private void cmbNotesLayer_SelectedIndexChanged(object sender, EventArgs e)
         {
             var cmb = (ComboBox)sender;
-            var nl = new List<string>();
-            if (cmb.SelectedItem.ToString().Length > 0)
-            {
-                nl.Add(cmb.SelectedItem.ToString());
-            }
-            var ad = AddLayersToIndex(chkAddressLayers);
-            var rd = AddLayersToIndex(chkRoadLayers);
-            var kl = AddLayersToIndex(chkKeyLocationsLayers);
-            var cl = AddLayersToIndex(cmbCityLimitLayer);
-            var cs = AddLayersToIndex(cmbCellSectorLayer);
-            var es = AddLayersToIndex(cmbESNLayer);
-            var pl = AddLayersToIndex(cmbParcelsLayer);
-            var hy = AddLayersToIndex(cmbHydrantsLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            if (cmb.SelectedItem == null) return;
+            if (_selectedNotesLayer == cmb.SelectedItem.ToString()) return;
+            // currently selected notes layer has changed, update dgv/row_template
+            UpdateNoteFieldsDataGridView(cmb.SelectedItem.ToString());
             _projectManager.IsDirty = true;
+        }
+
+        private void UpdateNoteFieldsDataGridView(string lyrName)
+        {
+            dgvNotesFields.Rows.Clear();  // clear any rows on the dgv
+            var cmb = (DataGridViewComboBoxCell)_noteFieldsDsgRowTemplate.Cells[0];
+            // check if a notes layer has been selected before
+            if (_selectedNotesLayer.Length > 0)
+            {
+                cmb.Items.Clear();  // clear all field values from our row template
+            }
+            if (lyrName.Length > 0)
+            {
+                // update field combobox for the row template
+                FillDgvComboBoxWithFields(lyrName, cmb);
+                // add a new cloned copy of the template row to the dgv
+                dgvNotesFields.Rows.Add(CloneDataGridViewRowTemplate(_noteFieldsDsgRowTemplate));
+                dgvNotesFields.Enabled = true;
+            }
+            else
+            {
+                dgvNotesFields.Enabled = false;
+            }
+            _selectedNotesLayer = lyrName;
+        }
+
+        private void FillDgvComboBoxWithFields(string lyr, DataGridViewComboBoxCell cmb)
+        {
+            if (lyr.Length == 0) return;
+
+            // open up the dataset and add all the data field columns the combobox for fields
+            IMapLayer mapLyr;
+            _layerLookup.TryGetValue(lyr, out mapLyr);
+            var mfl = mapLyr as IMapFeatureLayer;
+
+            var fields = new List<string>();
+            if (mfl != null && mfl.DataSet != null)
+            {
+                IFeatureSet fl = mfl.DataSet;
+                fields = (from DataColumn dc in fl.DataTable.Columns select dc.ColumnName).ToList();
+            }
+            cmb.Items.Clear();
+            cmb.Items.AddRange(fields.ToArray());
         }
 
         private void cmbCityLimitLayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -3298,8 +3388,7 @@ namespace Go2It
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3318,8 +3407,7 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3338,8 +3426,7 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var hy = AddLayersToIndex(cmbHydrantsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3358,8 +3445,7 @@ namespace Go2It
             var cl = AddLayersToIndex(cmbCityLimitLayer);
             var es = AddLayersToIndex(cmbESNLayer);
             var pl = AddLayersToIndex(cmbParcelsLayer);
-            var nl = AddLayersToIndex(cmbNotesLayer);
-            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy, nl);
+            UpdateLayerIndexCombo(ad, rd, kl, cs, cl, es, pl, hy);
             _projectManager.IsDirty = true;
         }
 
@@ -3909,32 +3995,6 @@ namespace Go2It
                 _projectManager.IsDirty = true;
             }
             _networkFleetLabelFont = fd.Font;
-        }
-
-        private void btnMapTipsAddLayer_Click(object sender, EventArgs e)
-        {
-            //tblData.Controls.Clear();
-            ////Set the new count
-            //tblData.RowCount = tblData.RowCount += 1;
-            //for (int i = 0; i < tblData.RowCount; i++)
-            //{
-            //    tblData.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            //    Label lblLabel = new Label();
-            //    //This is just to have text that is smaller then the rest.
-            //    //Just to see how the table reacts.
-            //    if ((i > 3) & (i < 6))
-            //        lblLabel.Text = "Label: " + i.ToString();
-            //    else
-            //        lblLabel.Text = "Label control: " + i.ToString();
-            //    lblLabel.Font = new Font("Verdana", 8, FontStyle.Bold | FontStyle.Regular);
-            //    lblLabel.AutoSize = true;
-            //    Label lblData = new Label();
-            //    lblData.Text = "Data for entity (" + i.ToString() + ")";
-            //    lblData.Font = new Font("Verdana", 8, FontStyle.Regular);
-            //    lblData.AutoSize = true;
-            //    tblData.Controls.Add(lblLabel, 0, i);
-            //    tblData.Controls.Add(lblData, 1, i);
-            //}
         }
     }
 }
