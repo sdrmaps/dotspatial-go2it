@@ -136,23 +136,15 @@ namespace SDR.Configuration.Project
             if (MapTipsChanged != null)
                 MapTipsChanged(this, e);
         }
-
-        /// <summary>
-        /// Add a maptip setting lookup to the current list of maptips
-        /// </summary>
         public void AddMapTip(string layerName, string fieldName)
         {
-            string record = layerName + "," + fieldName;
+            var record = layerName + "," + fieldName;
             if (!Properties.ProjectSettings.Default.MapTipsLookup.Contains(record))
             {
                 Properties.ProjectSettings.Default.MapTipsLookup.Add(record);
                 OnMapTipsChanged(EventArgs.Empty);
             }
         }
-
-        /// <summary>
-        /// clears the list maptip settings
-        /// </summary>
         public void ClearMapTips()
         {
             Properties.ProjectSettings.Default.MapTipsLookup.Clear();
@@ -173,19 +165,28 @@ namespace SDR.Configuration.Project
         /// </summary>
         public void AddNetworkfleetLabel(int vehicleId, string vehicleLabel)
         {
-            string record = vehicleId + "=" + vehicleLabel;
+            var record = vehicleId + "=" + vehicleLabel;
             if (!Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Contains(record))
             {
                 Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Add(record);
             }
         }
 
-        /// <summary>
-        /// clears the list of networkfleet label lookups
-        /// </summary>
-        public void ClearNetworkfleetLabels()
+        public event EventHandler NotesLayerChanged;
+        public string NotesLayer
         {
-            Properties.ProjectSettings.Default.AliNetworkfleetLabelLookup.Clear();
+            get { return Properties.ProjectSettings.Default.NotesLayer; }
+            set
+            {
+                if (Properties.ProjectSettings.Default.NotesLayer == value) return;
+                Properties.ProjectSettings.Default.NotesLayer = value;
+                OnNotesLayerChanged(EventArgs.Empty);
+            }
+        }
+        protected virtual void OnNotesLayerChanged(EventArgs e)
+        {
+            if (NotesLayerChanged != null)
+                NotesLayerChanged(this, e);
         }
 
         /// <summary>
@@ -322,15 +323,6 @@ namespace SDR.Configuration.Project
         {
             set { Properties.ProjectSettings.Default.MapBgColor = value; }
             get { return Properties.ProjectSettings.Default.MapBgColor; }
-        }
-
-        /// <summary>
-        /// Active Notes Layer
-        /// </summary>
-        public string NotesLayer
-        {
-            set { Properties.ProjectSettings.Default.NotesLayer = value; }
-            get { return Properties.ProjectSettings.Default.NotesLayer; }
         }
 
         /// <summary>

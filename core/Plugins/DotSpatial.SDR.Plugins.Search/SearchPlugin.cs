@@ -30,7 +30,7 @@ namespace DotSpatial.SDR.Plugins.Search
             App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Search", SearchTool_Click)
             {
                 GroupCaption = "Search",
-                ToolTipText = "Search for Attributes and Features",
+                ToolTipText = PluginCaption,
                 SmallImage = Resources.search_16,
                 LargeImage = Resources.search_32,
                 Key = PluginKey

@@ -2006,6 +2006,7 @@ namespace Go2It
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlMyColor = pnlAliNetworkfleetAVLMyVehicleColor.BackColor;
             SdrConfig.Project.Go2ItProjectSettings.Instance.AliNetworkfleetAvlInactiveColor = pnlAliNetworkfleetAVLInactiveColor.BackColor;
             // convert networkfleet labels back to list for storage
+            SdrConfig.Project.Go2ItProjectSettings.Instance.NetworkfleetLabels.Clear();
             foreach (DataGridViewRow row in dgvNetworkfleetLabelLookup.Rows)
             {
                 if (row.Cells[0].Value == null || row.Cells[1].Value == null) continue;
@@ -2016,16 +2017,17 @@ namespace Go2It
                 }
             }
             // convert maptips lookup to list for storage to sqlite row
+            SdrConfig.Project.Go2ItProjectSettings.Instance.ClearMapTips();
             foreach (DataGridViewRow row in dgvMapTips.Rows)
             {
                 if (row.Cells[0].Value == null || row.Cells[1].Value == null) continue;
-                var record = row.Cells[0].Value + "," + row.Cells[1].Value;
-                if (record.Length > 1)
                 {
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.MapTips.Add(record);
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AddMapTip(row.Cells[0].Value.ToString(), row.Cells[1].Value.ToString());
                 }
             }
+
             // save all the note fields to list
+            SdrConfig.Project.Go2ItProjectSettings.Instance.NoteFields.Clear();
             foreach (DataGridViewRow row in dgvNotesFields.Rows)
             {
                 if (row.Cells[0].Value == null) continue;

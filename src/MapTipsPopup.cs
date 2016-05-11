@@ -87,6 +87,8 @@ namespace Go2It
 
         private void DisplayMapTip()
         {
+            if (_map == null) return;
+
             var pCoord = _map.PixelToProj(MousePosition); // turn pixels into coordinates
             IEnvelope env = new Envelope(pCoord);
             env.ExpandBy(5);  // arbitrary unit size expansion (to generate an extent)
