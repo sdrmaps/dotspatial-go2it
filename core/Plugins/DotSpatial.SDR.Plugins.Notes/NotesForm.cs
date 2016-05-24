@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using DotSpatial.Data;
 
 namespace DotSpatial.SDR.Plugins.Notes
 {
@@ -35,6 +28,7 @@ namespace DotSpatial.SDR.Plugins.Notes
             get { return _frmState;}
             set { _frmState = value; }
         }
+
         public TableLayoutPanel NotesTable
         {
             get { return notesTable; }

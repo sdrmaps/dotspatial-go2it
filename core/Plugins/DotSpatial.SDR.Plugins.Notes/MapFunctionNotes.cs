@@ -22,7 +22,7 @@ namespace DotSpatial.SDR.Plugins.Notes
         public MapFunctionNotes()
         {
             Name = "MapFunctionNotes";
-           //  ActiveForm = new NotesForm();
+            ActiveForm = new NotesForm();
         }
 
         public IMapFeatureLayer NotesLayer
@@ -67,16 +67,17 @@ namespace DotSpatial.SDR.Plugins.Notes
                 ActiveForm.ActionState = FormState.Delete;
                 ActiveForm.Close();
             }
-
         }
 
         protected override void OnMouseDown(GeoMouseArgs e)
         {
+            if (ActiveForm.Visible) return;
+
             ActiveCoordinate = e.GeographicLocation;
             IEnvelope env = new Envelope(ActiveCoordinate);
-            env.ExpandBy(25);  // arbitrary unit size expansion (to generate an extent)
+            env.ExpandBy(25); // arbitrary unit size expansion (to generate an extent)
             IFeatureSet fs = NotesLayer.DataSet;
-            var fl = fs.Select(env.ToExtent());  // select any feature within the extent
+            var fl = fs.Select(env.ToExtent()); // select any feature within the extent
             ActiveFeature = fl.Count > 0 ? fl[0] : null;
 
             ActiveForm = new NotesForm();
@@ -98,10 +99,11 @@ namespace DotSpatial.SDR.Plugins.Notes
             for (var i = 0; i <= NotesFields.Count - 1; i++)
             {
                 var f = NotesFields[i];
-                ActiveForm.NotesTable.Controls.Add(new Label { Text = f, AutoSize = true, Padding = new Padding(0, 8, 0, 0) }, 0, i);
+                ActiveForm.NotesTable.Controls.Add(
+                    new Label {Text = f, AutoSize = true, Padding = new Padding(0, 8, 0, 0)}, 0, i);
                 ActiveForm.NotesTable.Controls.Add(
                     ActiveFeature != null
-                        ? new TextBox { Name = f, Text = ActiveFeature.DataRow[f].ToString(), Dock = DockStyle.Fill, Multiline = true }
+                        ? new TextBox {Name = f, Text = ActiveFeature.DataRow[f].ToString(), Dock = DockStyle.Fill, Multiline = true}
                         : new TextBox {Name = f, Text = string.Empty, Dock = DockStyle.Fill, Multiline = true}, 1, i);
             }
             ActiveForm.Show(Shell);

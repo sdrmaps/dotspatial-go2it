@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using DotSpatial.Controls;
@@ -47,7 +46,7 @@ namespace DotSpatial.SDR.Plugins.Notes
 
             SdrConfig.Project.Go2ItProjectSettings.Instance.NotesLayerChanged += InstanceOnNotesLayerChanged;
 
-            // watch for hotkeys activated via the mainform plugin
+            // watch for hotkeys activated via the main plugin
             HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
 
             base.Activate();
