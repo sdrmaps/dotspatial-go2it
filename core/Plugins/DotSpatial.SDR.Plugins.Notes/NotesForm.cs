@@ -33,7 +33,7 @@ namespace DotSpatial.SDR.Plugins.Notes
         public MapFunctionNotes.FormState ActionState
         {
             get { return _frmState;}
-
+            set { _frmState = value; }
         }
         public TableLayoutPanel NotesTable
         {

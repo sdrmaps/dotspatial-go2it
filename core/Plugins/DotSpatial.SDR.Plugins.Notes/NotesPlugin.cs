@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
+using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Notes.Properties;
 using SdrConfig = SDR.Configuration;
 
@@ -36,12 +38,38 @@ namespace DotSpatial.SDR.Plugins.Notes
             };
             App.HeaderControl.Add(_actionBtn);  // add control button to application header
   
+            // hotkeys for this plugin
+            HotKeyManager.AddHotKey(new HotKey(Keys.F8, "Delete Note"), "Delete_Note");
+            HotKeyManager.AddHotKey(new HotKey(Keys.F9, "Add/Edit Note"), "Add_Edit_Note");
+
             App.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
             App.DockManager.PanelHidden += DockManagerOnPanelHidden;
 
             SdrConfig.Project.Go2ItProjectSettings.Instance.NotesLayerChanged += InstanceOnNotesLayerChanged;
 
+            // watch for hotkeys activated via the mainform plugin
+            HotKeyManager.HotKeyEvent += HotKeyManagerOnHotKeyEvent;
+
             base.Activate();
+        }
+
+        private void HotKeyManagerOnHotKeyEvent(string action)
+        {
+            switch (action)
+            {
+                case "Delete_Note":
+                    if (_isFunctionActive && _actionBtn.Enabled)
+                    {
+                        _mapFunction.HotKeyDeleteNote();
+                    }
+                    break;
+                case "Add_Edit_Note":
+                    if (_actionBtn.Enabled)
+                    {
+                        NotesTool_Click(null, null);
+                    }
+                    break;
+            }
         }
 
         public override void Deactivate()
@@ -154,7 +182,7 @@ namespace DotSpatial.SDR.Plugins.Notes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NotesTool_Click(object sender, EventArgs e)
+        private void NotesTool_Click    (object sender, EventArgs e)
         {
             if (App.Map == null) return;
             // update the prefs for tracking the active tool modes and panels

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel.Composition;
-using System.Data;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Data;
@@ -25,14 +22,10 @@ namespace DotSpatial.SDR.Plugins.Notes
         public MapFunctionNotes()
         {
             Name = "MapFunctionNotes";
+           //  ActiveForm = new NotesForm();
         }
 
         public IMapFeatureLayer NotesLayer
-        {
-            get; set;
-        }
-
-        public Coordinate NoteCoordinate
         {
             get; set;
         }
@@ -45,7 +38,10 @@ namespace DotSpatial.SDR.Plugins.Notes
             }
         }
 
-        private IFeature _activeFeature;
+        private IFeature ActiveFeature { get; set; }
+        private NotesForm ActiveForm { get; set; }
+        private Coordinate ActiveCoordinate { get; set; }
+
         #endregion
 
         public enum FormState
@@ -64,41 +60,51 @@ namespace DotSpatial.SDR.Plugins.Notes
             Delete
         }
 
+        public void HotKeyDeleteNote()
+        {
+            if (ActiveForm.Visible)
+            {
+                ActiveForm.ActionState = FormState.Delete;
+                ActiveForm.Close();
+            }
+
+        }
+
         protected override void OnMouseDown(GeoMouseArgs e)
         {
-            NoteCoordinate = e.GeographicLocation;
-            IEnvelope env = new Envelope(NoteCoordinate);
+            ActiveCoordinate = e.GeographicLocation;
+            IEnvelope env = new Envelope(ActiveCoordinate);
             env.ExpandBy(25);  // arbitrary unit size expansion (to generate an extent)
             IFeatureSet fs = NotesLayer.DataSet;
             var fl = fs.Select(env.ToExtent());  // select any feature within the extent
-            _activeFeature = fl.Count > 0 ? fl[0] : null;
+            ActiveFeature = fl.Count > 0 ? fl[0] : null;
 
-            var nf = new NotesForm();
-            nf.NotesTable.RowCount = NotesFields.Count;
-            nf.FormClosing += NotesOnFormClosing;
+            ActiveForm = new NotesForm();
+            ActiveForm.NotesTable.RowCount = NotesFields.Count;
+            ActiveForm.FormClosing += NotesOnFormClosing;
 
-            if (_activeFeature != null)
+            if (ActiveFeature != null)
             {
-                nf.DisplayDeleteButton = true;
-                nf.SaveButtonText = "Update";
-                nf.Text = @"Update an existing note";
+                ActiveForm.DisplayDeleteButton = true;
+                ActiveForm.SaveButtonText = "Update";
+                ActiveForm.Text = @"Update an existing note";
             }
             else
             {
-                nf.DisplayDeleteButton = false;
-                nf.SaveButtonText = "Create";
-                nf.Text = @"Create a new note";
+                ActiveForm.DisplayDeleteButton = false;
+                ActiveForm.SaveButtonText = "Create";
+                ActiveForm.Text = @"Create a new note";
             }
             for (var i = 0; i <= NotesFields.Count - 1; i++)
             {
                 var f = NotesFields[i];
-                nf.NotesTable.Controls.Add(new Label { Text = f, AutoSize = true, Padding = new Padding(0, 8, 0, 0) }, 0, i);
-                nf.NotesTable.Controls.Add(
-                    _activeFeature != null
-                        ? new TextBox {Name = f, Text = _activeFeature.DataRow[f].ToString(), Dock = DockStyle.Fill, Multiline = true}
+                ActiveForm.NotesTable.Controls.Add(new Label { Text = f, AutoSize = true, Padding = new Padding(0, 8, 0, 0) }, 0, i);
+                ActiveForm.NotesTable.Controls.Add(
+                    ActiveFeature != null
+                        ? new TextBox { Name = f, Text = ActiveFeature.DataRow[f].ToString(), Dock = DockStyle.Fill, Multiline = true }
                         : new TextBox {Name = f, Text = string.Empty, Dock = DockStyle.Fill, Multiline = true}, 1, i);
             }
-            nf.Show(Shell);
+            ActiveForm.Show(Shell);
 
             base.OnMouseDown(e);
         }
@@ -108,42 +114,53 @@ namespace DotSpatial.SDR.Plugins.Notes
             var frm = sender as NotesForm;
             if (frm != null && frm.ActionState == FormState.Save)
             {
-                if (_activeFeature != null)
+                if (ActiveFeature != null)
                 {
                     // update the attributes of an existing notes feature
                     for (var j = 0; j <= NotesFields.Count - 1; j++)
                     {
                         var i = frm.NotesTable.Controls.IndexOfKey(NotesFields[j]);
-                        _activeFeature.DataRow[NotesFields[j]] = frm.NotesTable.Controls[i].Text;
+                        ActiveFeature.DataRow[NotesFields[j]] = frm.NotesTable.Controls[i].Text;
                     }
                     NotesLayer.DataSet.Save();
-                    _activeFeature = null;
+                    ActiveFeature = null;
                 }
                 else
                 {
                     // create new point and assign attributes to notes feature
-                    var pt = new Point(NoteCoordinate);
-                    var ft = NotesLayer.DataSet.AddFeature(new Feature(pt));
+                    var pt = new Point(ActiveCoordinate);
+                    var ft = NotesLayer.DataSet.AddFeature(pt);
+                    var cnt = 0;
                     for (var j = 0; j <= NotesFields.Count - 1; j++)
                     {
                         var i = frm.NotesTable.Controls.IndexOfKey(NotesFields[j]);
                         ft.DataRow[NotesFields[j]] = frm.NotesTable.Controls[i].Text;
+                        cnt = cnt + frm.NotesTable.Controls[i].Text.Length;
                     }
-                    NotesLayer.DataSet.UpdateExtent();
-                    NotesLayer.DataSet.InitializeVertices();
-                    NotesLayer.DataSet.Save();
-                    NotesLayer.AssignFastDrawnStates();
-                    Map.MapFrame.Invalidate();
+                    if (cnt > 0) // check to validate the user input anything into the form
+                    {
+
+                        NotesLayer.DataSet.UpdateExtent();
+                        NotesLayer.DataSet.InitializeVertices();
+                        NotesLayer.DataSet.Save();
+                        NotesLayer.AssignFastDrawnStates();
+                        Map.MapFrame.Invalidate();
+                    }
+                    else
+                    {
+                        NotesLayer.DataSet.Features.Remove(ft);
+                    }
                 }
             } 
             else if (frm != null && frm.ActionState == FormState.Delete)
             {
-                if (_activeFeature == null) return;
+                if (ActiveFeature == null) return;
 
-                NotesLayer.DataSet.Features.Remove(_activeFeature);
+                // delete the active notes feature
+                NotesLayer.DataSet.Features.Remove(ActiveFeature);
                 NotesLayer.DataSet.Save();
                 Map.MapFrame.Invalidate();
-                _activeFeature = null;
+                ActiveFeature = null;
             }
         }
     }
