@@ -297,7 +297,6 @@
     <Content Include="Resources\go2it2.ico" />
     <Content Include="Resources\Go2It_Logo.bmp" />
     <None Include="App.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">
