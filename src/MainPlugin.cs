@@ -55,7 +55,7 @@ namespace Go2It
         private void ProjectManagerOnSerializing(object sender, SerializingEventArgs serializingEventArgs)
         {
             // set shell window title
-            Shell.Text = string.Format("{0} - {1}", Resources.AppName, ProjectManager.GetProjectShortName());
+            Shell.Text = string.Format("{0} - {1}", Shell.Text, ProjectManager.GetProjectShortName());
 
             if (App.Map.Projection != null)
             {
@@ -67,7 +67,7 @@ namespace Go2It
         private void ProjectManagerOnDeserializing(object sender, SerializingEventArgs serializingEventArgs)
         {
             // set shell window title
-            Shell.Text = string.Format("{0} - {1}", Resources.AppName, ProjectManager.GetProjectShortName());
+            Shell.Text = string.Format("{0} - {1}", Shell.Text, ProjectManager.GetProjectShortName());
 
             if (App.Map.Projection != null)
             {

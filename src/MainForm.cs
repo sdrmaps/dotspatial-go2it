@@ -36,6 +36,9 @@ namespace Go2It
             AppManager.SerializationManager = projManager;
 
             _shell = this;
+            _shell.Text = SdrConfig.Settings.Instance.ApplicationName + " " +
+                          SdrConfig.Settings.Instance.ApplicationMode;
+
             // load any extensions/plugins now
             AppManager.LoadExtensions();
             // clear the progress handler

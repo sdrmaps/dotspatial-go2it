@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -84,9 +85,9 @@ namespace Go2It
         private static void LoadApplicationConfig()
         {
             // single location where application mode is set (0 = dispatch, 1 = responder) to SdrConfig assembly
-            SdrConfig.Settings.Instance.SetApplicationMode(Properties.Settings.Default.ApplicationMode);
+            SdrConfig.Settings.Instance.SetApplicationMode(Settings.Default.ApplicationMode);
             // set the name of the application on startup to the SdrConfig assembly
-            SdrConfig.Settings.Instance.ApplicationName = Properties.Resources.AppName;
+            SdrConfig.Settings.Instance.ApplicationName = Resources.AppName;
             string path = Assembly.GetCallingAssembly().Location;
             string dir = Path.GetDirectoryName(path);
             // set the application startup directory
