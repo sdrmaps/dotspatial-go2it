@@ -259,6 +259,7 @@
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.label23 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_MapConfiguration.SuspendLayout();
@@ -1159,6 +1160,7 @@
             // 
             // adminTab_SearchSettings
             // 
+            this.adminTab_SearchSettings.Controls.Add(this.label23);
             this.adminTab_SearchSettings.Controls.Add(this.lblHydrantDist);
             this.adminTab_SearchSettings.Controls.Add(this.lblZoomFactor);
             this.adminTab_SearchSettings.Controls.Add(this.lblBufDist);
@@ -3138,6 +3140,15 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(171, 592);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(220, 13);
+            this.label23.TabIndex = 53;
+            this.label23.Text = "TODO: Add a button to do full parser dumps?";
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3456,6 +3467,7 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lblNotesFields;
         private System.Windows.Forms.DataGridView dgvNotesFields;
+        private System.Windows.Forms.Label label23;
 
     }
 }

@@ -352,6 +352,32 @@ namespace DotSpatial.SDR.Plugins.Search
             return result;
         }
 
+        // TODO: handle numeric values spelled out or using value with post rider string
+        private static readonly Dictionary<string, string> Numerics =
+            new Dictionary<string, string>
+            {
+                { "FIRST", "1ST" },
+                { "SECOND", "2ND" },
+                { "THIRD", "3RD" },
+                { "FOURTH", "4TH" },
+                { "FIFTH", "5TH" },
+                { "SIXTH", "6TH" },
+                { "SEVENTH", "7TH" },
+                { "EIGHTH", "8TH" },
+                { "NINTH", "9TH" },
+                { "TENTH", "10TH" },
+                { "ELEVENTH", "11TH" },
+                { "TWELFTH", "12TH" },
+                { "THIRTEENTH", "13TH" },
+                { "FOURTEENTH", "14TH" },
+                { "FIFTHTEENTH", "15TH" },
+                { "SIXTEENTH", "16TH" },
+                { "SEVENTEENTH", "17TH" },
+                { "EIGHTEENTH", "18TH" },
+                { "NINETEENTH", "19TH" },
+                { "TWENTYTH", "20TH" }
+            };
+
         private static readonly Dictionary<string, string> Directionals =
             new Dictionary<string, string>
             {

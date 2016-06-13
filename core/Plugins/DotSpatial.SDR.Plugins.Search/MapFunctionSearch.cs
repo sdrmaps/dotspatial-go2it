@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
@@ -381,7 +380,7 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             var xy = new[] { x, y };
 
-            //Change y coordinate to be less than 90 degrees to prevent a bug.
+            //Change y coordinate to be less than 90 degrees to prevent an issue.
             if (xy[1] >= 90) xy[1] = 89.9;
             if (xy[1] <= -90) xy[1] = -89.9;
 
@@ -556,7 +555,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
             var coordsList = new List<string>();
             // search for all features that match feature2 exactly
-            ScoreDoc[] hits = ExecuteExactRoadQuery(ft2);
+            IEnumerable<ScoreDoc> hits = ExecuteExactRoadQuery(ft2);
             foreach (var hit in hits)
             {
                 var doc = _indexSearcher.Doc(hit.Doc);
@@ -589,7 +588,7 @@ namespace DotSpatial.SDR.Plugins.Search
             Shape shp2 = ctx.ReadShape(ft2.Shape);  // load ft2 shape
             // find all other possible features that match ft1 name
             var fts1Lookup = new List<FeatureLookup>();
-            ScoreDoc[] hits = ExecuteExactRoadQuery(ft1);
+            IEnumerable<ScoreDoc> hits = ExecuteExactRoadQuery(ft1);
             foreach (var hit in hits)
             {
                 var doc = _indexSearcher.Doc(hit.Doc);
@@ -800,8 +799,8 @@ namespace DotSpatial.SDR.Plugins.Search
 
             Filter filter = strategy.MakeFilter(args);
             ValueSource valueSource = strategy.MakeDistanceValueSource(centerPt);
-            ValueSourceQuery query = new ValueSourceQuery(valueSource);
-            Sort sort = new Sort(new SortField("DISTANCE", SortField.SCORE, true));
+            var query = new ValueSourceQuery(valueSource);
+            var sort = new Sort(new SortField("DISTANCE", SortField.SCORE, true));
 
             TopDocs docs = _indexSearcher.Search(query, filter, 10, sort);
             return docs.ScoreDocs;
@@ -1408,6 +1407,21 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             // parse our input road into a streetaddress object for analysis
             StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
+            // any values parsed to the structure number should be moved to street name because this is a road search
+            if (streetAddress.Number != null)
+            {
+                // TODO: decide if this is needed
+                //if (streetAddress.StreetName == streetAddress.StreetType)
+                //{
+                //    streetAddress.StreetName = streetAddress.Number;
+                //}
+                //else
+                //{
+                    streetAddress.StreetName = streetAddress.Number + " " + streetAddress.StreetName;
+                // }
+                streetAddress.Number = null;
+                streetAddress.StreetName = streetAddress.StreetName.Trim();
+            }
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -1467,10 +1481,25 @@ namespace DotSpatial.SDR.Plugins.Search
             return docs.ScoreDocs;
         }
 
-        private ScoreDoc[] ExecuteExactRoadQuery(string q)
+        private IEnumerable<ScoreDoc> ExecuteExactRoadQuery(string q)
         {
             // parse our input address into a valid streetaddress object
             StreetAddress streetAddress = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
+            // any values parsed to the structure number should be moved to street name because this is a road search
+            if (streetAddress.Number != null)
+            {
+                // TODO: decide if this is needed
+                //if (streetAddress.StreetName == streetAddress.StreetType)
+                //{
+                //    streetAddress.StreetName = streetAddress.Number;
+                //}
+                //else
+                //{
+                    streetAddress.StreetName = streetAddress.Number + " " + streetAddress.StreetName;
+                // }
+                streetAddress.Number = null;
+                streetAddress.StreetName = streetAddress.StreetName.Trim();
+            }
             LogStreetAddressParsedQuery(q, streetAddress);
             // arrays for storing all the values to pass into the index search
             var values = new ArrayList();
@@ -1536,7 +1565,7 @@ namespace DotSpatial.SDR.Plugins.Search
             // get the name of the street passed in so it is removed from results returned
             var sa = StreetAddressParser.Parse(q, SdrConfig.Project.Go2ItProjectSettings.Instance.SearchUsePretypes);
             var docs = new List<ScoreDoc>();  // total docs for return
-            ScoreDoc[] qHits = ExecuteExactRoadQuery(q);
+            IEnumerable<ScoreDoc> qHits = ExecuteExactRoadQuery(q);
             // setup a spatial query to find all features that intersect with our results
             var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
