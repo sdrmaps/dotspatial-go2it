@@ -732,9 +732,8 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         private void CreateQueryPanels()
         {
-            // TODO: handle enter key press event accordingly
             /*--------------------------------------------------------*/
-            // coordinate search panel
+            // coordinate search tablelayoutpanel
             _coordinatePanel = new TableLayoutPanel
             {
                 Name = "coordinatePanel",
@@ -748,21 +747,36 @@ namespace DotSpatial.SDR.Plugins.Search
             _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 64));
             _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             _coordinatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0));
-
+            // coordinate search interface controls
             var lblLatitude = new Label { Name = "lblLatitude", Text = @"Latitude:", Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             var lblLongitude = new Label { Name = "lblLongitude", Text = @"Longitude:", Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
             var txtLatitude = new TextBox { Name = "txtLatitude", Dock = DockStyle.Fill };
             var txtLongitude = new TextBox { Name = "txtLongitude", Dock = DockStyle.Fill };
             var lblCoordError = new Label { Name = "lblCoordError", Text = @"Coordinate Error", Anchor = AnchorStyles.Bottom | AnchorStyles.Left };
-            
+            // append ui controls to the tablelayoutpanel
             _coordinatePanel.Controls.Add(lblLatitude, 0, 0);
             _coordinatePanel.Controls.Add(txtLatitude, 1, 0);
             _coordinatePanel.Controls.Add(lblLongitude, 2, 0);
             _coordinatePanel.Controls.Add(txtLongitude, 3, 0);
             _coordinatePanel.Controls.Add(lblCoordError, 4, 0);
+            // handle keypress event of 'enter' key same as search button click
+            txtLatitude.KeyPress += delegate(object sender, KeyPressEventArgs e)
+            {
+                if (e.KeyChar != (char)Keys.Enter) return;
+                SearchQuery = _coordinatePanel.Controls["txtLatitude"].Text + "|" +
+                    _coordinatePanel.Controls["txtLongitude"].Text;
+                OnPerformSearch();
+            };
+            txtLongitude.KeyPress += delegate(object sender, KeyPressEventArgs e)
+            {
+                if (e.KeyChar != (char)Keys.Enter) return;
+                SearchQuery = _coordinatePanel.Controls["txtLatitude"].Text + "|" +
+                    _coordinatePanel.Controls["txtLongitude"].Text;
+                OnPerformSearch();
+            };
 
             /*--------------------------------------------------------*/
-            // address search panel
+            // address search tablelayoutpanel
             _addressPanel = new TableLayoutPanel
             {
                 Name = "addressPanel",
@@ -772,17 +786,20 @@ namespace DotSpatial.SDR.Plugins.Search
             };
             _addressPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _addressPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
+            // address search interface controls
             var txtAddressSearch = new TextBox {Name = "txtAddressSearch", Dock = DockStyle.Fill};
+            // add ui controls to tablelayoutpanel
+            _addressPanel.Controls.Add(txtAddressSearch, 0, 0);
+            // handle 'keypress' event for 'enter' key the same as btnSearch_Click()
             txtAddressSearch.KeyPress += delegate(object sender, KeyPressEventArgs e)
             {
                 if (e.KeyChar != (char) Keys.Enter) return;
                 SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                 OnPerformSearch();
             };
-            _addressPanel.Controls.Add(txtAddressSearch, 0, 0);
 
             /*--------------------------------------------------------*/
-            // road search panel
+            // road search tablelayoutpanel
             _roadPanel = new TableLayoutPanel
             {
                 Name = "roadPanel",
@@ -792,31 +809,36 @@ namespace DotSpatial.SDR.Plugins.Search
             };
             _roadPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _roadPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
+            // road search interface controls
             var cmbRoadSearch = new ComboBox {Name = "cmbRoadSearch", Dock = DockStyle.Fill};
-            // fixes auto suggestion when the list is dropped down
+            // add ui controls to the tablelayoutpanel
+            _roadPanel.Controls.Add(cmbRoadSearch, 0, 0);
+            // fixes combobox auto-suggestion when 'dropdown' event is fired
             cmbRoadSearch.DropDown += (sender, e) => cmbRoadSearch.AutoCompleteMode = AutoCompleteMode.None;
+            // handle 'dropdownclosed' event the same as btnSearch_Click()
             cmbRoadSearch.DropDownClosed += delegate
             {
                 cmbRoadSearch.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
                 OnPerformSearch();
             };
+            // handle 'selectedvaluechanged' event the same as btnSearch_Click()
             cmbRoadSearch.SelectedValueChanged += delegate
             {
                 SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
                 OnPerformSearch();
             };
+            // handle 'keypress' event for 'enter' key the same as btnSearch_Click()
             cmbRoadSearch.KeyUp += delegate(object sender, KeyEventArgs e)
             {
-                // a bit redundant but handles all actions possible
+                // seem redundant, but needed to handle all interface actions possible
                 if (e.KeyCode != Keys.Enter) return;
                 SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
                 OnPerformSearch();
             };
-            _roadPanel.Controls.Add(cmbRoadSearch, 0, 0);
             
             /*--------------------------------------------------------*/
-            // intersection search panel
+            // intersection search tablelayoutpanel
             _intersectionPanel = new TableLayoutPanel
             {
                 Name = "intersectionPanel",
@@ -828,16 +850,42 @@ namespace DotSpatial.SDR.Plugins.Search
             _intersectionPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             _intersectionPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 85));
             _intersectionPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-
+            // intersection search interface controls
             var btnIntSearch = new Button {Text = @"Intersections", Name = "btnIntSearch", Dock = DockStyle.Fill};
+            var cmbIntSearch1 = new ComboBox { Name = "cmbIntSearch1", Dock = DockStyle.Fill };
+            var cmbIntSearch2 = new ComboBox { Name = "cmbIntSearch2", Dock = DockStyle.Fill };
+            // add ui controls to the tablelayoutpanel
+            _intersectionPanel.Controls.Add(cmbIntSearch1, 0, 0);
+            _intersectionPanel.Controls.Add(btnIntSearch, 1, 0);
+            _intersectionPanel.Controls.Add(cmbIntSearch2, 2, 0);
+            // fixes combobox auto-suggestion when 'dropdown' event is fired
+            cmbIntSearch1.DropDown += (sender, e) => cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.None;
+            cmbIntSearch1.DropDownClosed += delegate
+            {
+                cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
+                OnPerformSearch();
+            };
+            // handle 'selectedvaluechanged' event the same as btnSearch_Click()
+            cmbIntSearch1.SelectedValueChanged += delegate
+            {
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
+                OnPerformSearch();
+            };
+            // handle 'keypress' event for 'enter' key the same as btnSearch_Click()
+            cmbIntSearch1.KeyUp += delegate(object sender, KeyEventArgs e)
+            {
+                if (e.KeyCode != Keys.Enter) return;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
+                OnPerformSearch();
+            };
+            // handle 'click' of intersection button the same as btnSearch_Click()
             btnIntSearch.Click += delegate
             {
                 SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
                 OnPerformSearch();
             };
-
-            var cmbIntSearch2 = new ComboBox { Name = "cmbIntSearch2", Dock = DockStyle.Fill };
-            // fixes auto suggestion when the list is dropped down
+            // fixes combobox auto-suggestion when 'dropdown' event is fired
             cmbIntSearch2.DropDown += (sender, e) => cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.None;
             cmbIntSearch2.DropDownClosed += delegate
             {
@@ -846,12 +894,14 @@ namespace DotSpatial.SDR.Plugins.Search
                     _intersectionPanel.Controls["cmbIntSearch2"].Text;
                 OnPerformSearch();
             };
+            // handle 'selectedvaluechanged' event the same as btnSearch_Click()
             cmbIntSearch2.SelectedValueChanged += delegate
             {
                 SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
                     _intersectionPanel.Controls["cmbIntSearch2"].Text;
                 OnPerformSearch();
             };
+            // handle 'keypress' event for 'enter' key the same as btnSearch_Click()
             cmbIntSearch2.KeyUp += delegate(object sender, KeyEventArgs e)
             {
                 if (e.KeyCode != Keys.Enter) return;
@@ -859,29 +909,6 @@ namespace DotSpatial.SDR.Plugins.Search
                     _intersectionPanel.Controls["cmbIntSearch2"].Text;
                 OnPerformSearch();
             };
-            var cmbIntSearch1 = new ComboBox {Name = "cmbIntSearch1", Dock = DockStyle.Fill};
-            // fixes auto suggestion when the list is dropped down
-            cmbIntSearch1.DropDown += (sender, e) => cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.None;
-            cmbIntSearch1.DropDownClosed += delegate
-            {
-                cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
-                OnPerformSearch();
-            };
-            cmbIntSearch1.SelectedValueChanged += delegate
-            {
-                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
-                OnPerformSearch();
-            };
-            cmbIntSearch1.KeyUp += delegate(object sender, KeyEventArgs e)
-            {
-                if (e.KeyCode != Keys.Enter) return;
-                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
-                OnPerformSearch();
-            };
-            _intersectionPanel.Controls.Add(cmbIntSearch1, 0, 0);
-            _intersectionPanel.Controls.Add(btnIntSearch, 1, 0);
-            _intersectionPanel.Controls.Add(cmbIntSearch2, 2, 0);
         }
 
         /// <summary>
