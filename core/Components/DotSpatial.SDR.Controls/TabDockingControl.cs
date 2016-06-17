@@ -32,13 +32,13 @@ namespace DotSpatial.SDR.Controls
             SplitterPanel toolPanel = sc.Panel1;
             SplitterPanel mapPanel = sc.Panel2;
             
-            // create the tab and tabless panel controls
-            _mapTabs = new TabControl {Name = "contentTabs", Dock = DockStyle.Fill};
-
+            // create the map-content tabcontrol
+            _mapTabs = new TabControl {Name = "contentTabs", Dock = DockStyle.Fill, TabStop = false};
             _mapTabs.Selected += MapTabsOnSelected;
             _mapTabs.Deselected += MapTabsOnDeselected;
 
-            _toolTabs = new TablessControl {Name = "toolTabs", Dock = DockStyle.Fill};
+            // create the tool-content tabbless control
+            _toolTabs = new TablessControl {Name = "toolTabs", Dock = DockStyle.Fill, TabStop = false};
             _toolTabs.Selected += ToolTabsOnSelected;
             _toolTabs.Deselected += ToolTabsOnDeselected;
 

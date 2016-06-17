@@ -33,7 +33,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 ToolTipText = PluginCaption,
                 SmallImage = Resources.search_16,
                 LargeImage = Resources.search_32,
-                Key = PluginKey
+                Key = PluginKey,
             });
             // generate the search tool display panel and add to tool panel
             _searchPanel = new SearchPanel();

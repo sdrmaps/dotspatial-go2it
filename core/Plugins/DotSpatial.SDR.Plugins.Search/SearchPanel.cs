@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
@@ -731,6 +732,7 @@ namespace DotSpatial.SDR.Plugins.Search
         /// </summary>
         private void CreateQueryPanels()
         {
+            // TODO: handle enter key press event accordingly
             /*--------------------------------------------------------*/
             // coordinate search panel
             _coordinatePanel = new TableLayoutPanel
@@ -766,11 +768,17 @@ namespace DotSpatial.SDR.Plugins.Search
                 Name = "addressPanel",
                 Dock = DockStyle.Fill,
                 ColumnCount = 1,
-                RowCount = 1
+                RowCount = 1,
             };
             _addressPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _addressPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent));
             var txtAddressSearch = new TextBox {Name = "txtAddressSearch", Dock = DockStyle.Fill};
+            txtAddressSearch.KeyPress += delegate(object sender, KeyPressEventArgs e)
+            {
+                if (e.KeyChar != (char) Keys.Enter) return;
+                SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
+                OnPerformSearch();
+            };
             _addressPanel.Controls.Add(txtAddressSearch, 0, 0);
 
             /*--------------------------------------------------------*/
@@ -798,6 +806,13 @@ namespace DotSpatial.SDR.Plugins.Search
                 SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
                 OnPerformSearch();
             };
+            cmbRoadSearch.KeyUp += delegate(object sender, KeyEventArgs e)
+            {
+                // a bit redundant but handles all actions possible
+                if (e.KeyCode != Keys.Enter) return;
+                SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
+                OnPerformSearch();
+            };
             _roadPanel.Controls.Add(cmbRoadSearch, 0, 0);
             
             /*--------------------------------------------------------*/
@@ -820,6 +835,30 @@ namespace DotSpatial.SDR.Plugins.Search
                 SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
                 OnPerformSearch();
             };
+
+            var cmbIntSearch2 = new ComboBox { Name = "cmbIntSearch2", Dock = DockStyle.Fill };
+            // fixes auto suggestion when the list is dropped down
+            cmbIntSearch2.DropDown += (sender, e) => cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.None;
+            cmbIntSearch2.DropDownClosed += delegate
+            {
+                cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                OnPerformSearch();
+            };
+            cmbIntSearch2.SelectedValueChanged += delegate
+            {
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                OnPerformSearch();
+            };
+            cmbIntSearch2.KeyUp += delegate(object sender, KeyEventArgs e)
+            {
+                if (e.KeyCode != Keys.Enter) return;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
+                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                OnPerformSearch();
+            };
             var cmbIntSearch1 = new ComboBox {Name = "cmbIntSearch1", Dock = DockStyle.Fill};
             // fixes auto suggestion when the list is dropped down
             cmbIntSearch1.DropDown += (sender, e) => cmbIntSearch1.AutoCompleteMode = AutoCompleteMode.None;
@@ -834,20 +873,10 @@ namespace DotSpatial.SDR.Plugins.Search
                 SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
                 OnPerformSearch();
             };
-            var cmbIntSearch2 = new ComboBox {Name = "cmbIntSearch2", Dock = DockStyle.Fill};
-            // fixes auto suggestion when the list is dropped down
-            cmbIntSearch2.DropDown += (sender, e) => cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.None;
-            cmbIntSearch2.DropDownClosed += delegate
+            cmbIntSearch1.KeyUp += delegate(object sender, KeyEventArgs e)
             {
-                cmbIntSearch2.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
-                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
-                OnPerformSearch();
-            };
-            cmbIntSearch2.SelectedValueChanged += delegate
-            {
-                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|" +
-                    _intersectionPanel.Controls["cmbIntSearch2"].Text;
+                if (e.KeyCode != Keys.Enter) return;
+                SearchQuery = _intersectionPanel.Controls["cmbIntSearch1"].Text + "|";
                 OnPerformSearch();
             };
             _intersectionPanel.Controls.Add(cmbIntSearch1, 0, 0);

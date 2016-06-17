@@ -26,7 +26,9 @@ namespace Go2It
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = SdrConfig.User.Go2ItUserSettings.Instance.GridHeaderColumnCount
+                ColumnCount = SdrConfig.User.Go2ItUserSettings.Instance.GridHeaderColumnCount,
+                // TODO:
+                // TabStop = true
             };
             for (int i = 0; i < SdrConfig.User.Go2ItUserSettings.Instance.GridHeaderColumnCount; i++ )
             {
@@ -50,6 +52,7 @@ namespace Go2It
                     Dock = DockStyle.Fill,
                     SplitterWidth = 10,
                     Panel1MinSize = 0,
+                    TabStop = false
                 };
                 Shell.Controls.Add(container);
             }

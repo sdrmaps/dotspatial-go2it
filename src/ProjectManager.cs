@@ -79,7 +79,8 @@ namespace Go2It
                 MapFrame = mapframe,
                 BackColor = bgColor,
                 Visible = true,
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Fill,
+                TabStop = false  // tab stop on map not needed
             }; 
             return map;
         }

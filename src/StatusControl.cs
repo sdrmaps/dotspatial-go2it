@@ -23,7 +23,8 @@ namespace Go2It
             {
                 Name = "defaultStatusStrip",
                 TabIndex = 0,
-                Text = String.Empty
+                Text = String.Empty,
+                TabStop = false
             };
             // adding the status strip control
             Shell.Controls.Add(_statusStrip);

@@ -46,7 +46,8 @@ namespace Go2It
                 SplitterWidth = 10,
                 FixedPanel = FixedPanel.Panel1,
                 Panel1MinSize = 0,
-                Panel1Collapsed = true
+                Panel1Collapsed = true,
+                TabStop = false
             };
 
             // grab or create the split container as needed
@@ -62,7 +63,8 @@ namespace Go2It
                     BackColor = Color.Transparent,
                     Dock = DockStyle.Fill,
                     SplitterWidth = 10,
-                    Panel1MinSize = 0
+                    Panel1MinSize = 0,
+                    TabStop = false,
                 };
                 Shell.Controls.Add(container);
             }
