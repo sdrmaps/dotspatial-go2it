@@ -25,7 +25,7 @@
         /// <summary>
         /// Search Key Locations Attributes
         /// </summary>
-        Key_Locations,
+        KeyLocation,
         /// <summary>
         /// Search All Attributes
         /// </summary>
@@ -41,7 +41,7 @@
         /// <summary>
         /// Search Cell Sector Coverages
         /// </summary>
-        Cell_Sector,
+        CellSector,
         /// <summary>
         /// Search Parcel Attributes
         /// </summary>

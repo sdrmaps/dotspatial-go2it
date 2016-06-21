@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using DotSpatial.SDR.Controls;
@@ -110,7 +109,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Phone:
                     ActivatePhoneSearch();
                     break;
-                case SearchMode.Key_Locations:
+                case SearchMode.KeyLocation:
                     ActivateKeyLocationsSearch();
                     break;
                 case SearchMode.All:
@@ -122,7 +121,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Esn:
                     ActivateEsnSearch();
                     break;
-                case SearchMode.Cell_Sector:
+                case SearchMode.CellSector:
                     ActivateCellSectorSearch();
                     break;
                 case SearchMode.Parcel:
@@ -168,7 +167,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     searchRoad.Enabled = enabled;
                     searchIntersection.Enabled = enabled;
                     break;
-                case SearchMode.Key_Locations:
+                case SearchMode.KeyLocation:
                     searchKeyLocations.Enabled = enabled;
                     break;
                 case SearchMode.City:
@@ -177,7 +176,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Esn:
                     searchEsn.Enabled = enabled;
                     break;
-                case SearchMode.Cell_Sector:
+                case SearchMode.CellSector:
                     searchCellSector.Enabled = enabled;
                     break;
                 case SearchMode.Parcel:
@@ -189,7 +188,9 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Coordinate:
                     searchCoordinate.Enabled = enabled;
                     break;
-                // TODO: need to handle all search
+                case SearchMode.All:
+                    searchAll.Enabled = enabled;
+                    break;
             }
         }
         #endregion
@@ -244,7 +245,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Phone:
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                     break;
-                case SearchMode.Key_Locations:
+                case SearchMode.KeyLocation:
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                     break;
                 case SearchMode.All:
@@ -256,7 +257,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Esn:
                     SearchQuery = _roadPanel.Controls["cmbRoadSearch"].Text;
                     break;
-                case SearchMode.Cell_Sector:
+                case SearchMode.CellSector:
                     SearchQuery = _addressPanel.Controls["txtAddressSearch"].Text;
                     break;
                 case SearchMode.Parcel:
@@ -330,9 +331,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchCellSector_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (PluginSettings.Instance.SearchMode != SearchMode.Cell_Sector)
+            if (PluginSettings.Instance.SearchMode != SearchMode.CellSector)
             {
-                PluginSettings.Instance.SearchMode = SearchMode.Cell_Sector;
+                PluginSettings.Instance.SearchMode = SearchMode.CellSector;
                 OnSearchModeChanged();
                 ActivateCellSectorSearch();
             }
@@ -571,9 +572,9 @@ namespace DotSpatial.SDR.Plugins.Search
         private void searchKeyLocations_Click(object sender, EventArgs e)
         {
             if (SearchModeActivated != null) SearchModeActivated(this, EventArgs.Empty);
-            if (PluginSettings.Instance.SearchMode != SearchMode.Key_Locations)
+            if (PluginSettings.Instance.SearchMode != SearchMode.KeyLocation)
             {
-                PluginSettings.Instance.SearchMode = SearchMode.Key_Locations;
+                PluginSettings.Instance.SearchMode = SearchMode.KeyLocation;
                 OnSearchModeChanged();
                 ActivateKeyLocationsSearch();
             }
@@ -940,7 +941,7 @@ namespace DotSpatial.SDR.Plugins.Search
             var c = searchLayoutPanel.GetControlFromPosition(0, 0);
             if (c != null)
             {
-                // TODO: look into inproving this with show and hide.
+                // TODO: look into improving this with show and hide.
                 // c.Hide();
                 searchLayoutPanel.Controls.Remove(c);
             }

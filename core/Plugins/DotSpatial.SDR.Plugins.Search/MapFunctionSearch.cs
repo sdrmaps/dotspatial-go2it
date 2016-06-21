@@ -50,6 +50,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private readonly DataGridView _dataGridView; // dgv to populate our results of query to
         private static IndexSearcher _indexSearcher;
         private static IndexReader _indexReader;
+        // private Directory[] _indexDirectories;
 
         // drawing layers used by this tool
         private FeatureSet _pointGraphics;
@@ -87,7 +88,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
             HandleSearchPanelEvents();
             SetSearchVariables();
-            if (_indexType == string.Empty) return;  // not an index based search (ie. coordinate)
             SetupIndexReaderWriter(_indexType);
         }
 
@@ -101,17 +101,29 @@ namespace DotSpatial.SDR.Plugins.Search
             _searchPanel.SearchModeActivated += SearchPanelOnSearchModeActivated;
         }
 
+        private int SetSearchButtonsState(SearchMode m)
+        {
+            var d = GetLuceneIndexDirectory(m + "Index");
+            _searchPanel.EnableSearchButton(m, d != null);
+            return d != null ? 1 : 0;
+        }
+
         public void EnableSearchModes()
         {
-            _searchPanel.EnableSearchButton(SearchMode.Address, GetLuceneIndexDirectory("AddressIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.Road, GetLuceneIndexDirectory("RoadIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.Key_Locations, GetLuceneIndexDirectory("KeyLocationIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.City, GetLuceneIndexDirectory("CityLimitIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.Cell_Sector, GetLuceneIndexDirectory("CellSectorIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.Parcel, GetLuceneIndexDirectory("ParcelIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.Esn, GetLuceneIndexDirectory("EsnIndex") != null);
-            _searchPanel.EnableSearchButton(SearchMode.Hydrant, GetLuceneIndexDirectory("HydrantIndex") != null);
+            int i = 0;  // track total count of lucene search modes active
+            // check each search type for existence of index directories, activate accordingly
+            i += SetSearchButtonsState(SearchMode.Address);
+            i += SetSearchButtonsState(SearchMode.Road);
+            i += SetSearchButtonsState(SearchMode.KeyLocation);
+            i += SetSearchButtonsState(SearchMode.City);
+            i += SetSearchButtonsState(SearchMode.CellSector);
+            i += SetSearchButtonsState(SearchMode.Parcel);
+            i += SetSearchButtonsState(SearchMode.Esn);
+            i += SetSearchButtonsState(SearchMode.Hydrant);
+            // coord search (no need for lucene index)
             _searchPanel.EnableSearchButton(SearchMode.Coordinate, Map != null);
+            // set the state of the search all button (make sure we have at least one search mode available
+            _searchPanel.EnableSearchButton(SearchMode.All, i >= 1);
         }
 
         private void SetSearchVariables()
@@ -119,43 +131,43 @@ namespace DotSpatial.SDR.Plugins.Search
             switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Address:
-                    _indexType = "AddressIndex";
+                    _indexType = SearchMode.Address + "Index";
                     _columnNames = GetColumnNames(); // uses the _indexType variable
                     break;
                 case SearchMode.Intersection:
-                    _indexType = "RoadIndex";
+                    _indexType = SearchMode.Road + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Name:
-                    _indexType = "AddressIndex";
+                    _indexType = SearchMode.Address + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Phone:
-                    _indexType = "AddressIndex";
+                    _indexType = SearchMode.Address + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Road:
-                    _indexType = "RoadIndex";
+                    _indexType = SearchMode.Road + "Index";
                     _columnNames = GetColumnNames();
                     break;
-                case SearchMode.Key_Locations:
-                    _indexType = "KeyLocationIndex";
+                case SearchMode.KeyLocation:
+                    _indexType = SearchMode.KeyLocation + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.City:
-                    _indexType = "CityLimitIndex";
+                    _indexType = SearchMode.City + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Esn:
-                    _indexType = "EsnIndex";
+                    _indexType = SearchMode.Esn + "Index";
                     _columnNames = GetColumnNames();
                     break;
-                case SearchMode.Cell_Sector:
-                    _indexType = "CellSectorIndex";
+                case SearchMode.CellSector:
+                    _indexType = SearchMode.CellSector + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Parcel:
-                    _indexType = "ParcelIndex";
+                    _indexType = SearchMode.Parcel + "Index";
                     _columnNames = GetColumnNames();
                     break;
                 case SearchMode.Coordinate:
@@ -163,8 +175,8 @@ namespace DotSpatial.SDR.Plugins.Search
                     _columnNames = new string[0];
                     break;
                 case SearchMode.All:
-                    MessageBox.Show("TODO");
-                    // TODO: Further thought is needed on this one
+                    _indexType = SearchMode.All + "Index";
+                    _columnNames = new[] {"Layer Name", "Field Name", "Field Value"};
                     break;
             }
         }
@@ -212,6 +224,7 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <param name="dataGridViewColumnEventArgs"></param>
         private void DataGridViewOnColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs dataGridViewColumnEventArgs)
         {
+            // todo handle any missing cases
             var newOrder = new Dictionary<string, string>();
             foreach (DataGridViewColumn col in _dataGridView.Columns)
             {
@@ -235,13 +248,13 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Road:
                     PluginSettings.Instance.RoadIndexColumnOrder = newOrder;
                     break;
-                case SearchMode.Key_Locations:
+                case SearchMode.KeyLocation:
                     PluginSettings.Instance.KeyLocationIndexColumnOrder = newOrder;
                     break;
                 case SearchMode.Parcel:
                     PluginSettings.Instance.ParcelIndexColumnOrder = newOrder;
                     break;
-                case SearchMode.Cell_Sector:
+                case SearchMode.CellSector:
                     PluginSettings.Instance.CellSectorIndexColumnOrder = newOrder;
                     break;
             }
@@ -250,7 +263,6 @@ namespace DotSpatial.SDR.Plugins.Search
         private void SearchPanelOnSearchModeChanged(object sender, EventArgs eventArgs)
         {
             SetSearchVariables();
-            if (_indexType == string.Empty) return;  // not an index based search (coordinates)
             SetupIndexReaderWriter(_indexType);
         }
 
@@ -324,6 +336,11 @@ namespace DotSpatial.SDR.Plugins.Search
                     return;
                 }
             }
+            //else if (PluginSettings.Instance.SearchMode == SearchMode.All)
+            //{
+            //    // handle searching across all indexes
+
+            //}
             /*         
              * all other query types are processed and proceed from this point ....
              * each requires a lucene query and populates combos and datagridview    
@@ -749,7 +766,7 @@ namespace DotSpatial.SDR.Plugins.Search
             if (hydrantfs == null) return;
             // store the current index type | reset when operation is complete
             var idxType = _indexType;  
-            SetupIndexReaderWriter("HydrantIndex");
+            SetupIndexReaderWriter(SearchMode.Hydrant.ToString());
             var hits = ExecuteScoredHydrantQuery(_activeLookup);
             if (hits.Length == 0)
             {
@@ -808,6 +825,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private IEnumerable<ScoreDoc> ExecuteLuceneQuery(string sq)
         {
+            // todo: handle any missing cases remaining
             ScoreDoc[] hits = null;
             switch (PluginSettings.Instance.SearchMode)
             {
@@ -826,7 +844,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Phone:
                     hits = ExecuteScoredPhoneQuery(sq);
                     break;
-                case SearchMode.Key_Locations:
+                case SearchMode.KeyLocation:
                     hits = ExecuteScoredKeyLocationsQuery(sq);
                     break;
                 case SearchMode.Parcel:
@@ -838,8 +856,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.City:
                     hits = ExecuteScoredCityQuery(sq);
                     break;
-                case SearchMode.Cell_Sector:
+                case SearchMode.CellSector:
                     hits = ExecuteScoredCellSectorsQuery(sq);
+                    break;
+                case SearchMode.All:
+                    hits = ExecuteSearchAllIndexes(sq);
                     break;
             }
             return hits;
@@ -971,11 +992,11 @@ namespace DotSpatial.SDR.Plugins.Search
                     return PluginSettings.Instance.AddressIndexColumnOrder;
                 case SearchMode.Road:
                     return PluginSettings.Instance.RoadIndexColumnOrder;
-                case SearchMode.Key_Locations:
+                case SearchMode.KeyLocation:
                     return PluginSettings.Instance.KeyLocationIndexColumnOrder;
                 case SearchMode.Parcel:
                     return PluginSettings.Instance.ParcelIndexColumnOrder;
-                case SearchMode.Cell_Sector:
+                case SearchMode.CellSector:
                     return PluginSettings.Instance.CellSectorIndexColumnOrder;
                 case SearchMode.All:
                     // TODO:
@@ -1008,20 +1029,79 @@ namespace DotSpatial.SDR.Plugins.Search
             return sql.Length == 0 ? new string[0] : SQLiteHelper.GetResultsAsArray(conn, sql);
         }
 
+        private Directory FetchSearchDirectory(SearchMode m)
+        {
+            return GetLuceneIndexDirectory(m + "Index");
+        }
+
+        private Directory[] FetchAllIndexDirectories()
+        {
+            // array list of all available directories (used by the multireader on search all)
+            var idxList = new List<Directory>
+            {
+                // cycle through all available index directories and populate to arraylist
+                FetchSearchDirectory(SearchMode.Address),
+                FetchSearchDirectory(SearchMode.Road),
+                FetchSearchDirectory(SearchMode.KeyLocation),
+                FetchSearchDirectory(SearchMode.City),
+                FetchSearchDirectory(SearchMode.CellSector),
+                FetchSearchDirectory(SearchMode.Parcel),
+                FetchSearchDirectory(SearchMode.Esn),
+                FetchSearchDirectory(SearchMode.Hydrant)
+            };
+            // remove any null values and return result as an array
+            return idxList.Where(d => d != null).ToArray();
+        }
+
+
+//        IndexReader[] indexReader = new IndexReader[indexCount];
+
+//for (int i = 0; i < indexCount; i++) {
+//    File directory = new File(indexdir, String.valueOf(i));
+//    IndexWriter indexWriter = new IndexWriter(FSDirectory.open(directory), analyzer, IndexWriter.MaxFieldLength.LIMITED);
+
+//    indexReader[i] = indexWriter.getReader();        
+//}
+
+//IndexSearcher searcher = new IndexSearcher(new MultiReader(indexReader));
+
+    //// + this
+    //    http://stackoverflow.com/questions/2148839/lucene-net-multisearcher
+
+        //http://pastebin.com/QSPtjzxf
+
         private void SetupIndexReaderWriter(string idxType)
         {
+            // reset the indexsearcher if it has been initialized
             if (_indexSearcher != null)
             {
                 _indexSearcher.Dispose();
                 _indexReader.Directory().Dispose();
                 _indexReader.Dispose();
             }
-            // get the index directory for this mode
-            Directory idxDir = GetLuceneIndexDirectory(idxType);
-            if (idxDir != null)
+            // if no index type is set then this is a coordinate based search
+            if (_indexType == string.Empty) return;
+            // setup the reader and searchers for the indexType being searched
+            if (_indexType == SearchMode.All + "Index")
             {
-                _indexReader = IndexReader.Open(idxDir, true);  // readonly for performance
-                _indexSearcher = new IndexSearcher(_indexReader);
+                Directory[] indexDirs = FetchAllIndexDirectories();
+                // searching across all indexes requires an array of indexreaders
+                var idxReaders = new IndexReader[indexDirs.Length];
+                for (int i = 0; i < indexDirs.Length - 1; i++)
+                {
+                    idxReaders[i] = IndexReader.Open(indexDirs[i], true);  // readonly for performance
+                }
+                _indexSearcher = new IndexSearcher(new MultiReader(idxReaders));
+            }
+            else
+            {
+                // single index type search initiated
+                Directory idxDir = GetLuceneIndexDirectory(idxType);
+                if (idxDir != null)
+                {
+                    _indexReader = IndexReader.Open(idxDir, true);  // readonly for performance
+                    _indexSearcher = new IndexSearcher(_indexReader);
+                }
             }
         }
 
@@ -1045,6 +1125,47 @@ namespace DotSpatial.SDR.Plugins.Search
 
             Directory idxDir = FSDirectory.Open(new DirectoryInfo(path));
             return idxDir;
+        }
+
+        private ScoreDoc[] ExecuteSearchAllIndexes(string q)
+        {
+            // arrays for storing all the values to pass into the index search
+            //var values = new ArrayList();
+            //var fields = new ArrayList();
+            //var occurs = new ArrayList();
+
+            //string[] searchArray = q.Split(' ');
+            //foreach (var value in searchArray)
+            //{
+            //    values.Add(name);
+            //    fields.Add("Sector ID");
+            //    occurs.Add(Occur.SHOULD);
+
+            //    values.Add(name);
+            //    fields.Add("Tower ID");
+            //    occurs.Add(Occur.SHOULD);
+
+            //    values.Add(name);
+            //    fields.Add("Company ID");
+            //    occurs.Add(Occur.SHOULD);
+            //}
+            //var vals = (string[])values.ToArray(typeof(string));
+            //var flds = (string[])fields.ToArray(typeof(string));
+            //var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
+            //// create lucene query from query string arrays
+            QueryParser qp = new QueryParser(Version.LUCENE_30, q, new StandardAnalyzer(Version.LUCENE_30));
+            Query query = qp.Parse(q);
+
+            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+
+            return docs.ScoreDocs;
+            //if (_indexReader == null)
+            //{
+            //    return new ScoreDoc[0];
+            //}
+            //TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            //// return our results
+            //return docs.ScoreDocs;
         }
 
         private ScoreDoc[] ExecuteScoredCellSectorsQuery(string q)

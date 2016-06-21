@@ -56,7 +56,7 @@
             // 
             this.btnSearch.AutoSize = true;
             this.btnSearch.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnSearch.Location = new System.Drawing.Point(766, 3);
+            this.btnSearch.Location = new System.Drawing.Point(808, 3);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 28);
             this.btnSearch.TabIndex = 10;
@@ -86,7 +86,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.MinimumSize = new System.Drawing.Size(0, 48);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(844, 48);
+            this.toolStrip1.Size = new System.Drawing.Size(886, 48);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -220,7 +220,6 @@
             this.searchAll.Text = "All Fields";
             this.searchAll.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.searchAll.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.searchAll.Visible = false;
             this.searchAll.Click += new System.EventHandler(this.searchAll_Click);
             // 
             // searchCellSector
@@ -272,7 +271,7 @@
             this.searchLayoutPanel.RowCount = 2;
             this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
             this.searchLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.searchLayoutPanel.Size = new System.Drawing.Size(844, 170);
+            this.searchLayoutPanel.Size = new System.Drawing.Size(886, 170);
             this.searchLayoutPanel.TabIndex = 3;
             // 
             // searchDGV
@@ -294,7 +293,7 @@
             this.searchDGV.ReadOnly = true;
             this.searchDGV.RowHeadersVisible = false;
             this.searchDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.searchDGV.Size = new System.Drawing.Size(838, 130);
+            this.searchDGV.Size = new System.Drawing.Size(880, 130);
             this.searchDGV.TabIndex = 2;
             this.searchDGV.TabStop = false;
             this.searchDGV.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.searchDGV_CellDoubleClick);
@@ -307,7 +306,7 @@
             this.Controls.Add(this.searchLayoutPanel);
             this.Controls.Add(this.toolStrip1);
             this.Name = "SearchPanel";
-            this.Size = new System.Drawing.Size(844, 218);
+            this.Size = new System.Drawing.Size(886, 218);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.searchLayoutPanel.ResumeLayout(false);
