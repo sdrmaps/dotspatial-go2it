@@ -182,7 +182,7 @@ IF /I "%1"=="--Help" (
     ECHO Create Installer
     ECHO.
     REM Run wix for updating the file fragments and creating a new installer
-    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\install\%PRODUCT%.Install.sln
+    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\build\%PRODUCT%\ ..\install\%PRODUCT%.Install.sln
     IF NOT %ERRORLEVEL%==0 ( goto HALT )
     RENAME "%BUILDPATH%\en-us\%PRODUCT%.msi" "%VERSION%.%BUILD_INFO%.msi"
     REM goto ZIPARTIFACTS
