@@ -54,9 +54,10 @@ IF /I "%1"=="--Help" (
     SET COMPILE=%COMPILE:"=%
     SET CONFIG=%CONFIG:"=%
     SET TYPE=%TYPE:"=%
-    goto SETBUILDPATH
+    goto SETPATHS
 
-:SETBUILDPATH
+:SETPATHS
+	REM Used by the build box when 
     SET "INSTALLPATH=..\build\%PRODUCT%" )
     REM IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
     SET "BUILDPATH=..\build\%CONFIG%"
@@ -98,7 +99,8 @@ IF /I "%1"=="--Help" (
     ECHO.
     ECHO Delete all remaining files
     ECHO.
-    IF EXIST "..\Build\%CONFIG%" ( RD /S/Q "..\Build\%CONFIG%" )
+    IF EXIST "%BUILDPATH%" ( RD /S/Q "%BUILDPATH%" )
+	IF EXIST "%INSTALLPATH%" ( RD /S/Q "%INSTALLPATH%" )
     goto END
 
 :COMPILE
@@ -166,16 +168,18 @@ IF /I "%1"=="--Help" (
     ECHO.
     ECHO Update Component and Plugin Harvest
     ECHO.
+	REM Rename the build directory to the name of the product
+	RENAME "..\build\%CONFIG%" "%PRODUCT%"
+	
     REM Update all the paraffin files before running wix
     IF EXIST "..\install\ProductBinariesFragment.PARAFFIN" ( Tools\paraffin\Paraffin.exe -update "..\install\ProductBinariesFragment.PARAFFIN" ) ELSE (
-        Tools\paraffin\Paraffin.exe -d %BUILDPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDR_DIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
+        Tools\paraffin\Paraffin.exe -d %INSTALLPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDR_DIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
     REM Check if an actual ProductBinariesFragment for WIX exists
     IF NOT EXIST "..\install\ProductBinariesFragment.wxs" ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
     REM Check if the two fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
     Tools\xmldiff\xmldiff.exe "..\install\ProductBinariesFragment.wxs" "..\install\ProductBinariesFragment.PARAFFIN"
     IF NOT %ERRORLEVEL%==0  ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
-	REM Rename the build directory to the name of the product
-	RENAME "..\build\%CONFIG%" "%PRODUCT%"
+
     goto CREATEINSTALL
 
 :CREATEINSTALL

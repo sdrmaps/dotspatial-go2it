@@ -50,7 +50,7 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="SDR_DIRECTORY" Name='SDR'>
-          <Directory Id="SDR_PRODUCT" Name='$(var.ProductInstalledDir)' />
+          <Directory Id="SDRPRODUCT" Name='$(var.ProductInstalledDir)' />
         </Directory>
       </Directory>
     </Directory>
@@ -60,7 +60,7 @@
     </Feature>
 
     <!-- user interface stuff here -->
-    <Property Id="WIXUI_INSTALLDIR" Value="SDR_PRODUCT" />
+    <Property Id="WIXUI_INSTALLDIR" Value="SDRPRODUCT" />
     <UIRef Id="WixUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />
       
