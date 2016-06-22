@@ -57,7 +57,7 @@ IF /I "%1"=="--Help" (
     goto SETBUILDPATH
 
 :SETBUILDPATH
-    REM IF "%TYPE%"=="Release" ( SET "BUILDPATH=..\build\%CONFIG%\%PRODUCT%" )
+    SET "INSTALLPATH=..\build\%PRODUCT%" )
     REM IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
     SET "BUILDPATH=..\build\%CONFIG%"
     goto SETVERSION
@@ -174,6 +174,7 @@ IF /I "%1"=="--Help" (
     REM Check if the two fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
     Tools\xmldiff\xmldiff.exe "..\install\ProductBinariesFragment.wxs" "..\install\ProductBinariesFragment.PARAFFIN"
     IF NOT %ERRORLEVEL%==0  ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
+	REM Rename the build directory to the name of the product
 	RENAME "..\build\%CONFIG%" "%PRODUCT%"
     goto CREATEINSTALL
 
@@ -182,11 +183,10 @@ IF /I "%1"=="--Help" (
     ECHO Create Installer
     ECHO.
     REM Run wix for updating the file fragments and creating a new installer
-    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=..\build\%PRODUCT%\ ..\install\%PRODUCT%.Install.sln
+    msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%INSTALLPATH%\ ..\install\%PRODUCT%.Install.sln
     IF NOT %ERRORLEVEL%==0 ( goto HALT )
-    RENAME "%BUILDPATH%\en-us\%PRODUCT%.msi" "%VERSION%.%BUILD_INFO%.msi"
-    REM goto ZIPARTIFACTS
-	goto END
+    RENAME "%INSTALLPATH%\en-us\%PRODUCT%.msi" "%VERSION%.%BUILD_INFO%.msi"
+    goto ZIPARTIFACTS
 	
 :ZIPARTIFACTS
     ECHO.
@@ -195,11 +195,11 @@ IF /I "%1"=="--Help" (
     REM make sure that the archive directory is available
     RD /S/Q "..\archive\%PRODUCT%\"
     IF NOT EXIST "..\archive\%PRODUCT%\" ( MD "..\archive\%PRODUCT%" )
-    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-install.zip %BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi
-    COPY /Y "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\archive\%PRODUCT%"
-    DEL /S "%BUILDPATH%\en-us\%VERSION%.%BUILD_INFO%.msi"
-    DEL /S "%BUILDPATH%\en-us\%PRODUCT%.wixpdb"
-    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-files.zip %BUILDPATH%\*
+    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-install.zip %INSTALLPATH%\en-us\%VERSION%.%BUILD_INFO%.msi
+    COPY /Y "%INSTALLPATH%\en-us\%VERSION%.%BUILD_INFO%.msi" "..\archive\%PRODUCT%"
+    DEL /S "%INSTALLPATH%\en-us\%VERSION%.%BUILD_INFO%.msi"
+    DEL /S "%INSTALLPATH%\en-us\%PRODUCT%.wixpdb"
+    Tools\7zip\7za.exe -r a ..\archive\%PRODUCT%\%VERSION%.%BUILD_INFO%-files.zip %INSTALLPATH%\*
     goto DELETEFILES
 
 :COPYFILES
