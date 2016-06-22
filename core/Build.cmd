@@ -174,6 +174,7 @@ IF /I "%1"=="--Help" (
     REM Check if the two fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
     Tools\xmldiff\xmldiff.exe "..\install\ProductBinariesFragment.wxs" "..\install\ProductBinariesFragment.PARAFFIN"
     IF NOT %ERRORLEVEL%==0  ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
+	RENAME "..\build\%CONFIG%" "%PRODUCT%"
     goto CREATEINSTALL
 
 :CREATEINSTALL
@@ -184,7 +185,8 @@ IF /I "%1"=="--Help" (
     msbuild.exe /t:%COMPILE% /p:Configuration=%CONFIG%;OutputPath=%BUILDPATH%\ ..\install\%PRODUCT%.Install.sln
     IF NOT %ERRORLEVEL%==0 ( goto HALT )
     RENAME "%BUILDPATH%\en-us\%PRODUCT%.msi" "%VERSION%.%BUILD_INFO%.msi"
-    goto ZIPARTIFACTS
+    REM goto ZIPARTIFACTS
+	goto END
 	
 :ZIPARTIFACTS
     ECHO.
