@@ -923,14 +923,14 @@ namespace DotSpatial.SDR.Plugins.Search
         private void PopulateValuesToCombo()
         {
             Query query = new MatchAllDocsQuery();  // query grabs all documents
-            if (MapFunctionSearch.IndexReader == null)
+            if (MapFunctionSearch.IndexSearcher.IndexReader == null)
             {
                 var log = AppContext.Instance.Get<ILog>();
                 log.Info("No Search index exists");
             }
             else
             {
-                TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, MapFunctionSearch.IndexReader.MaxDoc);
+                TopDocs docs = MapFunctionSearch.IndexSearcher.Search(query, MapFunctionSearch.IndexSearcher.IndexReader.MaxDoc);
                 ScoreDoc[] hits = docs.ScoreDocs;
                 FormatQueryResultsForComboBox(hits);
             }

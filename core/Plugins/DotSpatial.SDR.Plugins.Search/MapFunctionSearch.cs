@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Collections;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
+using Lucene.Net.Analysis;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Search.Function;
+using Lucene.Net.Search.Highlight;
 using Lucene.Net.Spatial;
 using Lucene.Net.Spatial.Prefix;
 using Lucene.Net.Spatial.Prefix.Tree;
@@ -49,8 +53,6 @@ namespace DotSpatial.SDR.Plugins.Search
         private SearchPanel _searchPanel;
         private readonly DataGridView _dataGridView; // dgv to populate our results of query to
         private static IndexSearcher _indexSearcher;
-        private static IndexReader _indexReader;
-        // private Directory[] _indexDirectories;
 
         // drawing layers used by this tool
         private FeatureSet _pointGraphics;
@@ -184,11 +186,6 @@ namespace DotSpatial.SDR.Plugins.Search
         public static IndexSearcher IndexSearcher
         {
             get { return _indexSearcher; }
-        }
-
-        public static IndexReader IndexReader
-        {
-            get { return _indexReader; }
         }
 
         private void SearchPanelOnSearchModeActivated(object sender, EventArgs eventArgs)
@@ -336,11 +333,6 @@ namespace DotSpatial.SDR.Plugins.Search
                     return;
                 }
             }
-            //else if (PluginSettings.Instance.SearchMode == SearchMode.All)
-            //{
-            //    // handle searching across all indexes
-
-            //}
             /*         
              * all other query types are processed and proceed from this point ....
              * each requires a lucene query and populates combos and datagridview    
@@ -1053,31 +1045,14 @@ namespace DotSpatial.SDR.Plugins.Search
             return idxList.Where(d => d != null).ToArray();
         }
 
-
-//        IndexReader[] indexReader = new IndexReader[indexCount];
-
-//for (int i = 0; i < indexCount; i++) {
-//    File directory = new File(indexdir, String.valueOf(i));
-//    IndexWriter indexWriter = new IndexWriter(FSDirectory.open(directory), analyzer, IndexWriter.MaxFieldLength.LIMITED);
-
-//    indexReader[i] = indexWriter.getReader();        
-//}
-
-//IndexSearcher searcher = new IndexSearcher(new MultiReader(indexReader));
-
-    //// + this
-    //    http://stackoverflow.com/questions/2148839/lucene-net-multisearcher
-
-        //http://pastebin.com/QSPtjzxf
-
         private void SetupIndexReaderWriter(string idxType)
         {
             // reset the indexsearcher if it has been initialized
             if (_indexSearcher != null)
             {
                 _indexSearcher.Dispose();
-                _indexReader.Directory().Dispose();
-                _indexReader.Dispose();
+                _indexSearcher.IndexReader.Directory().Dispose();
+                _indexSearcher.IndexReader.Dispose();
             }
             // if no index type is set then this is a coordinate based search
             if (_indexType == string.Empty) return;
@@ -1087,7 +1062,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 Directory[] indexDirs = FetchAllIndexDirectories();
                 // searching across all indexes requires an array of indexreaders
                 var idxReaders = new IndexReader[indexDirs.Length];
-                for (int i = 0; i < indexDirs.Length - 1; i++)
+                for (int i = 0; i < indexDirs.Length; i++)
                 {
                     idxReaders[i] = IndexReader.Open(indexDirs[i], true);  // readonly for performance
                 }
@@ -1099,8 +1074,8 @@ namespace DotSpatial.SDR.Plugins.Search
                 Directory idxDir = GetLuceneIndexDirectory(idxType);
                 if (idxDir != null)
                 {
-                    _indexReader = IndexReader.Open(idxDir, true);  // readonly for performance
-                    _indexSearcher = new IndexSearcher(_indexReader);
+                    var idxReader = IndexReader.Open(idxDir, true);  // readonly for performance
+                    _indexSearcher = new IndexSearcher(idxReader);
                 }
             }
         }
@@ -1129,43 +1104,103 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private ScoreDoc[] ExecuteSearchAllIndexes(string q)
         {
+            // fetch all the avilable field names that are searchable regardless of index
+            var fldList = _indexSearcher.IndexReader.GetFieldNames(IndexReader.FieldOption.INDEXED);
             // arrays for storing all the values to pass into the index search
-            //var values = new ArrayList();
-            //var fields = new ArrayList();
-            //var occurs = new ArrayList();
+            var values = new ArrayList();
+            var fields = new ArrayList();
+            var occurs = new ArrayList();
 
-            //string[] searchArray = q.Split(' ');
-            //foreach (var value in searchArray)
-            //{
-            //    values.Add(name);
-            //    fields.Add("Sector ID");
-            //    occurs.Add(Occur.SHOULD);
+            string[] qTermArray = q.Split(' ');
+            foreach (string fld in fldList)
+            {
+                // no need to search these fields as they are for internal use only
+                if (fld == "FID" || fld == "LYRNAME" || fld == "GEOSHAPE") continue;
+                foreach (var qTerm in qTermArray)
+                {
+                    values.Add(qTerm);
+                    fields.Add(fld);
+                    occurs.Add(Occur.SHOULD);
+                }
+            }
+            // turn the array lists into static arrays
+            var vals = (string[])values.ToArray(typeof(string));
+            var flds = (string[])fields.ToArray(typeof(string));
+            var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
 
-            //    values.Add(name);
-            //    fields.Add("Tower ID");
-            //    occurs.Add(Occur.SHOULD);
+            // create lucene query from query string arrays
+            var analyzer = new StandardAnalyzer(Version.LUCENE_30);
+            Query query = MultiFieldQueryParser.Parse(
+                Version.LUCENE_30,
+                vals,
+                flds,
+                ocrs,
+                analyzer
+            );
+            if (_indexSearcher.IndexReader == null)
+            {
+                return new ScoreDoc[0];
+            }
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
+            
+            IFragmenter fragmenter = new NullFragmenter();
+            IScorer scorer = new QueryScorer(query);
+            var highlighter = new Highlighter(scorer) {TextFragmenter = fragmenter};
 
-            //    values.Add(name);
-            //    fields.Add("Company ID");
-            //    occurs.Add(Occur.SHOULD);
-            //}
-            //var vals = (string[])values.ToArray(typeof(string));
-            //var flds = (string[])fields.ToArray(typeof(string));
-            //var ocrs = (Occur[])occurs.ToArray(typeof(Occur));
-            //// create lucene query from query string arrays
-            QueryParser qp = new QueryParser(Version.LUCENE_30, q, new StandardAnalyzer(Version.LUCENE_30));
-            Query query = qp.Parse(q);
+            foreach (ScoreDoc sDoc in docs.ScoreDocs)
+            {
+                var doc = _indexSearcher.Doc(sDoc.Doc);
+                var fds = doc.GetFields();
 
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+                foreach (var fld in fds)
+                {
+                    var fName = fld.Name;
+                    var fValue = fld.StringValue;
 
-            return docs.ScoreDocs;
-            //if (_indexReader == null)
-            //{
-            //    return new ScoreDoc[0];
-            //}
-            //TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
-            //// return our results
-            //return docs.ScoreDocs;
+                    var f = highlighter.GetBestFragment(analyzer, fld.Name, fld.StringValue);
+
+                    if (f != null)
+                    {
+                        Debug.WriteLine("-----------------------");
+                        Debug.WriteLine(fName);
+                        Debug.WriteLine(fValue);
+                        Debug.WriteLine(f);
+
+                        //var document = _searcher.Doc(scoreDoc.Doc);
+                        //return new Article
+                        //{
+                        //    Path = document.Get("path"),
+                        //    LastUpdate = document.Get("lastupdate"),
+                        //    Content = document.Get("shortcontent"),
+                        //    Title = document.Get("title"),
+                        //    Score = scoreDoc.Score
+                        //};
+
+                    }
+
+                }
+
+                //TokenStream stream = analyzer.TokenStream("", new StringReader(doc.Get("text")));
+
+
+
+                //String sample = highlighter.GetBestFragments(stream, doc.Get("text"), 2, "...");
+
+                //// create a new row with the result data
+                //DataRow row = results.NewRow();
+                //row["title"] = doc.Get("title");
+                //row["path"] = doc.Get("path");
+                //row["sample"] = sample;
+
+                //results.Rows.Add(row);
+
+
+            }
+
+          
+
+
+            return docs.ScoreDocs;  // return our results
         }
 
         private ScoreDoc[] ExecuteScoredCellSectorsQuery(string q)
@@ -1201,11 +1236,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1243,11 +1278,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1277,11 +1312,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1311,11 +1346,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1357,11 +1392,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1395,11 +1430,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1433,11 +1468,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
 
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1515,11 +1550,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
 
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1593,11 +1628,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1671,11 +1706,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 ocrs,
                 new StandardAnalyzer(Version.LUCENE_30)
                 );
-            if (_indexReader == null)
+            if (_indexSearcher.IndexReader == null)
             {
                 return new ScoreDoc[0];
             }
-            TopDocs docs = _indexSearcher.Search(query, _indexReader.NumDocs());
+            TopDocs docs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
             // return our results
             return docs.ScoreDocs;
         }
@@ -1704,11 +1739,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 // create overall boolean query to pass to indexsearcher
                 var query = new BooleanQuery {{sq, Occur.MUST}, {tq, Occur.MUST_NOT}};
                 // execute a query to find all features that intersect each passed in feature
-                if (_indexReader == null)
+                if (_indexSearcher.IndexReader == null)
                 {
                     return new ScoreDoc[0];
                 }
-                TopDocs topDocs = _indexSearcher.Search(query, _indexReader.NumDocs());
+                TopDocs topDocs = _indexSearcher.Search(query, _indexSearcher.IndexReader.NumDocs());
                 ScoreDoc[] hits = topDocs.ScoreDocs;
                 // add to results for cleanup after loop completes
                 docs.AddRange(hits);
@@ -1775,6 +1810,53 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
+        private void FormatAllQueryResultsForDataGridView(IEnumerable<ScoreDoc> hits)
+        {
+            if (hits == null) return;
+            foreach (var hit in hits)
+            {
+                // generate the empty cells required for a full row
+                var newCells = new DataGridViewCell[_columnNames.Length];
+                for (int i = 0; i <= _columnNames.Length - 1; i++)
+                {
+                    var txtCell = new DataGridViewTextBoxCell();
+                    newCells[i] = txtCell;
+                }
+                // create the row and populate it
+                var dgvRow = new DataGridViewRow();
+                dgvRow.Cells.AddRange(newCells);
+                // snatch the ranked document
+                var doc = _indexSearcher.Doc(hit.Doc);
+
+                //TODO
+                //TODO
+                //TODO
+                // columns for population
+                // "Layer Name", "Field Name", "Field Value"
+                // _indexSearcher.Explain()
+
+             //   foreach (var field in doc.GetFields())
+             //   {
+                    
+                    // field.
+
+                 //   var idx = GetColumnDisplayIndex(field, _dataGridView);
+                 //   var val = doc.Get(field);
+
+                //    dgvRow.Cells[idx].Value = val;
+                   
+            //    }
+                // add the fid and layername textbox cells
+                var fidCell = new DataGridViewTextBoxCell { Value = doc.Get(FID) };
+                dgvRow.Cells.Add(fidCell);
+                var lyrCell = new DataGridViewTextBoxCell { Value = doc.Get(LYRNAME) };
+                dgvRow.Cells.Add(lyrCell);
+                var shpCell = new DataGridViewTextBoxCell { Value = doc.Get(GEOSHAPE) };
+                dgvRow.Cells.Add(shpCell);
+                _dataGridView.Rows.Add(dgvRow);
+            }
+        }
+
         private void FormatQueryResults(IEnumerable<ScoreDoc> hits)
         {
             if (hits == null) return;
@@ -1783,6 +1865,9 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.Intersection:
                     FormatQueryResultsForDataGridView(hits);
                     UpdateIntersectedFeatures(hits);
+                    break;
+                case SearchMode.All:
+                    FormatAllQueryResultsForDataGridView(hits);
                     break;
                 default:
                     FormatQueryResultsForDataGridView(hits);
