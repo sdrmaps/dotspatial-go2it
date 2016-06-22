@@ -57,9 +57,7 @@ IF /I "%1"=="--Help" (
     goto SETPATHS
 
 :SETPATHS
-	REM Used by the build box when 
     SET "INSTALLPATH=..\build\%PRODUCT%" )
-    REM IF "%CONFIG%"=="Debug" ( SET "BUILDPATH=..\build\%CONFIG%" )
     SET "BUILDPATH=..\build\%CONFIG%"
     goto SETVERSION
 
@@ -170,10 +168,9 @@ IF /I "%1"=="--Help" (
     ECHO.
 	REM Rename the build directory to the name of the product
 	RENAME "..\build\%CONFIG%" "%PRODUCT%"
-	
     REM Update all the paraffin files before running wix
     IF EXIST "..\install\ProductBinariesFragment.PARAFFIN" ( Tools\paraffin\Paraffin.exe -update "..\install\ProductBinariesFragment.PARAFFIN" ) ELSE (
-        Tools\paraffin\Paraffin.exe -d %INSTALLPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDR_DIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
+        Tools\paraffin\Paraffin.exe -d %INSTALLPATH% -gn "PRODUCT_BINARIES" -x en-us -dr "SDRDIRECTORY" "..\install\ProductBinariesFragment.PARAFFIN" )
     REM Check if an actual ProductBinariesFragment for WIX exists
     IF NOT EXIST "..\install\ProductBinariesFragment.wxs" ( COPY /Y "..\install\ProductBinariesFragment.PARAFFIN" "..\install\ProductBinariesFragment.wxs" )
     REM Check if the two fragments are different, if so then replace the wix fragment with the PARAFFIN fragment
@@ -218,8 +215,6 @@ IF /I "%1"=="--Help" (
     XCOPY /Y /S /E "..\config\*" "%BUILDPATH%\Config"
     REM Copy in the License file
     XCOPY /Y "..\install\License.rtf" %BUILDPATH%
-    REM Copy in the Manual file
-    REM TODO XCOPY /Y /S "docs" %BUILDPATH%
     REM Delete any files or directories with underscore at start of name (do not included in build)
     SET "DEL_MATCH=%BUILDPATH%\Config\_*"
     DEL /S %DEL_MATCH%

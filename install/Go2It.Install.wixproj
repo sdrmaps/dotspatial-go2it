@@ -24,7 +24,9 @@
   <Import Project="$(WixTargetsPath)" />
   <!-- include all our generated fragments and such in here -->
   <ItemGroup>
-    <Compile Include="Product.wxs" />
+    <Compile Include="..\core\Install\Product.wxs">
+      <Link>Product.wxs</Link>
+    </Compile>
     <Compile Include="ProductBinariesFragment.wxs" />
   </ItemGroup>
   <!--

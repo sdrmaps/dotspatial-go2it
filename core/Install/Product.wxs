@@ -30,27 +30,10 @@
     <Property Id='DiskPrompt'
             Value="!(loc.DiskPrompt)" />
 
-     <!--  <InstallExecuteSequence>
-        <Custom Action='ExecEsriRegister' After='InstallFinalize'>NOT REMOVE</Custom>
-        <Custom Action='ExecEsriUnregister' Before='RemoveFiles'>REMOVE</Custom>
-      </InstallExecuteSequence>
-
-    <CustomAction Id='ExecEsriRegister'
-                  Directory='SDR_PRODUCT'
-                  Execute='immediate'
-                  ExeCommand='&quot;[CommonFilesFolder]ArcGIS\bin\ESRIRegasm.exe&quot; /p:Desktop /s &quot;[SDR_PRODUCT]$(var.ProductInstalledDir).dll&quot;'
-                  Return='check'/> 
-
-    <CustomAction Id='ExecEsriUnregister'
-              Directory='SDR_PRODUCT'
-              Execute='immediate'
-              ExeCommand='&quot;[CommonFilesFolder]ArcGIS\bin\ESRIRegasm.exe&quot; /p:Desktop /s /u &quot;[SDR_PRODUCT]$(var.ProductInstalledDir).dll&quot;'
-              Return='check'/>  -->
-      
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="SDR_DIRECTORY" Name='SDR'>
-          <Directory Id="SDR_PRODUCT" Name='$(var.ProductInstalledDir)' />
+        <Directory Id="SDRDIRECTORY" Name='SDR'>
+          <Directory Id="SDRPRODUCT" Name='$(var.ProductInstalledDir)' />
         </Directory>
       </Directory>
     </Directory>
@@ -60,7 +43,7 @@
     </Feature>
 
     <!-- user interface stuff here -->
-    <Property Id="WIXUI_INSTALLDIR" Value="SDR_PRODUCT" />
+    <Property Id="WIXUI_INSTALLDIR" Value="SDRPRODUCT" />
     <UIRef Id="WixUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />
       
