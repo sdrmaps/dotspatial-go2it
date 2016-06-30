@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
@@ -20,12 +22,14 @@ namespace Go2It
         private readonly ProjectionInfo _wgs84Projection = KnownCoordinateSystems.Geographic.World.WGS1984;
         private ProjectionInfo _currentMapProjection;
         private readonly StatusPanel _latLonStatusPanel;
+        private readonly DropDownStatusPanel _latLonDropDownPanel;
         private bool _isWgs84 = true;
         private bool _showCoordinates;
 
         public CoordinateDisplay(AppManager app)
         {
             _latLonStatusPanel = new StatusPanel { Width = 400 };
+            _latLonDropDownPanel = new DropDownStatusPanel { Width = 300 };
             // set the application manager and the panel changed event to update coords
             _appManager = app;
             _appManager.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
@@ -86,11 +90,15 @@ namespace Go2It
                 _showCoordinates = value;
                 if (_showCoordinates == false)
                 {
+                    // handled by StatusControl.cs
                     _appManager.ProgressHandler.Remove(_latLonStatusPanel);
+                    _appManager.ProgressHandler.Remove(_latLonDropDownPanel);
                 }
                 else
                 {
+                    // handled by StatusControl.cs
                     _appManager.ProgressHandler.Add(_latLonStatusPanel);
+                    _appManager.ProgressHandler.Add(_latLonDropDownPanel);
                 }
                 _latLonStatusPanel.Caption = String.Empty;
             }

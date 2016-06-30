@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.SDR.Controls;
@@ -42,7 +43,9 @@ namespace Go2It
             // load any extensions/plugins now
             AppManager.LoadExtensions();
             // clear the progress handler
-            AppManager.ProgressHandler.Progress("", 0, "");
+            AppManager.UpdateProgress(String.Empty);
+            // TODO: see if changing this results in any neg issues
+            // AppManager.ProgressHandler.Progress("", 0, "");
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

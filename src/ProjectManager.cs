@@ -704,8 +704,11 @@ namespace Go2It
 
             SetCurrentProjectDirectory(fileName);
 
-            App.ProgressHandler.Progress("project_save_" + fileName, 0, "Saving Project: " + fileName);
-            Application.DoEvents();  // TODO: investigate this further
+            // TODO: same as the open function
+            // App.ProgressHandler.Progress("project_save_" + fileName, 0, "Saving Project: " + fileName);
+            App.UpdateProgress("Saving Project: " + fileName);
+
+            Application.DoEvents();
 
             CreateProjectDatabase();  // either create new sqlite db or clear an existing one
             SaveMapTabs();  // serialize all the map tabs xml
@@ -717,7 +720,8 @@ namespace Go2It
             OnIsDirtyChanged();
             OnSerializing(new SerializingEventArgs());  // event for other plugins to listen for
 
-            App.ProgressHandler.Progress(String.Empty, 0, String.Empty);  // clear the progress display
+            // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);  // clear the progress display
+            App.UpdateProgress(String.Empty);
         }
 
 
@@ -742,7 +746,10 @@ namespace Go2It
 
             SetCurrentProjectDirectory(fileName);
 
-            App.ProgressHandler.Progress("project_open_" + fileName, 0, "Opening Project: " + fileName);
+            // TODO: replaced the progress handler update (determine if this has neg impact
+            // App.ProgressHandler.Progress("project_open_" + fileName, 100, "Opening Project: " + fileName);
+            App.UpdateProgress("Opening Project: " + fileName);
+
             Application.DoEvents();  // TODO: investigate this further
 
             // check if there is an additional provider avaiable to open this type
@@ -767,7 +774,8 @@ namespace Go2It
             OnIsDirtyChanged();
             OnDeserializing(new SerializingEventArgs());
 
-            App.ProgressHandler.Progress(String.Empty, 0, String.Empty);  // clear the progress display
+            // App.ProgressHandler.Progress(String.Empty, 0, String.Empty);  // clear the progress display
+            App.UpdateProgress(String.Empty);
         }
 
         private void AssignLayerSymbologies(IMapFrame mapFrame)

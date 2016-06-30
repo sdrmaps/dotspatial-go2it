@@ -104,6 +104,7 @@
             this.txtVerifyPassword = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.adminTab_SearchSettings = new System.Windows.Forms.TabPage();
+            this.label23 = new System.Windows.Forms.Label();
             this.lblHydrantDist = new System.Windows.Forms.Label();
             this.lblZoomFactor = new System.Windows.Forms.Label();
             this.lblBufDist = new System.Windows.Forms.Label();
@@ -259,7 +260,8 @@
             this.chkNetworkfleet = new System.Windows.Forms.CheckBox();
             this.btnSplitSave = new DotSpatial.SDR.Controls.SplitButton();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label23 = new System.Windows.Forms.Label();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.adminTab_Control.SuspendLayout();
             this.adminTab_MapConfiguration.SuspendLayout();
@@ -775,6 +777,8 @@
             // 
             // adminTab_ProjectSettings
             // 
+            this.adminTab_ProjectSettings.Controls.Add(this.radioButton2);
+            this.adminTab_ProjectSettings.Controls.Add(this.radioButton1);
             this.adminTab_ProjectSettings.Controls.Add(this.lblNotesFields);
             this.adminTab_ProjectSettings.Controls.Add(this.dgvNotesFields);
             this.adminTab_ProjectSettings.Controls.Add(this.label17);
@@ -1187,6 +1191,15 @@
             this.adminTab_SearchSettings.TabIndex = 4;
             this.adminTab_SearchSettings.Text = "Search Settings";
             this.adminTab_SearchSettings.UseVisualStyleBackColor = true;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(171, 592);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(220, 13);
+            this.label23.TabIndex = 53;
+            this.label23.Text = "TODO: Add a button to do full parser dumps?";
             // 
             // lblHydrantDist
             // 
@@ -3140,14 +3153,27 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // label23
+            // radioButton2
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(171, 592);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(220, 13);
-            this.label23.TabIndex = 53;
-            this.label23.Text = "TODO: Add a button to do full parser dumps?";
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(416, 182);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(151, 17);
+            this.radioButton2.TabIndex = 56;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "Display Global Coordinates";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(416, 159);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(147, 17);
+            this.radioButton1.TabIndex = 55;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Display Local Coordinates";
+            this.radioButton1.UseVisualStyleBackColor = true;
             // 
             // AdminForm
             // 
@@ -3468,6 +3494,8 @@
         private System.Windows.Forms.Label lblNotesFields;
         private System.Windows.Forms.DataGridView dgvNotesFields;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
 
     }
 }
