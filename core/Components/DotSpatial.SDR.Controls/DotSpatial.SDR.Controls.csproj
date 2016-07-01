@@ -77,7 +77,7 @@
       <Link>Properties\AssemblyInfoVersion.cs</Link>
     </Compile>
     <Compile Include="DataGridViewDisableButtonCell.cs" />
-    <Compile Include="DropDownStatusPanel.cs" />
+    <Compile Include="ComboBoxStatusPanel.cs" />
     <Compile Include="EventedList.cs" />
     <Compile Include="EventMapFrame.cs" />
     <Compile Include="HotKeyManager.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="ProgressPanelForm.Designer.cs">
       <DependentUpon>ProgressPanelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProgressStatusPanel.cs" />
+    <Compile Include="ProgressBarStatusPanel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -23,6 +23,16 @@ namespace SDR.Configuration.User
             Instance = new Go2ItUserSettings();
         }
 
+        public string CoordinateDisplayMode
+        {
+            get { return UserSettings.Default.CoordinateDisplayMode; }
+            set
+            {
+                UserSettings.Default.CoordinateDisplayMode = value;
+                UserSettings.Default.Save();
+            }
+        }
+
         public int GridHeaderColumnCount
         {
             get { return UserSettings.Default.GridHeaderColumnCount;  }

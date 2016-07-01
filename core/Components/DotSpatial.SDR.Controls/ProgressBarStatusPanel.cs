@@ -9,7 +9,7 @@ namespace DotSpatial.SDR.Controls
     /// <summary>
     /// ProgressStatusPanel class allows user-defined progress bar panels to be added to the status bar
     /// </summary>
-    public class ProgressStatusPanel : StatusPanel
+    public class ProgressBarStatusPanel : StatusPanel
     {
         #region Fields
 
@@ -18,9 +18,7 @@ namespace DotSpatial.SDR.Controls
 
         #endregion
 
-        public ProgressStatusPanel()
-        {   
-        }
+        public ProgressBarStatusPanel() {}
 
         /// <summary>
         /// Gets or sets the percentage complete

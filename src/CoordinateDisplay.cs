@@ -1,12 +1,13 @@
 ﻿using System;
-using System.ComponentModel.Composition;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls.Header;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
+using SdrConfig = SDR.Configuration;
 
 namespace Go2It
 {
@@ -22,14 +23,41 @@ namespace Go2It
         private readonly ProjectionInfo _wgs84Projection = KnownCoordinateSystems.Geographic.World.WGS1984;
         private ProjectionInfo _currentMapProjection;
         private readonly StatusPanel _latLonStatusPanel;
-        private readonly DropDownStatusPanel _latLonDropDownPanel;
+        private readonly ComboBoxStatusPanel _latLonComboBoxPanel;
         private bool _isWgs84 = true;
         private bool _showCoordinates;
 
         public CoordinateDisplay(AppManager app)
         {
-            _latLonStatusPanel = new StatusPanel { Width = 400 };
-            _latLonDropDownPanel = new DropDownStatusPanel { Width = 300 };
+            _latLonStatusPanel = new StatusPanel
+            {
+                Width = 400
+            };
+            _latLonComboBoxPanel = new ComboBoxStatusPanel
+            {
+                Width = 300,
+                Items = new object[]
+                {
+                    "Deg/Min/Sec (local)",
+                    "Deg/Min/Sec (global)",
+                    "Decimal.Deg (local)",
+                    "Decimal.Deg (global)"
+                },
+                SelectedItem = "Deg/Min/Sec (local)"  // default, this is updated with user set values on show
+            };
+            _latLonComboBoxPanel.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                var item = sender as ComboBoxStatusPanel;
+                if (item == null) return;
+
+                if (e.PropertyName == "SelectedItem")
+                {
+                    // update the user settings on chosen mode
+                    SDR.Configuration.User.Go2ItUserSettings.Instance.CoordinateDisplayMode =
+                        item.SelectedItem as string;
+                    // TODO: fire off an update to handle the display of the coords?? or not required?
+                }
+            };
             // set the application manager and the panel changed event to update coords
             _appManager = app;
             _appManager.DockManager.ActivePanelChanged += DockManagerOnActivePanelChanged;
@@ -92,15 +120,24 @@ namespace Go2It
                 {
                     // handled by StatusControl.cs
                     _appManager.ProgressHandler.Remove(_latLonStatusPanel);
-                    _appManager.ProgressHandler.Remove(_latLonDropDownPanel);
+                    _appManager.ProgressHandler.Remove(_latLonComboBoxPanel);
                 }
                 else
                 {
                     // handled by StatusControl.cs
+                    _appManager.ProgressHandler.Add(_latLonComboBoxPanel);
                     _appManager.ProgressHandler.Add(_latLonStatusPanel);
-                    _appManager.ProgressHandler.Add(_latLonDropDownPanel);
                 }
                 _latLonStatusPanel.Caption = String.Empty;
+
+                // saving the state of the coordinate display mode to the user settings
+                if (SDR.Configuration.User.Go2ItUserSettings.Instance.CoordinateDisplayMode == string.Empty)
+                {
+                    SDR.Configuration.User.Go2ItUserSettings.Instance.CoordinateDisplayMode =
+                        _latLonComboBoxPanel.SelectedItem as string;
+                }
+                _latLonComboBoxPanel.SelectedItem =
+                    SDR.Configuration.User.Go2ItUserSettings.Instance.CoordinateDisplayMode;
             }
         }
 
@@ -176,6 +213,7 @@ namespace Go2It
             else if (projCor.Y < 0) lat = "S";
             else lat = " ";
 
+            // update the status panel label caption accordingly
             _latLonStatusPanel.Caption = "Longitude: " + d[0] + "°" + m[0].ToString("00") + "'" + s[0].ToString("00") + "\"" + Long + ", Latitude: " + d[1] + "°" + m[1].ToString("00") + "'" + s[1].ToString("00") + "\"" + lat;
         }
 
