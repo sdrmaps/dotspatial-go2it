@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Text;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
@@ -27,8 +27,23 @@ namespace Go2It
         private bool _isWgs84 = true;
         private bool _showCoordinates;
 
+        private readonly object[] _includeLocal;
+        private readonly object[] _removeLocal;
+
         public CoordinateDisplay(AppManager app)
         {
+            _includeLocal = new object[]
+            {
+                "Deg/Min/Sec",
+                "Decimal Degrees",
+                "Local Coords"
+            };
+            _removeLocal = new object[]
+            {
+                "Deg/Min/Sec",
+                "Decimal Degrees"
+            };
+
             _latLonStatusPanel = new StatusPanel
             {
                 Width = 400
@@ -36,14 +51,8 @@ namespace Go2It
             _latLonComboBoxPanel = new ComboBoxStatusPanel
             {
                 Width = 300,
-                Items = new object[]
-                {
-                    "Deg/Min/Sec (local)",
-                    "Deg/Min/Sec (global)",
-                    "Decimal.Deg (local)",
-                    "Decimal.Deg (global)"
-                },
-                SelectedItem = "Deg/Min/Sec (local)"  // default, this is updated with user set values on show
+                Items = _includeLocal,
+                SelectedItem = "Deg/Min/Sec"  // default, this is updated with user set values on show
             };
             _latLonComboBoxPanel.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
             {
@@ -55,7 +64,8 @@ namespace Go2It
                     // update the user settings on chosen mode
                     SDR.Configuration.User.Go2ItUserSettings.Instance.CoordinateDisplayMode =
                         item.SelectedItem as string;
-                    // TODO: fire off an update to handle the display of the coords?? or not required?
+                    // reset the panel caption
+                    _latLonStatusPanel.Caption = String.Empty;
                 }
             };
             // set the application manager and the panel changed event to update coords
@@ -95,6 +105,19 @@ namespace Go2It
             _isWgs84 = (mapProjEsriString == KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString());
             _currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
 
+            // check if the map projection is strictly a latlong display
+            if (_map.Projection.IsLatLon)
+            {
+                _latLonComboBoxPanel.Items = _removeLocal;
+                if ((string) _latLonComboBoxPanel.SelectedItem == "Local Coords")
+                {
+                    _latLonComboBoxPanel.SelectedItem = "Deg/Min/Sec";
+                }
+            }
+            else
+            {
+                _latLonComboBoxPanel.Items = _includeLocal;
+            }
             // setup all the events for this coordinate display on the map
             _map.MouseMove += map_MouseMove;
             _map.ProjectionChanged += map_ProjectionChanged;
@@ -105,6 +128,21 @@ namespace Go2It
             var mapProjEsriString = _map.Projection.ToEsriString();
             _isWgs84 = (mapProjEsriString == KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString());
             _currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
+
+            // check if the map projection is strictly a latlong display
+            if (_map.Projection.IsLatLon)
+            {
+                _latLonComboBoxPanel.Items = _removeLocal;
+                if ((string)_latLonComboBoxPanel.SelectedItem == "Local Coords")
+                {
+                    _latLonComboBoxPanel.SelectedItem = "Deg/Min/Sec";
+                }
+            }
+            else
+            {
+                _latLonComboBoxPanel.Items = _includeLocal;
+            }
+
         }
 
         public bool ShowCoordinates
@@ -125,8 +163,8 @@ namespace Go2It
                 else
                 {
                     // handled by StatusControl.cs
-                    _appManager.ProgressHandler.Add(_latLonComboBoxPanel);
                     _appManager.ProgressHandler.Add(_latLonStatusPanel);
+                    _appManager.ProgressHandler.Add(_latLonComboBoxPanel);
                 }
                 _latLonStatusPanel.Caption = String.Empty;
 
@@ -151,6 +189,36 @@ namespace Go2It
             }
         }
 
+        private string CleanCoordinateUnitLabel()
+        {
+            var unit = _map.Projection.Unit.Name.Replace("_", " ");  // replace any underscores
+            var builder = new StringBuilder();
+           	foreach (string s in unit.Split(' '))
+	        {
+                switch (s.ToLower())
+                {
+                    case "foot":
+                        builder.Append("Feet ");
+                        break;
+                    case "mile":
+                        builder.Append("Miles ");
+                        break;
+                    case "meter":
+                    case "metre":
+                        builder.Append("Meters ");
+                        break;
+                    case "kilometer":
+                    case "kilometre":
+                        builder.Append("Kilometers ");
+                        break;
+                    default:
+                        builder.Append(s + " ");
+                        break;
+                }
+	        }
+	        return builder.ToString();
+        }
+
         #region Coordinate Display
 
         private void map_MouseMove(object sender, MouseEventArgs e)
@@ -167,10 +235,21 @@ namespace Go2It
             xy[0] = projCor.X;
             xy[1] = projCor.Y;
 
-            var z = new double[1];
+            if (_latLonComboBoxPanel.SelectedItem == "Local Coords")
+            {
+                _latLonStatusPanel.Caption = xy[1] + ",  " + xy[0] + " " + CleanCoordinateUnitLabel();
+                return;
+            }
+
             if (!_isWgs84)
             {
-                Reproject.ReprojectPoints(xy, z, _currentMapProjection, _wgs84Projection, 0, 1);
+                Reproject.ReprojectPoints(xy, new double[1], _currentMapProjection, _wgs84Projection, 0, 1);
+            }
+
+            if ((string) _latLonComboBoxPanel.SelectedItem == "Decimal Degrees")
+            {
+                _latLonStatusPanel.Caption = "Longitude: " + xy[1] + ", " + "Latitude: " + xy[0];
+                return;
             }
 
             // convert to degrees, minutes, seconds
