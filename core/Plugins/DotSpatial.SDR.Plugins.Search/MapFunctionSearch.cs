@@ -381,10 +381,10 @@ namespace DotSpatial.SDR.Plugins.Search
 
             var xy = new double[2];
 
-            //Now convert from Lat-Long to x,y coordinates that App.Map.ViewExtents can use to pan to the correct location.
+            // Now convert from Lat-Long to x,y coordinates that App.Map.ViewExtents can use to pan to the correct location.
             xy = LatLonReproject(lonCoor, latCoor);
 
-            //Get extent where center is desired X,Y coordinate.
+            // Get extent where center is desired X,Y coordinate.
             
             var width = Map.ViewExtents.Width;
             var height = Map.ViewExtents.Height;
@@ -1063,7 +1063,6 @@ namespace DotSpatial.SDR.Plugins.Search
             if (_indexSearcher != null)
             {
                 _indexSearcher.Dispose();
-                _indexSearcher.IndexReader.Directory().Dispose();
                 _indexSearcher.IndexReader.Dispose();
             }
             // if no index type is set then this is a coordinate based search

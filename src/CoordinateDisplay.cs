@@ -237,7 +237,7 @@ namespace Go2It
 
             if (_latLonComboBoxPanel.SelectedItem == "Local Coords")
             {
-                _latLonStatusPanel.Caption = xy[1] + ",  " + xy[0] + " " + CleanCoordinateUnitLabel();
+                _latLonStatusPanel.Caption = xy[0] + ",  " + xy[1] + " " + CleanCoordinateUnitLabel();
                 return;
             }
 
@@ -248,7 +248,7 @@ namespace Go2It
 
             if ((string) _latLonComboBoxPanel.SelectedItem == "Decimal Degrees")
             {
-                _latLonStatusPanel.Caption = "Longitude: " + xy[1] + ", " + "Latitude: " + xy[0];
+                _latLonStatusPanel.Caption = "Longitude: " + xy[0] + ", " + "Latitude: " + xy[1];
                 return;
             }
 
