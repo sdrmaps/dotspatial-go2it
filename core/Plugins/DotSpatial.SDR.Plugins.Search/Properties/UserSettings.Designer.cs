@@ -100,5 +100,17 @@ namespace DotSpatial.SDR.Plugins.Search.Properties {
                 this["ParcelIndexColumnOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AllIndexColumnOrder {
+            get {
+                return ((string)(this["AllIndexColumnOrder"]));
+            }
+            set {
+                this["AllIndexColumnOrder"] = value;
+            }
+        }
     }
 }

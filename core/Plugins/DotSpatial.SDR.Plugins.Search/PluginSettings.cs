@@ -92,6 +92,16 @@ namespace DotSpatial.SDR.Plugins.Search
             }
         }
 
+        public Dictionary<string, string> AllIndexColumnOrder
+        {
+            get { return FetchDictionarySetting(UserSettings.Default.AllIndexColumnOrder); }
+            set
+            {
+                UserSettings.Default.AllIndexColumnOrder = DictionarySettingsString(value);
+                UserSettings.Default.Save();
+            }
+        }
+
         private static string DictionarySettingsString(Dictionary<string, string> settings)
         {
             var xmlDict = new XmlSerializableDictionary<string, string>();

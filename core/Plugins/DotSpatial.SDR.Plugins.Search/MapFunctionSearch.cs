@@ -233,7 +233,6 @@ namespace DotSpatial.SDR.Plugins.Search
         /// <param name="dataGridViewColumnEventArgs"></param>
         private void DataGridViewOnColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs dataGridViewColumnEventArgs)
         {
-            // todo handle any missing cases
             var newOrder = new Dictionary<string, string>();
             foreach (DataGridViewColumn col in _dataGridView.Columns)
             {
@@ -265,6 +264,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     break;
                 case SearchMode.CellSector:
                     PluginSettings.Instance.CellSectorIndexColumnOrder = newOrder;
+                    break;
+                case SearchMode.All:
+                    PluginSettings.Instance.AllIndexColumnOrder = newOrder;
                     break;
             }
         }
@@ -1003,8 +1005,7 @@ namespace DotSpatial.SDR.Plugins.Search
                 case SearchMode.CellSector:
                     return PluginSettings.Instance.CellSectorIndexColumnOrder;
                 case SearchMode.All:
-                    // TODO:
-                    return null;
+                    return PluginSettings.Instance.AllIndexColumnOrder;
             }
             return null;
         }
