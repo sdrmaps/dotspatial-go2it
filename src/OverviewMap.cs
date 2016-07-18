@@ -33,7 +33,7 @@ namespace Go2It
 
         public override void Activate()
         {
-            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "OverviewMap", ToggleOverviewTool_Click)
+            App.HeaderControl.Add(new SimpleActionItem(HomeMenuKey, "Overview", ToggleOverviewTool_Click)
             {
                 GroupCaption = "Overview_Toggle",
                 ToolTipText = "Toggle Overview Map Visibility",
@@ -182,6 +182,7 @@ namespace Go2It
             _overviewMap.Height = _overviewMapForm.Height;
             _overviewMap.Width = _overviewMapForm.Width;
             _overviewMap.MapFrame.DrawingLayers.Add(_markerLayer);
+            _overviewMapForm.Text = SDR.Configuration.Project.Go2ItProjectSettings.Instance.ActiveMapViewCaption + @" Overview";
             _overviewMapForm.Controls.Clear();
             _overviewMapForm.Controls.Add(_overviewMap);
             _overviewMap.ZoomToMaxExtent();

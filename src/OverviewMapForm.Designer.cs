@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(256, 229);
             this.Name = "OverviewMapForm";
-            this.Text = "OverviewMapForm";
+            this.Text = "Overview Map";
             this.ResumeLayout(false);
 
         }

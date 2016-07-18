@@ -15,7 +15,6 @@ using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
 using DotSpatial.Topology;
 using Lucene.Net.Analysis;
-using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Search.Function;
@@ -35,7 +34,6 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
-using Field = Lucene.Net.Documents.Field;
 using PointShape = DotSpatial.Symbology.PointShape;
 using Shape = Spatial4n.Core.Shapes.Shape;
 
@@ -71,6 +69,7 @@ namespace DotSpatial.SDR.Plugins.Search
         internal const string GEOSHAPE = "GEOSHAPE";
 
         private static readonly Regex DigitsOnly = new Regex(@"[^\d]");
+        // the original regex used for coordinates parsing
         // private static readonly Regex ParseCoordinates = new Regex("(-?\\d{1,3})[\\.\\,°]{0,1}\\s*(\\d{0,2})[\\.\\,\']{0,1}\\s*(\\d*)[\\.\\,°]{0,1}\\s*([NSnsEeWw]?)");
         private static readonly Regex ParseCoordinates = new Regex("(-?\\d{1,3})[\\.\\,\\°]{0,1}\\s*(\\d{0,2})[\\.\\,\']{0,1}\\s*(\\d*)[\\.\\,\"]*\\d*[\\s\\.\"]*([NSnsEeWw]?)");
 
@@ -114,7 +113,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
         public void EnableSearchModes()
         {
-            int i = 0;  // track total count of lucene search modes active
+            var i = 0;  // track total count of lucene search modes active
             // check each search type for existence of index directories, activate accordingly
             i += SetSearchButtonsState(SearchMode.Address);
             i += SetSearchButtonsState(SearchMode.Road);
