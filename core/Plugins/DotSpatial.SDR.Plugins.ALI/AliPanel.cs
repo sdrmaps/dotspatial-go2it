@@ -185,8 +185,10 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public void DisplayStandardInterface()
         {
+            // enable the toolstrip buttons
             tsbAliLocate.Enabled = true;
             tsbAliUpdate.Enabled = true;
+            // display only the dgv on panel 1
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 100;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
@@ -197,9 +199,12 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         public void DisplayAvlListInterface(string listTitle, bool enableFunctions)
         {
+            // set state of toolstrip buttons
             tsbAliLocate.Enabled = enableFunctions;
             tsbAliUpdate.Enabled = enableFunctions;
+            // assign title to checkbox list
             lblFleetList.Text = listTitle;
+            // display the dgv on panel 1, and the checkboxlist on panel 2
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 75;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -214,6 +219,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             tsbAliUpdate.Enabled = enableFunctions;
             lblFleetList.Text = listTitle;
             lblCommLog.Text = unitTitle;  // because collapsing the top row would complicate things
+         
+            // display dgv
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 60;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -234,6 +241,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             lblFleetList.Text = listTitle;
             lblCommLog.Text = logTitle;
             lblMyUnit.Text = unitTitle;
+
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 60;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -271,6 +279,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             tsbAliLocate.Enabled = true;
             tsbAliUpdate.Enabled = true;
             lblCommLog.Text = logTitle;
+
             aliTableLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             aliTableLayoutPanel.ColumnStyles[0].Width = 75;
             aliTableLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
@@ -299,7 +308,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             }
         }
 
-        public void PopulateLogComboBox()
+        public void PopulateLogComboBox(string currentDate)
         {
             ClearLogComboBox();
             var files = new List<string>();
@@ -309,11 +318,10 @@ namespace DotSpatial.SDR.Plugins.ALI
                 files.AddRange(dir.GetFiles("*.log").Select(fi => Path.GetFileNameWithoutExtension(fi.Name)));
                 // add todays log to the list
                 var curLog = Path.GetFileNameWithoutExtension(
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
-                    DateTime.Now.ToShortDateString().Replace("/", "");
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) + currentDate;
                 files.Add(curLog);
                 files.Sort();
-                files.Reverse();
+                // files.Reverse();
                 FillLogComboBox(files.ToArray());
             }
             catch (Exception ex)

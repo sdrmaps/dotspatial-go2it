@@ -109,25 +109,14 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void HandleAliPanelEvents()
         {
             _aliPanel.DataGridDisplay.CellClick += DataGridDisplayOnCellClick;
-            //_aliPanel.VehicleFleetListBox.SelectedIndexChanged += delegate(object sender, EventArgs args)
-            //{
-            //    var x = sender as ListBox;
-            //    Debug.WriteLine("Selected Index Changed :: " + x.SelectedIndex);
-            //};
         }
-
-        //private void VehicleFleetListBoxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
-        //{
-        //    Debug.WriteLine("-------------------------------------------");
-        //    var x = sender as ListBox;
-        //    Debug.WriteLine("Selected Index Changed :: " + x.SelectedIndex);
-        //}
 
         private void DataGridDisplayOnCellClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
         {
             Debug.WriteLine("datagridrow clicked");
         }
 
+        // TODO: Is enterpol going to implemnt this or not?
         //private void StartSqlServerDependencyWatcher()
         //{
         //    var conn = GetEnterpolConnString();
@@ -240,7 +229,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 var itm = cmb.SelectedItem.ToString();
                 PluginSettings.Instance.ActiveGlobalCadCommLog = itm;
                 string log;
-                if (itm.EndsWith(DateTime.Now.ToShortDateString().Replace("/", "")))
+                if (itm.EndsWith(FormatCurrentDate()))
                 {
                     log = SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath;
                 }
@@ -1112,16 +1101,32 @@ namespace DotSpatial.SDR.Plugins.ALI
             PopulateGlobalCadInterface();
         }
 
+        private static string FormatCurrentDate()
+        {
+            var curDate = DateTime.Now;
+            var day = curDate.Day.ToString(CultureInfo.InvariantCulture);
+            if (day.Length == 1)
+            {
+                day = 0 + day;
+            }
+            var month = curDate.Month.ToString(CultureInfo.InvariantCulture);
+            if (month.Length == 1)
+            {
+                month = 0 + month;
+            }
+            var year = curDate.Year.ToString(CultureInfo.InvariantCulture);
+            return month + day + year;
+        }
+
         public void PopulateGlobalCadInterface()
         {
             if (PluginSettings.Instance.ActiveGlobalCadCommLog.Length == 0)
             {
                 PluginSettings.Instance.ActiveGlobalCadCommLog = Path.GetFileNameWithoutExtension(
-                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
-                    DateTime.Now.ToShortDateString().Replace("/", "");
+                    SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) + FormatCurrentDate();                  
             }
             // populate the combobox with files now
-            _aliPanel.PopulateLogComboBox();
+            _aliPanel.PopulateLogComboBox(FormatCurrentDate());
             // set up the event handler for the combobox index change
             _aliPanel.ComLogsComboBox.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
             // set the selection initiating the datagridview columns
@@ -1131,15 +1136,14 @@ namespace DotSpatial.SDR.Plugins.ALI
         private void OnGlobalCadArchiveChanged(object source, FileSystemEventArgs e)
         {
             _aliPanel.ComLogsComboBox.SelectedIndexChanged -= GlobalCadComLogsOnSelectedIndexChanged;
-            _aliPanel.PopulateLogComboBox();
+            _aliPanel.PopulateLogComboBox(FormatCurrentDate());
             _aliPanel.ComLogsComboBox.SelectedIndexChanged += GlobalCadComLogsOnSelectedIndexChanged;
         }
 
         private void OnGlobalCadFileChanged(object source, FileSystemEventArgs e)
         {
             var curLog = Path.GetFileNameWithoutExtension(
-                SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) +
-                DateTime.Now.ToShortDateString().Replace("/", "");
+                SdrConfig.Project.Go2ItProjectSettings.Instance.AliGlobalCadLogPath) + FormatCurrentDate();
 
             if (PluginSettings.Instance.ActiveGlobalCadCommLog == curLog)
             {

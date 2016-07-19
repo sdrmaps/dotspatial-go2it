@@ -47,11 +47,7 @@ namespace DotSpatial.SDR.Plugins.ALI
                 {
                     return AliAvl.Networkfleet;
                 }
-                if (SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl)
-                {
-                    return AliAvl.Enterpolavl;
-                }
-                return AliAvl.Disabled;
+                return SdrConfig.Project.Go2ItProjectSettings.Instance.AliUseEnterpolAvl ? AliAvl.Enterpolavl : AliAvl.Disabled;
             }
         }
         #endregion

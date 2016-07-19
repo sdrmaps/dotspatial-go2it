@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Collections;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using DotSpatial.Data;
 using DotSpatial.Projections;
@@ -320,9 +318,10 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
                 var hitz = ExecuteLuceneQuery(q);
-                if (hitz.Count() != 0)
+                var scoreDocs = hitz as ScoreDoc[] ?? hitz.ToArray();
+                if (scoreDocs.Count() != 0)
                 {
-                    var hit = hitz.First();
+                    var hit = scoreDocs.First();
                     var doc = _indexSearcher.Doc(hit.Doc);
                     var lookup = new FeatureLookup
                     {
@@ -380,10 +379,8 @@ namespace DotSpatial.SDR.Plugins.Search
             var latCoor = LoadCoordinates(lat);
             var lonCoor = LoadCoordinates(lng);
 
-            var xy = new double[2];
-
             // Now convert from Lat-Long to x,y coordinates that App.Map.ViewExtents can use to pan to the correct location.
-            xy = LatLonReproject(lonCoor, latCoor);
+            var xy = LatLonReproject(lonCoor, latCoor);
 
             // Get extent where center is desired X,Y coordinate.
             
@@ -402,27 +399,24 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             var xy = new[] { x, y };
 
-            //Change y coordinate to be less than 90 degrees to prevent an issue.
+            // change y coordinate to be less than 90 degrees to prevent an issue from arising
             if (xy[1] >= 90) xy[1] = 89.9;
             if (xy[1] <= -90) xy[1] = -89.9;
 
-            //Need to convert points to proper projection. Currently describe WGS84 points which may or may not be accurate.
-
-            var wgs84String = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223562997]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.0174532925199433]]";
+            // convert points to proper projection. by default it describes WGS84 points which may or may not be right
+            // TODO: isnt this referenced somewhere else ?? no need to redefine it?
+            const string wgs84String = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223562997]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.0174532925199433]]";
             var mapProjEsriString = Map.Projection.ToEsriString();
             var isWgs84 = (mapProjEsriString.Equals(wgs84String));
 
-            //If the projection is not WGS84, then convert points to properly describe desired location.
-            if (!isWgs84)
-            {
-                var z = new double[1];
-                var wgs84Projection = ProjectionInfo.FromEsriString(wgs84String);
-                var currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
-                Reproject.ReprojectPoints(xy, z, wgs84Projection, currentMapProjection, 0, 1);
-            }
+            if (isWgs84) return xy; // if the projection is anything other than WGS84, convert to points to describe location
 
-            //Return array with 1 x and 1 y value.
-            return xy;
+            var z = new double[1];
+            var wgs84Projection = ProjectionInfo.FromEsriString(wgs84String);
+            var currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
+            Reproject.ReprojectPoints(xy, z, wgs84Projection, currentMapProjection, 0, 1);
+
+            return xy;  // return array with a single x and y value
         }
 
         // Take Degrees-Minutes-Seconds from ParseCoordinates and turn them into doubles.
@@ -486,24 +480,23 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (layer.Length <= 0) return;
 
-            Dictionary<string, string> mapPanels = GetMapTabKeysContainingLayer(layer);
-            if (!mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey))
+            var mapPanels = GetMapTabKeysContainingLayer(layer);
+            if (mapPanels.ContainsKey(SdrConfig.Project.Go2ItProjectSettings.Instance.ActiveMapViewKey)) return;
+
+            if (mapPanels.Count == 1)
             {
-                if (mapPanels.Count == 1)
-                {
-                    TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
-                }
-                else if (mapPanels.Count > 1)
-                {
-                    var v = mapPanels.Values;
-                    var msgBox = new MultiSelectMessageBox(
-                        "Multiple Map Tabs",
-                        "Multiple map tabs contain this feature, please select the tab to map the feature below.",
-                        v.ToArray());
-                    msgBox.ShowDialog();
-                    var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
-                    TabDockingControl.SelectPanel(key);
-                }
+                TabDockingControl.SelectPanel(mapPanels.ElementAt(0).Key);
+            }
+            else if (mapPanels.Count > 1)
+            {
+                var v = mapPanels.Values;
+                var msgBox = new MultiSelectMessageBox(
+                    "Multiple Map Tabs",
+                    "Multiple map tabs contain this feature, please select the tab to map the feature below.",
+                    v.ToArray());
+                msgBox.ShowDialog();
+                var key = mapPanels.FirstOrDefault(x => x.Value == msgBox.Result).Key;
+                TabDockingControl.SelectPanel(key);
             }
         }
 
@@ -513,13 +506,13 @@ namespace DotSpatial.SDR.Plugins.Search
             return strip.Split(',');
         }
 
-        private IEnumerable<string> GetIntersectionCoordinate(IEnumerable<FeatureLookup> fl1s, FeatureLookup fl2)
+        private IEnumerable<string> GetIntersectionCoordinate(IEnumerable<FeatureLookup> fl1S, FeatureLookup fl2)
         {
             var coordsList = new List<string>();
             // strip all the wkt crap from coords and look for matches
             var coords = StripWktString(fl2.Shape);
             // now look for shared coordinates (the intersection point)
-            foreach (var fl1 in fl1s)
+            foreach (var fl1 in fl1S)
             {
                 foreach (var c in coords)
                 {
@@ -672,7 +665,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     pointShape,
                     SdrConfig.Project.Go2ItProjectSettings.Instance.GraphicPointSize);
 
-                // TODO: I do not recall what I was planning to do here
+                // TODO: I think the idea here was to add a new symbol that was the exact same as the actual feature symbol
+                // TODO: to the map, so that the feature sysmbol would sit above the highlight symbol, currently it sits below
+                // TODO: and i could not find a way to change the display of og said graphics and highlights
                 //  Symbol = new CharacterSymbol()
                 // _pointGraphicsLayer.Symbolizer.Symbols.Add();
 
@@ -760,13 +755,15 @@ namespace DotSpatial.SDR.Plugins.Search
             IFeatureSet hydrantfs = null;
             foreach (IMapPointLayer ptLayer in layers)
             {
-                if (ptLayer != null && String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
+                if (ptLayer == null) return;
+                if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((ptLayer.DataSet.Filename)))) return;
+
                 var fs = FeatureSet.Open(ptLayer.DataSet.Filename);
-                if (fs != null && fs.Name == SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer)
-                {
-                    hydrantfs = fs;
-                    break;
-                }
+                if (fs == null) return;
+
+                if (fs.Name != SdrConfig.Project.Go2ItProjectSettings.Instance.HydrantsLayer) continue;
+                hydrantfs = fs;
+                break;
             }
             if (hydrantfs == null) return;
             // store the current index type | reset when operation is complete
@@ -811,7 +808,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteScoredHydrantQuery(FeatureLookup activeLookup)
         {
             var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
-            Shape shp = ctx.ReadShape(activeLookup.Shape);
+            Shape shp = ctx.ReadShape(activeLookup.Shape);  // TODO: research the new method of reading the shape
             Spatial4n.Core.Shapes.Point centerPt = shp.GetCenter();
 
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
@@ -830,7 +827,6 @@ namespace DotSpatial.SDR.Plugins.Search
 
         private IEnumerable<ScoreDoc> ExecuteLuceneQuery(string sq)
         {
-            // todo: handle any missing cases remaining
             ScoreDoc[] hits = null;
             switch (PluginSettings.Instance.SearchMode)
             {
@@ -907,7 +903,7 @@ namespace DotSpatial.SDR.Plugins.Search
                     if (orderDict.ContainsKey(columnName))
                     {
                         var s = orderDict[columnName];
-                        var j = -1;
+                        int j;
                         int.TryParse(s, out j);
                         if (j < 0) continue;
 
@@ -1774,7 +1770,7 @@ namespace DotSpatial.SDR.Plugins.Search
 
             IFragmenter fragmenter = new NullFragmenter();
             IScorer scorer = new QueryScorer(GetSearchAllQuery(_searchPanel.SearchQuery));
-            Highlighter highlighter = new Highlighter(scorer) { TextFragmenter = fragmenter };
+            var highlighter = new Highlighter(scorer) { TextFragmenter = fragmenter };
 
             foreach (var hit in hits)
             {
@@ -1823,8 +1819,9 @@ namespace DotSpatial.SDR.Plugins.Search
             switch (PluginSettings.Instance.SearchMode)
             {
                 case SearchMode.Intersection:
-                    PopulateSingleQueryResultsToDgv(hits);
-                    UpdateIntersectedFeatures(hits);
+                    var scoreDocs = hits as ScoreDoc[] ?? hits.ToArray();  // enum to an array
+                    PopulateSingleQueryResultsToDgv(scoreDocs);
+                    UpdateIntersectedFeatures(scoreDocs);
                     break;
                 case SearchMode.All:
                     PopulateMultiQueryResultsToDgv(hits);
