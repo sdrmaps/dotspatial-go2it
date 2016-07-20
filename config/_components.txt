@@ -17,3 +17,4 @@ DotSpatial.SDR.Plugins.Selection
 DotSpatial.SDR.Plugins.Search
 DotSpatial.SDR.Plugins.GPS
 DotSpatial.SDR.Plugins.ALI
+DotSpatial.SDR.Plugins.Notes

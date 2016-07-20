@@ -12,8 +12,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotSpatial.Controls;
+using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.ALI.Properties;
+using DotSpatial.Symbology;
 using DotSpatial.Topology;
 using GeoTimeZone;
 using SDR.Common;
@@ -51,16 +53,227 @@ namespace DotSpatial.SDR.Plugins.ALI
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of MapFunction, with panel
+        /// Creates a new instance of MapFunctionAli, with associated panel
         /// </summary>
         /// <param name="ap"></param>
         public MapFunctionAli(AliPanel ap)
         {
             Name = "MapFunctionAli";
             YieldStyle = YieldStyles.AlwaysOn;
+
             _aliPanel = ap;
+
             HandleAliPanelEvents();
         }
+
+        private void HandleAliPanelEvents()
+        {
+            _aliPanel.PerformUpdate += AliPanelOnPerformUpdate;
+            _aliPanel.PerformLocate += AliPanelOnPerformLocate;
+            _aliPanel.OnRowDoublelicked += AliPanelOnOnRowDoublelicked;
+        }
+
+        // BEGIN THE HACK FOR OTTAWA DEMO
+        // basically we are gonna fake it till we make it.
+        // check if the row contains an X or Y coord, if so then zoom to the location
+        // if not then fetch the address info and search the address layer for the record?
+        private static int GetColumnDisplayIndex(string name, DataGridView dgv)
+        {
+            for (int i = 0; i <= dgv.ColumnCount - 1; i++)
+            {
+                if (dgv.Columns[i].Name == name)
+                {
+                    return dgv.Columns[i].DisplayIndex;
+                }
+            }
+            return -1;
+        }
+
+        private double[] LatLonReproject(double x, double y)
+        {
+            var xy = new[] { x, y };
+
+            // change y coordinate to be less than 90 degrees to prevent an issue from arising
+            if (xy[1] >= 90) xy[1] = 89.9;
+            if (xy[1] <= -90) xy[1] = -89.9;
+
+            // convert points to proper projection. by default it describes WGS84 points which may or may not be right
+            // TODO: isnt this referenced somewhere else ?? no need to redefine it?
+            const string wgs84String = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223562997]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.0174532925199433]]";
+            var mapProjEsriString = Map.Projection.ToEsriString();
+            var isWgs84 = (mapProjEsriString.Equals(wgs84String));
+
+            if (isWgs84) return xy; // if the projection is anything other than WGS84, convert to points to describe location
+
+            var z = new double[1];
+            var wgs84Projection = ProjectionInfo.FromEsriString(wgs84String);
+            var currentMapProjection = ProjectionInfo.FromEsriString(mapProjEsriString);
+            Reproject.ReprojectPoints(xy, z, wgs84Projection, currentMapProjection, 0, 1);
+
+            return xy;  // return array with a single x and y value
+        }
+
+        private void ZoomToCoordinates(string strLat, string strLng)
+        {
+            double lat;
+            double.TryParse(strLat, out lat);
+            double lon;
+            double.TryParse(strLng, out lon);
+            // TODO: look at these two and determine the better method
+            // var one = ConvertLatLonToMap(lat, lon);
+            var xy = LatLonReproject(lon, lat);
+
+            //  Get extent where center is desired X,Y coordinate.
+            var width = Map.ViewExtents.Width;
+            var height = Map.ViewExtents.Height;
+            Map.ViewExtents.X = (xy[0] - (width / 2));
+            Map.ViewExtents.Y = (xy[1] + (height / 2));
+            var ex = Map.ViewExtents;
+
+            // set App.Map.ViewExtents to new extent that centers on desired LatLong.
+            Map.ViewExtents = ex;
+        }
+
+        private void ZoomToAddress(string address)
+        {
+            // make sure the active map panel has the layer available for display
+            // ActivateMapPanelWithLayer(ftLookup.Layer);
+            // cycle through layers of the active map panel and find the one we need
+            var layers = Map.GetFeatureLayers();
+            foreach (IMapFeatureLayer mapLayer in layers)
+            {
+                if (mapLayer != null &&
+                    String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mapLayer.DataSet.Filename)))) return;
+                if (mapLayer == null) continue;
+
+                IFeatureSet fs = FeatureSet.Open(mapLayer.DataSet.Filename);
+                // TODO: terrible terrible hack
+                if (fs == null || fs.Name != "address") continue;
+
+                string q = "[FULL_ADDRE] = '" + address + "'";
+                var sel = fs.SelectByAttribute(q);
+                if (sel.Count > 0)
+                {
+                    IFeature ft = sel[0];
+                    var xy = ft.Coordinates[0];
+
+                    //  Get extent where center is desired X,Y coordinate.
+                    var width = Map.ViewExtents.Width;
+                    var height = Map.ViewExtents.Height;
+                    Map.ViewExtents.X = (xy[0] - (width / 2));
+                    Map.ViewExtents.Y = (xy[1] + (height / 2));
+                    var ex = Map.ViewExtents;
+
+                    // set App.Map.ViewExtents to new extent that centers on desired LatLong.
+                    Map.ViewExtents = ex;
+                }
+            }
+        }
+        // END HACK FOR OTTAWA DEMO - THE ABOVE WAS ALL RIPPED FROM SEARCH 
+
+        private void AliPanelOnOnRowDoublelicked(object sender, EventArgs eventArgs)
+        {
+            var evnt = eventArgs as DataGridViewCellEventArgs;
+            if (evnt == null) return;
+
+            var xIdx = GetColumnDisplayIndex("X", _aliPanel.DataGridDisplay);
+            var xVal = _aliPanel.DataGridDisplay.Rows[evnt.RowIndex].Cells[xIdx].Value.ToString();
+            var yIdx = GetColumnDisplayIndex("Y", _aliPanel.DataGridDisplay);
+            var yVal = _aliPanel.DataGridDisplay.Rows[evnt.RowIndex].Cells[yIdx].Value.ToString();
+            var aIdx = GetColumnDisplayIndex("FullAddress", _aliPanel.DataGridDisplay);
+            var aVal = _aliPanel.DataGridDisplay.Rows[evnt.RowIndex].Cells[aIdx].Value.ToString();
+
+            if (xVal != string.Empty && yVal != string.Empty)
+            {
+                ZoomToCoordinates(yVal, xVal);
+            }
+            else
+            {
+                ZoomToAddress(aVal);
+            }
+
+            // TODO: when we actually write this correctly
+            //switch (_currentAliMode)
+            //{
+            //    case AliMode.Enterpol:
+            //        break;
+            //    case AliMode.Globalcad:
+
+
+            //        break;
+            //    case AliMode.Sdraliserver:
+            //        break;
+            //}
+        }
+
+        private void AliPanelOnPerformLocate(object sender, EventArgs eventArgs)
+        {
+            var x = sender;
+
+            //if (_searchPanel.SearchQuery.Length <= 0) return;
+            //var q = _searchPanel.SearchQuery;
+            //// if its an intersection and there are two terms do a location zoom, otherwise find intersections
+            //if (PluginSettings.Instance.SearchMode == SearchMode.Intersection)
+            //{
+            //    if (_searchPanel.SearchQuery.Length <= 1) return;  // only the | is present (blank search)
+            //    var arr = q.Split('|');
+            //    if (arr[1].Length > 0) // zoom to intersection of the two features
+            //    {
+            //        ZoomToIntersection(arr[0], arr[1]);
+            //        return;
+            //    } // else look for intersections on this feature and populate combos and dgv
+            //    q = arr[0];
+            //}
+            //else if (PluginSettings.Instance.SearchMode == SearchMode.City || PluginSettings.Instance.SearchMode == SearchMode.Esn)
+            //{
+            //    _searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
+            //    var hitz = ExecuteLuceneQuery(q);
+            //    var scoreDocs = hitz as ScoreDoc[] ?? hitz.ToArray();
+            //    if (scoreDocs.Count() != 0)
+            //    {
+            //        var hit = scoreDocs.First();
+            //        var doc = _indexSearcher.Doc(hit.Doc);
+            //        var lookup = new FeatureLookup
+            //        {
+            //            Fid = doc.Get(FID),
+            //            Layer = doc.Get(LYRNAME),
+            //            Shape = doc.Get(GEOSHAPE)
+            //        };
+            //        ZoomToFeatureLookup(lookup);
+            //        return;
+            //    }
+            //}
+            //else if (PluginSettings.Instance.SearchMode == SearchMode.Coordinate)
+            //{
+            //    if (_searchPanel.SearchQuery.Length <= 1) return;  // only the | (internal separator) is present (empty search)
+            //    var arr = q.Split('|');
+            //    if (arr.Length != 2) return; // lat and long have not been passed in
+            //    if (arr[0].Length > 0 && arr[1].Length > 0)
+            //    {
+            //        _searchPanel.ClearSearches();  // clear any existing searches
+            //        ZoomToCoordinates(arr[0], arr[1]);
+            //        return;
+            //    }
+            //}
+     
+            // * all other query types are processed and proceed from this point ....
+            // * each requires a lucene query and populates combos and datagridview    
+            // */
+            //_searchPanel.ClearSearches();  // clear any existing searches (fires the event above this one actually)
+            //// setup columns, ordering, etc for results datagridview
+            //PrepareDataGridView();
+            //// execute our lucene query
+            //var hits = ExecuteLuceneQuery(q);
+            //FormatQueryResults(hits);
+        }
+
+        private void AliPanelOnPerformUpdate(object sender, EventArgs eventArgs)
+        {
+            var x = sender;
+
+            // TODO
+        }
+
         #endregion
 
         #region Methods
@@ -103,17 +316,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             _currentAliAvl = avl;
             // update interface display to alipanel
             ConfigureAliPanelInterface();
-        }
-
-
-        private void HandleAliPanelEvents()
-        {
-            _aliPanel.DataGridDisplay.CellClick += DataGridDisplayOnCellClick;
-        }
-
-        private void DataGridDisplayOnCellClick(object sender, DataGridViewCellEventArgs dataGridViewCellEventArgs)
-        {
-            Debug.WriteLine("datagridrow clicked");
         }
 
         // TODO: Is enterpol going to implemnt this or not?
@@ -777,7 +979,7 @@ namespace DotSpatial.SDR.Plugins.ALI
 
         private static int SetAlphaLevel(int cInterval)
         {
-            // networkfleet and enterpol shared these "application" level values for alpha
+            // networkfleet and enterpol share these "application" level values for alpha
             switch (cInterval)
             {
                 case 1:
@@ -1455,7 +1657,7 @@ namespace DotSpatial.SDR.Plugins.ALI
             return tzdbSource.CanonicalIdMap[tzid];
         }
 
-        // This will return the Windows zone that matches the IANA zone, if one exists.
+        // return the windows zone that matches the IANA zone, if one exists.
         public string IanaToWindows(string ianaZoneId)
         {
             var utcZones = new[] { "Etc/UTC", "Etc/UCT", "Etc/GMT" };
@@ -1882,25 +2084,5 @@ namespace DotSpatial.SDR.Plugins.ALI
         //    base.OnUnload();
         //}
         #endregion
-    }
-}
-
-public class GlobalCadRecord
-{
-    public string Time { get; set; }
-    public string Phone { get; set; }
-    public string Address { get; set; }
-    public string Street { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    [DisplayName(@"Service Class")]
-    public string ServiceClass { get; set; }
-    public string X { get; set; }
-    public string Y { get; set; }
-    public string Unc { get; set; }
-    [DisplayName(@"Full Address")]
-    public string FullAddress
-    {
-        get { return (Address + " " + Street).Trim(); }
     }
 }

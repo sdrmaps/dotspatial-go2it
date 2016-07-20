@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,13 +12,16 @@ namespace DotSpatial.SDR.Plugins.ALI
     public sealed partial class AliPanel : UserControl
     {
         #region Constructors
+
         public AliPanel()
         {
             InitializeComponent();
         }
+
         #endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the datagridview for record display
         /// </summary>
@@ -27,6 +29,9 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return aliDGV; }
         }
+        /// <summary>
+        /// Gets the combobox for com log files
+        /// </summary>
         public ComboBox ComLogsComboBox
         {
             get { return cmbAliCommLog; }
@@ -39,9 +44,28 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return cmbAliMyUnit; }
         }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Occurs when the Update button has been clicked
+        /// </summary>
+        public event EventHandler PerformUpdate;
+        /// <summary>
+        /// Occurs when the Locate button has been clicked
+        /// </summary>
+        public event EventHandler PerformLocate;
+        /// <summary>
+        /// Occurs when a cell within the dgv has been double clicked, ie zoom to clicked feature
+        /// </summary>
+        public event EventHandler OnRowDoublelicked;
+
         #endregion
 
         #region Methods
+
         public delegate void SetAvlVehicleCheckStateCallback(int id, bool status);
         public void SetAvlVehicleCheckState(int id, bool status)
         {
@@ -330,21 +354,36 @@ namespace DotSpatial.SDR.Plugins.ALI
                 msg.Warn("Failed to populate ComboBox with Log Files", ex);
             }
         }
+
         #endregion
+
+        #region Events
+
+        private void OnPerformUpdate()
+        {
+            if (PerformUpdate != null) PerformUpdate(this, new EventArgs());
+        }
+
+        private void OnPerformLocate()
+        {
+            if (PerformLocate != null) PerformLocate(this, new EventArgs());
+        }
+
+        private void aliDGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (OnRowDoublelicked != null) OnRowDoublelicked(this, e);
+        }
 
         private void tsbAliUpdate_Click(object sender, EventArgs e)
         {
-
+            OnPerformUpdate();
         }
 
         private void tsbAliLocate_Click(object sender, EventArgs e)
         {
-
+            OnPerformLocate();
         }
 
-        private void chkFleetList_ControlAdded(object sender, ControlEventArgs e)
-        {
-            Debug.WriteLine("added item");
-        }
+        #endregion
     }
 }
