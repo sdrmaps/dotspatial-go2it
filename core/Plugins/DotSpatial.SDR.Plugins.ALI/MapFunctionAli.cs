@@ -73,20 +73,42 @@ namespace DotSpatial.SDR.Plugins.ALI
             _aliPanel.OnRowDoublelicked += AliPanelOnOnRowDoublelicked;
         }
 
+        private void LocateActiveDgvRow()
+        {
+
+
+
+
+            switch (_currentAliMode)
+            {
+                case AliMode.Enterpol:
+                    break;
+                case AliMode.Globalcad:
+                    break;
+                case AliMode.Sdraliserver:
+                    break;
+                case AliMode.Disabled:
+                    break;
+            }
+
+            
+        }
+
         // BEGIN THE HACK FOR OTTAWA DEMO
         // basically we are gonna fake it till we make it.
         // check if the row contains an X or Y coord, if so then zoom to the location
         // if not then fetch the address info and search the address layer for the record?
-        private static int GetColumnDisplayIndex(string name, DataGridView dgv)
+        private Coordinate ConvertLatLonToMap(double lat, double lon)
         {
-            for (int i = 0; i <= dgv.ColumnCount - 1; i++)
-            {
-                if (dgv.Columns[i].Name == name)
-                {
-                    return dgv.Columns[i].DisplayIndex;
-                }
-            }
-            return -1;
+            if (Map.Projection.Equals(KnownCoordinateSystems.Geographic.World.WGS1984)) return new Coordinate(lon, lat);
+
+            ProjectionInfo mapProjInfo = ProjectionInfo.FromEsriString(Map.Projection.ToEsriString());
+            var xy = new double[2];
+            xy[0] = lon;
+            xy[1] = lat;
+            var z = new double[1];
+            Reproject.ReprojectPoints(xy, z, _wgs84Projection, mapProjInfo, 0, 1);
+            return new Coordinate(xy[0], xy[1]);
         }
 
         private double[] LatLonReproject(double x, double y)
@@ -99,7 +121,8 @@ namespace DotSpatial.SDR.Plugins.ALI
 
             // convert points to proper projection. by default it describes WGS84 points which may or may not be right
             // TODO: isnt this referenced somewhere else ?? no need to redefine it?
-            const string wgs84String = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223562997]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.0174532925199433]]";
+            string wgs84String = KnownCoordinateSystems.Geographic.World.WGS1984.ToEsriString();
+
             var mapProjEsriString = Map.Projection.ToEsriString();
             var isWgs84 = (mapProjEsriString.Equals(wgs84String));
 
@@ -171,10 +194,43 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
         // END HACK FOR OTTAWA DEMO - THE ABOVE WAS ALL RIPPED FROM SEARCH 
 
+        /// <summary>
+        /// Get the DisplayIndex of a column in a DataGridView given the ColumnName
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dgv"></param>
+        /// <returns></returns>
+        private static int GetColumnDisplayIndex(string name, DataGridView dgv)
+        {
+            for (int i = 0; i <= dgv.ColumnCount - 1; i++)
+            {
+                if (dgv.Columns[i].Name == name)
+                {
+                    return dgv.Columns[i].DisplayIndex;
+                }
+            }
+            return -1;
+        }
+
         private void AliPanelOnOnRowDoublelicked(object sender, EventArgs eventArgs)
         {
             var evnt = eventArgs as DataGridViewCellEventArgs;
             if (evnt == null) return;
+
+
+            // TODO: THIS IS A HACK FIX IT
+
+            //switch (_currentAliMode)
+            //{
+            //    case AliMode.Enterpol:
+            //        break;
+            //    case AliMode.Globalcad:
+            //        break;
+            //    case AliMode.Sdraliserver:
+            //        break;
+            //    case AliMode.Disabled:
+            //        break;
+            //}
 
             var xIdx = GetColumnDisplayIndex("X", _aliPanel.DataGridDisplay);
             var xVal = _aliPanel.DataGridDisplay.Rows[evnt.RowIndex].Cells[xIdx].Value.ToString();
@@ -191,19 +247,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             {
                 ZoomToAddress(aVal);
             }
-
-            // TODO: when we actually write this correctly
-            //switch (_currentAliMode)
-            //{
-            //    case AliMode.Enterpol:
-            //        break;
-            //    case AliMode.Globalcad:
-
-
-            //        break;
-            //    case AliMode.Sdraliserver:
-            //        break;
-            //}
         }
 
         private void AliPanelOnPerformLocate(object sender, EventArgs eventArgs)
@@ -271,6 +314,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             var x = sender;
 
+            // depends on the current ali mode- but basically reread the source and display to dgv etc
             // TODO
         }
 
@@ -964,18 +1008,6 @@ namespace DotSpatial.SDR.Plugins.ALI
             if (map != null) map.Paint -= MapOnPaint;
         }
 
-        private Coordinate ConvertLatLonToMap(double lat, double lon)
-        {
-            if (Map.Projection.Equals(KnownCoordinateSystems.Geographic.World.WGS1984)) return new Coordinate(lon, lat);
-
-            ProjectionInfo mapProjInfo = ProjectionInfo.FromEsriString(Map.Projection.ToEsriString());
-            var xy = new double[2];
-            xy[0] = lon;
-            xy[1] = lat;
-            var z = new double[1];
-            Reproject.ReprojectPoints(xy, z, _wgs84Projection, mapProjInfo, 0, 1);
-            return new Coordinate(xy[0], xy[1]);
-        }
 
         private static int SetAlphaLevel(int cInterval)
         {

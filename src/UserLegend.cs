@@ -284,7 +284,7 @@ namespace Go2It
                 AllowDrop = false,
                 Text = @"Legend",
                 Dock = DockStyle.Fill,
-                VerticalScrollEnabled = true
+                VerticalScrollEnabled = true,
             };
             _userLegendForm.Controls.Add(_userLegend);
             App.Map.Legend = _userLegend;

@@ -235,7 +235,7 @@ namespace Go2It
             xy[0] = projCor.X;
             xy[1] = projCor.Y;
 
-            if (_latLonComboBoxPanel.SelectedItem == "Local Coords")
+            if ((string) _latLonComboBoxPanel.SelectedItem == "Local Coords")
             {
                 _latLonStatusPanel.Caption = xy[0] + ",  " + xy[1] + " " + CleanCoordinateUnitLabel();
                 return;

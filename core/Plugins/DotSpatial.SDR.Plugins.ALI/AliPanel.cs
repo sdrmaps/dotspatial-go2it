@@ -29,6 +29,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         {
             get { return aliDGV; }
         }
+
         /// <summary>
         /// Gets the combobox for com log files
         /// </summary>
@@ -152,7 +153,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         delegate void FillLogComboBoxCallback(string[] array);
-        private void FillLogComboBox(string[] array)
+        private void FillLogComboBox(object[] array)
         {
             if (cmbAliCommLog.InvokeRequired)
             {
@@ -180,7 +181,7 @@ namespace DotSpatial.SDR.Plugins.ALI
         }
 
         delegate void FillMyUnitComboBoxCallback(string[] array);
-        private void FillMyUnitComboBox(string[] array)
+        private void FillMyUnitComboBox(object[] array)
         {
             if (cmbAliMyUnit.InvokeRequired)
             {
@@ -256,6 +257,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.RowStyles[1].Height = 0;
             aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
             aliTableLayoutPanel.RowStyles[2].Height = 0;
+
+            cmbAliMyUnit.Visible = true;
         }
 
         public void DisplayAvlListWithMyUnitAndCommLogInterface(string listTitle, string unitTitle, string logTitle)
@@ -276,6 +279,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.AutoSize;
             aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
             aliTableLayoutPanel.RowStyles[2].Height = 20;
+
+            cmbAliMyUnit.Visible = true;
         }
 
         public void DisplayAvlListAndCommLogInterface(string listTitle, string logTitle)
@@ -294,8 +299,8 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.AutoSize;
             aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
             aliTableLayoutPanel.RowStyles[2].Height = 0;
-            aliTableLayoutPanel.RowStyles[3].SizeType = SizeType.Absolute;
-            aliTableLayoutPanel.RowStyles[3].Height = 0;
+
+            cmbAliMyUnit.Visible = false;
         }
 
         public void DisplayCommLogInterface(string logTitle)
@@ -314,11 +319,11 @@ namespace DotSpatial.SDR.Plugins.ALI
             aliTableLayoutPanel.RowStyles[1].SizeType = SizeType.AutoSize;
             aliTableLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
             aliTableLayoutPanel.RowStyles[2].Height = 0;
-            aliTableLayoutPanel.RowStyles[3].SizeType = SizeType.Absolute;
-            aliTableLayoutPanel.RowStyles[3].Height = 0;
+
+            cmbAliMyUnit.Visible = false;
         }
 
-        public void PopulateMyUnitComboBox(string[] array)
+        public void PopulateMyUnitComboBox(object[] array)
         {
             try
             {
