@@ -105,9 +105,9 @@ Backup*/
 UpgradeLog*.XML
 
 # ignore all code files associated with dotspatial
-!/core/DotSpatial
-/core/DotSpatial/*
-!/core/DotSpatial/Trunk
-/core/DotSpatial/Trunk/*
-!/core/DotSpatial/Trunk/bin
-!/core/DotSpatial/Trunk/bin/Release
+#!/core/DotSpatial
+#/core/DotSpatial/*
+#!/core/DotSpatial/Trunk
+#/core/DotSpatial/Trunk/*
+#!/core/DotSpatial/Trunk/bin
+#!/core/DotSpatial/Trunk/bin/Release
