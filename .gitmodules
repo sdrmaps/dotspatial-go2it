@@ -1,0 +1,3 @@
+[submodule "core/DotSpatial"]
+	path = core/DotSpatial
+	url = git@github.com:sdrmaps/dotspatial.git
