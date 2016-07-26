@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
 using System.Xml;
@@ -50,20 +51,27 @@ namespace SDR.Configuration
 
         private static XmlNode GetSectionNode(string plugin, string config)
         {
-            var asm = Assembly.Load(plugin);
-            var cf = GetDllConfiguration(asm);  // load the assembly configuration
-            var sg = cf.SectionGroups["applicationSettings"]; // application level settings
-            if (sg == null) return null;
+            try
+            {
+                var asm = Assembly.Load(plugin);
+                var cf = GetDllConfiguration(asm);  // load the assembly configuration
+                var sg = cf.SectionGroups["applicationSettings"]; // application level settings
+                if (sg == null) return null;
 
-            var s = sg.Sections[config];  // snatch the requested config section from the group
-            if (s == null) return null;
+                var s = sg.Sections[config];  // snatch the requested config section from the group
+                if (s == null) return null;
 
-            // load raw xml into document for parsing
-            var xml = s.SectionInformation.GetRawXml();
-            var xdoc = new XmlDocument();
-            xdoc.LoadXml(xml);
+                // load raw xml into document for parsing
+                var xml = s.SectionInformation.GetRawXml();
+                var xdoc = new XmlDocument();
+                xdoc.LoadXml(xml);
 
-            return xdoc.ChildNodes[0];  // return the section node
+                return xdoc.ChildNodes[0];  // return the section node
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private static string GetFullConfigName(string plugin, string section)

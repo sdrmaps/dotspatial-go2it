@@ -350,11 +350,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\DotSpatial\Source\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\DotSpatial.Data.Rasters.GdalExtension.dll">
-      <Link>Plugins\gdal\DotSpatial.Data.Rasters.GdalExtension.dll</Link>
+      <Link>Plugins\DotSpatial.Data.Rasters.GdalExtension.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\DotSpatial\Source\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdalconst_csharp.dll">
-      <Link>Plugins\gdal\gdalconst_csharp.dll</Link>
+      <Link>Plugins\gdalconst_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\DotSpatial\Source\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal\data\gdalicon.png">
@@ -738,15 +738,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\DotSpatial\Source\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\gdal_csharp.dll">
-      <Link>Plugins\gdal\gdal_csharp.dll</Link>
+      <Link>Plugins\gdal_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\DotSpatial\Source\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\ogr_csharp.dll">
-      <Link>Plugins\gdal\ogr_csharp.dll</Link>
+      <Link>Plugins\ogr_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\DotSpatial\Source\bin\$(Configuration)\Windows Extensions\DotSpatial.Data.Rasters.GdalExtension\osr_csharp.dll">
-      <Link>Plugins\gdal\osr_csharp.dll</Link>
+      <Link>Plugins\osr_csharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -192,7 +192,14 @@ namespace Go2It
 
         private void InitializeAliModesDict()
         {
-            _aliInterfaces = SdrConfig.Plugins.GetPluginApplicationConfigSectionAsDict(AliPlugin, "AliInterfaceModes");
+            try
+            {
+                _aliInterfaces = SdrConfig.Plugins.GetPluginApplicationConfigSectionAsDict(AliPlugin, "AliInterfaceModes");
+            }
+            catch (Exception ex)
+            {
+                _aliInterfaces = new Dictionary<string, string>();
+            }
         }
 
         private void PopulateNetworkFleetLabels()
