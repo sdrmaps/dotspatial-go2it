@@ -16,13 +16,13 @@ using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Plugins.ALI.Properties;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
 using GeoTimeZone;
 using SDR.Common;
 using ILog = SDR.Common.logging.ILog;
 using SDR.Common.UserMessage;
-using SDR.Data.Database;
-using SDR.Data.Files;
+using DotSpatial.SDR.Data.Database;
+using DotSpatial.SDR.Data.Files;
 using SDR.Network;
 using SdrConfig = SDR.Configuration;
 using System.IO;
@@ -178,13 +178,13 @@ namespace DotSpatial.SDR.Plugins.ALI
                 if (sel.Count > 0)
                 {
                     IFeature ft = sel[0];
-                    var xy = ft.Coordinates[0];
-
+                    Coordinate xy = ft.Geometry.Coordinates[0];
+                   
                     //  Get extent where center is desired X,Y coordinate.
                     var width = Map.ViewExtents.Width;
                     var height = Map.ViewExtents.Height;
-                    Map.ViewExtents.X = (xy[0] - (width / 2));
-                    Map.ViewExtents.Y = (xy[1] + (height / 2));
+                    Map.ViewExtents.X = (xy[Ordinate.X] - (width / 2));
+                    Map.ViewExtents.Y = (xy[Ordinate.Y] + (height / 2));
                     var ex = Map.ViewExtents;
 
                     // set App.Map.ViewExtents to new extent that centers on desired LatLong.

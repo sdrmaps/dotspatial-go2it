@@ -16,8 +16,7 @@ using System.Xml;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
-using DotSpatial.Topology.Utilities;
+using GeoAPI.Geometries;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -27,6 +26,8 @@ using Lucene.Net.Spatial;
 using Lucene.Net.Spatial.Prefix;
 using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Store;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using SDR.Common;
 using SDR.Common.UserMessage;
 using SDR.Network;
@@ -38,10 +39,9 @@ using DotSpatial.Data;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Controls;
 using SDR.Authentication;
-using SDR.Data.Database;
+using DotSpatial.SDR.Data.Database;
 using Go2It.Properties;
 using Directory = System.IO.Directory;
-using IGeometry = DotSpatial.Topology.IGeometry;
 using Point = System.Drawing.Point;
 using PointShape = DotSpatial.Symbology.PointShape;
 using SdrConfig = SDR.Configuration;
@@ -987,7 +987,8 @@ namespace Go2It
                 var y = ((ptSymbolGraphic.Bottom - ptSymbolGraphic.Top) / 2) - 1;
                 var x = ((ptSymbolGraphic.Right - ptSymbolGraphic.Left) / 2) - 1;
                 var c = ptMap.PixelToProj(new Point(x, y));
-                ftSet.AddFeature(new DotSpatial.Topology.Point(c));
+
+                ftSet.AddFeature(new NetTopologySuite.Geometries.Point(c));
             }
             UpdatePointGraphics(ptMap);
         }
@@ -1013,18 +1014,27 @@ namespace Go2It
                 var ftLyr = new MapLineLayer(ftSet);
                 lineMap.MapFrame.DrawingLayers.Add(ftLyr);
 
-                // create a new line geometry for the feature
-                var coords = new List<Coordinate>();
-                var geo = new LineString(coords);
-                var lineFt = ftSet.AddFeature(geo);
+
+
                 var sx = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
                 var sy = lineSymbolGraphic.Bottom - lineSymbolGraphic.Top;
                 var sc = lineMap.PixelToProj(new Point(sx, sy));
                 var ex = lineSymbolGraphic.Right - lineSymbolGraphic.Left;
                 var ey = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
                 var ec = lineMap.PixelToProj(new Point(ex, ey));
-                lineFt.Coordinates.Add(sc);
-                lineFt.Coordinates.Add(ec);
+
+                // create a new line geometry for the feature
+
+                var coords = new List<Coordinate>();
+                coords.Add(sc);
+                coords.Add(ec);
+
+                var geo = new LineString(coords.ToArray());
+                ftSet.AddFeature(geo);
+
+
+                // lineFt.Geometry.Coordinates.Add(sc);
+                // lineFt.Geometry.Coordinates.Add(ec);
             }
             UpdateLineGraphics(lineMap);
         }
@@ -1180,7 +1190,8 @@ namespace Go2It
                 var y = ((panel.Bottom - panel.Top) / 2) - 1;
                 var x = ((panel.Right - panel.Left) / 2) - 1;
                 var c = ptMap.PixelToProj(new Point(x, y));
-                ftSet.AddFeature(new DotSpatial.Topology.Point(c));
+
+                ftSet.AddFeature(new NetTopologySuite.Geometries.Point(c));
             }
             UpdateCharacterGraphic(ptMap, panel == ptAliNetworkfleetGraphic ? _networkFleetSymbolFont : _enterpolAvlSymbolFont, color, chars);
         }
@@ -2913,7 +2924,7 @@ namespace Go2It
                 sw.WriteLine("-- Exception -------------------------------------------");
                 sw.WriteLine(ex);
                 sw.WriteLine("-- Geometry --------------------------------------------");
-                sw.WriteLine("FeatureType: " + shape.ToGeometry().FeatureType);
+                sw.WriteLine("FeatureType: " + shape.ToGeometry().OgcGeometryType);
                 sw.WriteLine("GeometryType: " + shape.ToGeometry().GeometryType);
                 sw.WriteLine("IsEmpty: " + shape.ToGeometry().IsEmpty);
                 sw.WriteLine("IsRectangle: " + shape.ToGeometry().IsRectangle);
@@ -2923,7 +2934,7 @@ namespace Go2It
                 sw.WriteLine("NumPoints: " + shape.ToGeometry().NumPoints);
                 sw.WriteLine("Centroid: " + shape.ToGeometry().Centroid.Coordinate.ToString());
                 sw.WriteLine("PrecisionModel: " + shape.ToGeometry().PrecisionModel);
-                sw.WriteLine("SRID: " + shape.ToGeometry().Srid);
+                sw.WriteLine("SRID: " + shape.ToGeometry().SRID);
                 sw.WriteLine("-- WKT -------------------------------------------------");
                 sw.WriteLine(wkt);
                 sw.WriteLine("========================================================");
@@ -2964,7 +2975,8 @@ namespace Go2It
                         IGeometry geom = shp.ToGeometry(); // cast shape to geometry for wkt serialization
 
                         // serialize the geometry into wkt (which will be read by spatial4n for lucene indexing)
-                        var wktWriter = new WktWriter();
+
+                        var wktWriter = new WKTWriter();
                         var wkt = wktWriter.Write((Geometry) geom);
 
                         // create our strategy for spatial indexing using NTS context
@@ -3776,7 +3788,7 @@ namespace Go2It
             if (File.Exists(configPath))
             {
                 var iniSection = SdrConfig.Plugins.GetPluginApplicationConfigValue(AliPlugin, "GlobalCadConfig", "IniKeyLookup");
-                string[] allKeys = SDR.Data.Files.IniHelper.IniGetAllSectionKeys(iniSection, configPath);
+                string[] allKeys = DotSpatial.SDR.Data.Files.IniHelper.IniGetAllSectionKeys(iniSection, configPath);
                 if (allKeys.Length == 1 && allKeys[0].Length == 0)
                 {
                     msg.Warn("Config file is missing required section: [" + iniSection + "] values");

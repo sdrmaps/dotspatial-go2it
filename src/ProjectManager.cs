@@ -19,12 +19,10 @@ using DotSpatial.Extensions;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Serialization;
 using DotSpatial.Symbology;
-using Lucene.Net.Index;
 using SDR.Common;
 using SDR.Common.UserMessage;
 using SDR.Configuration.Project;
-using SDR.Configuration.User;
-using SDR.Data.Database;
+using DotSpatial.SDR.Data.Database;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It
@@ -202,7 +200,7 @@ namespace Go2It
             foreach (DataRow row in lyrTable.Rows)
             {
                 string name = row["name"].ToString();
-                string lyrType = row["layerType"].ToString(); // currently unused
+                // string lyrType = row["layerType"].ToString(); // currently unused
                 string projType = row["projectType"].ToString();
                 switch (projType)
                 {
@@ -298,7 +296,7 @@ namespace Go2It
             }
             else
             {
-                SQLiteHelper.Update(conn, "ProjectSettings", d, "key=" + k.ToString());
+                SQLiteHelper.Update(conn, "ProjectSettings", d, "key=" + k);
             }
 
             TypeConverter converter = TypeDescriptor.GetConverter(typeof(Font));

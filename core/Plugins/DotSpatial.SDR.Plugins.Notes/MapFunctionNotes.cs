@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Data;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.Notes
@@ -74,7 +75,7 @@ namespace DotSpatial.SDR.Plugins.Notes
             if (ActiveForm.Visible) return;
 
             ActiveCoordinate = e.GeographicLocation;
-            IEnvelope env = new Envelope(ActiveCoordinate);
+            Envelope env = new Envelope(ActiveCoordinate);
             env.ExpandBy(25); // arbitrary unit size expansion (to generate an extent)
             IFeatureSet fs = NotesLayer.DataSet;
             var fl = fs.Select(env.ToExtent()); // select any feature within the extent

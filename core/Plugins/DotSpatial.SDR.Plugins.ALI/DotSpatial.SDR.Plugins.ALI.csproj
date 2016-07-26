@@ -43,27 +43,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotSpatial.Controls">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Data">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Data.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Extensions">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Extensions.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotSpatial.GeoAPI">
+      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Projections">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Projections.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotSpatial.SDR.Data">
+      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DotSpatial.Topology">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Topology.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoTimeZone">
@@ -78,10 +82,6 @@
     </Reference>
     <Reference Include="SDR.Configuration">
       <HintPath>..\..\..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SDR.Data">
-      <HintPath>..\..\..\build\$(Configuration)\SDR.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SDR.Network">

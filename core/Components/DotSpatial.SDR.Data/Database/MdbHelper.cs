@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 
-namespace SDR.Data.Database
+namespace DotSpatial.SDR.Data.Database
 {
     /// <summary>
     /// This class contains methods for working with the

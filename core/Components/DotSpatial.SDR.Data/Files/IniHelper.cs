@@ -1,7 +1,7 @@
-﻿using System.Text;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 
-namespace SDR.Data.Files
+namespace DotSpatial.SDR.Data.Files
 {
     public static class IniHelper
     {

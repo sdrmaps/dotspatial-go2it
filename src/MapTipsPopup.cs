@@ -5,7 +5,7 @@ using DotSpatial.Controls;
 using DotSpatial.Controls.Docking;
 using DotSpatial.Data;
 using DotSpatial.SDR.Controls;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
 using Point = System.Drawing.Point;
 using SdrConfig = SDR.Configuration;
 
@@ -90,7 +90,7 @@ namespace Go2It
             if (_map == null) return;
 
             var pCoord = _map.PixelToProj(MousePosition); // turn pixels into coordinates
-            IEnvelope env = new Envelope(pCoord);
+            Envelope env = new Envelope(pCoord);
             env.ExpandBy(5);  // arbitrary unit size expansion (to generate an extent)
             var msgList = new List<string>();  // list of all maptips to display
 

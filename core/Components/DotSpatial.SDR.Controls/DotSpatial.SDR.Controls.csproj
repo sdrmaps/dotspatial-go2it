@@ -39,25 +39,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotSpatial.Controls">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Controls.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Data.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Data.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data.Forms">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Data.Forms.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Data.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.SDR.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Build\$(Configuration)\DotSpatial.SDR.Data.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Symbology">
-      <HintPath>..\..\DotSpatial\Trunk\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
+      <HintPath>..\..\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
     </Reference>
     <Reference Include="SDR.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\build\$(Configuration)\SDR.Configuration.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="SDR.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\$(Configuration)\SDR.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

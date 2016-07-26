@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using SDR.Authentication;
-using SDR.Data.Database;
+using DotSpatial.SDR.Data.Database;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It

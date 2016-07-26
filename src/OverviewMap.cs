@@ -10,8 +10,9 @@ using DotSpatial.Controls.Header;
 using DotSpatial.Data;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
 using Go2It.Properties;
+using NetTopologySuite.Geometries;
 
 namespace Go2It
 {
@@ -133,7 +134,7 @@ namespace Go2It
             double minX = mapFrame.ViewExtents.MinX;
             double minY = mapFrame.ViewExtents.MinY;
 
-            var coords = new List<Coordinate>
+            var coords = new Coordinate[]
             {
                 new Coordinate(minX, maxY),
                 new Coordinate(maxX, maxY),

@@ -3,8 +3,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
 using DotSpatial.Data;
+using GeoAPI.Geometries;
 using Point = System.Drawing.Point;
 using PointShape = DotSpatial.Symbology.PointShape;
 using SdrConfig = SDR.Configuration;
@@ -134,7 +134,7 @@ namespace DotSpatial.SDR.Plugins.GPS
                 var y = ((gpsSymbolGraphic.Bottom - gpsSymbolGraphic.Top) / 2) - 1;
                 var x = ((gpsSymbolGraphic.Right - gpsSymbolGraphic.Left) / 2) - 1;
                 var c = gpsMap.PixelToProj(new Point(x, y));
-                ftSet.AddFeature(new Topology.Point(c));
+                ftSet.AddFeature(new NetTopologySuite.Geometries.Point(c));
             }
             UpdateGpsGraphics(gpsMap);
         }

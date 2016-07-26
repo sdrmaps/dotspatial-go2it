@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -7,7 +6,7 @@ using System.Xml;
 using Go2It.Properties;
 using SDR.Common;
 using SDR.Common.logging;
-using SDR.Data.Database;
+using DotSpatial.SDR.Data.Database;
 using SdrConfig = SDR.Configuration;
 
 namespace Go2It

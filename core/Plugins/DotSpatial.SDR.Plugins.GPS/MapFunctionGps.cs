@@ -8,8 +8,8 @@ using DotSpatial.Controls;
 using DotSpatial.Positioning;
 using DotSpatial.Projections;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
-using Point = DotSpatial.Topology.Point;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Plugins.GPS

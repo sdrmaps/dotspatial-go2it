@@ -4,7 +4,7 @@ using System.Drawing;
 using DotSpatial.Controls;
 using DotSpatial.Data;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
+using NetTopologySuite;
 using PointShape = DotSpatial.Symbology.PointShape;
 
 namespace DotSpatial.SDR.Plugins.GPS
@@ -85,14 +85,14 @@ namespace DotSpatial.SDR.Plugins.GPS
             {
                 base.Dequeue();
             }
-            var p = obj as Topology.Point;
+            var p = obj as NetTopologySuite.Geometries.Point;
             base.Enqueue(p);
             var ftArray = base.ToArray();
             Array.Reverse(ftArray);  // reverse to move newest values to front of array
             _pointGraphics.Features.Clear();
             for (int i = 0; i <= ftArray.Length - 1; i++)
             {
-                var point = ftArray[i] as Topology.Point;
+                var point = ftArray[i] as NetTopologySuite.Geometries.Point;
                 _pointGraphics.AddFeature(point);
                 GpsGraphicsLayer.SetShapeSymbolizer(i, _fsArray[i]);
             }

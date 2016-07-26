@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDR.Data", "SDR.Data.csproj", "{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotSpatial.SDR.Data", "DotSpatial.SDR.Data.csproj", "{A9EB26FE-4D70-4686-BD5B-AC22A72ADEDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

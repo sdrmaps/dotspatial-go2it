@@ -5,7 +5,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 
-namespace SDR.Data.Database
+namespace DotSpatial.SDR.Data.Database
 {
     /// <summary>
     /// This class contains methods for working with the

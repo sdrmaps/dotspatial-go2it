@@ -27,8 +27,9 @@ using System.Windows.Forms;
 using DotSpatial.Controls;
 using DotSpatial.Data;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
-using DotSpatial.Topology.Algorithm;
+using GeoAPI.Geometries;
+using NetTopologySuite.Algorithm;
+using NetTopologySuite.Geometries;
 using Point = System.Drawing.Point;
 
 namespace DotSpatial.SDR.Plugins.Measure
@@ -38,6 +39,7 @@ namespace DotSpatial.SDR.Plugins.Measure
     /// </summary>
     public class MapFunctionMeasure : MapFunction
     {
+        private const double RadiusOfEarth = 111319.5;
         private bool _areaMode;
         private List<Coordinate> _coordinates;
         private double _currentArea;
@@ -48,8 +50,8 @@ namespace DotSpatial.SDR.Plugins.Measure
         private double _previousDistance;
         private List<List<Coordinate>> _previousParts;
         private bool _standBy;
-
-        private bool _doubleClick;
+        
+        // private bool _doubleClick;
 
         #region Constructors
 
@@ -148,21 +150,26 @@ namespace DotSpatial.SDR.Plugins.Measure
 
             bool hasMouse = Map.ClientRectangle.Contains(mouseTest);
 
-            var bluePen = new Pen(Color.Blue, 2F);
-            var redPen = new Pen(Color.Red, 3F);
-            var redBrush = new SolidBrush(Color.Red);
+            Pen bluePen = new Pen(Color.Blue, 2F);
+            Pen redPen = new Pen(Color.Red, 3F);
+            Brush redBrush = new SolidBrush(Color.Red);
 
-            var points = new List<Point>();
+            List<Point> points = new List<Point>();
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             Brush blue = new SolidBrush(Color.FromArgb(60, 0, 0, 255));
 
             if (_previousParts != null && _previousParts.Count > 0)
             {
-                var previous = new GraphicsPath {FillMode = FillMode.Winding};
-                var allPoints = new List<Point>();
+                GraphicsPath previous = new GraphicsPath();
+                previous.FillMode = FillMode.Winding;
+                List<Point> allPoints = new List<Point>();
                 foreach (List<Coordinate> part in _previousParts)
                 {
-                    var prt = part.Select(c => Map.ProjToPixel(c)).ToList();
+                    List<Point> prt = new List<Point>();
+                    foreach (Coordinate c in part)
+                    {
+                        prt.Add(Map.ProjToPixel(c));
+                    }
                     previous.AddLines(prt.ToArray());
                     allPoints.AddRange(prt);
                     if (_areaMode) previous.CloseFigure();
@@ -170,10 +177,13 @@ namespace DotSpatial.SDR.Plugins.Measure
                 }
                 if (_areaMode && _coordinates != null)
                 {
-                    var fillPts = new List<Point>();
+                    List<Point> fillPts = new List<Point>();
                     if ((!_standBy && _coordinates.Count > 2) || _coordinates.Count > 3)
                     {
-                        fillPts.AddRange(_coordinates.Select(c => Map.ProjToPixel(c)));
+                        foreach (Coordinate c in _coordinates)
+                        {
+                            fillPts.Add(Map.ProjToPixel(c));
+                        }
                         if (!_standBy && hasMouse)
                         {
                             fillPts.Add(_mousePosition);
@@ -200,7 +210,10 @@ namespace DotSpatial.SDR.Plugins.Measure
 
             if (_coordinates != null)
             {
-                points.AddRange(_coordinates.Select(coord => Map.ProjToPixel(coord)));
+                foreach (Coordinate coord in _coordinates)
+                {
+                    points.Add(Map.ProjToPixel(coord));
+                }
 
                 if (points.Count > 1)
                 {
@@ -253,7 +266,7 @@ namespace DotSpatial.SDR.Plugins.Measure
                     double factor = Math.Cos(y * Math.PI / 180);
                     dx *= factor;
                     dist = Math.Sqrt(dx * dx + dy * dy);
-                    dist = dist * 111319.5;
+                    dist = dist * RadiusOfEarth;
                 }
                 else
                 {
@@ -269,16 +282,16 @@ namespace DotSpatial.SDR.Plugins.Measure
             return dist;
         }
 
-        private double GetArea(List<Coordinate> tempPolygon)
+        private double GetArea(Coordinate[] tempPolygon)
         {
-            double area = Math.Abs(CgAlgorithms.SignedArea(tempPolygon));
+            double area = Math.Abs(CGAlgorithms.SignedArea(tempPolygon));
             if (_previousParts == null || _previousParts.Count == 0)
             {
-                _firstPartIsCounterClockwise = CgAlgorithms.IsCounterClockwise(tempPolygon);
+                _firstPartIsCounterClockwise = CGAlgorithms.IsCCW(tempPolygon);
             }
             else
             {
-                if (CgAlgorithms.IsCounterClockwise(tempPolygon) != _firstPartIsCounterClockwise)
+                if (CGAlgorithms.IsCCW(tempPolygon) != _firstPartIsCounterClockwise)
                 {
                     area = -area;
                 }
@@ -288,8 +301,7 @@ namespace DotSpatial.SDR.Plugins.Measure
                 if (Map.Projection.IsLatLon)
                 {
                     // this code really assumes the location is near the equator
-                    const double radiusOfEarth = 111319.5;
-                    area *= radiusOfEarth * radiusOfEarth;
+                    area *= RadiusOfEarth * RadiusOfEarth;
                 }
                 else
                 {
@@ -322,22 +334,25 @@ namespace DotSpatial.SDR.Plugins.Measure
             else
             {
                 List<Coordinate> tempPolygon = _coordinates.ToList();
-                tempPolygon.Add(c1);
+                if (!c1.Equals2D(_coordinates[_coordinates.Count - 1])) tempPolygon.Add(c1); //don't add the current coordinate again if it was added by mouse click
                 if (tempPolygon.Count < 3)
                 {
-                    if (tempPolygon.Count == 2)
+                    if (tempPolygon.Count > 1)
                     {
-                        Rectangle r = Map.ProjToPixel(new LineString(tempPolygon).Envelope.ToExtent());
+                        Rectangle r = Map.ProjToPixel(new LineString(tempPolygon.ToArray()).EnvelopeInternal.ToExtent());
                         r.Inflate(20, 20);
                         Map.Invalidate(r);
                     }
                     _mousePosition = e.Location;
                     return;
                 }
-                var pg = new Polygon(new LinearRing(tempPolygon));
-                double area = GetArea(tempPolygon);
+                tempPolygon.Add(_coordinates[0]); //changed by jany_ (2016-06-09) close the polygon, because they must be closed by definition
+                Polygon pg = new Polygon(new LinearRing(tempPolygon.ToArray()));
+
+                double area = GetArea(tempPolygon.ToArray());
+
                 _measurePanel.TotalArea = area;
-                Rectangle rr = Map.ProjToPixel(pg.Envelope.ToExtent());
+                Rectangle rr = Map.ProjToPixel(pg.EnvelopeInternal.ToExtent());
                 rr.Inflate(20, 20);
                 Map.Invalidate(rr);
                 _mousePosition = e.Location;
@@ -356,12 +371,6 @@ namespace DotSpatial.SDR.Plugins.Measure
             base.OnMouseMove(e);
         }
 
-        protected override void OnMouseDoubleClick(GeoMouseArgs e)
-        {
-            _doubleClick = true;
-            base.OnMouseDoubleClick(e);
-        }
-
         /// <summary>
         /// Handles the Mouse-Up situation
         /// </summary>
@@ -372,16 +381,29 @@ namespace DotSpatial.SDR.Plugins.Measure
             {
                 return;
             }
-            if (_doubleClick)
-            {
-                _doubleClick = false;
-                FinalizeCalculation();
-                return;
-            }
             // Add the current point to the featureset
+
             if (e.Button == MouseButtons.Right)
             {
-                FinalizeCalculation();
+                if (_coordinates.Count > 1)
+                {
+                    _previousParts.Add(_coordinates);
+                    if (_areaMode)
+                    {
+                        _measurePanel.TotalArea = _currentArea;
+                    }
+                    else
+                    {
+                        _previousDistance += _currentDistance;
+                        _currentDistance = 0;
+                        _currentArea = 0;
+                        _measurePanel.Distance = 0;
+                        _measurePanel.TotalDistance = _previousDistance;
+                    }
+                }
+
+                _coordinates = new List<Coordinate>();
+                Map.Invalidate();
             }
             else
             {
@@ -405,12 +427,17 @@ namespace DotSpatial.SDR.Plugins.Measure
                 {
                     if (_coordinates.Count >= 3)
                     {
-                        double area = GetArea(_coordinates);
+                        //changed by jany_ (2016-06-09) close the polygon to get the correct area
+                        List<Coordinate> tempPolygon = _coordinates.ToList();
+                        tempPolygon.Add(_coordinates[0]);
+
+                        double area = GetArea(tempPolygon.ToArray());
                         _currentArea = area;
                     }
                 }
                 Map.Invalidate();
             }
+
             base.OnMouseUp(e);
         }
 
@@ -428,32 +455,37 @@ namespace DotSpatial.SDR.Plugins.Measure
             Map.Invalidate();
         }
 
-        private void FinalizeCalculation()
-        {
-            if (_coordinates.Count > 1)
-            {
-                _previousParts.Add(_coordinates);
-                if (_areaMode)
-                {
-                    _measurePanel.TotalArea = _currentArea;
-                }
-                else
-                {
-                    _previousDistance += _currentDistance;
-                    _currentDistance = 0;
-                    _currentArea = 0;
-                    _measurePanel.Distance = 0;
-                    _measurePanel.TotalDistance = _previousDistance;
-                }
-            }
-            _coordinates = new List<Coordinate>();
-            Map.Invalidate();
-        }
+        //private void FinalizeCalculation()
+        //{
+        //    if (_coordinates.Count > 1)
+        //    {
+        //        _previousParts.Add(_coordinates);
+        //        if (_areaMode)
+        //        {
+        //            _measurePanel.TotalArea = _currentArea;
+        //        }
+        //        else
+        //        {
+        //            _previousDistance += _currentDistance;
+        //            _currentDistance = 0;
+        //            _currentArea = 0;
+        //            _measurePanel.Distance = 0;
+        //            _measurePanel.TotalDistance = _previousDistance;
+        //        }
+        //    }
+        //    _coordinates = new List<Coordinate>();
+        //    Map.Invalidate();
+        //}
 
         private void MeasurePanel_MeasureModeChanged(object sender, EventArgs e)
         {
             _previousParts.Clear();
+
             _areaMode = (_measurePanel.MeasureMode == MeasureMode.Area);
+            if (_coordinates != null)
+            {
+                _coordinates = new List<Coordinate>();
+            }
             Map.Invalidate();
         }
         #endregion

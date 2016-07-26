@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 
-namespace SDR.Data.Database
+namespace DotSpatial.SDR.Data.Database
 {
     /// <summary>
     /// This class contains methods for working with the

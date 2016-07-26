@@ -11,7 +11,7 @@ using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.SDR.Controls;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
 using Lucene.Net.Analysis;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
@@ -22,18 +22,19 @@ using Lucene.Net.Spatial.Prefix;
 using Lucene.Net.Spatial.Prefix.Tree;
 using Lucene.Net.Spatial.Queries;
 using Lucene.Net.Store;
+using NetTopologySuite.Geometries;
 using Spatial4n.Core.Context.Nts;
 using Spatial4n.Core.Distance;
 using SdrConfig = SDR.Configuration;
 using System.Windows.Forms;
 using DotSpatial.Controls;
-using SDR.Data.Database;
+using DotSpatial.SDR.Data.Database;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using PointShape = DotSpatial.Symbology.PointShape;
-using Shape = Spatial4n.Core.Shapes.Shape;
+// using Shape = Spatial4n.Core.Shapes.Shape;
 
 namespace DotSpatial.SDR.Plugins.Search
 {
@@ -600,7 +601,8 @@ namespace DotSpatial.SDR.Plugins.Search
         {
             if (ft1.Length <= 0 || ft2 == null) return null;
             var ctx = NtsSpatialContext.GEO; // using NTS context (provides polygon/line/point models)
-            Shape shp2 = ctx.ReadShape(ft2.Shape);  // load ft2 shape
+
+            var shp2 = ctx.ReadShape(ft2.Shape);  // load ft2 shape
             // find all other possible features that match ft1 name
             var fts1Lookup = new List<FeatureLookup>();
             IEnumerable<ScoreDoc> hits = ExecuteExactRoadQuery(ft1);
@@ -608,7 +610,7 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 var doc = _indexSearcher.Doc(hit.Doc);
                 // load a possible intersecting feature shape
-                Shape shp1 = ctx.ReadShape(doc.Get(GEOSHAPE));
+                var shp1 = ctx.ReadShape(doc.Get(GEOSHAPE));
                 // validate relation
                 if (shp1.Relate(shp2).Equals(Spatial4n.Core.Shapes.SpatialRelation.INTERSECTS))  
                 {
@@ -627,7 +629,7 @@ namespace DotSpatial.SDR.Plugins.Search
             return fts1Lookup.ToArray();
         }
 
-        private IEnvelope CreateBufferGraphic(IGeometry ft)
+        private Envelope CreateBufferGraphic(IGeometry ft)
         {
             if (_polylineGraphicsLayer == null)
             {
@@ -648,7 +650,7 @@ namespace DotSpatial.SDR.Plugins.Search
             }
             var buffer = ft.Buffer(SdrConfig.Project.Go2ItProjectSettings.Instance.SearchBufferDistance);
             _polylineGraphics.AddFeature(buffer);
-            return buffer.Envelope;
+            return buffer.EnvelopeInternal;
         }
 
         private void CreatePointHighlightGraphic(Coordinate c)
@@ -697,11 +699,11 @@ namespace DotSpatial.SDR.Plugins.Search
                 // grab the feature and use the shape to generate a buffer around it
                 var ft = fs.GetFeature(Convert.ToInt32(ftLookup.Fid));
 
-                if (ft.Coordinates.Count == 1)
+                if (ft.Geometry.Coordinates.Count() == 1)
                 {
-                    CreatePointHighlightGraphic(ft.Coordinates[0]);
+                    CreatePointHighlightGraphic(ft.Geometry.Coordinates[0]);
                 }
-                IEnvelope buffEnv = CreateBufferGraphic(ft.BasicGeometry as Geometry);
+                Envelope buffEnv = CreateBufferGraphic(ft.Geometry as Geometry);
 
                 var zoomInFactor = (double)SdrConfig.Project.Go2ItProjectSettings.Instance.SearchZoomFactor;
                 var newExtentWidth = Map.ViewExtents.Width * zoomInFactor;
@@ -783,9 +785,9 @@ namespace DotSpatial.SDR.Plugins.Search
                     var hit = hits[i];
                     var doc = _indexSearcher.Doc(hit.Doc);
                     var ft = hydrantfs.GetFeature(Convert.ToInt32(doc.Get(FID)));
-                    if (ft.Coordinates.Count == 1)
+                    if (ft.Geometry.Coordinates.Count() == 1)
                     {
-                        CreatePointHighlightGraphic(ft.Coordinates[0]);
+                        CreatePointHighlightGraphic(ft.Geometry.Coordinates[0]);
                     }
                 }
             }
@@ -808,7 +810,7 @@ namespace DotSpatial.SDR.Plugins.Search
         private ScoreDoc[] ExecuteScoredHydrantQuery(FeatureLookup activeLookup)
         {
             var ctx = NtsSpatialContext.GEO; // using NTS (provides polygon/line/point models)
-            Shape shp = ctx.ReadShape(activeLookup.Shape);  // TODO: research the new method of reading the shape
+            var shp = ctx.ReadShape(activeLookup.Shape);  // TODO: research the new method of reading the shape
             Spatial4n.Core.Shapes.Point centerPt = shp.GetCenter();
 
             SpatialStrategy strategy = new RecursivePrefixTreeStrategy(new GeohashPrefixTree(ctx, 24), GEOSHAPE);
@@ -1686,7 +1688,7 @@ namespace DotSpatial.SDR.Plugins.Search
             {
                 var doc = _indexSearcher.Doc(qHit.Doc);  // snag the current doc for additional spatial queries
                 var strShp = doc.Get(GEOSHAPE);  // get the string representation of the feature shape
-                Shape shp = ctx.ReadShape(strShp);  // read the wkt string into an actual shape object
+                var shp = ctx.ReadShape(strShp);  // read the wkt string into an actual shape object
                 // prepare spatial query
                 var args = new SpatialArgs(SpatialOperation.Intersects, shp);
                 Query sq = strategy.MakeQuery(args);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
-using SDR.Data.Database;
+using DotSpatial.SDR.Data.Database;
 using SdrConfig = SDR.Configuration;
 
 namespace DotSpatial.SDR.Controls

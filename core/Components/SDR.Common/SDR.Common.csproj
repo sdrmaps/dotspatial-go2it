@@ -38,11 +38,6 @@
     <AssemblyOriginatorKeyFile>sdrmaps.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotSpatial.SDR.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Unity.2.0\lib\20\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>

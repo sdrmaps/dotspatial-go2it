@@ -2,7 +2,7 @@
 using DotSpatial.Controls;
 using DotSpatial.Controls.Header;
 using DotSpatial.SDR.Plugins.Selection.Properties;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
 
 namespace DotSpatial.SDR.Plugins.Selection
 {
@@ -71,7 +71,7 @@ namespace DotSpatial.SDR.Plugins.Selection
         /// </summary>
         private void DeselectAllTool_Click(object sender, EventArgs e)
         {
-            IEnvelope env;
+            Envelope env;
             App.Map.MapFrame.ClearSelection(out env);
         }
     }

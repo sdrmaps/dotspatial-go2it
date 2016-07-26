@@ -7,7 +7,7 @@ using DotSpatial.Data;
 using DotSpatial.SDR.Controls;
 using DotSpatial.SDR.Plugins.Navigate.Properties;
 using DotSpatial.Symbology;
-using DotSpatial.Topology;
+using GeoAPI.Geometries;
 
 namespace DotSpatial.SDR.Plugins.Navigate
 {
@@ -109,11 +109,13 @@ namespace DotSpatial.SDR.Plugins.Navigate
                     // we need to disable the flag that prevents view changes from adding to the next/prev view stack
                     if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
                     {
-                        mapFrame.AllowViewChangesToViewExtentStack(true);
+                        // TODO:
+                        // mapFrame.AllowViewChangesToViewExtentStack(true);
                     }
                     else
                     {
-                        mapFrame.AllowViewChangesToViewExtentStack(false);
+                        // TODO:
+                        // mapFrame.AllowViewChangesToViewExtentStack(false);
                     }
                 }
             }
@@ -155,11 +157,13 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
             {
-                mapFrame.AllowViewChangesToViewExtentStack(true);
+                // TODO:
+                // mapFrame.AllowViewChangesToViewExtentStack(true);
             }
             else
             {
-                mapFrame.AllowViewChangesToViewExtentStack(false);
+                // TODO:
+                // mapFrame.AllowViewChangesToViewExtentStack(false);
             }
 
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
@@ -186,11 +190,13 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
             {
-                mapFrame.AllowViewChangesToViewExtentStack(true);
+                // TODO:
+                // mapFrame.AllowViewChangesToViewExtentStack(true);
             }
             else
             {
-                mapFrame.AllowViewChangesToViewExtentStack(false);
+                // TODO:
+                // mapFrame.AllowViewChangesToViewExtentStack(false);
             }
 
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
@@ -311,7 +317,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
         private void ZoomToLayer(IMapLayer layerToZoom)
         {
             const double eps = 1e-7;
-            IEnvelope layerEnvelope = layerToZoom.Extent.ToEnvelope();
+            Envelope layerEnvelope = layerToZoom.Extent.ToEnvelope();
             if (layerEnvelope.Width > eps && layerEnvelope.Height > eps)
             {
                 layerEnvelope.ExpandBy(layerEnvelope.Width / 10, layerEnvelope.Height / 10); // work item #84
