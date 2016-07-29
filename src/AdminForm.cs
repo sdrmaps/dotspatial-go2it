@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -198,7 +197,7 @@ namespace Go2It
             }
             catch (Exception ex)
             {
-                _aliInterfaces = new Dictionary<string, string>();
+                _aliInterfaces = new Dictionary<string, string>() {{"Disabled", "Disabled"}};
             }
         }
 
@@ -777,10 +776,17 @@ namespace Go2It
             string fileName;
             if (layer.GetType().Name == "MapImageLayer")
             {
-                var mImage = (IMapImageLayer) layer;
+                var mImage = (IMapImageLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(mImage.Image.Filename))) return;
                 fileName = Path.GetFileNameWithoutExtension(mImage.Image.Filename);
-                if (fileName != null) _layerLookup.Add(fileName, mImage);
+                if (fileName != null && !_layerLookup.ContainsKey(fileName))
+                {
+                    _layerLookup.Add(fileName, mImage);
+                }
+                else
+                {
+                    return;
+                }
                 _projectManager.IsDirty = true;
             }
             else
@@ -788,9 +794,18 @@ namespace Go2It
                 var mLayer = (IMapFeatureLayer)layer;
                 if (String.IsNullOrEmpty(Path.GetFileNameWithoutExtension((mLayer.DataSet.Filename)))) return;
                 fileName = Path.GetFileNameWithoutExtension(mLayer.DataSet.Filename);
-                if (fileName != null) _layerLookup.Add(fileName, mLayer);
+                if (fileName != null && !_layerLookup.ContainsKey(fileName))
+                {
+                    _layerLookup.Add(fileName, mLayer);
+                }
+                else
+                {
+                    return;
+                }
                 _projectManager.IsDirty = true;
             }
+
+
             if (layer.GetType().Name != "MapPointLayer" && layer.GetType().Name != "MapPolygonLayer" &&
                 layer.GetType().Name != "MapLineLayer") return;
             
@@ -1020,8 +1035,6 @@ namespace Go2It
                 var ftSet = new FeatureSet(FeatureType.Line);
                 var ftLyr = new MapLineLayer(ftSet);
                 lineMap.MapFrame.DrawingLayers.Add(ftLyr);
-
-
 
                 var sx = ((Convert.ToInt32(lineSymbolSize.Text) - 1) / 2 + 1) * -1;
                 var sy = lineSymbolGraphic.Bottom - lineSymbolGraphic.Top;

@@ -99,26 +99,7 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
         private void MapOnFunctionModeChanged(object sender, EventArgs eventArgs)
         {
-            var map = (Map) sender;
-            if (map != null)
-            {
-                var mapFrame = (EventMapFrame)map.MapFrame;
-                if (mapFrame != null)
-                {
-                    // basically these two tools also use view changes that should be view-extent changes
-                    // we need to disable the flag that prevents view changes from adding to the next/prev view stack
-                    if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
-                    {
-                        // TODO:
-                        // mapFrame.AllowViewChangesToViewExtentStack(true);
-                    }
-                    else
-                    {
-                        // TODO:
-                        // mapFrame.AllowViewChangesToViewExtentStack(false);
-                    }
-                }
-            }
+
         }
 
         private void HotKeyManagerOnHotKeyEvent(string action)
@@ -155,17 +136,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
             var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
 
-            if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
-            {
-                // TODO:
-                // mapFrame.AllowViewChangesToViewExtentStack(true);
-            }
-            else
-            {
-                // TODO:
-                // mapFrame.AllowViewChangesToViewExtentStack(false);
-            }
-
             mapFrame.ViewExtentsChanged -= MapFrameOnViewExtentsChanged;
             map.FunctionModeChanged -= MapOnFunctionModeChanged;
         }
@@ -187,17 +157,6 @@ namespace DotSpatial.SDR.Plugins.Navigate
 
             var mapFrame = map.MapFrame as EventMapFrame;
             if (mapFrame == null) return;
-
-            if (map.FunctionMode == FunctionMode.ZoomIn || map.FunctionMode == FunctionMode.ZoomOut)
-            {
-                // TODO:
-                // mapFrame.AllowViewChangesToViewExtentStack(true);
-            }
-            else
-            {
-                // TODO:
-                // mapFrame.AllowViewChangesToViewExtentStack(false);
-            }
 
             mapFrame.ViewExtentsChanged += MapFrameOnViewExtentsChanged;
             map.FunctionModeChanged += MapOnFunctionModeChanged;
