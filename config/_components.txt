@@ -11,10 +11,10 @@ SDR.Configuration
 SDR.Common
 DotSpatial.SDR.Data
 DotSpatial.SDR.Controls
-#DotSpatial.SDR.Plugins.ALI
-#DotSpatial.SDR.Plugins.GPS
+DotSpatial.SDR.Plugins.ALI
+DotSpatial.SDR.Plugins.GPS
 DotSpatial.SDR.Plugins.Measure
 DotSpatial.SDR.Plugins.Navigate
-#DotSpatial.SDR.Plugins.Notes
-#DotSpatial.SDR.Plugins.Search
-#DotSpatial.SDR.Plugins.Selection
+DotSpatial.SDR.Plugins.Notes
+DotSpatial.SDR.Plugins.Search
+DotSpatial.SDR.Plugins.Selection

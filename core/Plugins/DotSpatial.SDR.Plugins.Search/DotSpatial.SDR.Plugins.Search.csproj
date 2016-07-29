@@ -80,11 +80,6 @@
     </Reference>
     <Reference Include="Lucene.Net.Contrib.Highlighter">
       <HintPath>..\..\..\references\Lucene.Net.Contrib.Highlighter.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Lucene.Net.Contrib.Memory">
-      <HintPath>..\..\..\references\Lucene.Net.Contrib.Memory.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Lucene.Net.Contrib.Queries">
       <HintPath>..\..\..\references\Lucene.Net.Contrib.Queries.dll</HintPath>

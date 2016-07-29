@@ -34,7 +34,6 @@ using Lucene.Net.QueryParsers;
 using Version = Lucene.Net.Util.Version;
 using Directory = Lucene.Net.Store.Directory;
 using PointShape = DotSpatial.Symbology.PointShape;
-// using Shape = Spatial4n.Core.Shapes.Shape;
 
 namespace DotSpatial.SDR.Plugins.Search
 {
