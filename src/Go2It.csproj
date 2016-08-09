@@ -59,44 +59,44 @@
   <ItemGroup>
     <Reference Include="DotSpatial.Controls, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Controls.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Controls.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c29dbf30e059ca9d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Data.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Data.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Data.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=53ab5a198378d4c1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Data.Forms.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Data.Forms.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Extensions.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.GeoAPI.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.GeoAPI.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.NetTopologySuite, Version=1.14.2.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.NetTopologySuite.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Positioning">
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Positioning.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Positioning.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Positioning.Design">
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Positioning.Design.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Positioning.Design.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Positioning.Forms">
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Positioning.Forms.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Positioning.Forms.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections, Version=2.0.0.0, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Projections.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Projections.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Projections.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=52099474f11b7ff0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Projections.Forms.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Projections.Forms.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.SDR.Controls">
       <HintPath>..\build\$(Configuration)\DotSpatial.SDR.Controls.dll</HintPath>
@@ -104,19 +104,19 @@
     </Reference>
     <Reference Include="DotSpatial.SDR.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fc2bfe82e8747a95, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Build\Debug\DotSpatial.SDR.Data.dll</HintPath>
+      <HintPath>..\Build\$(Configuration)\DotSpatial.SDR.Data.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Serialization, Version=2.0.0.0, Culture=neutral, PublicKeyToken=441f200f827611e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Serialization.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Symbology, Version=2.0.0.0, Culture=neutral, PublicKeyToken=6178c08da7998387, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Symbology.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Symbology.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Symbology.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0544cdeefb662382, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\core\DotSpatial\Source\bin\Debug\DotSpatial.Symbology.Forms.dll</HintPath>
+      <HintPath>..\core\DotSpatial\Source\bin\$(Configuration)\DotSpatial.Symbology.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=2.9.2.1, Culture=neutral, PublicKeyToken=402f1553d5c332e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
